@@ -1,7 +1,6 @@
-package com.wouter.crudcodegen.generator.engine
+package com.wouter.crudcodegen.engine
 
 import com.nhaarman.mockitokotlin2.*
-import com.wouter.crudcodegen.generator.io.FileManager
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
@@ -17,9 +16,6 @@ internal class TemplateEngineTest {
     @Mock
     private lateinit var templateSolidifier: TemplateSolidifier
 
-    @Mock
-    private lateinit var fileNameTemplateSolidifier: FileNameTemplateSolidifier
-
     @InjectMocks
     private lateinit var templateEngine: TemplateEngine
 
@@ -27,8 +23,8 @@ internal class TemplateEngineTest {
     fun `File and filenames are generated from template specs`() {
         val root = mock<File>()
         val someMemoryFields = listOf(
-                MemoryField("artifact", "helloworld"),
-                MemoryField("pomFileName", "pom")
+                Variable("artifact", "helloworld"),
+                Variable("pomFileName", "pom")
         )
 
         whenever(fileManager.listTemplateFilesRecursively("new"))
@@ -38,15 +34,15 @@ internal class TemplateEngineTest {
                 ))
 
         doReturn("pom.xml.hbs")
-                .whenever(fileNameTemplateSolidifier).generate("[pomFileName].xml.hbs", someMemoryFields)
+                .whenever(templateSolidifier).solidifyFilename("[pomFileName].xml.hbs", someMemoryFields)
 
         doReturn("README.md")
-                .whenever(fileNameTemplateSolidifier).generate("README.md", someMemoryFields)
+                .whenever(templateSolidifier).solidifyFilename("README.md", someMemoryFields)
 
         doReturn("""<artifact>{{ artifact }}</artifact>""")
                 .whenever(fileManager).readTemplate("new", "[pomFileName].xml.hbs")
 
-        whenever(templateSolidifier.generate("""<artifact>{{ artifact }}</artifact>""", someMemoryFields))
+        whenever(templateSolidifier.solidifyTemplate("""<artifact>{{ artifact }}</artifact>""", someMemoryFields))
                 .thenReturn("<artifact>helloworld</artifact>")
 
         templateEngine.generate(root, "new", someMemoryFields)

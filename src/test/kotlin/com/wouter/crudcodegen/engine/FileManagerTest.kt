@@ -1,4 +1,4 @@
-package com.wouter.crudcodegen.generator.io
+package com.wouter.crudcodegen.engine
 
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
@@ -49,14 +49,15 @@ internal class FileManagerTest {
 
     @Test
     fun `All files are listed in a template using templateFileTree`() {
-        assertThat(fileManager.listTemplateFilesRecursively("new"), hasItems(
-                "pom.xml.hbs",
-                "src/main/java/com/[groupId]/[artifactId]/Application.kt.hbs"
-        ))
+        assertThat(fileManager.listTemplateFilesRecursively("new"),
+                hasItems(
+                        "pom.xml.hbs",
+                        "src/main/java/com/[groupId]/[artifactId]/Application.kt.hbs"
+                )
+        )
 
-        assertThat(fileManager.listTemplateFilesRecursively("new"), not(hasItems(
-                "src/main/java/com/[groupId]/[artifactId]"
-        )))
+        assertThat(fileManager.listTemplateFilesRecursively("new"),
+                not(hasItems("src/main/java/com/[groupId]/[artifactId]")))
     }
 
     @Test
@@ -83,6 +84,28 @@ internal class FileManagerTest {
             assertThat(File(tempDir.path + "/a/b/d").exists(), equalTo(false))
             assertThat(File(tempDir.path + "/a/b/d").isDirectory(), equalTo(false))
             assertThat(File(tempDir.path + "/a/b/c").readText(), equalTo("test"))
+        } finally {
+            tempDir.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun `Target files can be read if they exist`() {
+        val tempDir = createTempDir("crudcodegen_")
+        try {
+            fileManager.writeTargetFileContent(tempDir, "a/b/c", "test")
+
+            assertThat(fileManager.readTargetFile(tempDir, "a/b/c"), equalTo("test"))
+        } finally {
+            tempDir.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun `Target files cannot be read if they dont exist and return null`() {
+        val tempDir = createTempDir("crudcodegen_")
+        try {
+            assertThat(fileManager.readTargetFile(tempDir, "a/b/c"), nullValue())
         } finally {
             tempDir.deleteRecursively()
         }

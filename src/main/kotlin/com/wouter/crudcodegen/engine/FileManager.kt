@@ -1,4 +1,4 @@
-package com.wouter.crudcodegen.generator.io
+package com.wouter.crudcodegen.engine
 
 import org.springframework.core.io.ResourceLoader
 import org.springframework.stereotype.Service
@@ -55,5 +55,13 @@ class FileManager(private val resourceLoader: ResourceLoader) {
         val directories = path.split("/").dropLast(1).joinToString("/")
         File("${root.path}/$directories").mkdirs()
         File("${root.path }/$path").writeText(content)
+    }
+
+    // TODO add tests
+    fun readTargetFile(root: File, path: String): String? {
+        if (!File(root.path + "/$path").exists()) {
+            return null
+        }
+        return File(root.path + "/$path").readText()
     }
 }

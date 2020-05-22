@@ -1,4 +1,4 @@
-package com.wouter.crudcodegen.generator.project
+package com.wouter.crudcodegen.application
 
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -12,7 +12,7 @@ import java.io.File
 @SpringBootTest
 internal class ProjectIntegrationTest {
     @Autowired
-    private lateinit var projectFilesGenerator: ProjectFilesGenerator
+    private lateinit var commandLineInterface: CommandLineInterface
 
     private lateinit var tempDir: File
 
@@ -28,21 +28,7 @@ internal class ProjectIntegrationTest {
 
     @Test
     fun `Building using template "new" will succeed the integration tests`() {
-        projectFilesGenerator.generateNew(tempDir, "com.hello", "world")
-        assertTrue(executeTests(tempDir))
-    }
-
-    @Test
-    @Disabled // Not Implemented Yet.
-    fun `Building using template "new" and "scaffold" will succeed the integration tests`() {
-        projectFilesGenerator.generateNew(tempDir, "com.hello", "world")
-        projectFilesGenerator.generateScaffold(tempDir, "Customer", listOf(
-                FieldDeclaration("name", FieldDeclaration.FieldType.STRING),
-                FieldDeclaration("date_of_birth", FieldDeclaration.FieldType.DATE),
-                FieldDeclaration("number_of_dogs", FieldDeclaration.FieldType.INT),
-                FieldDeclaration("bed_time", FieldDeclaration.FieldType.DATE_TIME)
-        ))
-
+        commandLineInterface.interpret(tempDir, listOf("new", "com.hello", "world"))
         assertTrue(executeTests(tempDir))
     }
 

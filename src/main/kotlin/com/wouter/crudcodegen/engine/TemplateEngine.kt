@@ -1,22 +1,24 @@
-package com.wouter.crudcodegen.generator.engine
+package com.wouter.crudcodegen.engine
 
-import com.wouter.crudcodegen.generator.io.FileManager
 import org.springframework.stereotype.Service
 import java.io.File
 
 @Service
 class TemplateEngine(
         private val fileManager: FileManager,
-        private val templateSolidifier: TemplateSolidifier,
-        private val fileNameTemplateSolidifier: FileNameTemplateSolidifier
+        private val templateSolidifier: TemplateSolidifier
 ) {
-    fun generate(targetRoot: File, templateName: String, memoryFields: List<MemoryField>) {
+    fun generate(
+            targetRoot: File,
+            templateName: String,
+            variables: List<Variable>
+    ) {
         val files = fileManager.listTemplateFilesRecursively(templateName)
         files.forEach { templateFilePath ->
-            val generatedFilename = fileNameTemplateSolidifier.generate(templateFilePath, memoryFields)
+            val generatedFilename = templateSolidifier.solidifyFilename(templateFilePath, variables)
             if (isTemplateFileName(generatedFilename)) {
                 val template = fileManager.readTemplate(templateName, templateFilePath)
-                val generatedContent = templateSolidifier.generate(template, memoryFields)
+                val generatedContent = templateSolidifier.solidifyTemplate(template, variables)
                 val targetFileName = removeTemplateSuffix(generatedFilename)
 
                 fileManager.writeTargetFileContent(targetRoot, targetFileName, generatedContent)
