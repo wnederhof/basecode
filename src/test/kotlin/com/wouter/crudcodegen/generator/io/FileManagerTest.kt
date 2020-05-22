@@ -1,0 +1,129 @@
+package com.wouter.crudcodegen.generator.io
+
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.*
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import java.io.File
+import java.io.IOException
+
+@SpringBootTest
+internal class FileManagerTest {
+    @Autowired
+    private lateinit var fileManager: FileManager
+
+    // We mainly test on the "new" template, as it is the least likely template
+    // to change structurally.
+
+    @Test
+    fun `There is a "new" template, but not a "new" file`() {
+        assertThat(fileManager.listTemplateDirectories(),
+                hasItem("new"))
+
+        assertThat(fileManager.listTemplateFiles(),
+                not(hasItem("new")))
+    }
+
+    @Test
+    fun `The init template has a pom file`() {
+        assertThat(fileManager.listTemplateDirectories("new"),
+                not(hasItem("pom.xml.hbs")))
+
+        assertThat(fileManager.listTemplateFiles("new"),
+                hasItem("pom.xml.hbs"))
+    }
+
+    @Test
+    fun `The contents of the "new" template pom file contains a group id`() {
+        assertThat(fileManager.readTemplate("new", "pom.xml.hbs"),
+                containsString("<groupId>"))
+    }
+
+    @Test
+    fun `Temp files and directories can be written directly`() {
+        assertThat(fileManager.readTemplate("new", "pom.xml.hbs"),
+                containsString("<groupId>"))
+    }
+
+    @Test
+    fun `All files are listed in a template using templateFileTree`() {
+        assertThat(fileManager.listTemplateFilesRecursively("new"), hasItems(
+                "pom.xml.hbs",
+                "src/main/java/com/[groupId]/[artifactId]/Application.kt.hbs"
+        ))
+
+        assertThat(fileManager.listTemplateFilesRecursively("new"), not(hasItems(
+                "src/main/java/com/[groupId]/[artifactId]"
+        )))
+    }
+
+    @Test
+    fun `Directories can be written even if the target directory does not exist`() {
+        val tempDir = createTempDir("crudcodegen_")
+        try {
+            fileManager.createTargetDirectory(tempDir, "a/b/c")
+
+            assertThat(File(tempDir.path + "/a/b/c").exists(), equalTo(true))
+            assertThat(File(tempDir.path + "/a/b/d").exists(), equalTo(false))
+            assertThat(File(tempDir.path + "/a/b/c").isDirectory(), equalTo(true))
+        } finally {
+            tempDir.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun `Files can be written even if the target directory does not exist`() {
+        val tempDir = createTempDir("crudcodegen_")
+        try {
+            fileManager.writeTargetFileContent(tempDir, "a/b/c", "test")
+
+            assertThat(File(tempDir.path + "/a/b/c").exists(), equalTo(true))
+            assertThat(File(tempDir.path + "/a/b/d").exists(), equalTo(false))
+            assertThat(File(tempDir.path + "/a/b/d").isDirectory(), equalTo(false))
+            assertThat(File(tempDir.path + "/a/b/c").readText(), equalTo("test"))
+        } finally {
+            tempDir.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun `Directories can be written twice, content stays in place`() {
+        val tempDir = createTempDir("crudcodegen_")
+        try {
+            fileManager.writeTargetFileContent(tempDir, "a/b/c/d", "test")
+            fileManager.createTargetDirectory(tempDir, "a/b/c")
+
+            assertThat(File(tempDir.path + "/a/b/c/d").exists(), equalTo(true))
+        } finally {
+            tempDir.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun `Files can be copied, even when the target directory does not exist`() {
+        val tempDir = createTempDir("crudcodegen_")
+        try {
+            fileManager.copyFile(tempDir, "new", "pom.xml.hbs", "a/b/c/d")
+
+            assertThat(File(tempDir.path + "/a/b/c/d").exists(), equalTo(true))
+            assertThat(File(tempDir.path + "/a/b/c/d").readText(), containsString("<artifactId>"))
+        } finally {
+            tempDir.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun `Files cannot be overwritten`() {
+        val tempDir = createTempDir("crudcodegen_")
+        try {
+            fileManager.writeTargetFileContent(tempDir, "a/b/c", "test")
+            assertThrows<IOException> {
+                fileManager.writeTargetFileContent(tempDir, "a/b/c", "test")
+            }
+        } finally {
+            tempDir.deleteRecursively()
+        }
+    }
+}
