@@ -1,0 +1,4 @@
+CREATE TABLE {{ name }} (
+    id INT PRIMARY KEY{{#each fields}},
+    {{ _name }} {{ dbType }}{{/each}}
+);

@@ -52,12 +52,12 @@ internal class FileManagerTest {
         assertThat(fileManager.listTemplateFilesRecursively("new"),
                 hasItems(
                         "pom.xml.hbs",
-                        "src/main/java/com/[groupId]/[artifactId]/Application.kt.hbs"
+                        "src/main/kotlin/[groupId]/[artifactId]/Application.kt.hbs"
                 )
         )
 
         assertThat(fileManager.listTemplateFilesRecursively("new"),
-                not(hasItems("src/main/java/com/[groupId]/[artifactId]")))
+                not(hasItems("src/main/kotlin/[groupId]/[artifactId]")))
     }
 
     @Test
@@ -145,6 +145,19 @@ internal class FileManagerTest {
             assertThrows<IOException> {
                 fileManager.writeTargetFileContent(tempDir, "a/b/c", "test")
             }
+        } finally {
+            tempDir.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun `Files can be read and overwritten iff overwrite is true`() {
+        val tempDir = createTempDir("crudcodegen_")
+        try {
+            assertThat(fileManager.readTargetFile(tempDir, "a/b/c"), nullValue())
+            fileManager.writeTargetFileContent(tempDir, "a/b/c", "test")
+            fileManager.writeTargetFileContent(tempDir, "a/b/c", "test 2", true)
+            assertThat(fileManager.readTargetFile(tempDir, "a/b/c"), equalTo("test 2"))
         } finally {
             tempDir.deleteRecursively()
         }

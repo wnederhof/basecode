@@ -71,6 +71,6 @@ internal class ProjectPropertiesManagerTest {
             artifactId: "test"
         """.trimIndent()
 
-        verify(fileManager).writeTargetFileContent(contextPath, PROPERTIES_FILE_NAME, "$expectedPropsFile\n")
+        verify(fileManager).writeTargetFileContent(contextPath, PROPERTIES_FILE_NAME, "$expectedPropsFile\n", true)
     }
 }

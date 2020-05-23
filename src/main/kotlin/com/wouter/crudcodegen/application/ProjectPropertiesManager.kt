@@ -20,7 +20,7 @@ class ProjectPropertiesManager(private val fileManager: FileManager) {
 
     fun writeProperties(contextPath: File, properties: ProjectProperties) {
         fileManager.writeTargetFileContent(contextPath, PROPERTIES_FILE_NAME,
-                yamlObjectMapper.writeValueAsString(properties))
+                yamlObjectMapper.writeValueAsString(properties), true)
     }
 
     companion object {

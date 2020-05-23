@@ -6,6 +6,7 @@ import com.wouter.crudcodegen.generators.GeneratorSettings
 import com.wouter.crudcodegen.generators.ProjectProperties
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
+import java.io.File
 
 @Component
 @Order(1)
@@ -21,8 +22,8 @@ class NewProjectGenerator : Generator {
 
     override fun templateName() = "new"
 
-    override fun initializeGenerator(properties: ProjectProperties, args: List<String>): GeneratorSettings {
-        val (artifactId, groupId) = args
+    override fun initializeGenerator(targetPath: File, properties: ProjectProperties, args: List<String>): GeneratorSettings {
+        val (groupId, artifactId) = args
 
         return GeneratorSettings(
                 updatedProperties = properties.copy(artifactId = artifactId, groupId = groupId),

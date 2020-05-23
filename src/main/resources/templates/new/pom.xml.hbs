@@ -8,11 +8,10 @@
         <version>2.2.7.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>com.{{ groupId }}</groupId>
+    <groupId>{{ groupId }}</groupId>
     <artifactId>{{ artifactId }}</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>website</name>
-    <description>Demo project for Spring Boot</description>
+    <name>{{ artifactId }}</name>
 
     <properties>
         <java.version>11</java.version>
@@ -77,6 +76,8 @@
     </dependencies>
 
     <build>
+        <sourceDirectory>${project.basedir}/src/main/kotlin</sourceDirectory>
+        <testSourceDirectory>${project.basedir}/src/test/kotlin</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

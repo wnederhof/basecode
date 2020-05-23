@@ -16,7 +16,7 @@ class GeneratorExecutor(
                 ?: return false
 
         val properties = projectPropertiesManager.readProperties(contextPath)
-        val generatorSettings = generator.initializeGenerator(properties, args)
+        val generatorSettings = generator.initializeGenerator(contextPath, properties, args)
 
         templateEngine.generate(contextPath, generator.templateName(), generatorSettings.variables)
         projectPropertiesManager.writeProperties(contextPath, generatorSettings.updatedProperties)

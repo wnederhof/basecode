@@ -1,16 +1,17 @@
-package com.wouter.crudcodegen.application
+package com.wouter.crudcodegen
 
+import com.wouter.crudcodegen.application.CommandLineInterface
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.io.File
 
 @SpringBootTest
-internal class ProjectIntegrationTest {
+internal class ScenariosIntegrationTest {
     @Autowired
     private lateinit var commandLineInterface: CommandLineInterface
 
@@ -27,9 +28,14 @@ internal class ProjectIntegrationTest {
     }
 
     @Test
-    fun `Building using template "new" will succeed the integration tests`() {
-        commandLineInterface.interpret(tempDir, listOf("new", "com.hello", "world"))
-        assertTrue(executeTests(tempDir))
+    fun `User creates a simple blog with a post`() {
+        generate("new", "com.blogcorp", "blog")
+        generate("entity", "Post", "title:string", "description:string")
+        assertThat(executeTests(tempDir), equalTo(true))
+    }
+
+    private fun generate(vararg args: String) {
+        commandLineInterface.interpret(tempDir, args.toList())
     }
 
     private fun executeTests(tempDir: File): Boolean {

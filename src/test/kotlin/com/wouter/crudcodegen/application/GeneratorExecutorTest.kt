@@ -62,7 +62,7 @@ class GeneratorExecutorTest {
         whenever(projectPropertiesManager.readProperties(someRootPathFile))
                 .thenReturn(someProperties)
 
-        whenever(someGenerator.initializeGenerator(someProperties, someArgs))
+        whenever(someGenerator.initializeGenerator(someRootPathFile, someProperties, someArgs))
                 .thenReturn(GeneratorSettings(someUpdatedProperties, someVariables))
 
         val actual = generatorExecutor.execute(someRootPathFile, "some-gen", someArgs)

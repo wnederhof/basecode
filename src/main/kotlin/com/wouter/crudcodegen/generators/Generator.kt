@@ -1,5 +1,7 @@
 package com.wouter.crudcodegen.generators
 
+import java.io.File
+
 interface Generator {
     fun getSyntax(): String
 
@@ -9,5 +11,5 @@ interface Generator {
 
     fun templateName(): String
 
-    fun initializeGenerator(properties: ProjectProperties, args: List<String>): GeneratorSettings
+    fun initializeGenerator(targetPath: File, properties: ProjectProperties, args: List<String>): GeneratorSettings
 }

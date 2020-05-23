@@ -1,0 +1,14 @@
+package {{ groupId }}.{{ artifactId }}.{{ names }}
+
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.GenerationType
+import javax.persistence.Id
+
+@Entity
+data class {{ Name }}(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    val id: Int? = null{{#each fields }},
+    val {{ name }}: {{ kotlinType }}{{/each}}
+)

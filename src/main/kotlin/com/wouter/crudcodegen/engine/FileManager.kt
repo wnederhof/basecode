@@ -48,8 +48,8 @@ class FileManager(private val resourceLoader: ResourceLoader) {
                 .copyTo(File("${root.path}/$targetPath"))
     }
 
-    fun writeTargetFileContent(root: File, path: String, content: String) {
-        if (File(root.path + "/$path").exists()) {
+    fun writeTargetFileContent(root: File, path: String, content: String, overwrite: Boolean = false) {
+        if (!overwrite && File(root.path + "/$path").exists()) {
             throw IOException("File already exists: $path")
         }
         val directories = path.split("/").dropLast(1).joinToString("/")
@@ -57,7 +57,6 @@ class FileManager(private val resourceLoader: ResourceLoader) {
         File("${root.path }/$path").writeText(content)
     }
 
-    // TODO add tests
     fun readTargetFile(root: File, path: String): String? {
         if (!File(root.path + "/$path").exists()) {
             return null
