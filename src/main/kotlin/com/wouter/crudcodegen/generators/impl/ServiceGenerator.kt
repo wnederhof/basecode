@@ -11,19 +11,19 @@ import java.io.File
 import java.lang.RuntimeException
 
 @Component
-@Order(2)
-class EntityProjectGenerator(
+@Order(3)
+class ServiceGenerator(
         private val nameHelper: NameHelper
 ) : Generator {
     override fun getSyntax() =
-            "entity <name> (<name>:<type>)+"
+            "service <name> (<name>:<type>)+"
 
     override fun getSyntaxDescription() =
             "Generates a new Entity and Migration script. Available types: string, int."
 
-    override fun acceptsGeneratorName(name: String) = name == "entity"
+    override fun acceptsGeneratorName(name: String) = name == "service"
 
-    override fun templateName() = "entity"
+    override fun templateName() = "service"
 
     override fun initializeGenerator(targetPath: File, properties: ProjectProperties, args: List<String>): GeneratorSettings {
         val name = args.first()
@@ -52,9 +52,7 @@ class EntityProjectGenerator(
                             it.split(":").let {
                                 Field(
                                         name = nameHelper.toLowerCamelCase(it[0]),
-                                        _name = nameHelper.toDuckName(it[0]),
-                                        dbType = determineDatabaseType(it[1]),
-                                        kotlinType = determineKotlinType(it[1]),
+                                        someTestValue = determineSomeTestValue(nameHelper.toUpperCamelCase(it[0]), it[1]),
                                         kotlinAnnotations = determineKotlinAnnotations(it[1])
                                 )
                             }
@@ -84,16 +82,16 @@ class EntityProjectGenerator(
         return Integer.parseInt(s.replace(Regex("(\\d+).+"), "\$1"))
     }
 
-    private fun determineDatabaseType(type: String): String {
+    private fun determineSomeTestValue(name: String, type: String): String {
         return when (type) {
             "string" ->
-                "VARCHAR(255) NOT NULL"
+                "\"Some $name\""
             "text" ->
-                "TEXT NOT NULL"
+                "\"Some $name\""
             "string?" ->
-                "VARCHAR(255)"
+                "\"Some $name\""
             "text?" ->
-                "TEXT"
+                "\"Some $name\""
             else ->
                 throw RuntimeException("Unable to determine type $type.")
         }
@@ -131,9 +129,7 @@ class EntityProjectGenerator(
 
     data class Field(
             val name: String,
-            val _name: String,
-            val dbType: String,
-            val kotlinType: String,
+            val someTestValue: String,
             val kotlinAnnotations: String?
     )
 }

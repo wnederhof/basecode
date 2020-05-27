@@ -1,7 +1,7 @@
 # CrudCodeGen
-CrudCodeGen is a tool for generating and managing the basic skeleton of a web application using Kotlin, Spring Boot and NextJS.
+CrudCodeGen is designed to automate the repetitive job of writing boilerplate code for many common tasks when creating a web application in Kotlin and Spring Boot.
 
-CrudCodeGen was created to automate the repetitive job of writing boilerplate code for common tasks when creating a web application.
+CrudCodeGen is a tool for generating and managing the basic skeleton of a web application using Kotlin, Spring Boot and zero or more frontends.
 
 Example Usage:
 ```
@@ -31,7 +31,6 @@ ccg frontend Comment
 `curl ... | sh`
 
 # Design Principles
-CrudCodeGen is designed with good practies in mind. Many of these practices are common, while others are less common.
 
 ## Productive
 CrudCodeGen should be the go-to tool for quickly setting up a prototype, but also your go-to tool for building large web applications.
@@ -57,6 +56,7 @@ Furthermore, whenever a service is generated, we also generate events. Using eve
 For instance, when a comment depends on a blog post, and the blog post is removed, it is common to just call the comment repository from the blog service to remove the related comments (if there is no delete-cascading strategy in place). However, in this case, comments depend on blog posts, and through this logic, blog posts also depend on comments. By utilizing events, we can just listen to a `PostAwaitingDeletionEvent`, which is triggered when a blog post is deleted, from within the comment package, and remove the comment from over there. If we would want to remove the comments at some point, we can then simply just remove the entire comments folder, without breaking the application.
 
 ## Design Decisions
+### GraphQL for Frontend
 While CrudCodeGen is able to generate REST interfaces and show them using Swagger, the preferred way is using GraphQL, because it allows for much better decoupling between the frontend and the backend.
 
 # Documentation, Videos, etc.
@@ -66,5 +66,5 @@ Find out more about this project in this YouTube video of the original author, W
 Licensed under MIT.
 
 # Credits
-- The `new` template is mostly a "templified" version of the template generated using Spring Initializr.
+- The `new` template is derived from the template generated using Spring Boot Initializr.
 - The `frontend` template is mostly based on NextJS templates.

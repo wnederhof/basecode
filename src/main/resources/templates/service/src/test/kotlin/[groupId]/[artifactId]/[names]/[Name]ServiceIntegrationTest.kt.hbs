@@ -1,0 +1,28 @@
+package {{ groupId }}.{{ artifactId }}.{{ names }}
+
+import {{ groupId }}.{{ artifactId }}.IntegrationTestContext
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+
+class {{ Name }}ServiceIntegrationTest : IntegrationTestContext() {
+    @Autowired
+    private lateinit var {{ name }}Service: {{ Name }}Service
+
+    @Test
+    fun `{{ Names }} can be saved, retrieved and deleted`() {
+        val {{ name }} = {{ name }}Service.save(SOME_{{ NAME }})
+        assertThat({{ name }}Service.findById({{ name }}.id!!), equalTo({{ name }}))
+
+        {{ name }}Service.deleteById({{ name }}.id!!)
+        assertThat({{ name }}Service.findAll(), equalTo(emptyList()))
+    }
+
+    private companion object {
+        val SOME_{{ NAME }} = {{ Name }}(
+            id = null{{#each fields}},
+            {{ name }} = {{{ someTestValue }}}{{/each}}
+        )
+    }
+}

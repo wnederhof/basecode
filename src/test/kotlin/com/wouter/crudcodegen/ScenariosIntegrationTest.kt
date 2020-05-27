@@ -31,11 +31,14 @@ internal class ScenariosIntegrationTest {
     fun `User creates a simple blog with a post`() {
         generate("new", "com.blogcorp", "blog")
         generate("entity", "Post", "title:string", "description:string")
+        generate("service", "Post", "title:string", "description:string")
         assertThat(executeTests(tempDir), equalTo(true))
     }
 
     private fun generate(vararg args: String) {
-        commandLineInterface.interpret(tempDir, args.toList())
+        if (!commandLineInterface.interpret(tempDir, args.toList())) {
+            throw RuntimeException("Interpreter failed.")
+        }
     }
 
     private fun executeTests(tempDir: File): Boolean {

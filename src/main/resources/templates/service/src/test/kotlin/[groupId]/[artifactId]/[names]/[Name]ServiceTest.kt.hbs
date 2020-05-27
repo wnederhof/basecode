@@ -1,0 +1,129 @@
+package {{ groupId }}.{{ artifactId }}.{{ names }}
+
+import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Event.{{ Name }}AwaitingDeletionEvent
+import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Event.{{ Name }}CreatedEvent
+import com.nhaarman.mockitokotlin2.times
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import org.hamcrest.CoreMatchers.equalTo
+import org.hamcrest.CoreMatchers.nullValue
+import org.hamcrest.MatcherAssert.assertThat
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.context.ApplicationEventPublisher
+import java.util.*
+
+@ExtendWith(MockitoExtension::class)
+internal class {{ Name }}ServiceTest {
+    @Mock
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
+
+    @Mock
+    private lateinit var {{ name }}Repository: {{ Name }}Repository
+
+    @InjectMocks
+    private lateinit var {{ name }}Service: {{ Name }}Service
+
+    @Test
+    fun `findAll delegates call to findAll`() {
+        whenever({{ name }}Repository.findAll())
+                .thenReturn(listOf(SOME_{{ NAME }}))
+
+        val actual = {{ name }}Service.findAll()
+
+        assertThat(actual, equalTo(listOf(SOME_{{ NAME }})))
+    }
+
+    @Test
+    fun `findById delegates call to findById, returns value if exists`() {
+        whenever({{ name }}Repository.findById(SOME_{{ NAME }}_ID))
+                .thenReturn(Optional.of(SOME_{{ NAME }}))
+
+        val actual = {{ name }}Service.findById(SOME_{{ NAME }}_ID)
+
+        assertThat(actual, equalTo(SOME_{{ NAME }}))
+    }
+
+    @Test
+    fun `findById delegates call to findById, returns null if not exist`() {
+        whenever({{ name }}Repository.findById(SOME_{{ NAME }}_ID))
+                .thenReturn(Optional.empty())
+
+        val actual = {{ name }}Service.findById(SOME_{{ NAME }}_ID)
+
+        assertThat(actual, nullValue())
+    }
+
+    @Test
+    fun `save throws Exception if id is set but entity cannot be found`() {
+        whenever({{ name }}Repository.findById(SOME_{{ NAME }}_ID))
+                .thenReturn(Optional.empty())
+
+        assertThrows<IllegalStateException> {
+            {{ name }}Service.save(SOME_{{ NAME }}_WITH_ID)
+        }
+
+        verify(applicationEventPublisher, times(0))
+                .publishEvent({{ Name }}Event.{{ Name }}UpdatedEvent({{ name }}Service, SOME_{{ NAME }}_WITH_ID))
+    }
+
+    @Test
+    fun `save updates entity if no id is set`() {
+        whenever({{ name }}Repository.findById(SOME_{{ NAME }}_ID))
+                .thenReturn(Optional.of(SOME_{{ NAME }}_WITH_ID))
+
+        whenever({{ name }}Repository.save(SOME_{{ NAME }}_WITH_ID))
+                .thenReturn(SOME_{{ NAME }}_WITH_ID)
+
+        val actual = {{ name }}Service.save(SOME_{{ NAME }}_WITH_ID)
+
+        assertThat(actual, equalTo(SOME_{{ NAME }}_WITH_ID))
+
+        verify(applicationEventPublisher)
+                .publishEvent({{ Name }}Event.{{ Name }}UpdatedEvent({{ name }}Service, SOME_{{ NAME }}_WITH_ID))
+    }
+
+    @Test
+    fun `save saves entity if no id is set`() {
+        whenever({{ name }}Repository.save(SOME_{{ NAME }}))
+                .thenReturn(SOME_{{ NAME }}_WITH_ID)
+
+        val actual = {{ name }}Service.save(SOME_{{ NAME }})
+
+        assertThat(actual, equalTo(SOME_{{ NAME }}_WITH_ID))
+
+        verify(applicationEventPublisher)
+                .publishEvent({{ Name }}CreatedEvent({{ name }}Service, SOME_{{ NAME }}_WITH_ID))
+    }
+
+    @Test
+    fun `deleteById delegates call to deleteById`() {
+        whenever({{ name }}Repository.findById(SOME_{{ NAME }}_ID))
+                .thenReturn(Optional.of(SOME_{{ NAME }}))
+
+        {{ name }}Service.deleteById(1)
+
+        verify(applicationEventPublisher)
+                .publishEvent({{ Name }}AwaitingDeletionEvent({{ name }}Service, 1))
+
+        verify({{ name }}Repository).deleteById(1)
+
+        verify(applicationEventPublisher)
+                .publishEvent({{ Name }}AwaitingDeletionEvent({{ name }}Service, 1))
+    }
+
+    private companion object {
+        val SOME_{{ NAME }} = {{ Name }}(
+            id = null{{#each fields}},
+            {{ name }} = {{{ someTestValue }}}{{/each}}
+        )
+
+        const val SOME_{{ NAME }}_ID = 1
+
+        val SOME_{{ NAME }}_WITH_ID = SOME_{{ NAME }}.copy(id = SOME_{{ NAME }}_ID)
+    }
+}

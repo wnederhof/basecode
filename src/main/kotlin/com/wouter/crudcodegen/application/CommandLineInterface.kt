@@ -9,18 +9,19 @@ class CommandLineInterface(
         private val generatorExecutor: GeneratorExecutor,
         private val generators: List<Generator>
 ) {
-    fun interpret(currentPath: File, args: List<String>) {
+    fun interpret(currentPath: File, args: List<String>): Boolean {
         showAbout()
         if (args.isEmpty()) {
             showSyntax()
-            return
+            return false
         }
 
         if (!generatorExecutor.execute(currentPath, args[0], args.drop(1))) {
             showSyntax()
             println("No generator accepts the \"${args[0]}\" command.")
-            return
+            return false
         }
+        return true
     }
 
     private fun showAbout() {

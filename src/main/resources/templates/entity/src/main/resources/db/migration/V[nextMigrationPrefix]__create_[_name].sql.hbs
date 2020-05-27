@@ -1,4 +1,6 @@
-CREATE TABLE {{ name }} (
-    id INT PRIMARY KEY{{#each fields}},
-    {{ _name }} {{ dbType }}{{/each}}
+CREATE TABLE {{ _names }} (
+    id SERIAL{{#each fields}},
+    {{ _name }} {{ dbType }}{{/each}},
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP
 );
