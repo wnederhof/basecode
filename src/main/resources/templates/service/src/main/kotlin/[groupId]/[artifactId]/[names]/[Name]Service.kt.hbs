@@ -4,7 +4,7 @@ import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Event.*
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import javax.transaction.Transactional
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional

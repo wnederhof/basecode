@@ -2,4 +2,8 @@ package {{ groupId }}.{{ artifactId }}.{{ names }}
 
 import org.springframework.data.repository.CrudRepository
 
-interface {{ Name }}Repository: CrudRepository<{{ Name }}, Int>
+interface {{ Name }}Repository: CrudRepository<{{ Name }}, Int> {
+    {{#each fields as |f|}}
+        {{#if f.relation}}fun findBy{{ f.Name }}(): List<{{ Name }}>{{/if}}
+    {{/each}}
+}
