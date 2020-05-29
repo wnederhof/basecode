@@ -12,8 +12,8 @@ class {{ Name }}Service(
         private val {{ name }}Repository: {{ Name }}Repository,
         private val applicationEventPublisher: ApplicationEventPublisher
 ) {
-    fun findAll(): List<{{ Name }}> {
-        return {{ name }}Repository.findAll().toList()
+    fun findAll(): Iterable<{{ Name }}> {
+        return {{ name }}Repository.findAll()
     }
 
     fun findById(id: Int): {{ Name }}? {
@@ -21,35 +21,15 @@ class {{ Name }}Service(
     }
 
     fun save({{ name }}: {{ Name }}): {{ Name }} {
-        if ({{ name }}.id == null) {
-            return create({{ name }})
-        }
-        return update({{ name }})
-    }
-
-    private fun create({{ name }}: {{ Name }}): {{ Name }} {
+        applicationEventPublisher.publishEvent(Before{{ Name }}SavedEvent(this, {{ name }}))
         val saved{{ Name }} = {{ name }}Repository.save({{ name }})
-        applicationEventPublisher.publishEvent({{ Name }}CreatedEvent(this, saved{{ Name }}))
-        return saved{{ Name }}
-    }
-
-    private fun update({{ name }}: {{ Name }}): {{ Name }} {
-        if ({{ name }}Repository.findById({{ name }}.id!!).isEmpty) {
-            error("{{ Name }} ${ {{ name }}.id } does not exist.")
-        }
-
-        val saved{{ Name }} = {{ name }}Repository.save({{ name }})
-        applicationEventPublisher.publishEvent({{ Name }}UpdatedEvent(this, saved{{ Name }}))
+        applicationEventPublisher.publishEvent(After{{ Name }}SavedEvent(this, saved{{ Name }}))
         return saved{{ Name }}
     }
 
     fun deleteById(id: Int) {
-        if ({{ name }}Repository.findById(id).isEmpty) {
-            error("{{ Name }} ${id} does not exist.")
-        }
-
-        applicationEventPublisher.publishEvent({{ Name }}AwaitingDeletionEvent(this, id))
+        applicationEventPublisher.publishEvent(Before{{ Name }}DeletedEvent(this, id))
         {{ name }}Repository.deleteById(id)
-        applicationEventPublisher.publishEvent({{ Name }}DeletedEvent(this, id))
+        applicationEventPublisher.publishEvent(After{{ Name }}DeletedEvent(this, id))
     }
 }

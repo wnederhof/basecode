@@ -3,11 +3,11 @@ package {{ groupId }}.{{ artifactId }}.{{ names }}
 import org.springframework.context.ApplicationEvent
 
 sealed class {{ Name }}Event(source: Any): ApplicationEvent(source) {
-    data class {{ Name }}UpdatedEvent(private val _source: Any, val entity: {{ Name }}): {{ Name }}Event(_source)
+    data class Before{{ Name }}SavedEvent(private val _source: Any, val entity: {{ Name }}) : {{ Name }}Event(_source)
 
-    data class {{ Name }}CreatedEvent(private val _source: Any, val entity: {{ Name }}): {{ Name }}Event(_source)
+    data class After{{ Name }}SavedEvent(private val _source: Any, val entity: {{ Name }}) : {{ Name }}Event(_source)
 
-    data class {{ Name }}AwaitingDeletionEvent(private val _source: Any, val id: Int): {{ Name }}Event(_source)
+    data class Before{{ Name }}DeletedEvent(private val _source: Any, val id: Int) : {{ Name }}Event(_source)
 
-    data class {{ Name }}DeletedEvent(private val _source: Any, val id: Int): {{ Name }}Event(_source)
+    data class After{{ Name }}DeletedEvent(private val _source: Any, val id: Int) : {{ Name }}Event(_source)
 }

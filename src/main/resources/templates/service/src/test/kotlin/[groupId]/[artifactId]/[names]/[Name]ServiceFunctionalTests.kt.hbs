@@ -1,0 +1,58 @@
+package {{ groupId }}.{{ artifactId }}.{{ names }}
+
+import {{ groupId }}.{{ artifactId }}.IntegrationTestContext
+import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+
+class {{ Name }}ServiceFunctionalTests : IntegrationTestContext() {
+    @Autowired
+    private lateinit var {{ name }}Repository: {{ Name }}Repository
+
+    @Autowired
+    private lateinit var {{ name }}Service: {{ Name }}Service
+
+    private lateinit var {{ name }}Fixture: {{ Name }}
+
+    @BeforeEach
+    fun setup() {
+        {{ name }}Fixture = {{ name }}Repository.save({{ NAME }}_FIXTURE_1)
+    }
+
+    @Test
+    fun `Multiple {{ names }} can be fetched at once`() {
+        val {{ names }} = {{ name }}Service.findAll()
+
+        assertThat({{ names }}).hasSize(1)
+    }
+
+    @Test
+    fun `Saving an entity does not change the original`() {
+        val unsaved{{ Name }} = {{ NAME }}_FIXTURE_1
+        val copyOf{{ Name }} = unsaved{{ Name }}.copy()
+
+        val saved{{ Name }} = {{ name }}Service.save(unsaved{{ Name }})
+
+        assertThat(unsaved{{ Name }}).isEqualTo(copyOf{{ Name }})
+        assertThat(saved{{ Name }}).isNotEqualTo({{ NAME }}_FIXTURE_1)
+    }
+
+    @Test
+    fun `Retrieving non-existing {{ names }} yield null`() {
+        assertThat({{ name }}Service.findById(0)).isNull()
+    }
+
+    @Test
+    fun `{{ Names }} can be retrieved by id`() {
+        assertThat({{ name }}Service.findById({{ name }}Fixture.id!!)).isNotNull
+    }
+
+    @Test
+    fun `{{ Names }} can be deleted`() {
+        {{ name }}Service.deleteById({{ name }}Fixture.id!!)
+
+        assertThat({{ name }}Repository.findAll()).isEmpty()
+    }
+}

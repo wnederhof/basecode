@@ -6,11 +6,11 @@ import java.time.LocalDateTime
 
 @Table("{{ names }}")
 data class {{ Name }}(
-    @Id
-    val id: Int? = null{{#each fields }},
-    val {{ name }}: {{ kotlinType }}{{/each}},
-    @CreatedDate
-    val createdAt: LocalDateTime? = null,
-    @LastModifiedDate
-    val updatedAt: LocalDateTime? = null
+        @Id
+        val id: Int? = null{{#each fields }},
+        val {{ name }}: {{ kotlinType }}{{/each}},
+        @CreatedDate
+        val createdAt: LocalDateTime? = null,
+        @LastModifiedDate
+        val updatedAt: LocalDateTime? = null
 )

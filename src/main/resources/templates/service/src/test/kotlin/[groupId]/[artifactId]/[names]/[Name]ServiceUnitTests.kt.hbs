@@ -1,0 +1,134 @@
+package {{ groupId }}.{{ artifactId }}.{{ names }}
+
+import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1
+import com.nhaarman.mockitokotlin2.inOrder
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.context.ApplicationEventPublisher
+import java.util.*
+
+@ExtendWith(MockitoExtension::class)
+internal class {{ Name }}ServiceUnitTests {
+    @Mock
+    private lateinit var applicationEventPublisher: ApplicationEventPublisher
+
+    @Mock
+    private lateinit var {{ name }}Repository: {{ Name }}Repository
+
+    @InjectMocks
+    private lateinit var {{ name }}Service: {{ Name }}Service
+
+    @Test
+    fun `findAll retrieves all {{ names }} in repository`() {
+        whenever({{ name }}Repository.findAll())
+                .thenReturn(listOf({{ NAME }}_FIXTURE_1))
+
+        val actual = {{ name }}Service.findAll()
+
+        assertThat(actual).containsExactly({{ NAME }}_FIXTURE_1)
+    }
+
+    @Test
+    fun `findById returns the requested {{ name }} if it can be found`() {
+        whenever({{ name }}Repository.findById(1))
+                .thenReturn(Optional.of({{ NAME }}_FIXTURE_1))
+
+        val actual = {{ name }}Service.findById(1)
+
+        assertThat(actual).isEqualTo(actual)
+    }
+
+    @Test
+    fun `findById returns null if it cannot be found`() {
+        whenever({{ name }}Repository.findById(1))
+                .thenReturn(Optional.empty())
+
+        val actual = {{ name }}Service.findById(1)
+
+        assertThat(actual).isNull()
+    }
+
+    @Test
+    fun `save persists the provided {{ Name }} in the repository`() {
+        whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
+                .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
+
+        val actual = {{ name }}Service.save({{ NAME }}_FIXTURE_1)
+
+        assertThat(actual).isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
+    }
+
+    @Test
+    fun `save publishes Before{{ Name }}SavedEvent before saving`() {
+        whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
+                .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
+
+        val actual = {{ name }}Service.save({{ NAME }}_FIXTURE_1)
+
+        assertThat(actual)
+                .isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
+
+        val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
+
+        inOrder.verify(applicationEventPublisher)
+                .publishEvent({{ Name }}Event.Before{{ Name }}SavedEvent({{ name }}Service, {{ NAME }}_FIXTURE_1))
+        inOrder.verify({{ name }}Repository)
+                .save({{ NAME }}_FIXTURE_1)
+    }
+
+    @Test
+    fun `save publishes After{{ Name }}SavedEvent after saving`() {
+        whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
+                .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
+
+        val actual = {{ name }}Service.save({{ NAME }}_FIXTURE_1)
+
+        assertThat(actual)
+                .isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
+
+        val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
+
+        inOrder.verify({{ name }}Repository)
+                .save({{ NAME }}_FIXTURE_1)
+        inOrder.verify(applicationEventPublisher)
+                .publishEvent({{ Name }}Event.After{{ Name }}SavedEvent({{ name }}Service, {{ NAME }}_FIXTURE_WITH_ID_1))
+    }
+
+    @Test
+    fun `delete deletes the {{ Name }} identified by id in the repository`() {
+        {{ name }}Service.deleteById(1)
+
+        verify({{ name }}Repository).deleteById(1)
+    }
+
+    @Test
+    fun `delete publishes an Before{{ Name }}DeletedEvent before deletion`() {
+        {{ name }}Service.deleteById(1)
+
+        val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
+
+        inOrder.verify(applicationEventPublisher)
+                .publishEvent({{ Name }}Event.Before{{ Name }}DeletedEvent({{ name }}Service, 1))
+        inOrder.verify({{ name }}Repository)
+                .deleteById(1)
+    }
+
+    @Test
+    fun `delete publishes an After{{ Name }}DeletedEvent after deletion`() {
+        {{ name }}Service.deleteById(1)
+
+        val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
+
+        inOrder.verify({{ name }}Repository)
+                .deleteById(1)
+        inOrder.verify(applicationEventPublisher)
+                .publishEvent({{ Name }}Event.After{{ Name }}DeletedEvent({{ name }}Service, 1))
+    }
+}

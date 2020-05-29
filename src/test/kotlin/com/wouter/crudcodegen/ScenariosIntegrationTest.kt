@@ -32,8 +32,8 @@ internal class ScenariosIntegrationTest {
         generate("new", "com.blogcorp", "blog")
         generate("entity", "Post", "title:string", "description:string")
         generate("service", "Post", "title:string", "description:string")
-        generate("entity", "Comment", "post_id:Post", "comment:string")
-        generate("service", "Comment", "post_id:Post", "comment:string")
+        generate("entity", "Comment", "postId:Post", "comment:string")
+        generate("service", "Comment", "postId:Post", "comment:string")
         assertThat(executeTests(tempDir), equalTo(true))
     }
 
