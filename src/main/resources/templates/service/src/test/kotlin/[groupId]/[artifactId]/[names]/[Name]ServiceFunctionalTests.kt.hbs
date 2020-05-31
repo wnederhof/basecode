@@ -2,17 +2,24 @@ package {{ groupId }}.{{ artifactId }}.{{ names }}
 
 import {{ groupId }}.{{ artifactId }}.IntegrationTestContext
 import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
+{{#each fields as |f|}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service
+{{/if}}{{/each}}
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
 class {{ Name }}ServiceFunctionalTests : IntegrationTestContext() {
+
     @Autowired
     private lateinit var {{ name }}Repository: {{ Name }}Repository
 
     @Autowired
     private lateinit var {{ name }}Service: {{ Name }}Service
+{{#each fields as |f|}}{{#if fieldRelationship}}
+    @Autowired
+    private lateinit var {{ fieldType }}Service: {{ FieldType }}Service{{/if}}{{/each}}
 
     private lateinit var {{ name }}Fixture: {{ Name }}
 
@@ -55,4 +62,16 @@ class {{ Name }}ServiceFunctionalTests : IntegrationTestContext() {
 
         assertThat({{ name }}Repository.findAll()).isEmpty()
     }
+{{#each fields as |f|}}{{#if fieldRelationship}}
+    @Test
+    fun `Deleting a {{ fieldType }} causes its {{ names }} to be deleted as well`() {
+        val {{ fieldType }} = {{ fieldType }}Service.save({{ FIELD_TYPE }}_FIXTURE_1)
+        val {{ fieldName }} = {{ fieldType }}.id!!
+
+        commentService.save({{ NAME }}_FIXTURE_1.copy({{ fieldName }} = {{ fieldName }}))
+        postService.deleteById(postId)
+
+        assertThat(commentService.findBy{{ FieldName }}({{ fieldName }})).isEmpty()
+    }{{/if}}{{/each}}
+
 }

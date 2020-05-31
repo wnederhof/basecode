@@ -1,6 +1,6 @@
 CREATE TABLE {{ _names }} (
     id SERIAL{{#each fields}},
-    {{ _name }} {{ dbType }}{{/each}},
+    {{ field_name }} {{ FIELD_DATABASE_TYPE }}{{/each}},
     created_at TIMESTAMP,
     updated_at TIMESTAMP
 );

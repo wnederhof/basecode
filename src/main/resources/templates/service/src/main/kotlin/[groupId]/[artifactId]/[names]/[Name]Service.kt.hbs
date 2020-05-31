@@ -12,10 +12,20 @@ class {{ Name }}Service(
         private val {{ name }}Repository: {{ Name }}Repository,
         private val applicationEventPublisher: ApplicationEventPublisher
 ) {
+
     fun findAll(): Iterable<{{ Name }}> {
         return {{ name }}Repository.findAll()
     }
 
+{{#each fields as |f|}}{{#if fieldRelationship}}    fun findBy{{ FieldName }}({{ fieldName }}: Int): List<{{ Name }}> {
+        return {{ name }}Repository.findBy{{ FieldName }}({{ fieldName }})
+    }
+
+    fun deleteBy{{ FieldName }}({{ fieldName }}: Int) {
+        {{ name }}Repository.findBy{{ FieldName }}({{ fieldName }})
+                .forEach({{ name }}Repository::delete)
+    }
+{{/if}}{{/each}}
     fun findById(id: Int): {{ Name }}? {
         return {{ name }}Repository.findByIdOrNull(id)
     }
@@ -32,4 +42,5 @@ class {{ Name }}Service(
         {{ name }}Repository.deleteById(id)
         applicationEventPublisher.publishEvent(After{{ Name }}DeletedEvent(this, id))
     }
+
 }

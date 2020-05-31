@@ -16,6 +16,7 @@ import java.util.*
 
 @ExtendWith(MockitoExtension::class)
 internal class {{ Name }}ServiceUnitTests {
+
     @Mock
     private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
@@ -102,14 +103,14 @@ internal class {{ Name }}ServiceUnitTests {
     }
 
     @Test
-    fun `delete deletes the {{ Name }} identified by id in the repository`() {
+    fun `deleteById deletes the {{ Name }} identified by id in the repository`() {
         {{ name }}Service.deleteById(1)
 
         verify({{ name }}Repository).deleteById(1)
     }
 
     @Test
-    fun `delete publishes an Before{{ Name }}DeletedEvent before deletion`() {
+    fun `deleteById publishes an Before{{ Name }}DeletedEvent before deletion`() {
         {{ name }}Service.deleteById(1)
 
         val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
@@ -121,7 +122,7 @@ internal class {{ Name }}ServiceUnitTests {
     }
 
     @Test
-    fun `delete publishes an After{{ Name }}DeletedEvent after deletion`() {
+    fun `deleteById publishes an After{{ Name }}DeletedEvent after deletion`() {
         {{ name }}Service.deleteById(1)
 
         val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
@@ -131,4 +132,5 @@ internal class {{ Name }}ServiceUnitTests {
         inOrder.verify(applicationEventPublisher)
                 .publishEvent({{ Name }}Event.After{{ Name }}DeletedEvent({{ name }}Service, 1))
     }
+
 }

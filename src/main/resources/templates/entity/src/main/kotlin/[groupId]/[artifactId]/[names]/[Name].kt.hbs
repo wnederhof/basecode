@@ -8,9 +8,11 @@ import java.time.LocalDateTime
 data class {{ Name }}(
         @Id
         val id: Int? = null{{#each fields }},
-        val {{ name }}: {{ kotlinType }}{{/each}},
+        val {{ fieldName }}: {{ FieldKotlinType }}{{/each}},
+
         @CreatedDate
         val createdAt: LocalDateTime? = null,
+
         @LastModifiedDate
         val updatedAt: LocalDateTime? = null
 )

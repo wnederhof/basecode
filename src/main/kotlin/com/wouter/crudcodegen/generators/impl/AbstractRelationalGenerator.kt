@@ -34,14 +34,20 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                         Variable("NAMES", nameHelper.capitalize(nameHelper.pluralize(name))),
                         Variable("fields", fields.map {
                             it.split(":").let {
-                                Field(
-                                        name = nameHelper.toLowerCamelCase(it[0]),
-                                        _name = nameHelper.toDuckName(it[0]),
-                                        dbType = determineDatabaseType(it[1]),
-                                        kotlinType = determineKotlinType(it[1]),
-                                        kotlinAnnotations = determineKotlinAnnotations(it[1]),
-                                        someTestValue = determineSomeTestValue(nameHelper.toUpperCamelCase(it[0]), it[1]),
-                                        relationship = isRelationship(it[1])
+                                mapOf(
+                                        "field_name" to nameHelper.toDuckName(it[0]),
+                                        "FieldName" to nameHelper.toUpperCamelCase(it[0]),
+                                        "fieldName" to nameHelper.toLowerCamelCase(it[0]),
+                                        "FieldType" to nameHelper.toUpperCamelCase(it[1]),
+                                        "fieldTypes" to nameHelper.toLowerCamelCase(nameHelper.pluralize(it[1])),
+                                        "FIELD_TYPE" to nameHelper.toDuckName(it[1]).toUpperCase(),
+                                        "fieldType" to nameHelper.toLowerCamelCase(it[1]),
+                                        "field_types" to nameHelper.toLowerCamelCase(nameHelper.pluralize(it[1])),
+                                        "FIELD_DATABASE_TYPE" to determineDatabaseType(it[1]),
+                                        "FieldKotlinType" to determineKotlinType(it[1]),
+                                        "fieldKotlinAnnotations" to determineKotlinAnnotations(it[1]),
+                                        "fieldTestValue" to determineSomeTestValue(nameHelper.toUpperCamelCase(it[0]), it[1]),
+                                        "fieldRelationship" to isRelationship(it[1])
                                 )
                             }
                         }),
@@ -86,7 +92,7 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "text" -> "\"Some $name\""
             "string?" -> "\"Some $name\""
             "text?" -> "\"Some $name\""
-            else -> "1"
+            else -> "10"
         }
     }
 
@@ -122,6 +128,9 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
 
     data class Field(
             val name: String,
+            val uName: String,
+            val lName: String,
+            val unames: String,
             val _name: String,
             val dbType: String,
             val kotlinType: String,
