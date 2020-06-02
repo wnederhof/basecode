@@ -1,2 +1,8 @@
-spring.datasource.driver-class-name: org.postgresql.Driver
-spring.jpa.database-platform: org.hibernate.dialect.PostgreSQLDialect
+spring.datasource:
+  driver-class-name: org.postgresql.Driver
+  url: jdbc:postgresql://localhost:15432/postgres
+  driverClassName: org.postgresql.Driver
+  username: postgres
+  password: postgres
+
+graphql.servlet.websocket.enabled: false

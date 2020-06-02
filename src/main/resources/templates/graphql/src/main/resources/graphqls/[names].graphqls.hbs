@@ -1,0 +1,19 @@
+extend type Query {
+    find{{ Name }}ById(id: Int): {{ Name }}
+    findAll{{ Names }}: [{{ Name }}!]!
+}
+
+extend type Mutation {
+    save{{ Name }}(comment: {{ Name }}Input!): {{ Name }}!
+    delete{{ Name }}ById(id: ID!): Boolean
+}
+
+type {{ Name }} {
+    id: ID!{{#each fields }}
+    {{ fieldName }}: {{ FieldGraphQLType }}{{/each}}
+}
+
+input {{ Name }}Input {
+    id: ID{{#each fields }}
+    {{ fieldName }}: {{ FieldGraphQLType }}{{/each}}
+}

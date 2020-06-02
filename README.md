@@ -65,6 +65,14 @@ Find out more about this project in this YouTube video of the original author, W
 # License
 Licensed under MIT.
 
+# To Do
+- Finish GraphQL Integration tests
+- Decide: Maven vs GradleKT
+- Int and Other Types
+- Controllers
+- Frontend
+- Unit Tests for Scenarios
+
 # Credits
 - The `new` template is derived from the template generated using Spring Boot Initializr.
 - The `frontend` template is mostly based on NextJS templates.

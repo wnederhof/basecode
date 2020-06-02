@@ -1,0 +1,64 @@
+package {{ groupId }}.{{ artifactId }}.{{ names }}
+
+{{#each fields}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service{{/if}}{{/each}}
+import graphql.kickstart.tools.GraphQLMutationResolver
+import graphql.kickstart.tools.GraphQLQueryResolver
+import graphql.kickstart.tools.GraphQLResolver
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Component
+
+sealed class {{ Name }}GraphQLResolver {
+
+    @Autowired
+    protected lateinit var {{ name }}Service: {{ Name }}Service
+{{#each fields}}{{#if fieldRelationship}}
+    @Autowired
+    protected lateinit var {{ fieldType }}Service: {{ FieldType }}Service{{/if}}{{/each}}
+
+    @Component
+    class QueryResolver: GraphQLQueryResolver, {{ Name }}GraphQLResolver() {
+
+        fun find{{ Name }}ById(id: Int): {{ Name }}? {
+            return {{ name }}Service.findById(id)
+        }
+
+        fun findAll{{ Names }}(): Iterable<{{ Name }}> {
+            return {{ name }}Service.findAll()
+        }
+
+    }
+
+    @Component
+    class MutationResolver: GraphQLMutationResolver, {{ Name }}GraphQLResolver() {
+
+        fun save{{ Name }}({{ name }}: {{ Name }}): {{ Name }} {
+            return {{ name }}Service.save({{ name }})
+        }
+
+        fun delete{{ Name }}ById(id: Int) {
+            {{ name }}Service.deleteById(id)
+        }
+
+    }
+
+    @Component
+    class {{ Name }}Resolver(
+    ): GraphQLResolver<{{ Name }}>, {{ Name }}GraphQLResolver() {
+{{#each fields}}{{#if fieldRelationship}}
+        fun {{ fieldType }}({{ name }}: {{ Name }}): {{ FieldType }}? {
+            return {{ fieldType }}Service.findById({{ name }}.{{ fieldName }})
+        }{{/if}}{{/each}}
+
+    }
+{{#each fields}}{{#if fieldRelationship}}
+    @Component
+    class {{ FieldType }}Resolver: GraphQLResolver<{{ FieldType }}>, {{ Name }}GraphQLResolver() {
+
+        fun {{ names }}({{ fieldType }}: {{ FieldType }}): List<{{ Name }}> {
+            return {{ name }}Service.findBy{{ FieldName }}({{ fieldType }}.id!!)
+        }
+
+    }{{/if}}{{/each}}
+
+}

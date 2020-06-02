@@ -45,6 +45,7 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                                         "field_types" to nameHelper.toLowerCamelCase(nameHelper.pluralize(it[1])),
                                         "FIELD_DATABASE_TYPE" to determineDatabaseType(it[1]),
                                         "FieldKotlinType" to determineKotlinType(it[1]),
+                                        "FieldGraphQLType" to determineGraphQLType(it[1]),
                                         "fieldKotlinAnnotations" to determineKotlinAnnotations(it[1]),
                                         "fieldTestValue" to determineSomeTestValue(nameHelper.toUpperCamelCase(it[0]), it[1]),
                                         "fieldRelationship" to isRelationship(it[1])
@@ -123,6 +124,16 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "string?" -> "String?"
             "text?" -> "String?"
             else -> "Int"
+        }
+    }
+
+    private fun determineGraphQLType(type: String): String {
+        return when (type) {
+            "string" -> "String!"
+            "text" -> "String!"
+            "string?" -> "String"
+            "text?" -> "String"
+            else -> "Int!"
         }
     }
 
