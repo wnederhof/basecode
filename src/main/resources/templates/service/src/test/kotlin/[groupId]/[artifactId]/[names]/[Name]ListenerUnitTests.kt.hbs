@@ -1,6 +1,8 @@
 package {{ groupId }}.{{ artifactId }}.{{ names }}
 
-{{#each fields as |f|}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent
+{{#each fields as |f|}}{{#if fieldRelationship}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service
 {{/if}}{{/each}}
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.jupiter.api.Test
@@ -10,17 +12,22 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-internal class {{ Name }}EventListenerUnitTests {
+internal class {{ Name }}ListenerUnitTests {
 
     @Mock
     private lateinit var {{ name }}Service: {{ Name }}Service
 
+{{#each fields as |f|}}{{#if fieldRelationship}}
+    @Mock
+    private lateinit var {{ fieldType }}Service: {{ FieldType }}Service
+
+{{/if}}{{/each}}
     @InjectMocks
-    private lateinit var {{ name }}EventListener: {{ Name }}EventListener
+    private lateinit var {{ name }}Listener: {{ Name }}Listener
 {{#each fields as |f|}}{{#if fieldRelationship}}
     @Test
     fun `Before a {{ fieldType }} is deleted, all related {{ names }} are deleted`() {
-        {{ name }}EventListener.onBefore{{ FieldType }}DeletedEvent(Before{{ FieldType }}DeletedEvent(this, 1))
+        {{ name }}Listener.onBefore{{ FieldType }}DeletedEvent(Before{{ FieldType }}DeletedEvent(this, 1))
 
         verify({{ name }}Service).deleteBy{{ FieldName }}(1)
     }{{/if}}{{/each}}

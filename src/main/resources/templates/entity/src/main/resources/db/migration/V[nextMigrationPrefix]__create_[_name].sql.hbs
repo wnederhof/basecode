@@ -1,5 +1,5 @@
 CREATE TABLE {{ _names }} (
-    id SERIAL{{#each fields}},
+    id SERIAL PRIMARY KEY{{#each fields}},
     {{ field_name }} {{ FIELD_DATABASE_TYPE }}{{/each}},
     created_at TIMESTAMP,
     updated_at TIMESTAMP

@@ -6,9 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @Order(3)
-class ServiceGenerator(
-        private val nameHelper: NameHelper
-) : AbstractRelationalGenerator(nameHelper) {
+class ServiceGenerator(nameHelper: NameHelper) : AbstractRelationalGenerator(nameHelper) {
     override fun getSyntax() =
             "service <name> (<name>:<type>)+"
 

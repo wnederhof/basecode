@@ -3,7 +3,8 @@ package {{ groupId }}.{{ artifactId }}.{{ names }}
 import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1
 {{#each fields}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_WITH_ID_1
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service{{/if}}{{/each}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service
+{{/if}}{{/each}}
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -14,7 +15,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 
-class {{ Name }}GraphQLResolverUnitTests {
+class {{ Name }}ResolverUnitTests {
 
     @Nested
     @ExtendWith(MockitoExtension::class)
@@ -24,23 +25,23 @@ class {{ Name }}GraphQLResolverUnitTests {
         private lateinit var {{ name }}Service: {{ Name }}Service
 
         @InjectMocks
-        private lateinit var {{ name }}QueryResolver: {{ Name }}GraphQLResolver.QueryResolver
+        private lateinit var {{ name }}QueryResolver: {{ Name }}Resolver.QueryResolver
 
         @Test
-        fun `find{{ Name }}ById delegates the call to the {{ Name }}Service`() {
+        fun `{{ name }}ById delegates the call to the {{ Name }}Service`() {
             whenever({{ name }}Service.findById(1))
                     .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
 
-            assertThat({{ name }}QueryResolver.find{{ Name }}ById(1))
+            assertThat({{ name }}QueryResolver.{{ name }}ById(1))
                     .isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
         }
 
         @Test
-        fun `findAll{{ Names }} delegates the call to the {{ Name }}Service`() {
+        fun `{{ names }} delegates the call to the {{ Name }}Service`() {
             whenever({{ name }}Service.findAll())
                     .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
 
-            assertThat({{ name }}QueryResolver.findAll{{ Names }}())
+            assertThat({{ name }}QueryResolver.all{{ Names }}())
                     .isEqualTo(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
         }
 
@@ -54,7 +55,7 @@ class {{ Name }}GraphQLResolverUnitTests {
         private lateinit var {{ name }}Service: {{ Name }}Service
 
         @InjectMocks
-        private lateinit var {{ name }}MutationResolver: {{ Name }}GraphQLResolver.MutationResolver
+        private lateinit var {{ name }}MutationResolver: {{ Name }}Resolver.MutationResolver
 
         @Test
         fun `find{{ Name }}ById delegates the call to the {{ Name }}Service`() {
@@ -83,14 +84,14 @@ class {{ Name }}GraphQLResolverUnitTests {
         private lateinit var {{ fieldType }}Service: {{ FieldType }}Service{{/if}}{{/each}}
 
         @InjectMocks
-        private lateinit var {{ name }}Resolver: {{ Name }}GraphQLResolver.{{ Name }}Resolver
+        private lateinit var resolver: {{ Name }}Resolver.Resolver
 {{#each fields}}{{#if fieldRelationship}}
         @Test
         fun `{{ fieldType }} delegates the call to the {{ FieldType }}Service`() {
             whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
                     .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
 
-            assertThat({{ name }}Resolver.{{ fieldType }}({{ NAME }}_FIXTURE_WITH_ID_1))
+            assertThat(resolver.{{ fieldType }}({{ NAME }}_FIXTURE_WITH_ID_1))
                     .isEqualTo({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
         }{{/if}}{{/each}}
 
@@ -104,7 +105,8 @@ class {{ Name }}GraphQLResolverUnitTests {
         private lateinit var {{ name }}Service: {{ Name }}Service
 
         @InjectMocks
-        private lateinit var {{ fieldType }}Resolver: {{ Name }}GraphQLResolver.{{ FieldType }}Resolver
+        private lateinit var {{ fieldType }}Resolver: {{ Name }}Resolver.{{ FieldType }}Resolver
+
         @Test
         fun `{{ name }} delegates the call to the {{ name }}Service`() {
             whenever({{ name }}Service.findBy{{ FieldName }}({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1.id!!))

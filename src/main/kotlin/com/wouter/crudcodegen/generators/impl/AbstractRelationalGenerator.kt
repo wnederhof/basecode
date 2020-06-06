@@ -30,8 +30,9 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                         Variable("Names", nameHelper.pluralize(nameHelper.toUpperCamelCase(name))),
                         Variable("_name", nameHelper.toDuckName(name)),
                         Variable("_names", nameHelper.pluralize(nameHelper.toDuckName(name))),
-                        Variable("NAME", nameHelper.capitalize(name)),
-                        Variable("NAMES", nameHelper.capitalize(nameHelper.pluralize(name))),
+                        Variable("NAME", nameHelper.capitalize(nameHelper.toDuckName(name))),
+                        Variable("NAMES", nameHelper.capitalize(nameHelper.pluralize(nameHelper.toDuckName(name)))),
+                        Variable("hasRelations", fields.any { isRelationship(it.split(":")[1]) }),
                         Variable("fields", fields.map {
                             it.split(":").let {
                                 mapOf(
@@ -39,6 +40,7 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                                         "FieldName" to nameHelper.toUpperCamelCase(it[0]),
                                         "fieldName" to nameHelper.toLowerCamelCase(it[0]),
                                         "FieldType" to nameHelper.toUpperCamelCase(it[1]),
+                                        "FieldTypes" to nameHelper.toUpperCamelCase(nameHelper.pluralize(it[1])),
                                         "fieldTypes" to nameHelper.toLowerCamelCase(nameHelper.pluralize(it[1])),
                                         "FIELD_TYPE" to nameHelper.toDuckName(it[1]).toUpperCase(),
                                         "fieldType" to nameHelper.toLowerCamelCase(it[1]),
@@ -83,7 +85,7 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "text" -> "TEXT NOT NULL"
             "string?" -> "VARCHAR(255) NULL"
             "text?" -> "TEXT NULL"
-            else -> "INT"
+            else -> "INT NOT NULL" // REFERENCES ${nameHelper.toDuckName(nameHelper.pluralize(type))}(id)"
         }
     }
 

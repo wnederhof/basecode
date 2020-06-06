@@ -30,12 +30,15 @@ internal class ScenariosIntegrationTest {
     @Test
     fun `User creates a simple blog with a post`() {
         generate("new", "com.blogcorp", "blog")
-        generate("entity", "Post", "title:string", "description:string")
-        generate("service", "Post", "title:string", "description:string")
-        generate("graphql", "Post", "title:string", "description:string")
-        generate("entity", "Comment", "postId:Post", "comment:string")
-        generate("service", "Comment", "postId:Post", "comment:string")
-        generate("graphql", "Comment", "postId:Post", "comment:string")
+        listOf(
+                listOf("Patient", "lastName:string", "firstName:string"),
+                listOf("QuestionForm", "name:string", "url:string"),
+                listOf("PatientQuestionForm", "patientId:Patient", "questionFormId:QuestionForm")
+        ).forEach {
+            generate("entity", *it.toTypedArray())
+            generate("service", *it.toTypedArray())
+            generate("graphql", *it.toTypedArray())
+        }
         assertThat(executeTests(tempDir), equalTo(true))
     }
 

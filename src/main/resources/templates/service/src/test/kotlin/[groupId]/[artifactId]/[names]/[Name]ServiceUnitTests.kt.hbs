@@ -27,7 +27,7 @@ internal class {{ Name }}ServiceUnitTests {
     private lateinit var {{ name }}Service: {{ Name }}Service
 
     @Test
-    fun `findAll retrieves all {{ names }} in repository`() {
+    fun `findAll returns the values of findAll in {{ Name }}Repository`() {
         whenever({{ name }}Repository.findAll())
                 .thenReturn(listOf({{ NAME }}_FIXTURE_1))
 
@@ -37,7 +37,7 @@ internal class {{ Name }}ServiceUnitTests {
     }
 
     @Test
-    fun `findById returns the requested {{ name }} if it can be found`() {
+    fun `findById returns the contained value of findById in {{ Name }}Repository if it is non-empty`() {
         whenever({{ name }}Repository.findById(1))
                 .thenReturn(Optional.of({{ NAME }}_FIXTURE_1))
 
@@ -47,7 +47,7 @@ internal class {{ Name }}ServiceUnitTests {
     }
 
     @Test
-    fun `findById returns null if it cannot be found`() {
+    fun `findById returns null if findById in {{ Name }}Repository yields an empty Optional`() {
         whenever({{ name }}Repository.findById(1))
                 .thenReturn(Optional.empty())
 
@@ -57,7 +57,7 @@ internal class {{ Name }}ServiceUnitTests {
     }
 
     @Test
-    fun `save persists the provided {{ Name }} in the repository`() {
+    fun `save calls save and return its value if all requirements are met`() {
         whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
                 .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
 
@@ -67,7 +67,7 @@ internal class {{ Name }}ServiceUnitTests {
     }
 
     @Test
-    fun `save publishes Before{{ Name }}SavedEvent before saving`() {
+    fun `save publishes a Before{{ Name }}SavedEvent before saving`() {
         whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
                 .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
 
@@ -85,7 +85,7 @@ internal class {{ Name }}ServiceUnitTests {
     }
 
     @Test
-    fun `save publishes After{{ Name }}SavedEvent after saving`() {
+    fun `save publishes an After{{ Name }}SavedEvent after saving`() {
         whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
                 .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
 
@@ -110,7 +110,7 @@ internal class {{ Name }}ServiceUnitTests {
     }
 
     @Test
-    fun `deleteById publishes an Before{{ Name }}DeletedEvent before deletion`() {
+    fun `deleteById publishes a Before{{ Name }}DeletedEvent before deletion`() {
         {{ name }}Service.deleteById(1)
 
         val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)

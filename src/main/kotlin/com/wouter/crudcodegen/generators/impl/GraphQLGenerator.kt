@@ -6,9 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @Order(3)
-class GraphQLGenerator(
-        private val nameHelper: NameHelper
-) : AbstractRelationalGenerator(nameHelper) {
+class GraphQLGenerator(nameHelper: NameHelper) : AbstractRelationalGenerator(nameHelper) {
     override fun getSyntax() =
             "graphql <name> (<name>:<type>)+"
 

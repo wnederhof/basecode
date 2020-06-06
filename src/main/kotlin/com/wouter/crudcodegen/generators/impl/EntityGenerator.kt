@@ -6,9 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 @Order(2)
-class EntityGenerator(
-        private val nameHelper: NameHelper
-) : AbstractRelationalGenerator(nameHelper) {
+class EntityGenerator(nameHelper: NameHelper) : AbstractRelationalGenerator(nameHelper) {
 
     override fun getSyntax() =
             "entity <name> (<name>:<type>)+"

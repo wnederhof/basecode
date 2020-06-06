@@ -35,6 +35,7 @@ class FileManager(private val resourceLoader: ResourceLoader) {
 
     fun createTargetDirectory(root: File, path: String) {
         File(root.path + "/$path").mkdirs()
+        println("[D] $path")
     }
 
     fun copyFile(root: File, templateName: String, templatePath: String, targetPath: String) {
@@ -46,6 +47,7 @@ class FileManager(private val resourceLoader: ResourceLoader) {
         resourceLoader.getResource("templates/$templateName/$templatePath")
                 .file
                 .copyTo(File("${root.path}/$targetPath"))
+                .also { println("[F] $targetPath") }
     }
 
     fun writeTargetFileContent(root: File, path: String, content: String, overwrite: Boolean = false) {
@@ -55,6 +57,8 @@ class FileManager(private val resourceLoader: ResourceLoader) {
         val directories = path.split("/").dropLast(1).joinToString("/")
         File("${root.path}/$directories").mkdirs()
         File("${root.path }/$path").writeText(content)
+
+        println("[F] $path")
     }
 
     fun readTargetFile(root: File, path: String): String? {

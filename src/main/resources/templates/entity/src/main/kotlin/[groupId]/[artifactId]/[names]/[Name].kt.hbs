@@ -4,7 +4,7 @@ import org.springframework.data.annotation.*
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
-@Table("{{ names }}")
+@Table("{{ _names }}")
 data class {{ Name }}(
         @Id
         val id: Int? = null{{#each fields }},
