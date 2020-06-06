@@ -86,6 +86,7 @@ Licensed under MIT.
 # To Do
 - Check that references exist / use foreign keys
 - Lowercase ref names
+- Not every Listener use case is tested
 - Add Created at and updated at to GraphQL model
 - Int and Other Types
 - Finish GraphQL Integration tests

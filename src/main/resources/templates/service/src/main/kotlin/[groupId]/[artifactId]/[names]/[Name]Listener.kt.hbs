@@ -17,14 +17,14 @@ class {{ Name }}Listener(
 
     @EventListener
     @Order(VALIDATION_PRECEDENCE)
-    fun onBefore{{ Name }}SavedEvent(event: Before{{ Name }}SavedEvent) {
+    fun validateBefore{{ Name }}Saved(event: Before{{ Name }}SavedEvent) {
 {{#each fields}}{{#if fieldRelationship}}
         requireNotNull({{ fieldType }}Service.findById(event.entity.{{ fieldName }}))
 {{/if}}{{/each}}
     }
 {{#each fields}}{{#if fieldRelationship}}
     @EventListener
-    fun onBefore{{ FieldType }}DeletedEvent(event: Before{{ FieldType }}DeletedEvent) {
+    fun deleteBefore{{ FieldType }}Deleted(event: Before{{ FieldType }}DeletedEvent) {
         {{ name }}Service.deleteBy{{ FieldName }}(event.id)
     }
 {{/if}}{{/each}}

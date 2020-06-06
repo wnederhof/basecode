@@ -1,14 +1,19 @@
 package {{ groupId }}.{{ artifactId }}.{{ names }}
 
-{{#each fields as |f|}}{{#if fieldRelationship}}
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent
+import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
+{{#each fields as |f|}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_WITH_ID_1
 {{/if}}{{/each}}
+import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Event.Before{{ Name }}SavedEvent
 import com.nhaarman.mockitokotlin2.verify
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
+import com.nhaarman.mockitokotlin2.whenever
+import org.mockito.Mockito.lenient
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
@@ -24,12 +29,36 @@ internal class {{ Name }}ListenerUnitTests {
 {{/if}}{{/each}}
     @InjectMocks
     private lateinit var {{ name }}Listener: {{ Name }}Listener
-{{#each fields as |f|}}{{#if fieldRelationship}}
+
     @Test
-    fun `Before a {{ fieldType }} is deleted, all related {{ names }} are deleted`() {
-        {{ name }}Listener.onBefore{{ FieldType }}DeletedEvent(Before{{ FieldType }}DeletedEvent(this, 1))
+    fun `validateBefore{{ Name }}Saved throws no Exception when all dependencies can be resolved`() {
+        val {{ name }} = {{ NAME }}_FIXTURE_1
+        val event = Before{{ Name }}SavedEvent(this, {{ name }})
+{{#each fields as |f|}}{{#if fieldRelationship}
+        whenever({{ fieldType }}Service.findById({{ name }}.{{ fieldName }}))
+                .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
+{{/if}}{{/each}}
+        {{ name }}Listener.validateBefore{{ Name }}Saved(event)
+    }
+{{#if hasRelations}}
+    @Test
+    fun `validateBefore{{ Name }}Saved throws Exception when related objects cannot be resolved`() {
+        val {{ name }} = {{ NAME }}_FIXTURE_1
+        val event = Before{{ Name }}SavedEvent(this, {{ name }})
+{{#each fields as |f|}}{{#if fieldRelationship}}
+        lenient().`when`({{ fieldType }}Service.findById({{ name }}.{{ fieldName }}))
+                .thenReturn(null)
+{{/if}}{{/each}}
+        assertThrows<RuntimeException> {
+            {{ name }}Listener.validateBefore{{ Name }}Saved(event)
+        }
+    }
+{{/if}}{{#each fields as |f|}}{{#if fieldRelationship}}
+    @Test
+    fun `deleteBefore{{ FieldType }}Deleted deletes related {{ Names }} in Before{{ FieldType }}DeletedEvent`() {
+        {{ name }}Listener.deleteBefore{{ FieldType }}Deleted(Before{{ FieldType }}DeletedEvent(this, 1))
 
         verify({{ name }}Service).deleteBy{{ FieldName }}(1)
-    }{{/if}}{{/each}}
-
+    }
+{{/if}}{{/each}}
 }
