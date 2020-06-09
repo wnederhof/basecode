@@ -1,0 +1,27 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:fragment="defaultHead">
+        <title>{{ groupId }</title>
+    </head>
+</head>
+
+<body>
+<div th:fragment="notifications">
+    <div th:if="${info}" th:text="${info}"></div>
+    <div th:if="${error}" th:text="${error}"></div>
+    <div th:if="${fieldErrors}" th:text="${fieldErrors}"></div>
+    <div th:if="${globalErrors}" th:text="${globalErrors}"></div>
+</div>
+
+<div th:fragment="header">
+    <div>Header</div>
+
+    <div th:replace=":: notifications"></div>
+</div>
+
+<div th:fragment="footer">
+    <div>Footer</div>
+</div>
+</body>
+</html>

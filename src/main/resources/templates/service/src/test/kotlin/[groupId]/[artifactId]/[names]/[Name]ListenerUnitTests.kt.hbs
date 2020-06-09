@@ -34,7 +34,7 @@ internal class {{ Name }}ListenerUnitTests {
     fun `validateBefore{{ Name }}Saved throws no Exception when all dependencies can be resolved`() {
         val {{ name }} = {{ NAME }}_FIXTURE_1
         val event = Before{{ Name }}SavedEvent(this, {{ name }})
-{{#each fields as |f|}}{{#if fieldRelationship}
+{{#each fields as |f|}}{{#if fieldRelationship}}
         whenever({{ fieldType }}Service.findById({{ name }}.{{ fieldName }}))
                 .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
 {{/if}}{{/each}}

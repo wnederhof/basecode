@@ -1,0 +1,19 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: defaultHead"></head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+
+<h1>Edit {{ Name }}</h1>
+<form th:action="@{ /{{ names }} }" method="post">
+    <div th:replace="fragments/{{ names }} :: form"></div>
+
+    <input type="hidden" name="id" th:value="${ {{ name }}.id }"/>
+
+    <button name="save">Save</button>
+    <a th:href="@{ /{{ names }} }">Go Back</a>
+</form>
+
+<div th:replace="fragments/layout :: footer"></div>
+</body>
+</html>

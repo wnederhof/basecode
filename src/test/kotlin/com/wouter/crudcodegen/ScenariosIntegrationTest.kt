@@ -38,6 +38,7 @@ internal class ScenariosIntegrationTest {
             generate("entity", *it.toTypedArray())
             generate("service", *it.toTypedArray())
             generate("graphql", *it.toTypedArray())
+            generate("controller", *it.toTypedArray())
         }
         assertThat(executeTests(tempDir), equalTo(true))
     }

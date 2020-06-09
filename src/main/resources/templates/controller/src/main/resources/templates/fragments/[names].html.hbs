@@ -1,0 +1,40 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="listing">
+    <table>
+        <thead>
+        <tr>{{#each fields as |f|}}
+            <th>{{ FieldName }}</th>{{/each}}
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="{{ name }} : ${ {{ names }} }">{{#each fields as |f|}}
+            <td th:text="${ {{ name }}.{{ fieldName }} }"></td>{{/each}}
+            <td><a th:href="@{ /{{ names }}/{id}(id=${ {{ name }}.id }) }">Show</a></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:fragment="form">{{#each fields as |f|}}
+    <div>
+        <label for="{{ fieldName }}">{{ FieldName }}</label>
+        <input id="{{ fieldName }}" type="text" name="{{ fieldName }}" th:value="${ {{ name }}?.{{ fieldName }} }" placeholder="{{ FieldName }}" />
+    </div>
+{{/each}}
+</div>
+
+<div th:fragment="details">{{#each fields as |f|}}
+    <div>
+        <strong>{{ FieldName }}</strong>
+        <span th:text="${ {{ name }}.{{ fieldName }} }"></span>
+    </div>
+{{/each}}    <div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,15 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: defaultHead"></head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+
+<h1>{{ Name }} Listing</h1>
+
+<div th:replace="fragments/{{ names }} :: listing"></div>
+
+<a href="/{{ names }}/new">New {{ Name }}</a>
+
+<div th:replace="fragments/layout :: footer"></div>
+</body>
+</html>
