@@ -3,7 +3,7 @@
 <body>
 
 <div th:fragment="listing">
-    <table>
+    <table class="table">
         <thead>
         <tr>{{#each fields as |f|}}
             <th>{{ FieldName }}</th>{{/each}}
@@ -13,16 +13,23 @@
         <tbody>
         <tr th:each="{{ name }} : ${ {{ names }} }">{{#each fields as |f|}}
             <td th:text="${ {{ name }}.{{ fieldName }} }"></td>{{/each}}
-            <td><a th:href="@{ /{{ names }}/{id}(id=${ {{ name }}.id }) }">Show</a></td>
+            <td>
+                <a class="btn btn-primary" th:href="@{ /{{ names }}/{id}(id=${ {{ name }}.id }) }">Show</a>
+
+                <form th:action="@{ /{{ names }} }" method="post" style="display:inline">
+                    <input type="hidden" name="id" th:value="${ {{ name }}.id }"/>
+                    <button class="btn btn-danger" name="delete" onClick="confirm('Are you sure?')">Delete</button>
+                </form>
+            </td>
         </tr>
         </tbody>
     </table>
 </div>
 
-<div th:fragment="form">{{#each fields as |f|}}
-    <div>
+<div th:fragment="formFields">{{#each fields as |f|}}
+    <div class="form-group">
         <label for="{{ fieldName }}">{{ FieldName }}</label>
-        <input id="{{ fieldName }}" type="text" name="{{ fieldName }}" th:value="${ {{ name }}?.{{ fieldName }} }" placeholder="{{ FieldName }}" />
+        <input class="form-control" id="{{ fieldName }}" type="text" name="{{ fieldName }}" th:value="${ {{ name }}?.{{ fieldName }} }" placeholder="{{ FieldName }}" />
     </div>
 {{/each}}
 </div>
@@ -32,9 +39,7 @@
         <strong>{{ FieldName }}</strong>
         <span th:text="${ {{ name }}.{{ fieldName }} }"></span>
     </div>
-{{/each}}    <div>
-    </div>
-</div>
+{{/each}}</div>
 
 </body>
 </html>

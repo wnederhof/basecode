@@ -60,11 +60,11 @@ class {{ Name }}Controller(
     }
 
     @PostMapping(params = ["delete"])
-    fun delete(idContainer: IdContainer, redirectAttributes: RedirectAttributes): String {
-        {{ name }}Service.deleteById(idContainer.id)
+    fun delete(deleteRequest: DeleteRequest, redirectAttributes: RedirectAttributes): String {
+        {{ name }}Service.deleteById(deleteRequest.id)
         redirectAttributes.addFlashAttribute("info", "{{ Name }} Deleted.")
         return "redirect:/{{ names }}"
     }
 
-    data class IdContainer(val id: Int)
+    data class DeleteRequest(val id: Int)
 }

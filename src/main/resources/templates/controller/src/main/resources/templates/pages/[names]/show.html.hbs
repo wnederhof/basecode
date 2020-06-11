@@ -4,17 +4,19 @@
 <body>
 <div th:replace="fragments/layout :: header"></div>
 
-<h1>Show {{ Name }}</h1>
+<div class="container-fluid">
+<h1 class="mt-5 mb-3">Show {{ Name }}</h1>
 <div>
     <div th:replace="fragments/{{ names }} :: details"></div>
 
-    <form th:action="@{ /{{ names }} }" method="post">
+    <form th:action="@{ /{{ names }} }" method="post" style="display:inline">
         <input type="hidden" name="id" th:value="${ {{ name }}.id }"/>
-        <button name="delete" onClick="confirm('Are you sure?')">Delete</button>
+        <button class="btn btn-danger" name="delete" onClick="confirm('Are you sure?')">Delete</button>
     </form>
 
     <a th:href="@{ /{{ names }}/{id}/edit(id=${ {{ name }}.id }) }">Edit {{ Name }}</a>
     <a th:href="@{ /{{ names }} }">Go Back</a>
+</div>
 </div>
 
 <div th:replace="fragments/layout :: footer"></div>

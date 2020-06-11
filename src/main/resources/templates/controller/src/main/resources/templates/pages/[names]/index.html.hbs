@@ -4,11 +4,13 @@
 <body>
 <div th:replace="fragments/layout :: header"></div>
 
-<h1>{{ Name }} Listing</h1>
+<div class="container-fluid">
+<h1 class="mt-5 mb-3">{{ Name }} Listing</h1>
 
 <div th:replace="fragments/{{ names }} :: listing"></div>
 
-<a href="/{{ names }}/new">New {{ Name }}</a>
+<a class="btn btn-primary" href="/{{ names }}/new">New {{ Name }}</a>
+</div>
 
 <div th:replace="fragments/layout :: footer"></div>
 </body>

@@ -93,6 +93,7 @@ Licensed under MIT.
 - Controllers
 - Decide: Maven vs GradleKT
 - Unit Tests for Scenarios
+- SCSS / JS / etc. / Node Modules / Deno?
 - Frontend
 
 # Credits
