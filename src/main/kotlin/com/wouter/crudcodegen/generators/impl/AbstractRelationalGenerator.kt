@@ -82,8 +82,10 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
     private fun determineDatabaseType(type: String): String {
         return when (type) {
             "string" -> "VARCHAR(255) NOT NULL"
+            "int" -> "INT NOT NULL"
             "text" -> "TEXT NOT NULL"
             "string?" -> "VARCHAR(255) NULL"
+            "int?" -> "INT NULL"
             "text?" -> "TEXT NULL"
             else -> "INT NOT NULL" // REFERENCES ${nameHelper.toDuckName(nameHelper.pluralize(type))}(id)"
         }
@@ -92,8 +94,10 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
     private fun determineSomeTestValue(name: String, type: String): String {
         return when (type) {
             "string" -> "\"Some $name\""
+            "int" -> "1"
             "text" -> "\"Some $name\""
             "string?" -> "\"Some $name\""
+            "int?" -> "1"
             "text?" -> "\"Some $name\""
             else -> "10"
         }
@@ -102,8 +106,10 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
     private fun determineKotlinAnnotations(type: String): String? {
         return when (type) {
             "string" -> null
+            "int" -> null
             "text" -> "@Lob"
             "string?" -> null
+            "int?" -> null
             "text?" -> "@Lob"
             else -> null
         }
@@ -113,8 +119,10 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
         return when (type) {
             "string" -> false
             "text" -> false
+            "int" -> false
             "string?" -> false
             "text?" -> false
+            "int?" -> false
             else -> true
         }
     }
@@ -123,8 +131,10 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
         return when (type) {
             "string" -> "String"
             "text" -> "String"
+            "int" -> "Int"
             "string?" -> "String?"
             "text?" -> "String?"
+            "int?" -> "Int?"
             else -> "Int"
         }
     }
@@ -133,8 +143,10 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
         return when (type) {
             "string" -> "String!"
             "text" -> "String!"
+            "int" -> "Int!"
             "string?" -> "String"
             "text?" -> "String"
+            "int?" -> "Int"
             else -> "Int!"
         }
     }

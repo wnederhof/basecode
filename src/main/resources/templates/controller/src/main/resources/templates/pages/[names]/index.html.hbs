@@ -5,11 +5,11 @@
 <div th:replace="fragments/layout :: header"></div>
 
 <div class="container-fluid">
-<h1 class="mt-5 mb-3">{{ Name }} Listing</h1>
+<h3 class="mt-5 mb-3">{{ Name }} Listing</h3>
 
 <div th:replace="fragments/{{ names }} :: listing"></div>
 
-<a class="btn btn-primary" href="/{{ names }}/new">New {{ Name }}</a>
+<a href="/{{ names }}/new">New {{ Name }}</a>
 </div>
 
 <div th:replace="fragments/layout :: footer"></div>

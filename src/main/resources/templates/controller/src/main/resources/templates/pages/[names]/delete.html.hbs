@@ -5,11 +5,16 @@
 <div th:replace="fragments/layout :: header"></div>
 
 <div class="container-fluid">
-    <h3 class="mt-5 mb-3">Show {{ Name }}</h3>
+    <h3 class="mt-5 mb-3">Confirm Delete {{ Name }}</h3>
+    <p>
+        Are you sure you want to delete the following record?
+    </p>
     <div th:replace="fragments/{{ names }} :: details"></div>
 
-    <a th:href="@{ /{{ names }}/{id}/edit(id=${ {{ name }}.id }) }">Edit</a> |
-    <a th:href="@{ /{{ names }}/{id}/delete(id=${ {{ name }}.id }) }">Delete</a> |
+    <form th:action="@{ /{{ names }} }" method="post" style="display:inline">
+        <input type="hidden" name="id" th:value="${ {{ name }}.id }"/>
+        <button class="btn btn-outline-danger" name="delete">Delete</button>
+    </form>
     <a th:href="@{ /{{ names }} }">Go Back</a>
 </div>
 

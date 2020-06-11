@@ -5,6 +5,7 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -28,6 +29,7 @@ internal class ScenariosIntegrationTest {
     }
 
     @Test
+    @Disabled
     fun `User creates a simple blog with a post`() {
         generate("new", "com.blogcorp", "blog")
         listOf(

@@ -59,6 +59,12 @@ class {{ Name }}Controller(
         return "redirect:/{{ names }}/${saved{{ Name }}.id}"
     }
 
+    @GetMapping("/{id}/delete")
+    fun confirmDelete(@PathVariable("id") id: Int, model: Model): String {
+        model.addAttribute("{{ name }}", {{ name }}Service.findById(id))
+        return "pages/{{ names }}/delete"
+    }
+
     @PostMapping(params = ["delete"])
     fun delete(deleteRequest: DeleteRequest, redirectAttributes: RedirectAttributes): String {
         {{ name }}Service.deleteById(deleteRequest.id)

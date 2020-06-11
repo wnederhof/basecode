@@ -5,13 +5,13 @@
 <div th:replace="fragments/layout :: header"></div>
 
 <div class="container-fluid">
-<h1 class="mt-5 mb-3">Edit {{ Name }}</h1>
+<h3 class="mt-5 mb-3">Edit {{ Name }}</h3>
 <form th:action="@{ /{{ names }} }" method="post" style="display:inline">
     <div th:replace="fragments/{{ names }} :: formFields"></div>
 
     <input type="hidden" name="id" th:value="${ {{ name }}.id }"/>
 
-    <button class="btn btn-primary" name="save">Save</button>
+    <button class="btn btn-outline-primary" name="save">Save</button>
 </form>
 <a th:href="@{ /{{ names }} }">Go Back</a>
 </div>

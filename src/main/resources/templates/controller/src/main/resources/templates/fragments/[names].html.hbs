@@ -5,21 +5,19 @@
 <div th:fragment="listing">
     <table class="table">
         <thead>
-        <tr>{{#each fields as |f|}}
+        <tr>
+            <th>Id</th>{{#each fields as |f|}}
             <th>{{ FieldName }}</th>{{/each}}
-            <th></th>
+            <th style="width:250px"></th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="{{ name }} : ${ {{ names }} }">{{#each fields as |f|}}
+        <tr th:each="{{ name }} : ${ {{ names }} }">
+            <td th:text="${ {{ name }}.id }"></td>{{#each fields as |f|}}
             <td th:text="${ {{ name }}.{{ fieldName }} }"></td>{{/each}}
             <td>
-                <a class="btn btn-primary" th:href="@{ /{{ names }}/{id}(id=${ {{ name }}.id }) }">Show</a>
-
-                <form th:action="@{ /{{ names }} }" method="post" style="display:inline">
-                    <input type="hidden" name="id" th:value="${ {{ name }}.id }"/>
-                    <button class="btn btn-danger" name="delete" onClick="confirm('Are you sure?')">Delete</button>
-                </form>
+                <a th:href="@{ /{{ names }}/{id}(id=${ {{ name }}.id }) }">Show</a> |
+                <a th:href="@{ /{{ names }}/{id}/delete(id=${ {{ name }}.id }) }">Delete</a>
             </td>
         </tr>
         </tbody>
@@ -27,17 +25,20 @@
 </div>
 
 <div th:fragment="formFields">{{#each fields as |f|}}
-    <div class="form-group">
-        <label for="{{ fieldName }}">{{ FieldName }}</label>
-        <input class="form-control" id="{{ fieldName }}" type="text" name="{{ fieldName }}" th:value="${ {{ name }}?.{{ fieldName }} }" placeholder="{{ FieldName }}" />
+    <div class="form-group row">
+        <label for="{{ fieldName }}" class="col-sm-2 col-form-label">{{ FieldName }}</label>
+        <div class="col-sm-10">
+            <input type="text" class="form-control" id="{{ fieldName }}" th:value="${ {{ name }}?.{{ fieldName }} }" />
+        </div>
     </div>
-{{/each}}
-</div>
+{{/each}}</div>
 
 <div th:fragment="details">{{#each fields as |f|}}
-    <div>
-        <strong>{{ FieldName }}</strong>
-        <span th:text="${ {{ name }}.{{ fieldName }} }"></span>
+    <div class="form-group row">
+        <label for="{{ fieldName }}" class="col-sm-2 col-form-label">{{ FieldName }}</label>
+        <div class="col-sm-10">
+            <div class="form-control-plaintext" id="{{ fieldName }}" th:text="${ {{ name }}?.{{ fieldName }} }"></div>
+        </div>
     </div>
 {{/each}}</div>
 
