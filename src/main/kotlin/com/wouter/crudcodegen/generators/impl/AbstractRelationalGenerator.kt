@@ -38,6 +38,9 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                                 mapOf(
                                         "field_name" to nameHelper.toDuckName(it[0]),
                                         "FieldName" to nameHelper.toUpperCamelCase(it[0]),
+                                        "isTextInput" to (it[1] == "string" || it[1] == "string?"),
+                                        "isNumberInput" to (it[1] == "int" || it[1] == "int?"),
+                                        "isDateInput" to (it[1] == "date" || it[1] == "date?"),
                                         "fieldName" to nameHelper.toLowerCamelCase(it[0]),
                                         "FieldType" to nameHelper.toUpperCamelCase(it[1]),
                                         "FieldTypes" to nameHelper.toUpperCamelCase(nameHelper.pluralize(it[1])),
@@ -60,7 +63,7 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
 
     private fun findNextMigrationPrefix(targetPath: File): String {
         val i = findLastMigrationNumber(targetPath) + 1
-        return "$i".padStart(4, '0')
+        return "$i".padStart(3, '0')
     }
 
     private fun findLastMigrationNumber(targetPath: File): Int {
@@ -87,7 +90,7 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "string?" -> "VARCHAR(255) NULL"
             "int?" -> "INT NULL"
             "text?" -> "TEXT NULL"
-            else -> "INT NOT NULL" // REFERENCES ${nameHelper.toDuckName(nameHelper.pluralize(type))}(id)"
+            else -> "INT NOT NULL"
         }
     }
 
@@ -96,9 +99,11 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "string" -> "\"Some $name\""
             "int" -> "1"
             "text" -> "\"Some $name\""
+            "date" -> "LocalDate.now()"
             "string?" -> "\"Some $name\""
             "int?" -> "1"
             "text?" -> "\"Some $name\""
+            "date?" -> "LocalDate.now()"
             else -> "10"
         }
     }
@@ -108,9 +113,11 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "string" -> null
             "int" -> null
             "text" -> "@Lob"
+            "date" -> null
             "string?" -> null
             "int?" -> null
             "text?" -> "@Lob"
+            "date?" -> null
             else -> null
         }
     }
@@ -120,9 +127,11 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "string" -> false
             "text" -> false
             "int" -> false
+            "date" -> false
             "string?" -> false
             "text?" -> false
             "int?" -> false
+            "date?" -> false
             else -> true
         }
     }
@@ -132,9 +141,11 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "string" -> "String"
             "text" -> "String"
             "int" -> "Int"
+            "date" -> "LocalDate"
             "string?" -> "String?"
             "text?" -> "String?"
             "int?" -> "Int?"
+            "date?" -> "LocalDate?"
             else -> "Int"
         }
     }
@@ -144,9 +155,11 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "string" -> "String!"
             "text" -> "String!"
             "int" -> "Int!"
+            "date" -> "LocalDate!"
             "string?" -> "String"
             "text?" -> "String"
             "int?" -> "Int"
+            "date?" -> "LocalDate"
             else -> "Int!"
         }
     }

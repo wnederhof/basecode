@@ -1,0 +1,49 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <head th:fragment="defaultHead">
+        <title>{{ artifactId }}</title>
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+              rel="stylesheet"
+              integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+              crossorigin="anonymous">
+
+        <link rel="stylesheet"
+              href="https://unpkg.com/unpoly@0.62.0/dist/unpoly.min.css"
+              integrity="sha384-Au6LjS9fxDpwn3+26YmukmOumZUmryd8ONenkVIoH4eEPH1tACqLsVfqz9tBrvQy"
+              crossorigin="anonymous">
+
+        <script src="https://unpkg.com/unpoly@0.62.0/dist/unpoly.min.js"
+                integrity="sha384-FhYCzYFdGp9JBPsEmRaQPBVM0i1LUwBuiQ4jHUKZL9WhuiSGVdAfa6vw3L8bNfpU"
+                crossorigin="anonymous"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/date-input-polyfill@2.14.0/date-input-polyfill.dist.min.js"></script>
+    </head>
+</head>
+
+<body>
+<div th:fragment="notifications">
+    <div class="alert alert-info" th:if="${info}" th:text="${info}"></div>
+    <div class="alert alert-danger" th:if="${error}" th:text="${error}"></div>
+    <div class="alert alert-danger" th:if="${fieldErrors}" th:text="${fieldErrors}"></div>
+    <div class="alert alert-danger" th:if="${globalErrors}" th:text="${globalErrors}"></div>
+</div>
+
+<div th:fragment="header">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a up-follow class="navbar-brand" href="/">{{ artifactId }}</a>
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a up-follow class="nav-link" href="/">Home</a>
+            </li>
+        </ul>
+    </nav>
+
+    <div th:replace=":: notifications"></div>
+</div>
+
+<div th:fragment="footer">
+    <div>Footer</div>
+</div>
+</body>
+</html>

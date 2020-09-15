@@ -1,0 +1,25 @@
+query all{{ Names }} {
+    all{{ Names }} {
+        id{{#each fields as |f|}}
+        {{fieldName}}{{/each}}
+    }
+}
+
+query {{ name }}ById($id: Int) {
+    {{ name }}ById(id: $id) {
+        id{{#each fields as |f|}}
+        {{fieldName}}{{/each}}
+    }
+}
+
+mutation delete{{ Name }}ById($id: ID!) {
+    delete{{ Name }}ById(id: $id)
+}
+
+mutation save{{ Name }}(${{ name }}: {{ Name }}Input!) {
+    save{{ Name }}({{ name }}: ${{ name }}) {
+        id{{#each fields as |f|}}
+        {{fieldName}}{{/each}}
+    }
+}
+

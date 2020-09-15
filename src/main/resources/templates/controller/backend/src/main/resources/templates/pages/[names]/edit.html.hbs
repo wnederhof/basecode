@@ -1,0 +1,23 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/layout :: defaultHead"></head>
+<body>
+<div th:replace="fragments/layout :: header"></div>
+
+<div class="container-fluid content">
+<h3 class="mt-5 mb-3">Edit {{ Name }}</h3>
+<form th:action="@{ /{{ names }} }" method="post" style="display:inline">
+    <div th:replace="fragments/{{ names }} :: formFields"></div>
+
+    <input type="hidden" name="id" th:value="${ {{ name }}.id }"/>
+
+    <div class="mt-4">
+        <button class="btn btn-outline-primary" name="save">Save</button>
+        <a up-follow th:href="@{ /{{ names }} }">Go Back</a>
+    </div>
+</form>
+</div>
+
+<div th:replace="fragments/layout :: footer"></div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<template>
+  <div>
+    <h2>{{ Name }} Listing</h2>
+    <table>
+      <thead>
+      <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="{{ name }} in this.{{ names }}" :key="{{ name }}.id">
+        <td>\{{ {{ name }}.id }}</td>{{#each fields as |f|}}
+        <td>\{{ {{ fieldName }}.id }}</td>{{/each}}
+        <td>
+          <nuxt-link :to="'/{{ names }}/' + {{ name }}.id">Show</nuxt-link>
+          <nuxt-link :to="'/{{ names }}/' + {{ name }}.id + '/edit'">Edit</nuxt-link>
+          <button @click="delete{{ Name }}ById({{ name }}.id)">Delete {{ Name }}</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <nuxt-link :to="'/{{ names }}/new'">New {{ Name }}</nuxt-link>
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from 'vue'
+import { all{{ Names }}, delete{{ Name }}ById } from '../../queries/{{ names }}.graphql';
+
+export default Vue.extend({
+  async asyncData({$graphql, params}) {
+    let result = await $graphql.request(all{{ Names }})
+    return { {{ names }}: result.all{{ Names }} }
+  },
+  methods: {
+    delete{{ Name }}ById: async function (id: number) {
+      if (confirm("Are you sure?")) {
+        await this.$graphql.request(delete{{ Name }}ById, {id})
+        let result = await this.$graphql.request(all{{ Names }})
+        this.{{ names }} = result.all{{ Names }}
+      }
+    },
+  }
+})
+</script>

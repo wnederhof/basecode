@@ -1,0 +1,19 @@
+package {{ groupId }}.{{ artifactId }}.{{ names }}
+
+import org.springframework.data.annotation.*
+import org.springframework.data.relational.core.mapping.Table
+import java.time.LocalDate
+import java.time.LocalDateTime
+
+@Table("{{ _names }}")
+data class {{ Name }}(
+        @Id
+        val id: Int? = null{{#each fields }},
+        val {{ fieldName }}: {{ FieldKotlinType }}{{/each}},
+
+        @CreatedDate
+        val createdAt: LocalDateTime? = null,
+
+        @LastModifiedDate
+        val updatedAt: LocalDateTime? = null
+)

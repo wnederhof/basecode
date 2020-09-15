@@ -1,0 +1,29 @@
+package {{ groupId }}.{{ artifactId }}.{{ names }}
+
+import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Event.Before{{ Name }}SavedEvent
+{{#each fields}}{{#if fieldRelationship}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service
+{{/if}}{{/each}}
+import org.springframework.context.event.EventListener
+import org.springframework.stereotype.Component
+
+@Component
+class {{ Name }}Listener(
+        private val {{ name }}Service: {{ Name }}Service{{#each fields}}{{#if fieldRelationship}},
+        private val {{ fieldType }}Service: {{ FieldType }}Service{{/if}}{{/each}}
+) {
+
+    @EventListener
+    fun validateBefore{{ Name }}Saved(event: Before{{ Name }}SavedEvent) {
+{{#each fields}}{{#if fieldRelationship}}
+        requireNotNull({{ fieldType }}Service.findById(event.entity.{{ fieldName }}))
+{{/if}}{{/each}}
+    }
+{{#each fields}}{{#if fieldRelationship}}
+    @EventListener
+    fun deleteBefore{{ FieldType }}Deleted(event: Before{{ FieldType }}DeletedEvent) {
+        {{ name }}Service.deleteBy{{ FieldName }}(event.id)
+    }
+{{/if}}{{/each}}
+}

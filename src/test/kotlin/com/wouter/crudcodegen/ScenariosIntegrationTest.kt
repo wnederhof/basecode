@@ -5,7 +5,6 @@ import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -29,20 +28,18 @@ internal class ScenariosIntegrationTest {
     }
 
     @Test
-    @Disabled
-    fun `User creates a simple blog with a post`() {
-        generate("new", "com.blogcorp", "blog")
+    fun `User scaffolds a book store`() {
+        generate("new", "com.wouter", "bookstore")
+//        generate("frontend", "com.wouter", "bookstore")
         listOf(
-                listOf("Patient", "lastName:string", "firstName:string"),
-                listOf("QuestionForm", "name:string", "url:string"),
-                listOf("PatientQuestionForm", "patientId:Patient", "questionFormId:QuestionForm")
-        ).forEach {
-            generate("entity", *it.toTypedArray())
-            generate("service", *it.toTypedArray())
-            generate("graphql", *it.toTypedArray())
-            generate("controller", *it.toTypedArray())
+                listOf("Book", "title:string", "author:string")
+        ).map { it.toTypedArray() }.forEach { args ->
+            generate("entity", *args)
+            generate("service", *args)
+            generate("graphql", *args)
+//            generate("frontend-scaffold", *args)
         }
-        assertThat(executeTests(tempDir), equalTo(true))
+        assertThat(executeBackendTests(tempDir), equalTo(true))
     }
 
     private fun generate(vararg args: String) {
@@ -51,10 +48,10 @@ internal class ScenariosIntegrationTest {
         }
     }
 
-    private fun executeTests(tempDir: File): Boolean {
+    private fun executeBackendTests(tempDir: File): Boolean {
         return OK_RETURN_STATUS == ProcessBuilder("sh", "mvnw", "verify")
                 .inheritIO()
-                .directory(tempDir)
+                .directory(File(tempDir.path + "/backend"))
                 .start()
                 .waitFor()
     }

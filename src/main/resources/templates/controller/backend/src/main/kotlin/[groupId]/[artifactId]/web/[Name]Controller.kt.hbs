@@ -1,0 +1,77 @@
+package {{ groupId }}.{{ artifactId }}.web
+
+import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}
+import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Service
+import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
+import org.springframework.validation.BindingResult
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
+import javax.validation.Valid
+
+@Controller
+@RequestMapping("/{{ names }}")
+class {{ Name }}Controller(
+        private val {{ name }}Service: {{ Name }}Service
+) {
+
+    @GetMapping
+    fun index(model: Model): String {
+        model.addAttribute("{{ names }}", {{ name }}Service.findAll())
+        return "pages/{{ names }}/index"
+    }
+
+    @GetMapping("/new")
+    fun new(model: Model): String {
+        return "pages/{{ names }}/new"
+    }
+
+    @GetMapping("/{id}")
+    fun show(@PathVariable("id") id: Int, model: Model): String {
+        model.addAttribute("{{ name }}", {{ name }}Service.findById(id))
+        return "pages/{{ names }}/show"
+    }
+
+    @GetMapping("/{id}/edit")
+    fun edit(@PathVariable("id") id: Int, model: Model): String {
+        model.addAttribute("{{ name }}", {{ name }}Service.findById(id))
+        return "pages/{{ names }}/edit"
+    }
+
+    @PostMapping(params = ["save"])
+    fun save(@Valid {{ name }}: {{ Name }}, bindingResult: BindingResult, redirectAttributes: RedirectAttributes): String {
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("errors",
+                    bindingResult.fieldErrors.map { "${it.field}: ${it.defaultMessage}" } +
+                    bindingResult.globalErrors.map { it.defaultMessage })
+            return "redirect:/{{ names }}/${ {{ name }}.id }/edit"
+        }
+
+        val saved{{ Name }} = {{ name }}Service.save({{ name }})
+
+        if ({{ name }}.id == null) {
+            redirectAttributes.addFlashAttribute("info", "New {{ Name }} Created.")
+        } else {
+            redirectAttributes.addFlashAttribute("info", "{{ Name }} Updated.")
+        }
+        return "redirect:/{{ names }}/${saved{{ Name }}.id}"
+    }
+
+    @GetMapping("/{id}/delete")
+    fun confirmDelete(@PathVariable("id") id: Int, model: Model): String {
+        model.addAttribute("{{ name }}", {{ name }}Service.findById(id))
+        return "pages/{{ names }}/delete"
+    }
+
+    @PostMapping(params = ["delete"])
+    fun delete(deleteRequest: DeleteRequest, redirectAttributes: RedirectAttributes): String {
+        {{ name }}Service.deleteById(deleteRequest.id)
+        redirectAttributes.addFlashAttribute("info", "{{ Name }} Deleted.")
+        return "redirect:/{{ names }}"
+    }
+
+    data class DeleteRequest(val id: Int)
+}

@@ -1,0 +1,32 @@
+<template>
+  <div>
+    <h2>New {{ Name }}</h2>
+    <app-{{ name }}-form :{{ name }}="this.{{ name }}" v-on:save="save"/>
+    <nuxt-link :to="'/{{ names }}'">List of {{ Names }}</nuxt-link>
+  </div>
+</template>
+
+<script lang="ts">
+import App{{ Name }}Form from '../../components/{{ Name }}Form.vue';
+import Vue from 'vue'
+import { save{{ Name }} } from '../../queries/{{ names }}.graphql';
+
+export default Vue.extend({
+  data() {
+    return {
+      {{ name }}: { {{#each fields as |f|}}
+        {{ fieldName }}: '',{{/each}}
+      }
+    }
+  },
+  components: {
+    App{{ Name }}Form
+  },
+  methods: {
+    async save({{ name }}) {
+      await this.$graphql.request(save{{ Name }}, { {{ name }} })
+      await this.$router.push({ path: '/{{ names }}' })
+    }
+  }
+})
+</script>
