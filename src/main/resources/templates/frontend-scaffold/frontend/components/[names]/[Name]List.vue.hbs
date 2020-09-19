@@ -3,20 +3,18 @@
   <table v-else>
     <thead>
       <tr>
-        <th>Id</th>
-        <th>Title</th>
-        <th>Author</th>
+        <th>Id</th>{{#each fields}}
+        <th>{{ FieldName }}</th>{{/each}}
       </tr>
     </thead>
     <tbody>
-      <tr v-for="book in this.allBooks" :key="book.id">
-        <td>\{{ book.id }}</td>
-        <td>\{{ book.title }}</td>
-        <td>\{{ book.author }}</td>
+      <tr v-for="{{ name }} in this.all{{ Names }}" :key="{{ name }}.id">
+        <td>\{{ {{ name }}.id }}</td>{{#each fields}}
+        <td>\{{ {{ name }}.{{ fieldName }} }}</td>{{/each}}
         <td>
-          <nuxt-link :to="'/books/' + book.id">Show</nuxt-link>
-          <nuxt-link :to="'/books/' + book.id + '/edit'">Edit</nuxt-link>
-          <button @click="deleteBookById(book.id)">Delete Book</button>
+          <nuxt-link :to="'/{{ names }}/' + {{ name }}.id">Show</nuxt-link>
+          <nuxt-link :to="'/{{ names }}/' + {{ name }}.id + '/edit'">Edit</nuxt-link>
+          <button @click="delete{{ Name }}ById({{ name }}.id)">Delete {{ Name }}</button>
         </td>
       </tr>
     </tbody>
@@ -30,24 +28,23 @@ import gql from "graphql-tag";
 import { SmartQuery } from "vue-apollo-decorators";
 
 @Component
-export default class BookList extends Vue {
+export default class {{ Name }}List extends Vue {
   @SmartQuery({
     query: gql`
-      query allBooks {
-        allBooks {
-          id
-          title
-          author
+      query all{{ Names }} {
+        all{{ Names }} {
+          id{{#each fields}}
+          {{ fieldName }}{{/each}}}
         }
       }
     `,
   })
-  allBooks = null;
+  all{{ Names }} = null;
 
-  async deleteBookById(id: number) {
+  async delete{{ Name }}ById(id: number) {
     const mutation = gql`
-      mutation deleteBookById($id: ID!) {
-        deleteBookById(id: $id)
+      mutation delete{{ Name }}ById($id: ID!) {
+        delete{{ Name }}ById(id: $id)
       }
     `;
 
