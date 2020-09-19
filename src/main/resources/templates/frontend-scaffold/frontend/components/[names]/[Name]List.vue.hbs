@@ -1,0 +1,65 @@
+<template>
+  <div v-if="$apollo.loading">Loading...</div>
+  <table v-else>
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Author</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="book in this.allBooks" :key="book.id">
+        <td>\{{ book.id }}</td>
+        <td>\{{ book.title }}</td>
+        <td>\{{ book.author }}</td>
+        <td>
+          <nuxt-link :to="'/books/' + book.id">Show</nuxt-link>
+          <nuxt-link :to="'/books/' + book.id + '/edit'">Edit</nuxt-link>
+          <button @click="deleteBookById(book.id)">Delete Book</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</template>
+
+<script lang="ts">
+import { Vue } from "vue-property-decorator";
+import Component from "nuxt-class-component";
+import gql from "graphql-tag";
+import { SmartQuery } from "vue-apollo-decorators";
+
+@Component
+export default class BookList extends Vue {
+  @SmartQuery({
+    query: gql`
+      query allBooks {
+        allBooks {
+          id
+          title
+          author
+        }
+      }
+    `,
+  })
+  allBooks = null;
+
+  async deleteBookById(id: number) {
+    const mutation = gql`
+      mutation deleteBookById($id: ID!) {
+        deleteBookById(id: $id)
+      }
+    `;
+
+    if (confirm("Are you sure?")) {
+      await this.$apollo.mutate({
+        mutation,
+        variables: { id },
+        update: async (store, data) => {
+          await this.$apollo.getClient().resetStore();
+        },
+      });
+    }
+  }
+}
+</script>

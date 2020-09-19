@@ -1,0 +1,34 @@
+{
+  "name": "bookstorefe",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt-ts",
+    "build": "nuxt-ts build",
+    "start": "nuxt-ts start",
+    "generate": "nuxt-ts generate",
+    "lint:js": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint": "npm run lint:js"
+  },
+  "dependencies": {
+    "@nuxt/typescript-runtime": "^1.0.0",
+    "@nuxtjs/apollo": "4.0.1-rc.1",
+    "graphql": "^15.3.0",
+    "graphql-tag": "^2.11.0",
+    "nuxt": "^2.14.0",
+    "nuxt-class-component": "^1.3.0",
+    "vue-apollo-decorators": "^2.0.0",
+    "vue-property-decorator": "^9.0.0"
+  },
+  "devDependencies": {
+    "@nuxt/types": "^2.14.0",
+    "@nuxt/typescript-build": "^2.0.2",
+    "@nuxtjs/eslint-config": "^3.1.0",
+    "@nuxtjs/eslint-config-typescript": "^3.0.0",
+    "@nuxtjs/eslint-module": "^2.0.0",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "eslint": "^7.5.0",
+    "eslint-plugin-nuxt": "^1.0.0"
+  }
+}

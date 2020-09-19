@@ -30,14 +30,14 @@ internal class ScenariosIntegrationTest {
     @Test
     fun `User scaffolds a book store`() {
         generate("new", "com.wouter", "bookstore")
-//        generate("frontend", "com.wouter", "bookstore")
+        generate("frontend", "bookstore")
         listOf(
                 listOf("Book", "title:string", "author:string")
         ).map { it.toTypedArray() }.forEach { args ->
             generate("entity", *args)
             generate("service", *args)
             generate("graphql", *args)
-//            generate("frontend-scaffold", *args)
+            generate("frontend-scaffold", *args)
         }
         assertThat(executeBackendTests(tempDir), equalTo(true))
     }
