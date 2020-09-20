@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "sourceRoot": "src/main/webapp",
     "target": "ES2018",
     "module": "ESNext",
     "moduleResolution": "Node",
@@ -17,10 +18,10 @@
     "baseUrl": ".",
     "paths": {
       "~/*": [
-        "./*"
+        "./src/main/webapp/*"
       ],
       "@/*": [
-        "./*"
+        "./src/main/webapp/*"
       ]
     },
     "types": [

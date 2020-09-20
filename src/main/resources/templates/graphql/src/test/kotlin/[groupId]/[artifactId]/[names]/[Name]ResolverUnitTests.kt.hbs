@@ -103,14 +103,14 @@ class {{ Name }}ResolverUnitTests {
         private lateinit var {{ name }}Service: {{ Name }}Service
 
         @InjectMocks
-        private lateinit var {{ fieldType }}Resolver: {{ Name }}Resolver.{{ FieldType }}Resolver
+        private lateinit var {{ fieldType }}FieldResolver: {{ Name }}Resolver.{{ FieldType }}FieldResolver
 
         @Test
         fun `{{ name }} delegates the call to the {{ name }}Service`() {
             whenever({{ name }}Service.findBy{{ FieldName }}({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1.id!!))
                     .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
 
-            assertThat({{ fieldType }}Resolver.{{ names }}({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1))
+            assertThat({{ fieldType }}FieldResolver.{{ names }}({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1))
                     .isEqualTo(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
         }
 

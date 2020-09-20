@@ -1,0 +1,11 @@
+{{=<% %>=}}<template>
+  <div>
+    <h1><% Name %> Listing</h1>
+    <<% Name %>List />
+    <nuxt-link to="/<% names %>/new">New <% Name %></nuxt-link>
+  </div>
+</template>
+
+<script lang="ts">
+import <% Name %>List from "@/components/<% names %>/<% Name %>List.vue";
+</script><%={{ }}=%>

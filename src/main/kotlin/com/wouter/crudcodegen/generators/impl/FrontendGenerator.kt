@@ -20,9 +20,9 @@ class FrontendGenerator(nameHelper: NameHelper) : Generator {
             "Generates new project called <artifactId>. " +
                     "For instance: \"new example\"."
 
-    override fun acceptsGeneratorName(name: String) = name == "new"
+    override fun acceptsGeneratorName(name: String) = name == "frontend"
 
-    override fun templateName() = "new"
+    override fun templateName() = "frontend"
 
     override fun initializeGenerator(targetPath: File, properties: ProjectProperties, args: List<String>): GeneratorSettings {
         val (artifactId) = args
