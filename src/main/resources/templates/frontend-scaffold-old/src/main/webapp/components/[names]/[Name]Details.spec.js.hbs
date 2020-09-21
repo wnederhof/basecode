@@ -1,0 +1,69 @@
+{{=<% %>=}}import {shallowMount, createLocalVue} from '@vue/test-utils';
+import flushPromises from 'flush-promises'
+import <% Name %>Details from './<% Name %>Details.vue';
+import {createMockClient} from 'mock-apollo-client';
+import VueApollo from 'vue-apollo';
+import gql from "graphql-tag";
+
+const localVue = createLocalVue()
+localVue.use(VueApollo)
+
+describe('<% Name %>Details', () => {
+  let wrapper
+  let mockClient
+  let apolloProvider
+
+  const createComponent = () => {
+    mockClient = createMockClient()
+
+    mockClient.setRequestHandler(gql`
+      query <% name %>ById($id: Int) {
+        <% name %>: <% name %>ById(id: $id) {
+          id<%#each fields%>
+          <% fieldName %><%/each%>
+        }
+      }
+    `, jest.fn().mockResolvedValue({
+      data: {
+        <% name %>: {
+          id: 1,<%#each fields%>
+          <% fieldName %>: "Some <% FieldName %>",<%/each%>
+        }
+      }
+    }));
+
+    apolloProvider = new VueApollo({
+      defaultClient: mockClient,
+    })
+
+    wrapper = shallowMount(<% Name %>Details, {
+      localVue,
+      apolloProvider,
+    })
+  }
+
+  afterEach(() => {
+    if (wrapper) {
+      wrapper.destroy()
+    }
+    mockClient = null
+    apolloProvider = null
+  })
+
+  it('is a Vue instance', () => {
+    createComponent();
+    expect(wrapper.vm).toBeTruthy();
+  })
+
+  it('shows loading when fetching data', async () => {
+    createComponent();
+    expect(wrapper.text()).toContain('Loading...');
+  });
+
+  it('contains <% name %> details', async () => {
+    createComponent();
+    await flushPromises()
+    <%#each fields%>
+    expect(wrapper.text()).toContain('Some <% FieldName %>');<%/each%>
+  });
+});<%={{ }}=%>

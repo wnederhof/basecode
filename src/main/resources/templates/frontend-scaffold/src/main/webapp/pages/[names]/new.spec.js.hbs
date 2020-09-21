@@ -1,0 +1,41 @@
+{{=<% %>=}}import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
+import New from './new.vue'
+
+const localVue = createLocalVue()
+
+describe('New', () => {
+  let wrapper
+
+  const push = jest.fn()
+  const $router = { push }
+
+  const createComponent = () => {
+    wrapper = shallowMount(New, {
+      localVue,
+      stubs: {
+        NuxtLink: RouterLinkStub,
+        <%Name%>Form: true
+      },
+      mocks: {
+        $router
+      }
+    })
+  }
+
+  afterEach(() => {
+    if (wrapper) {
+      wrapper.destroy()
+    }
+  })
+
+  it('is a Vue instance', () => {
+    createComponent()
+    expect(wrapper.vm).toBeTruthy()
+  })
+
+  it('redirects to the listing page on form save', async () => {
+    createComponent()
+    await wrapper.vm.handleFormSave()
+    expect(push).toHaveBeenCalledWith({ path: '/<%names%>' })
+  })
+})<%={{ }}=%>

@@ -1,0 +1,66 @@
+{{=<% %>=}}<template>
+  <div v-if="$apollo.loading">Loading...</div>
+  <table v-else>
+    <thead>
+      <tr>
+        <th>Id</th><%#each fields%>
+        <th><% FieldName %></th><%/each%>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="<% name %> in this.<% names %>" :key="<% name %>.id">
+        <td>{{ <% name %>.id }}</td><%#each fields%>
+        <td>{{ <% name %>.<% fieldName %> }}</td><%/each%>
+        <td>
+          <nuxt-link :to="'/<% names %>/' + <% name %>.id">Show</nuxt-link>
+          <nuxt-link :to="'/<% names %>/' + <% name %>.id + '/edit'">Edit</nuxt-link>
+          <button @click="delete<% Name %>ById(<% name %>.id)">Delete <% Name %></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</template>
+
+<script lang="ts">
+import { Vue } from "vue-property-decorator";
+import Component from "nuxt-class-component";
+import gql from "graphql-tag";
+import { SmartQuery } from "vue-apollo-decorators";
+
+@Component({
+  apollo: {
+    <% names %>: {
+      query: gql`
+        query all<% Names %> {
+          <% names %>: all<% Names %> {
+            id<%#each fields%>
+            <% fieldName %><%/each%>
+          }
+        }
+      `
+    }
+  }
+)
+export default class <% Name %>List extends Vue {
+  <% names %> = [];
+
+  async delete<% Name %>ById(id: number) {
+    const mutation = gql`
+      mutation delete<% Name %>ById($id: ID!) {
+        delete<% Name %>ById(id: $id)
+      }
+    `;
+
+    if (confirm("Are you sure?")) {
+      await this.$apollo.mutate({
+        mutation,
+        variables: { id },
+        update: async (store, data) => {
+          await this.$apollo.getClient().resetStore();
+        },
+      });
+    }
+  }
+}
+</script><%={{ }}=%>

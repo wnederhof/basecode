@@ -1,11 +1,20 @@
 {{=<% %>=}}<template>
   <div>
-    <h1><% Name %> Listing</h1>
-    <<% Name %>List />
-    <nuxt-link to="/<% names %>/new">New <% Name %></nuxt-link>
+    <h1><%Name%> Listing</h1>
+    <<%Name%>List />
+    <nuxt-link to="/<%names%>/new">
+      New <%Name%>
+    </nuxt-link>
   </div>
 </template>
 
 <script lang="ts">
-import <% Name %>List from "@/components/<% names %>/<% Name %>List.vue";
+import <%Name%>List from '@/components/<%names%>/<%Name%>List.vue'
+import Component from 'nuxt-class-component'
+import Vue from 'vue'
+
+@Component({ components: { <%Name%>List } })
+export default class extends Vue {
+
+}
 </script><%={{ }}=%>

@@ -1,0 +1,22 @@
+{{=<% %>=}}<template>
+  <div>
+    <h1>New <% Name %></h1>
+
+    <<% Name %>Form v-on:save="handleFormSave()" />
+
+    <nuxt-link :to="'/<% names %>'">List of <% Names %></nuxt-link>
+  </div>
+</template>
+
+<script lang="ts">
+import <% Name %>Form from "@/components/<% names %>/<% Name %>Form.vue"
+import Vue from "vue";
+import Component from "nuxt-class-component";
+
+@Component
+export default class extends Vue {
+  async handleFormSave() {
+    await this.$router.push({ path: '/<% names %>' })
+  }
+}
+</script><%={{ }}=%>

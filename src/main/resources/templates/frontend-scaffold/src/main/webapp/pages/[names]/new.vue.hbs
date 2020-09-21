@@ -1,22 +1,24 @@
 {{=<% %>=}}<template>
   <div>
-    <h1>New <% Name %></h1>
+    <h1>New <%Name%></h1>
 
-    <<% Name %>Form v-on:save="navigateToListPage()" />
+    <<%Name%>Form @save="handleFormSave()" />
 
-    <nuxt-link :to="'/<% names %>'">List of <% Names %></nuxt-link>
+    <nuxt-link :to="'/<%names%>'">
+      List of <%Names%>
+    </nuxt-link>
   </div>
 </template>
 
 <script lang="ts">
-import <% Name %>Form from "@/components/<% names %>/<% Name %>Form.vue"
-import Vue from "vue";
-import Component from "nuxt-class-component";
+import <%Name%>Form from '@/components/<%names%>/<%Name%>Form.vue'
+import Vue from 'vue'
+import Component from 'nuxt-class-component'
 
-@Component
+@Component({ components: { <%Name%>Form } })
 export default class extends Vue {
-  async navigateToListPage() {
-    await this.$router.push({ path: '/<% names %>' })
+  async handleFormSave () {
+    await this.$router.push({ path: '/<%names%>' })
   }
 }
 </script><%={{ }}=%>

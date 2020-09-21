@@ -1,0 +1,37 @@
+{{=<% %>=}}import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
+import Index from './index.vue'
+
+const localVue = createLocalVue()
+
+describe('Index', () => {
+  let wrapper
+
+  const push = jest.fn()
+  const $route = { params: { <%name%>Id: '1' } }
+  const $router = { push }
+
+  const createComponent = () => {
+    wrapper = shallowMount(Index, {
+      localVue,
+      stubs: {
+        NuxtLink: RouterLinkStub,
+        <%Name%>Details: true
+      },
+      mocks: {
+        $route,
+        $router
+      }
+    })
+  }
+
+  afterEach(() => {
+    if (wrapper) {
+      wrapper.destroy()
+    }
+  })
+
+  it('is a Vue instance', () => {
+    createComponent()
+    expect(wrapper.vm).toBeTruthy()
+  })
+})<%={{ }}=%>

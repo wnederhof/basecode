@@ -29,11 +29,10 @@ internal class ScenariosIntegrationTest {
 
     @Test
     fun `User scaffolds a book store`() {
-        generate("new", "com.wouter", "blog")
-        generate("frontend", "blog")
+        generate("new", "com.wouter", "klimreminder")
+        generate("frontend", "klimreminder")
         listOf(
-                listOf("Post", "title:string", "description:string"),
-                listOf("Comment", "content:string", "postId:Post")
+                listOf("Product", "name:string", "boughtOn:string", "expiresOn:string")
         ).map { it.toTypedArray() }.forEach { args ->
             generate("entity", *args)
             generate("service", *args)

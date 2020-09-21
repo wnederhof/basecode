@@ -1,25 +1,27 @@
 {{=<% %>=}}<template>
   <div>
-    <h1>Edit <% Name %></h1>
+    <h1>Edit <%Name%></h1>
 
-    <<% Name %>Form :<% name %>Id="<% name %>Id" v-on:save="navigateToListPage()" />
+    <<%Name%>Form :<%name%>-id="this.$route.params.<%name%>Id" @save="handleFormSave()" />
 
-    <nuxt-link :to="'/<% names %>'">List of <% Names %></nuxt-link>
-    <nuxt-link :to="'/<% names %>/' + this.$route.params.<% name %>Id">Show</nuxt-link>
+    <nuxt-link :to="'/<%names%>'">
+      List of <%Names%>
+    </nuxt-link>
+    <nuxt-link :to="'/<%names%>/' + this.$route.params.<%name%>Id">
+      Show
+    </nuxt-link>
   </div>
 </template>
 
 <script lang="ts">
-import <% Name %>Form from "@/components/<% names %>/<% Name %>Form.vue"
-import Vue from "vue";
-import Component from "nuxt-class-component";
+import <%Name%>Form from '@/components/<%names%>/<%Name%>Form.vue'
+import Vue from 'vue'
+import Component from 'nuxt-class-component'
 
-@Component
+@Component({ components: { <%Name%>Form } })
 export default class extends Vue {
-  <% name %>Id: number = parseInt(this.$route.params.<% name %>Id)
-
-  async navigateToListPage() {
-    await this.$router.push({ path: '/<% names %>' })
+  async handleFormSave () {
+    await this.$router.push({ path: '/<%names%>' })
   }
 }
 </script><%={{ }}=%>
