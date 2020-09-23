@@ -1,17 +1,18 @@
-{{=<% %>=}}import { shallowMount, createLocalVue } from '@vue/test-utils'
+{{=<% %>=}}import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { createMockClient } from 'mock-apollo-client'
 import VueApollo from 'vue-apollo'
 import gql from 'graphql-tag'
 import <%Name%>Details from './<%Name%>Details.vue'
+import { MockApolloClient } from "mock-apollo-client/dist/mockClient"
 
 const localVue = createLocalVue()
 localVue.use(VueApollo)
 
 describe('<%Name%>Details', () => {
-  let wrapper
-  let mockClient
-  let apolloProvider
+  let wrapper: Wrapper<any>
+  let mockClient: MockApolloClient
+  let apolloProvider: VueApollo
 
   const createComponent = () => {
     mockClient = createMockClient()
@@ -45,8 +46,6 @@ describe('<%Name%>Details', () => {
 
   afterEach(() => {
     wrapper.destroy()
-    mockClient = null
-    apolloProvider = null
   })
 
   it('is a Vue instance', () => {

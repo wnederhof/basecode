@@ -1,10 +1,10 @@
-import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
+import { shallowMount, createLocalVue, RouterLinkStub, Wrapper } from '@vue/test-utils'
 import Default from './Default.vue'
 
 const localVue = createLocalVue()
 
 describe('Default', () => {
-  let wrapper: any
+  let wrapper: Wrapper<any>
 
   const createComponent = () => {
     wrapper = shallowMount(Default, {
