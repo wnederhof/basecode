@@ -33,12 +33,11 @@
 import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
 import gql from 'graphql-tag'
-import { SmartQuery } from 'vue-apollo-decorators'
 
-@Component
-export default class <%Name%>List extends Vue {
-  @SmartQuery({
-    query: gql`
+@Component({
+  apollo: {
+    <%names%>: {
+      query: gql`
       query all<%Names%> {
         <%names%>: all<%Names%> {
           id<%#each fields%>
@@ -46,7 +45,10 @@ export default class <%Name%>List extends Vue {
         }
       }
     `
-  })
+    }
+  }
+})
+export default class <%Name%>List extends Vue {
   <%names%> = null;
 
   async delete<%Name%>ById (id: number) {

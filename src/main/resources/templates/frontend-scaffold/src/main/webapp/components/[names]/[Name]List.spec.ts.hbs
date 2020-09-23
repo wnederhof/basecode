@@ -48,9 +48,7 @@ describe('<%Name%>List', () => {
   }
 
   afterEach(() => {
-    if (wrapper) {
-      wrapper.destroy()
-    }
+    wrapper.destroy()
     mockClient = null
     apolloProvider = null
   })

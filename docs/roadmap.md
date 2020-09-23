@@ -4,18 +4,21 @@
 - Add E2E tests
 - Use Typescript for Jest tests
 - Clean up generated code
-- Add `date` support
-- Make sure `numbers` are properly supported
 - Clean up generator code
-- Dockerfile
+- Add authentication generators
 
 ## Version 0.2.0
-- Add authentication generators
-- Fix page transition scrolling delay
+- Add `date` support
+- Add `enum` support
+- Make sure `numbers` are properly supported
 - Add GraphQL backend tests
-- Also test Codegen for linting, FE, E2E
+- Dockerfile
 
 ## Version 0.3.0
+- Fix page transition scrolling delay
+- Also test Codegen for linting, FE, E2E
+
+## Version 0.4.0
 - Relational code generation
 
 ## Version 1.0.0

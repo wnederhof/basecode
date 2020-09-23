@@ -1,10 +1,10 @@
-{{=<% %>=}}import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
+{{=<% %>=}}import { shallowMount, createLocalVue, RouterLinkStub, Wrapper } from '@vue/test-utils'
 import Index from './index.vue'
 
 const localVue = createLocalVue()
 
 describe('Index', () => {
-  let wrapper
+  let wrapper: Wrapper<any>
 
   const createComponent = () => {
     wrapper = shallowMount(Index, {
@@ -17,9 +17,7 @@ describe('Index', () => {
   }
 
   afterEach(() => {
-    if (wrapper) {
-      wrapper.destroy()
-    }
+    wrapper.destroy()
   })
 
   it('is a Vue instance', () => {

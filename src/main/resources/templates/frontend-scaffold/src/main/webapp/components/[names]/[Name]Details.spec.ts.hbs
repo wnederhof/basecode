@@ -3,7 +3,7 @@ import flushPromises from 'flush-promises'
 import { createMockClient } from 'mock-apollo-client'
 import VueApollo from 'vue-apollo'
 import gql from 'graphql-tag'
-import Details from './<%Name%>Details.vue'
+import <%Name%>Details from './<%Name%>Details.vue'
 
 const localVue = createLocalVue()
 localVue.use(VueApollo)
@@ -44,9 +44,7 @@ describe('<%Name%>Details', () => {
   }
 
   afterEach(() => {
-    if (wrapper) {
-      wrapper.destroy()
-    }
+    wrapper.destroy()
     mockClient = null
     apolloProvider = null
   })

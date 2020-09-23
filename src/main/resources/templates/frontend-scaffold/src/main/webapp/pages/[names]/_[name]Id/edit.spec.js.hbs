@@ -1,13 +1,13 @@
-{{=<% %>=}}import { shallowMount, createLocalVue, RouterLinkStub } from '@vue/test-utils'
+{{=<% %>=}}import { shallowMount, createLocalVue, RouterLinkStub, Wrapper } from '@vue/test-utils'
 import Edit from './edit.vue'
 
 const localVue = createLocalVue()
 
 describe('Edit', () => {
-  let wrapper
+  let wrapper: Wrapper<any>
 
   const push = jest.fn()
-  const $route = { params: { <%name%>Id: '1' } }
+  const $route = { params: { <%name%>Id: 1 } }
   const $router = { push }
 
   const createComponent = () => {
@@ -25,9 +25,7 @@ describe('Edit', () => {
   }
 
   afterEach(() => {
-    if (wrapper) {
-      wrapper.destroy()
-    }
+    wrapper.destroy()
   })
 
   it('is a Vue instance', () => {

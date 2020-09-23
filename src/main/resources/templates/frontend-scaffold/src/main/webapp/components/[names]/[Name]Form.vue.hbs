@@ -1,4 +1,4 @@
-<template>
+{{=<% %>=}}<template>
   <div v-if="$apollo.loading">
     Loading...
   </div>
@@ -17,29 +17,30 @@
 <script lang="ts">
 import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
-import { SmartQuery } from 'vue-apollo-decorators'
 import gql from 'graphql-tag'
 
-@Component({ props: { <%name%>Id: Number } })
-export default class <%Name%>Form extends Vue {
-  @SmartQuery({
-    query: gql`
+@Component({
+  apollo: {
+    <%name%>: {
+      query: gql`
       query <%name%>ById($id: Int) {
         <%name%>: <%name%>ById(id: $id) {
           id<%#each fields%>
           <%fieldName%><%/each%>
         }
       }
-    `,
-    variables () {
-      return {
-        id: this.$props.<%name%>Id
+    `, variables () {
+        return {
+          id: this.$props.<%name%>Id
+        }
+      }, skip () {
+        return !this.$props.<%name%>Id
       }
-    },
-    skip () {
-      return !this.$props.<%name%>Id
     }
-  })
+  },
+  props: { <%name%>Id: [Number, String] }
+})
+export default class <%Name%>Form extends Vue {
   <%name%> = { <%#each fields%><%fieldName%>: '', <%/each%> };
 
   async save<%Name%> () {
@@ -65,4 +66,4 @@ export default class <%Name%>Form extends Vue {
     this.$emit('save', this.<%name%>)
   }
 }
-</script>
+</script><%={{ }}=%>
