@@ -1,8 +1,8 @@
 # Roadmap
 ## Version 0.1.0
-- Add unit tests for entire FE
+- X Add unit tests for entire FE
 - Add E2E tests
-- Use Typescript for Jest tests
+- X Use Typescript for Jest tests
 - Clean up generated code
 - Clean up generator code
 - Add authentication generators

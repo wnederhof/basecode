@@ -5,7 +5,7 @@
   <form v-else @submit.prevent="save<%Name%>">
     <input v-if="<%name%>" id="id" v-model="<%name%>.id" type="hidden"><%#each fields%>
     <div>
-      <label for="<%fieldName%>"><%fieldName%></label>
+      <label for="<%fieldName%>"><%FieldName%></label>
       <input id="<%fieldName%>" v-model="<%name%>.<%fieldName%>" type="text">
     </div><%/each%>
     <div>

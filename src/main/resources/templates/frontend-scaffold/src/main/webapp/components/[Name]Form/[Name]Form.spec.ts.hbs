@@ -55,7 +55,7 @@ describe('<%Name%>Form', () => {
 
   it('contains <%name%> form with no data if id is not set', () => {
     createComponent({ <%name%>Id: null })<%#each fields%>
-    expect(wrapper.find('input#<%fieldName%>').element.value).toContain('')<%/each%>
+    expect((wrapper.find('input#<%fieldName%>').element as HTMLInputElement).value).toContain('')<%/each%>
   })
 
   it('shows loading when fetching data if id is set', () => {
@@ -67,7 +67,7 @@ describe('<%Name%>Form', () => {
     createComponent({ <%name%>Id: 1 })
     await flushPromises()
 <%#each fields%>
-    expect(wrapper.find('input#<%fieldName%>').element.value).toContain('Some <%FieldName%>')<%/each%>
+    expect((wrapper.find('input#<%fieldName%>').element as HTMLInputElement).value).toContain('Some <%FieldName%>')<%/each%>
   })
 
   it('runs a mutation on submit and emits save event', async () => {
