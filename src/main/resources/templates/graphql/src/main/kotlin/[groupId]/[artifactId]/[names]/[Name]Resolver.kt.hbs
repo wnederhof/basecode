@@ -2,8 +2,7 @@ package {{ groupId }}.{{ artifactId }}.{{ names }}
 
 {{#each fields}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service
-{{/if}}{{/each}}
-import graphql.kickstart.tools.GraphQLMutationResolver
+{{/if}}{{/each}}import graphql.kickstart.tools.GraphQLMutationResolver
 import graphql.kickstart.tools.GraphQLQueryResolver
 import graphql.kickstart.tools.GraphQLResolver
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,14 +17,14 @@ sealed class {{ Name }}Resolver {
     protected lateinit var {{ fieldType }}Service: {{ FieldType }}Service
 {{/if}}{{/each}}
     @Component
-    class QueryResolver: GraphQLQueryResolver, {{ Name }}Resolver() {
+    class RootQueryResolver: GraphQLQueryResolver, {{ Name }}Resolver() {
 
         fun {{ name }}ById(id: Int): {{ Name }}? {
             return {{ name }}Service.findById(id)
         }
 
-        fun all{{ Names }}(): Iterable<{{ Name }}> {
-            return {{ name }}Service.findAll()
+        fun all{{ Names }}(filter: {{ Name }}Filter?): Iterable<{{ Name }}> {
+            return {{ name }}Service.findAll(filter)
         }
 
     }
@@ -44,13 +43,14 @@ sealed class {{ Name }}Resolver {
     }
 
     @Component
-    class Resolver: GraphQLResolver<{{ Name }}>, {{ Name }}Resolver() {
+    class {{ Name }}QueryResolver: GraphQLResolver<{{ Name }}>, {{ Name }}Resolver() {
 {{#each fields}}{{#if fieldRelationship}}
         fun {{ fieldType }}({{ name }}: {{ Name }}): {{ FieldType }}? {
             return {{ fieldType }}Service.findById({{ name }}.{{ fieldName }})
         }
 {{/if}}{{/each}}
-    }{{#each fields}}{{#if fieldRelationship}}
+    }
+{{#each fields}}{{#if fieldRelationship}}
     @Component
     class {{ FieldType }}FieldResolver: GraphQLResolver<{{ FieldType }}>, {{ Name }}Resolver() {
 
@@ -58,6 +58,6 @@ sealed class {{ Name }}Resolver {
             return {{ name }}Service.findBy{{ FieldName }}({{ fieldType }}.id!!)
         }
 
-    }{{/if}}{{/each}}
-
+    }
+{{/if}}{{/each}}
 }

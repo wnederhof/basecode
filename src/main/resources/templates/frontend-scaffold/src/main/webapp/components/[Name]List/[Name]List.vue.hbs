@@ -11,7 +11,8 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="<%name%> in <%names%>" :key="<%name%>.id"><%#each fields%>
+      <tr v-for="<%name%> in <%names%>" :key="<%name%>.id">
+        <td>{{ <%name%>.id }}</td><%#each fields%>
         <td>{{ <%name%>.<%fieldName%> }}</td><%/each%>
         <td>
           <nuxt-link :to="'/<%names%>/' + <%name%>.id">
@@ -38,14 +39,21 @@ import gql from 'graphql-tag'
   apollo: {
     <%names%>: {
       query: gql`
-      query all<%Names%> {
-        <%names%>: all<%Names%> {
+      query all<%Names%>($filter: <%Name%>Filter) {
+        <%names%>: all<%Names%>(filter: $filter) {
           id<%#each fields%>
           <%fieldName%><%/each%>
         }
+      }`, variables () {
+        const id = this.$props.id;<%#each fields%><%#if fieldRelationship%>
+        const <%fieldName%> = this.$props.<%fieldName%>;<%/if%><%/each%>
+        return { filter: { id<%#each fields%><%#if fieldRelationship%>, <%fieldName%><%/if%><%/each%> } }
       }
-    `
     }
+  },
+  props: {
+    id: [Number, String]<%#each fields%><%#if fieldRelationship%>,
+    <%fieldName%>: [Number, String]<%/if%><%/each%>
   }
 })
 export default class <%Name%>List extends Vue {

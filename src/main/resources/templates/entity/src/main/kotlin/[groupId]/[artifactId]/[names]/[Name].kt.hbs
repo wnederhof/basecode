@@ -7,13 +7,13 @@ import java.time.LocalDateTime
 
 @Table("{{ _names }}")
 data class {{ Name }}(
-        @Id
-        val id: Int? = null{{#each fields }},
-        val {{ fieldName }}: {{ FieldKotlinType }}{{/each}},
+    @Id
+    val id: Int? = null{{#each fields }},
+    val {{ fieldName }}: {{ FieldKotlinType }}{{/each}},
 
-        @CreatedDate
-        val createdAt: LocalDateTime? = null,
+    @CreatedDate
+    val createdAt: LocalDateTime? = null,
 
-        @LastModifiedDate
-        val updatedAt: LocalDateTime? = null
+    @LastModifiedDate
+    val updatedAt: LocalDateTime? = null
 )

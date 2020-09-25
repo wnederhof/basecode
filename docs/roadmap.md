@@ -2,10 +2,14 @@
 ## Version 0.1.0
 - X Add unit tests for entire FE
 - Add E2E tests
+- 1-N relations FE and BE support
 - X Use Typescript for Jest tests
 - Clean up generated code
 - Clean up generator code
 - Add authentication generators
+- Add unit tests for 1-N BE relations
+- Sealed classes?
+- Add tests for FE List filter
 
 ## Version 0.2.0
 - Add `date` support
@@ -13,6 +17,7 @@
 - Make sure `numbers` are properly supported
 - Add GraphQL backend tests
 - Dockerfile
+- Add optional Bootstrap support
 
 ## Version 0.3.0
 - Fix page transition scrolling delay

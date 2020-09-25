@@ -49,7 +49,8 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                                         "fieldType" to nameHelper.toLowerCamelCase(it[1]),
                                         "field_types" to nameHelper.toLowerCamelCase(nameHelper.pluralize(it[1])),
                                         "FIELD_DATABASE_TYPE" to determineDatabaseType(it[1]),
-                                        "FieldKotlinType" to determineKotlinType(it[1]),
+                                        "FieldKotlinType" to determineKotlinTypeNullable(it[1]),
+                                        "FieldKotlinTypeNotNullable" to determineKotlinType(it[1]),
                                         "FieldGraphQLType" to determineGraphQLType(it[1]),
                                         "fieldKotlinAnnotations" to determineKotlinAnnotations(it[1]),
                                         "fieldTestValue" to determineSomeTestValue(nameHelper.toUpperCamelCase(it[0]), it[1]),
@@ -137,6 +138,20 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
     }
 
     private fun determineKotlinType(type: String): String {
+        return when (type) {
+            "string" -> "String"
+            "text" -> "String"
+            "int" -> "Int"
+            "date" -> "LocalDate"
+            "string?" -> "String"
+            "text?" -> "String"
+            "int?" -> "Int"
+            "date?" -> "LocalDate"
+            else -> "Int"
+        }
+    }
+
+    private fun determineKotlinTypeNullable(type: String): String {
         return when (type) {
             "string" -> "String"
             "text" -> "String"

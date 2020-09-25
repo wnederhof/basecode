@@ -19,29 +19,29 @@ class {{ Name }}ResolverUnitTests {
 
     @Nested
     @ExtendWith(MockitoExtension::class)
-    inner class QueryResolverUnitTests {
+    inner class RootQueryResolverUnitTests {
 
         @Mock
         private lateinit var {{ name }}Service: {{ Name }}Service
 
         @InjectMocks
-        private lateinit var {{ name }}QueryResolver: {{ Name }}Resolver.QueryResolver
+        private lateinit var rootQueryResolver: {{ Name }}Resolver.RootQueryResolver
 
         @Test
         fun `{{ name }}ById delegates the call to the {{ Name }}Service`() {
             whenever({{ name }}Service.findById(1))
                     .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
 
-            assertThat({{ name }}QueryResolver.{{ name }}ById(1))
+            assertThat(rootQueryResolver.{{ name }}ById(1))
                     .isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
         }
 
         @Test
         fun `{{ names }} delegates the call to the {{ Name }}Service`() {
-            whenever({{ name }}Service.findAll())
+            whenever({{ name }}Service.findAll(null))
                     .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
 
-            assertThat({{ name }}QueryResolver.all{{ Names }}())
+            assertThat(rootQueryResolver.all{{ Names }}({{ Name }}Filter()))
                     .isEqualTo(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
         }
 
@@ -58,7 +58,7 @@ class {{ Name }}ResolverUnitTests {
         private lateinit var {{ name }}MutationResolver: {{ Name }}Resolver.MutationResolver
 
         @Test
-        fun `find{{ Name }}ById delegates the call to the {{ Name }}Service`() {
+        fun `save delegates the call to the {{ Name }}Service`() {
             whenever({{ name }}Service.save({{ NAME }}_FIXTURE_1))
                     .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
 
@@ -67,7 +67,7 @@ class {{ Name }}ResolverUnitTests {
         }
 
         @Test
-        fun `findAll{{ Names }} delegates the call to the {{ Name }}Service`() {
+        fun `delete{{ Name }}ById delegates the call to the {{ Name }}Service`() {
             {{ name }}MutationResolver.delete{{ Name }}ById(1)
 
             verify({{ name }}Service).deleteById(1)
@@ -83,14 +83,14 @@ class {{ Name }}ResolverUnitTests {
         private lateinit var {{ fieldType }}Service: {{ FieldType }}Service{{/if}}{{/each}}
 
         @InjectMocks
-        private lateinit var resolver: {{ Name }}Resolver.Resolver
+        private lateinit var {{ name }}QueryResolver: {{ Name }}Resolver.{{ Name }}QueryResolver
 {{#each fields}}{{#if fieldRelationship}}
         @Test
         fun `{{ fieldType }} delegates the call to the {{ FieldType }}Service`() {
             whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
                     .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
 
-            assertThat(resolver.{{ fieldType }}({{ NAME }}_FIXTURE_WITH_ID_1))
+            assertThat({{ name }}QueryResolver.{{ fieldType }}({{ NAME }}_FIXTURE_WITH_ID_1))
                     .isEqualTo({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
         }{{/if}}{{/each}}
     }

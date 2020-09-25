@@ -13,8 +13,29 @@ class {{ Name }}Service(
         private val applicationEventPublisher: ApplicationEventPublisher
 ) {
 
-    fun findAll(): Iterable<{{ Name }}> {
+    fun findAll(filter: {{ Name }}Filter? = null): Iterable<{{ Name }}> {
+        if (filter != null && hasMultipleFilters(filter)) {
+            error("Using multiple filters is not supported.")
+        }
+
+        if (filter?.id != null) {
+            return listOfNotNull({{ name }}Repository.findByIdOrNull(filter.id))
+        }
+{{#each fields as |f|}}{{#if fieldRelationship}}
+        if (filter?.{{ fieldName }} != null) {
+            return {{ name }}Repository.findBy{{ FieldName }}(filter.{{ fieldName }})
+        }
+{{/if}}{{/each}}
         return {{ name }}Repository.findAll()
+    }
+
+    private fun hasMultipleFilters(filter: {{ Name }}Filter): Boolean {
+        val filterCount = listOfNotNull(
+            filter.id{{#each fields as |f|}}{{#if fieldRelationship}},
+            filter.{{fieldName}}{{/if}}{{/each}}
+        )
+
+        return filterCount.size > 1
     }
 
 {{#each fields as |f|}}{{#if fieldRelationship}}    fun findBy{{ FieldName }}({{ fieldName }}: Int): List<{{ Name }}> {

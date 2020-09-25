@@ -1,6 +1,6 @@
 extend type Query {
     {{ name }}ById(id: Int): {{ Name }}
-    all{{ Names }}: [{{ Name }}!]!
+    all{{ Names }}(filter: {{ Name }}Filter): [{{ Name }}!]!
 }
 
 extend type Mutation {
@@ -16,6 +16,11 @@ type {{ Name }} {
     id: ID!{{#each fields }}
     {{ fieldName }}: {{ FieldGraphQLType }}{{/each}}{{#each fields }}{{#if fieldRelationship}}
     {{ fieldType }}: {{ FieldType }}{{/if}}{{/each}}
+}
+
+input {{ Name }}Filter {
+    id: ID{{#each fields }}{{#if fieldRelationship}}
+    {{ fieldName }}: Int{{/if}}{{/each}}
 }
 
 input {{ Name }}Input {
