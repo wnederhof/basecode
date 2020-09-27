@@ -18,10 +18,10 @@
           <nuxt-link :to="'/<%names%>/' + <%name%>.id">
             Show
           </nuxt-link>
-          <button @click="edit<%Name%>(<%name%>.id)">
+          <button ref="edit-<%name%>-btn" type="button" @click="edit<%Name%>(<%name%>.id)">
             Edit <%Name%>
           </button>
-          <button @click="delete<%Name%>ById(<%name%>.id)">
+          <button ref="delete-<%name%>-btn" type="button" @click="delete<%Name%>ById(<%name%>.id)">
             Delete <%Name%>
           </button>
         </td>

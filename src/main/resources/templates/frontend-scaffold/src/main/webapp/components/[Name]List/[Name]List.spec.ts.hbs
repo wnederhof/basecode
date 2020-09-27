@@ -18,8 +18,8 @@ describe('<%Name%>List', () => {
     mockClient = createMockClient()
 
     mockClient.setRequestHandler(gql`
-      query all<%Names%> {
-        <%names%>: all<%Names%> {
+      query all<%Names%>($filter: <%Name%>Filter) {
+        <%names%>: all<%Names%>(filter: $filter) {
           id<%#each fields%>
           <%fieldName%><%/each%>
         }
@@ -80,7 +80,7 @@ describe('<%Name%>List', () => {
       }
     `, queryHandler)
 
-    await wrapper.find('button').trigger('click')
+    await wrapper.findComponent({ ref: 'delete-<%name%>-btn' }).trigger('click')
     expect(queryHandler).toBeCalledTimes(0)
   })
 
@@ -95,7 +95,7 @@ describe('<%Name%>List', () => {
       }
     `, queryHandler)
 
-    await wrapper.find('button').trigger('click')
+    await wrapper.findComponent({ ref: 'delete-<%name%>-btn' }).trigger('click')
     expect(queryHandler).toBeCalledTimes(1)
   })
 })<%={{ }}=%>

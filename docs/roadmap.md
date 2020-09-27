@@ -4,16 +4,17 @@
 - X Use Typescript for Jest tests
 - X Sealed classes?
 - X 1-N relations FE and BE support
+- X Add unit tests for 1-N BE relations
 
 - Add tests for FE List filter
 - Fix broken tests
-- Add unit tests for 1-N BE relations
 - Add E2E tests
+
 - Pagination
+- Add authentication generators
 
 - Clean up generated code
 - Clean up generator code
-- Add authentication generators
 
 ## Version 0.2.0
 - Add `date` support
