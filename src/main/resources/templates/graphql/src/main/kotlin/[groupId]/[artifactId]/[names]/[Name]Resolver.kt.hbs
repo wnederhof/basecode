@@ -3,8 +3,8 @@ package {{ groupId }}.{{ artifactId }}.{{ names }}
 {{#each fields}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service
 {{/if}}{{/each}}import graphql.kickstart.tools.GraphQLMutationResolver
-import graphql.kickstart.tools.GraphQLQueryResolver
-import graphql.kickstart.tools.GraphQLResolver
+import graphql.kickstart.tools.GraphQLQueryResolver{{#if hasRelations}}
+import graphql.kickstart.tools.GraphQLResolver{{/if}}
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -18,7 +18,6 @@ sealed class {{ Name }}Resolver {
 {{/if}}{{/each}}
     @Component
     class RootQueryResolver: GraphQLQueryResolver, {{ Name }}Resolver() {
-
         fun {{ name }}ById(id: Int): {{ Name }}? {
             return {{ name }}Service.findById(id)
         }
@@ -26,12 +25,10 @@ sealed class {{ Name }}Resolver {
         fun all{{ Names }}(filter: {{ Name }}Filter?): Iterable<{{ Name }}> {
             return {{ name }}Service.findAll(filter)
         }
-
     }
 
     @Component
     class MutationResolver: GraphQLMutationResolver, {{ Name }}Resolver() {
-
         fun save{{ Name }}({{ name }}: {{ Name }}): {{ Name }} {
             return {{ name }}Service.save({{ name }})
         }
@@ -39,25 +36,20 @@ sealed class {{ Name }}Resolver {
         fun delete{{ Name }}ById(id: Int) {
             {{ name }}Service.deleteById(id)
         }
-
     }
-
+{{#if hasRelations}}
     @Component
-    class {{ Name }}QueryResolver: GraphQLResolver<{{ Name }}>, {{ Name }}Resolver() {
-{{#each fields}}{{#if fieldRelationship}}
+    class {{ Name }}QueryResolver: GraphQLResolver<{{ Name }}>, {{ Name }}Resolver() { {{#each fields}}{{#if fieldRelationship}}
         fun {{ fieldType }}({{ name }}: {{ Name }}): {{ FieldType }}? {
             return {{ fieldType }}Service.findById({{ name }}.{{ fieldName }})
         }
-{{/if}}{{/each}}
-    }
+{{/if}}{{/each}}    }
 {{#each fields}}{{#if fieldRelationship}}
     @Component
     class {{ FieldType }}FieldResolver: GraphQLResolver<{{ FieldType }}>, {{ Name }}Resolver() {
-
         fun {{ names }}({{ fieldType }}: {{ FieldType }}): List<{{ Name }}> {
             return {{ name }}Service.findBy{{ FieldName }}({{ fieldType }}.id!!)
         }
-
     }
-{{/if}}{{/each}}
+{{/if}}{{/each}}{{/if}}
 }

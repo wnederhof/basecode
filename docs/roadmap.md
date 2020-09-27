@@ -1,15 +1,17 @@
 # Roadmap
 ## Version 0.1.0
 - X Add unit tests for entire FE
-- Add E2E tests
-- 1-N relations FE and BE support
 - X Use Typescript for Jest tests
+- X Sealed classes?
+
+- 1-N relations FE and BE support
 - Clean up generated code
 - Clean up generator code
 - Add authentication generators
-- Add unit tests for 1-N BE relations
-- Sealed classes?
 - Add tests for FE List filter
+- Fix broken tests
+- Add unit tests for 1-N BE relations
+- Add E2E tests
 
 ## Version 0.2.0
 - Add `date` support

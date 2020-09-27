@@ -2,8 +2,8 @@ package {{ groupId }}.{{ artifactId }}.{{ names }}
 
 import org.springframework.data.repository.CrudRepository
 
-interface {{ Name }}Repository: CrudRepository<{{ Name }}, Int> {
-
-{{#each fields}}{{#if fieldRelationship}}    fun findBy{{ FieldName }}({{ fieldName }}: Int): List<{{ Name }}>
+interface {{ Name }}Repository: CrudRepository<{{ Name }}, Int>{{#if hasRelations}} {
+{{#each fields}}{{#if fieldRelationship}}
+    fun findBy{{ FieldName }}({{ fieldName }}: Int): List<{{ Name }}>
 {{/if}}{{/each}}
-}
+}{{/if}}

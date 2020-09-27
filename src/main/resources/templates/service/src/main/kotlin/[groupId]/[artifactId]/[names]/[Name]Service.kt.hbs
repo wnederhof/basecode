@@ -9,7 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 class {{ Name }}Service(
-        private val {{ name }}Repository: {{ Name }}Repository,
+        private val {{ name }}Repository: {{ Name }}Repository,{{#each field}}{{#if fieldRelationship}}
+        private val {{ fieldName }}Repository: {{ FieldName }}Repository,{{/if}}{{/each}}
         private val applicationEventPublisher: ApplicationEventPublisher
 ) {
 
@@ -52,9 +53,12 @@ class {{ Name }}Service(
     }
 
     fun save({{ name }}: {{ Name }}): {{ Name }} {
+        requireNotNull({{ fieldType }}Service.findById(event.entity.{{ fieldName }}))
+
         applicationEventPublisher.publishEvent(Before{{ Name }}SavedEvent(this, {{ name }}))
         val saved{{ Name }} = {{ name }}Repository.save({{ name }})
         applicationEventPublisher.publishEvent(After{{ Name }}SavedEvent(this, saved{{ Name }}))
+
         return saved{{ Name }}
     }
 
