@@ -2,7 +2,7 @@ package {{ groupId }}.{{ artifactId }}.{{ names }}
 
 import org.springframework.context.ApplicationEvent
 
-sealed class {{ Name }}Event(source: Any): ApplicationEvent(source) {
+sealed class {{ Name }}Event(source: Any) : ApplicationEvent(source) {
 
     data class Before{{ Name }}SavedEvent(private val _source: Any, val entity: {{ Name }}) : {{ Name }}Event(_source)
 

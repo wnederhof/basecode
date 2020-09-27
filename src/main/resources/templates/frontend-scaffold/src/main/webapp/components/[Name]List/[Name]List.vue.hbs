@@ -18,9 +18,9 @@
           <nuxt-link :to="'/<%names%>/' + <%name%>.id">
             Show
           </nuxt-link>
-          <nuxt-link :to="'/<%names%>/' + <%name%>.id + '/edit'">
-            Edit
-          </nuxt-link>
+          <button @click="edit<%Name%>(<%name%>.id)">
+            Edit <%Name%>
+          </button>
           <button @click="delete<%Name%>ById(<%name%>.id)">
             Delete <%Name%>
           </button>
@@ -75,6 +75,10 @@ export default class <%Name%>List extends Vue {
         }
       })
     }
+  }
+
+  edit<%Name%>(id: number) {
+    this.$emit('edit', id)
   }
 }
 </script><%={{ }}=%>

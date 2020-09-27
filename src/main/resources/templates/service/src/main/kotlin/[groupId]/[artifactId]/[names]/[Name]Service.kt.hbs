@@ -1,17 +1,18 @@
 package {{ groupId }}.{{ artifactId }}.{{ names }}
 
-import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Event.*
+import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Event.*{{#each fields}}{{#if fieldRelationship}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service{{/if}}{{/each}}
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
 class {{ Name }}Service(
-        private val {{ name }}Repository: {{ Name }}Repository,{{#each field}}{{#if fieldRelationship}}
-        private val {{ fieldName }}Repository: {{ FieldName }}Repository,{{/if}}{{/each}}
-        private val applicationEventPublisher: ApplicationEventPublisher
+    private val {{ name }}Repository: {{ Name }}Repository,{{#each fields}}{{#if fieldRelationship}}
+    private val {{ fieldType }}Service: {{ FieldType }}Service,{{/if}}{{/each}}
+    private val applicationEventPublisher: ApplicationEventPublisher
 ) {
 
     fun findAll(filter: {{ Name }}Filter? = null): Iterable<{{ Name }}> {
@@ -45,16 +46,16 @@ class {{ Name }}Service(
 
     fun deleteBy{{ FieldName }}({{ fieldName }}: Int) {
         {{ name }}Repository.findBy{{ FieldName }}({{ fieldName }})
-                .forEach({{ name }}Repository::delete)
+            .forEach({{ name }}Repository::delete)
     }
 {{/if}}{{/each}}
     fun findById(id: Int): {{ Name }}? {
         return {{ name }}Repository.findByIdOrNull(id)
     }
 
-    fun save({{ name }}: {{ Name }}): {{ Name }} {
-        requireNotNull({{ fieldType }}Service.findById(event.entity.{{ fieldName }}))
-
+    fun save({{ name }}: {{ Name }}): {{ Name }} { {{#each fields}}{{#if fieldRelationship}}
+        requireNotNull({{ fieldType }}Service.findById({{ name }}.{{ fieldName }}))
+{{/if}}{{/each}}
         applicationEventPublisher.publishEvent(Before{{ Name }}SavedEvent(this, {{ name }}))
         val saved{{ Name }} = {{ name }}Repository.save({{ name }})
         applicationEventPublisher.publishEvent(After{{ Name }}SavedEvent(this, saved{{ Name }}))

@@ -1,25 +1,44 @@
 {{=<% %>=}}<template>
   <div>
     <h1>Show <%Name%></h1>
-
     <<%Name%>Details :<%name%>-id="this.$route.params.<%name%>Id" />
 
     <nuxt-link :to="'/<%names%>'">
       List of <%Names%>
     </nuxt-link>
-    <nuxt-link :to="'/<%names%>/' + this.$route.params.<%name%>Id + '/edit'">
-      Edit
-    </nuxt-link>
+    <button @click="edit<%Name%>()">
+      Edit <%Name%>
+    </button>
+
+    <<%Name%>Form :key="edit<%Name%>Id"
+              v-if="showEdit<%Name%>"
+              :<%name%>-id="edit<%Name%>Id"
+              @save="closeEdit<%Name%>"
+              @cancel="closeEdit<%Name%>" />
   </div>
 </template>
 
 <script lang="ts">
 import <%Name%>Details from '@/components/<%Name%>Details/<%Name%>Details.vue'
+import <%Name%>Form from '@/components/<%Name%>Form/<%Name%>Form.vue'
 import Vue from 'vue'
 import Component from 'nuxt-class-component'
 
-@Component({ components: { <%Name%>Details } })
+@Component({
+  components: { <%Name%>Details, <%Name%>Form }
+})
 export default class extends Vue {
+  showEdit<%Name%> = false;
+  edit<%Name%>Id: number | null = null;
 
+  edit<%Name%>() {
+    this.showEdit<%Name%> = true;
+    this.edit<%Name%>Id = parseInt(this.$route.params.<%name%>Id);
+  }
+
+  closeEdit<%Name%>() {
+    this.showEdit<%Name%> = false;
+    this.edit<%Name%>Id = null;
+  }
 }
 </script><%={{ }}=%>

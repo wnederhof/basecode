@@ -1,17 +1,21 @@
 package {{ groupId }}.{{ artifactId }}.{{ names }}
-
+{{#each fields}}{{#if fieldRelationship}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service{{/if}}{{/each}}
 import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1
+import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1{{#each fields}}{{#if fieldRelationship}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_WITH_ID_1{{/if}}{{/each}}
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
-import org.springframework.context.ApplicationEventPublisher
+import org.springframework.context.ApplicationEventPublisher{{#if hasRelations}}
+import com.nhaarman.mockitokotlin2.times{{/if}}
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
@@ -22,14 +26,17 @@ internal class {{ Name }}ServiceUnitTests {
 
     @Mock
     private lateinit var {{ name }}Repository: {{ Name }}Repository
-
+{{#each fields}}{{#if fieldRelationship}}
+    @Mock
+    private lateinit var {{ fieldType }}Service: {{ FieldType }}Service
+{{/if}}{{/each}}
     @InjectMocks
     private lateinit var {{ name }}Service: {{ Name }}Service
 
     @Test
     fun `findAll returns the values of findAll in {{ Name }}Repository`() {
         whenever({{ name }}Repository.findAll())
-                .thenReturn(listOf({{ NAME }}_FIXTURE_1))
+            .thenReturn(listOf({{ NAME }}_FIXTURE_1))
 
         val actual = {{ name }}Service.findAll()
 
@@ -39,7 +46,7 @@ internal class {{ Name }}ServiceUnitTests {
     @Test
     fun `findById returns the contained value of findById in {{ Name }}Repository if it is non-empty`() {
         whenever({{ name }}Repository.findById(1))
-                .thenReturn(Optional.of({{ NAME }}_FIXTURE_1))
+            .thenReturn(Optional.of({{ NAME }}_FIXTURE_1))
 
         val actual = {{ name }}Service.findById(1)
 
@@ -49,7 +56,7 @@ internal class {{ Name }}ServiceUnitTests {
     @Test
     fun `findById returns null if findById in {{ Name }}Repository yields an empty Optional`() {
         whenever({{ name }}Repository.findById(1))
-                .thenReturn(Optional.empty())
+            .thenReturn(Optional.empty())
 
         val actual = {{ name }}Service.findById(1)
 
@@ -57,24 +64,41 @@ internal class {{ Name }}ServiceUnitTests {
     }
 
     @Test
-    fun `save calls save and return its value if all requirements are met`() {
+    fun `save calls save on repository if all requirements are met`() {
         whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
-                .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
-
+            .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
+{{#each fields}}{{#if fieldRelationship}}
+        whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
+            .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
+{{/if}}{{/each}}
         val actual = {{ name }}Service.save({{ NAME }}_FIXTURE_1)
 
         assertThat(actual).isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
     }
-
+{{#if hasRelations}}
     @Test
+    fun `save fails when related objects cannot be found`() { {{#each fields}}{{#if fieldRelationship}}
+        whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
+            .thenReturn(null)
+{{/if}}{{/each}}
+        assertThrows<RuntimeException> {
+            {{ name }}Service.save({{ NAME }}_FIXTURE_1)
+        }
+
+        verify({{ name }}Repository, times(0)).save({{ NAME }}_FIXTURE_1)
+    }
+{{/if}}
+@Test
     fun `save publishes a Before{{ Name }}SavedEvent before saving`() {
         whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
-                .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
-
+            .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
+{{#each fields}}{{#if fieldRelationship}}
+        whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
+            .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
+{{/if}}{{/each}}
         val actual = {{ name }}Service.save({{ NAME }}_FIXTURE_1)
 
-        assertThat(actual)
-                .isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
+        assertThat(actual).isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
 
         val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
 
@@ -87,12 +111,14 @@ internal class {{ Name }}ServiceUnitTests {
     @Test
     fun `save publishes an After{{ Name }}SavedEvent after saving`() {
         whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
-                .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
-
+            .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
+{{#each fields}}{{#if fieldRelationship}}
+        whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
+            .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
+{{/if}}{{/each}}
         val actual = {{ name }}Service.save({{ NAME }}_FIXTURE_1)
 
-        assertThat(actual)
-                .isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
+        assertThat(actual).isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
 
         val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
 
@@ -116,9 +142,9 @@ internal class {{ Name }}ServiceUnitTests {
         val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
 
         inOrder.verify(applicationEventPublisher)
-                .publishEvent({{ Name }}Event.Before{{ Name }}DeletedEvent({{ name }}Service, 1))
+            .publishEvent({{ Name }}Event.Before{{ Name }}DeletedEvent({{ name }}Service, 1))
         inOrder.verify({{ name }}Repository)
-                .deleteById(1)
+            .deleteById(1)
     }
 
     @Test
@@ -128,9 +154,9 @@ internal class {{ Name }}ServiceUnitTests {
         val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
 
         inOrder.verify({{ name }}Repository)
-                .deleteById(1)
+            .deleteById(1)
         inOrder.verify(applicationEventPublisher)
-                .publishEvent({{ Name }}Event.After{{ Name }}DeletedEvent({{ name }}Service, 1))
+            .publishEvent({{ Name }}Event.After{{ Name }}DeletedEvent({{ name }}Service, 1))
     }
 
 }

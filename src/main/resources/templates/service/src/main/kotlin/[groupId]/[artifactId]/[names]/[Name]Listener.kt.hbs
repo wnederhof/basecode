@@ -1,16 +1,12 @@
 package {{ groupId }}.{{ artifactId }}.{{ names }}
-
-import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Event.Before{{ Name }}SavedEvent
 {{#each fields}}{{#if fieldRelationship}}
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service
-{{/if}}{{/each}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent{{/if}}{{/each}}
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
 @Component
 class {{ Name }}Listener{{#if hasRelations}}(
-        private val {{ name }}Service: {{ Name }}Service
+    private val {{ name }}Service: {{ Name }}Service
 ) {
 {{#each fields}}{{#if fieldRelationship}}
     @EventListener

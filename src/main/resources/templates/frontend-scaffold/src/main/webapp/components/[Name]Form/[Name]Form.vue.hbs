@@ -10,6 +10,7 @@
     </div><%/each%>
     <div>
       <button>Save <%Name%></button>
+      <button type="button" @click="close">Close <%Name%></button>
     </div>
   </form>
 </template>
@@ -35,6 +36,8 @@ import gql from 'graphql-tag'
         }
       }, skip () {
         return !this.$props.<%name%>Id
+      }, result({data}) {
+        this.<%name%> = JSON.parse(JSON.stringify(data.<%name%>))
       }
     }
   },
@@ -64,6 +67,10 @@ export default class <%Name%>Form extends Vue {
     })
 
     this.$emit('save', this.<%name%>)
+  }
+
+  close() {
+    this.$emit('cancel')
   }
 }
 </script><%={{ }}=%>

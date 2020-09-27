@@ -1,0 +1,46 @@
+{{=<% %>=}}<template>
+  <div>
+    <<%Name%>List @edit="edit<%Name%>ById" />
+
+    <button @click="new<%Name%>()">
+      New <%Name%>
+    </button>
+
+    <h2 v-if="showEdit<%Name%> && !edit<%Name%>Id">New <%Name%></h2>
+    <h2 v-if="showEdit<%Name%> && edit<%Name%>Id">Edit <%Name%> {{ edit<%Name%>Id }}</h2>
+    <<%Name%>Form :key="edit<%Name%>Id"
+              v-if="showEdit<%Name%>"
+              :<%name%>-id="edit<%Name%>Id"
+              @save="closeEdit<%Name%>"
+              @cancel="closeEdit<%Name%>" />
+  </div>
+</template>
+<script lang="ts">
+import <%Name%>List from '@/components/<%Name%>List/<%Name%>List.vue'
+import Component from 'nuxt-class-component'
+import Vue from 'vue'
+import <%Name%>Form from "~/components/<%Name%>Form/<%Name%>Form.vue";
+
+@Component({
+  components: {<%Name%>Form, <%Name%>List }
+})
+export default class <%Name%>Editor extends Vue {
+  showEdit<%Name%> = false;
+  edit<%Name%>Id: number | null = null;
+
+  edit<%Name%>ById(<%name%>Id: number) {
+    this.showEdit<%Name%> = true;
+    this.edit<%Name%>Id = <%name%>Id;
+  }
+
+  new<%Name%>() {
+    this.showEdit<%Name%> = true;
+    this.edit<%Name%>Id = null;
+  }
+
+  closeEdit<%Name%>() {
+    this.showEdit<%Name%> = false;
+    this.edit<%Name%>Id = null;
+  }
+}
+</script><%={{ }}=%>

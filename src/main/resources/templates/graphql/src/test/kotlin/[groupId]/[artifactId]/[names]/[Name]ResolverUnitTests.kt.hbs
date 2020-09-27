@@ -30,19 +30,21 @@ class {{ Name }}ResolverUnitTests {
         @Test
         fun `{{ name }}ById delegates the call to the {{ Name }}Service`() {
             whenever({{ name }}Service.findById(1))
-                    .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
+                .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
 
             assertThat(rootQueryResolver.{{ name }}ById(1))
-                    .isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
+                .isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
         }
 
         @Test
         fun `{{ names }} delegates the call to the {{ Name }}Service`() {
-            whenever({{ name }}Service.findAll(null))
-                    .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
+            val any{{ Name }}Filter = {{ Name }}Filter()
 
-            assertThat(rootQueryResolver.all{{ Names }}({{ Name }}Filter()))
-                    .isEqualTo(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
+            whenever({{ name }}Service.findAll(any{{ Name }}Filter))
+                .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
+
+            assertThat(rootQueryResolver.all{{ Names }}(any{{ Name }}Filter))
+                .isEqualTo(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
         }
 
     }
@@ -60,10 +62,10 @@ class {{ Name }}ResolverUnitTests {
         @Test
         fun `save delegates the call to the {{ Name }}Service`() {
             whenever({{ name }}Service.save({{ NAME }}_FIXTURE_1))
-                    .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
+                .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
 
             assertThat({{ name }}MutationResolver.save{{ Name }}({{ NAME }}_FIXTURE_1))
-                    .isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
+                .isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
         }
 
         @Test
@@ -74,7 +76,7 @@ class {{ Name }}ResolverUnitTests {
         }
 
     }
-
+{{#if hasRelations}}
     @Nested
     @ExtendWith(MockitoExtension::class)
     inner class {{ Name }}ResolverUnitTests { {{#each fields}}{{#if fieldRelationship}}
@@ -88,13 +90,13 @@ class {{ Name }}ResolverUnitTests {
         @Test
         fun `{{ fieldType }} delegates the call to the {{ FieldType }}Service`() {
             whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
-                    .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
+                .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
 
             assertThat({{ name }}QueryResolver.{{ fieldType }}({{ NAME }}_FIXTURE_WITH_ID_1))
-                    .isEqualTo({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
+                .isEqualTo({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
         }{{/if}}{{/each}}
     }
-{{#each fields}}{{#if fieldRelationship}}
+{{/if}}{{#each fields}}{{#if fieldRelationship}}
     @Nested
     @ExtendWith(MockitoExtension::class)
     inner class {{ FieldType }}ResolverUnitTests {
@@ -108,12 +110,12 @@ class {{ Name }}ResolverUnitTests {
         @Test
         fun `{{ name }} delegates the call to the {{ name }}Service`() {
             whenever({{ name }}Service.findBy{{ FieldName }}({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1.id!!))
-                    .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
+                .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
 
             assertThat({{ fieldType }}FieldResolver.{{ names }}({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1))
-                    .isEqualTo(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
+                .isEqualTo(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
         }
 
-    }{{/if}}{{/each}}
-
+    }
+{{/if}}{{/each}}
 }
