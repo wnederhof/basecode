@@ -1,17 +1,13 @@
 package {{ groupId }}.{{ artifactId }}.{{ names }}
 
 import {{ groupId }}.{{ artifactId }}.IntegrationTestContext
-import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
-
-{{#each fields as |f|}}{{#if fieldRelationship}}
+import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1{{#each fields as |f|}}{{#if fieldRelationship}}
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Repository
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service
-{{/if}}{{/each}}
-
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service{{/if}}{{/each}}
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.Test{{#if hasRelations}}
+import org.junit.jupiter.api.assertThrows{{/if}}
 import org.springframework.beans.factory.annotation.Autowired
 
 class {{ Name }}IntegrationTests : IntegrationTestContext() {
@@ -34,19 +30,21 @@ class {{ Name }}IntegrationTests : IntegrationTestContext() {
     }
 {{/if}}
     @Test
-    fun `{{ Name }}s can be saved, fetched and destroyed`() {
-{{#each fields as |f|}}{{#if fieldRelationship}}
+    fun `{{ Name }}s can be saved, fetched and destroyed`() { {{#each fields as |f|}}{{#if fieldRelationship}}
         val {{ fieldType }} = {{ fieldType }}Repository.save({{ FIELD_TYPE }}_FIXTURE_1)
 {{/if}}{{/each}}
-
         val {{ name }} = {{ name }}Service.save({{ NAME }}_FIXTURE_1.copy(
-                id = null{{#each fields as |f|}}{{#if fieldRelationship}},
-                {{ fieldName }} = {{ fieldType }}.id!!{{/if}}{{/each}}
+            id = null{{#each fields as |f|}}{{#if fieldRelationship}},
+            {{ fieldName }} = {{ fieldType }}.id!!{{/if}}{{/each}}
         ))
 
         assertThat({{ name }}Service.findAll()).isNotEmpty()
+        assertThat({{ name }}Service.findAll({{ Name }}Filter(id = {{name}}.id!!))).isNotNull
         assertThat({{ name }}Service.findById({{ name }}.id!!)).isNotNull
-
+{{#each fields}}{{#if fieldRelationship}}
+        assertThat({{ name }}Service.findAll({{ Name }}Filter({{ fieldName }} = {{ fieldType }}.id!!))).isNotNull
+        assertThat({{ name }}Service.findBy{{ FieldName }}({{ fieldType }}.id!!)).isNotNull
+{{/if}}{{/each}}
         {{ name }}Service.deleteById({{ name }}.id!!)
 
         assertThat({{ name }}Service.findAll()).isEmpty()
@@ -56,7 +54,6 @@ class {{ Name }}IntegrationTests : IntegrationTestContext() {
     fun `{{ Name }}s are deleted when related {{ FieldTypes }} are deleted`() {
 {{#each fields as |f|}}{{#if fieldRelationship}}        val {{ fieldType }} = {{ fieldType }}Repository.save({{ FIELD_TYPE }}_FIXTURE_1)
 {{/if}}{{/each}}
-
         val {{ name }} = {{ name }}Service.save({{ NAME }}_FIXTURE_1.copy(
                 id = null{{#each fields as |f|}}{{#if fieldRelationship}},
                 {{ fieldName }} = {{ fieldType }}.id!!{{/if}}{{/each}}

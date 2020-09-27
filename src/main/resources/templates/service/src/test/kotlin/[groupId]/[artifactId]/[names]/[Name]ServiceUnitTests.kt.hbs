@@ -8,13 +8,13 @@ import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.context.ApplicationEventPublisher{{#if hasRelations}}
+import org.junit.jupiter.api.assertThrows
 import com.nhaarman.mockitokotlin2.times{{/if}}
 import java.util.*
 
@@ -36,23 +36,63 @@ internal class {{ Name }}ServiceUnitTests {
     @Test
     fun `findAll returns the values of findAll in {{ Name }}Repository`() {
         whenever({{ name }}Repository.findAll())
-            .thenReturn(listOf({{ NAME }}_FIXTURE_1))
+            .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
 
         val actual = {{ name }}Service.findAll()
 
-        assertThat(actual).containsExactly({{ NAME }}_FIXTURE_1)
+        assertThat(actual).containsExactly({{ NAME }}_FIXTURE_WITH_ID_1)
     }
 
     @Test
+    fun `findAll returns the values of findAll in CommentRepository when filter is empty`() {
+        whenever({{ name }}Repository.findAll())
+            .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
+
+        val actual = {{ name }}Service.findAll({{ Name }}Filter())
+
+        assertThat(actual).containsExactly({{ NAME }}_FIXTURE_WITH_ID_1)
+    }
+{{#each fields}}{{#if fieldRelationship}}
+    @Test
+    fun `findAll delegates to findBy{{FieldName}} when filter only contains {{fieldName}}`() {
+        whenever({{ name }}Repository.findBy{{FieldName}}(1))
+            .thenReturn(listOf({{ NAME }}_FIXTURE_1))
+
+        val actual = {{ name }}Service.findAll({{ Name }}Filter({{fieldName}} = 1))
+
+        assertThat(actual).containsExactly({{ NAME }}_FIXTURE_1)
+    }
+{{/if}}{{/each}}{{#if hasRelations}}
+    @Test
+    fun `findAll with multiple filter attributes is not supported`() {
+        assertThrows<RuntimeException> {
+            {{ name }}Service.findAll({{ Name }}Filter(id = 1{{#each fields}}{{#if fieldRelationship}}, {{fieldName}} = 1{{/if}}{{/each}}))
+        }
+
+        verify({{ name }}Repository, times(0)).findAll(){{#each fields}}{{#if fieldRelationship}}
+        verify({{ name }}Repository, times(0)).findBy{{ FieldName }}(1){{/if}}{{/each}}
+    }
+{{/if}}
+    @Test
     fun `findById returns the contained value of findById in {{ Name }}Repository if it is non-empty`() {
         whenever({{ name }}Repository.findById(1))
-            .thenReturn(Optional.of({{ NAME }}_FIXTURE_1))
+            .thenReturn(Optional.of({{ NAME }}_FIXTURE_WITH_ID_1))
 
         val actual = {{ name }}Service.findById(1)
 
+        assertThat(actual).isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
+    }
+{{#each fields}}{{#if fieldRelationship}}
+    @Test
+    fun `findBy{{FieldName}} returns the contents of the corresponding repository call`() {
+        whenever({{ name }}Repository.findBy{{ FieldName }}(1))
+            .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
+
+        val actual = {{ name }}Service.findBy{{ FieldName }}(1)
+
         assertThat(actual).isEqualTo(actual)
     }
-
+{{/if}}{{/each}}
     @Test
     fun `findById returns null if findById in {{ Name }}Repository yields an empty Optional`() {
         whenever({{ name }}Repository.findById(1))
@@ -88,7 +128,7 @@ internal class {{ Name }}ServiceUnitTests {
         verify({{ name }}Repository, times(0)).save({{ NAME }}_FIXTURE_1)
     }
 {{/if}}
-@Test
+    @Test
     fun `save publishes a Before{{ Name }}SavedEvent before saving`() {
         whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
             .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
