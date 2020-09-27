@@ -27,13 +27,13 @@ import Component from 'nuxt-class-component'
   apollo: {
     <%name%>: {
       query: gql`
-      query <%name%>ById($id: Int) {
-        <%name%>: <%name%>ById(id: $id) {
-          id<%#each fields%>
-          <%fieldName%><%/each%>
-        }
-      }
-    `, variables () {
+        query <%name%>ById($id: Int) {
+          <%name%>: <%name%>ById(id: $id) {
+            id<%#each fields%>
+            <%fieldName%><%/each%>
+          }
+        }`,
+      variables () {
         return {
           id: this.$props.<%name%>Id
         }
@@ -43,6 +43,6 @@ import Component from 'nuxt-class-component'
   props: { <%name%>Id: [Number, String] }
 })
 export default class <%Name%>Details extends Vue {
-  <%name%> = {};
+  <%name%> = {}
 }
 </script><%={{ }}=%>

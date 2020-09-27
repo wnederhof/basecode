@@ -1,46 +1,60 @@
 {{=<% %>=}}<template>
   <div>
-    <<%Name%>List @edit="edit<%Name%>ById" />
+    <<%Name%>List @edit="handleEdit<%Name%>" ref="editor-<%name%>-list" />
 
-    <button @click="new<%Name%>()">
+    <button @click="handleNew<%Name%>()">
       New <%Name%>
     </button>
 
-    <h2 v-if="showEdit<%Name%> && !edit<%Name%>Id">New <%Name%></h2>
-    <h2 v-if="showEdit<%Name%> && edit<%Name%>Id">Edit <%Name%> {{ edit<%Name%>Id }}</h2>
-    <<%Name%>Form :key="edit<%Name%>Id"
-              v-if="showEdit<%Name%>"
-              :<%name%>-id="edit<%Name%>Id"
-              @save="closeEdit<%Name%>"
-              @cancel="closeEdit<%Name%>" />
+    <h2 v-if="showEdit<%Name%> && !edit<%Name%>Id" ref="editor-new-<%name%>-header">
+      New <%Name%>
+    </h2>
+
+    <h2 v-if="showEdit<%Name%> && edit<%Name%>Id" ref="editor-edit-<%name%>-header">
+      Edit <%Name%> {{ edit<%Name%>Id }}
+    </h2>
+
+    <<%Name%>Form
+      v-if="showEdit<%Name%>"
+      :key="edit<%Name%>Id"
+      ref="editor-<%name%>-form"
+      :<%name%>-id="edit<%Name%>Id"
+      @save="handleSave<%Name%>"
+      @cancel="handleCancel<%Name%>"
+    />
   </div>
 </template>
 <script lang="ts">
 import <%Name%>List from '@/components/<%Name%>List/<%Name%>List.vue'
 import Component from 'nuxt-class-component'
 import Vue from 'vue'
-import <%Name%>Form from "~/components/<%Name%>Form/<%Name%>Form.vue";
+import <%Name%>Form from '~/components/<%Name%>Form/<%Name%>Form.vue'
 
 @Component({
-  components: {<%Name%>Form, <%Name%>List }
+  components: { <%Name%>Form, <%Name%>List }
 })
 export default class <%Name%>Editor extends Vue {
-  showEdit<%Name%> = false;
-  edit<%Name%>Id: number | null = null;
+  showEdit<%Name%> = false
+  edit<%Name%>Id: number | null = null
 
-  edit<%Name%>ById(<%name%>Id: number) {
-    this.showEdit<%Name%> = true;
-    this.edit<%Name%>Id = <%name%>Id;
+  handleEdit<%Name%> (<%name%>Id: number) {
+    this.showEdit<%Name%> = true
+    this.edit<%Name%>Id = <%name%>Id
   }
 
-  new<%Name%>() {
-    this.showEdit<%Name%> = true;
-    this.edit<%Name%>Id = null;
+  handleNew<%Name%> () {
+    this.showEdit<%Name%> = true
+    this.edit<%Name%>Id = null
   }
 
-  closeEdit<%Name%>() {
-    this.showEdit<%Name%> = false;
-    this.edit<%Name%>Id = null;
+  handleSave<%Name%> () {
+    this.showEdit<%Name%> = false
+    this.edit<%Name%>Id = null
+  }
+
+  handleCancel<%Name%> () {
+    this.showEdit<%Name%> = false
+    this.edit<%Name%>Id = null
   }
 }
 </script><%={{ }}=%>

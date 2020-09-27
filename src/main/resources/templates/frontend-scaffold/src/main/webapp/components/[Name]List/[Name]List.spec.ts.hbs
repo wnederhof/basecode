@@ -4,7 +4,7 @@ import { createMockClient } from 'mock-apollo-client'
 import VueApollo from 'vue-apollo'
 import gql from 'graphql-tag'
 import <%Name%>List from './<%Name%>List.vue'
-import { MockApolloClient } from "mock-apollo-client/dist/mockClient"
+import { MockApolloClient } from 'mock-apollo-client/dist/mockClient'
 
 const localVue = createLocalVue()
 localVue.use(VueApollo)
@@ -28,8 +28,8 @@ describe('<%Name%>List', () => {
       data: {
         <%names%>: [
           {
-            id: 1,<%#each fields%>
-            <%fieldName%>: 'Some <%FieldName%>',<%/each%>
+            id: 1<%#each fields%>,
+            <%fieldName%>: 'Some <%FieldName%>'<%/each%>
           }
         ]
       }
@@ -67,6 +67,13 @@ describe('<%Name%>List', () => {
     await flushPromises()
 <%#each fields%>
     expect(wrapper.text()).toContain('Some <%FieldName%>')<%/each%>
+  })
+
+  it('emits edit event when edit is clicked', async () => {
+    createComponent()
+    await flushPromises()
+    await wrapper.findComponent({ ref: 'edit-<%name%>-btn' }).trigger('click')
+    expect(wrapper.emitted().edit).toBeTruthy()
   })
 
   it('does not run a mutation on delete with no confirmation', async () => {

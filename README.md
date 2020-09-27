@@ -27,6 +27,10 @@ ccg frontend Post
 ccg frontend Comment
 ```
 
+NOTE: Run `npm run eslint-fix` after scaffolding
+frontend parts of the projects to ensure
+that the files are formatted appropriately.
+
 # Installation
 `curl ... | sh`
 

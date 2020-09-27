@@ -4,7 +4,7 @@ import { createMockClient } from 'mock-apollo-client'
 import VueApollo from 'vue-apollo'
 import gql from 'graphql-tag'
 import <%Name%>Details from './<%Name%>Details.vue'
-import { MockApolloClient } from "mock-apollo-client/dist/mockClient"
+import { MockApolloClient } from 'mock-apollo-client/dist/mockClient'
 
 const localVue = createLocalVue()
 localVue.use(VueApollo)
@@ -27,8 +27,8 @@ describe('<%Name%>Details', () => {
     `, jest.fn().mockResolvedValue({
       data: {
         <%name%>: {
-          id: 1,<%#each fields%>
-          <%fieldName%>: 'Some <%FieldName%>',<%/each%>
+          id: 1<%#each fields%>,
+          <%fieldName%>: 'Some <%FieldName%>'<%/each%>
         }
       }
     }))

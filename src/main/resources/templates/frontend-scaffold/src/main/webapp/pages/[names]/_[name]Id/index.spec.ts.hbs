@@ -1,4 +1,5 @@
 {{=<% %>=}}import { shallowMount, createLocalVue, RouterLinkStub, Wrapper } from '@vue/test-utils'
+import flushPromises from 'flush-promises'
 import Index from './index.vue'
 
 const localVue = createLocalVue()
@@ -31,5 +32,38 @@ describe('Index', () => {
   it('is a Vue instance', () => {
     createComponent()
     expect(wrapper.vm).toBeTruthy()
+  })
+
+  it('opens <%name%> form when edit is pressed', async () => {
+    createComponent()
+    await flushPromises()
+
+    expect(wrapper.findComponent({ ref: 'edit-<%name%>-header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%name%>-form' }).exists()).toBeFalsy()
+
+    await wrapper.vm.handleEdit<%Name%>()
+
+    expect(wrapper.findComponent({ ref: 'edit-<%name%>-header' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: '<%name%>-form' }).exists()).toBeTruthy()
+  })
+
+  it('closes when close is pressed', async () => {
+    createComponent()
+    await flushPromises()
+    await wrapper.vm.handleEdit<%Name%>()
+    await wrapper.vm.handleCancel<%Name%>()
+
+    expect(wrapper.findComponent({ ref: 'edit-<%name%>-header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%name%>-form' }).exists()).toBeFalsy()
+  })
+
+  it('closes when save is pressed', async () => {
+    createComponent()
+    await flushPromises()
+    await wrapper.vm.handleEdit<%Name%>()
+    await wrapper.vm.handleSave<%Name%>()
+
+    expect(wrapper.findComponent({ ref: 'edit-<%name%>-header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%name%>-form' }).exists()).toBeFalsy()
   })
 })<%={{ }}=%>

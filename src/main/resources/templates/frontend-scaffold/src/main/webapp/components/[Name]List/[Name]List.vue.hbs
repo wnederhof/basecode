@@ -39,14 +39,15 @@ import gql from 'graphql-tag'
   apollo: {
     <%names%>: {
       query: gql`
-      query all<%Names%>($filter: <%Name%>Filter) {
-        <%names%>: all<%Names%>(filter: $filter) {
-          id<%#each fields%>
-          <%fieldName%><%/each%>
-        }
-      }`, variables () {
-        const id = this.$props.id;<%#each fields%><%#if fieldRelationship%>
-        const <%fieldName%> = this.$props.<%fieldName%>;<%/if%><%/each%>
+        query all<%Names%>($filter: <%Name%>Filter) {
+          <%names%>: all<%Names%>(filter: $filter) {
+            id<%#each fields%>
+            <%fieldName%><%/each%>
+          }
+        }`,
+      variables () {
+        const id = this.$props.id<%#each fields%><%#if fieldRelationship%>
+        const <%fieldName%> = this.$props.<%fieldName%><%/if%><%/each%>
         return { filter: { id<%#each fields%><%#if fieldRelationship%>, <%fieldName%><%/if%><%/each%> } }
       }
     }
@@ -57,7 +58,7 @@ import gql from 'graphql-tag'
   }
 })
 export default class <%Name%>List extends Vue {
-  <%names%> = null;
+  <%names%> = null
 
   async delete<%Name%>ById (id: number) {
     const mutation = gql`

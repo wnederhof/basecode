@@ -6,11 +6,11 @@
     <input v-if="<%name%>" id="id" v-model="<%name%>.id" type="hidden"><%#each fields%>
     <div>
       <label for="<%fieldName%>"><%FieldName%></label>
-      <input ref="<%fieldName%>-input" id="<%fieldName%>" v-model="<%name%>.<%fieldName%>" type="text">
+      <input id="<%fieldName%>" ref="<%fieldName%>-input" v-model="<%name%>.<%fieldName%>" type="text">
     </div><%/each%>
     <div>
       <button>Save <%Name%></button>
-      <button type="button" @click="close">Close <%Name%></button>
+      <button ref="cancel-btn" type="button" @click="close">Close <%Name%></button>
     </div>
   </form>
 </template>
@@ -24,19 +24,21 @@ import gql from 'graphql-tag'
   apollo: {
     <%name%>: {
       query: gql`
-      query <%name%>ById($id: Int) {
-        <%name%>: <%name%>ById(id: $id) {
-          id<%#each fields%>
-          <%fieldName%><%/each%>
-        }
-      }
-    `, variables () {
+        query <%name%>ById($id: Int) {
+          <%name%>: <%name%>ById(id: $id) {
+            id<%#each fields%>
+            <%fieldName%><%/each%>
+          }
+        }`,
+      variables () {
         return {
           id: this.$props.<%name%>Id
         }
-      }, skip () {
+      },
+      skip () {
         return !this.$props.<%name%>Id
-      }, result({data}) {
+      },
+      result({data}) {
         this.<%name%> = JSON.parse(JSON.stringify(data.<%name%>))
       }
     }
@@ -44,7 +46,7 @@ import gql from 'graphql-tag'
   props: { <%name%>Id: [Number, String] }
 })
 export default class <%Name%>Form extends Vue {
-  <%name%> = { <%#each fields%><%fieldName%>: '', <%/each%> };
+  <%name%> = { <%#each fields%><%fieldName%>: '', <%/each%> }
 
   async save<%Name%> () {
     const mutation = gql`
@@ -56,9 +58,10 @@ export default class <%Name%>Form extends Vue {
       }
     `
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { __typename, ...input } = this.<%name%> as any
 
-    await this.$apollo.mutate({
+        await this.$apollo.mutate({
       mutation,
       variables: { <%name%>: input },
       update: () => {

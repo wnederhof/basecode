@@ -17,7 +17,7 @@ sealed class {{ Name }}Resolver {
     protected lateinit var {{ fieldType }}Service: {{ FieldType }}Service
 {{/if}}{{/each}}
     @Component
-    class RootQueryResolver: GraphQLQueryResolver, {{ Name }}Resolver() {
+    class RootQueryResolver : GraphQLQueryResolver, {{ Name }}Resolver() {
         fun {{ name }}ById(id: Int): {{ Name }}? {
             return {{ name }}Service.findById(id)
         }
@@ -28,7 +28,7 @@ sealed class {{ Name }}Resolver {
     }
 
     @Component
-    class MutationResolver: GraphQLMutationResolver, {{ Name }}Resolver() {
+    class MutationResolver : GraphQLMutationResolver, {{ Name }}Resolver() {
         fun save{{ Name }}({{ name }}: {{ Name }}): {{ Name }} {
             return {{ name }}Service.save({{ name }})
         }
@@ -39,14 +39,14 @@ sealed class {{ Name }}Resolver {
     }
 {{#if hasRelations}}
     @Component
-    class {{ Name }}QueryResolver: GraphQLResolver<{{ Name }}>, {{ Name }}Resolver() { {{#each fields}}{{#if fieldRelationship}}
+    class {{ Name }}QueryResolver : GraphQLResolver<{{ Name }}>, {{ Name }}Resolver() { {{#each fields}}{{#if fieldRelationship}}
         fun {{ fieldType }}({{ name }}: {{ Name }}): {{ FieldType }}? {
             return {{ fieldType }}Service.findById({{ name }}.{{ fieldName }})
         }
 {{/if}}{{/each}}    }
 {{#each fields}}{{#if fieldRelationship}}
     @Component
-    class {{ FieldType }}FieldResolver: GraphQLResolver<{{ FieldType }}>, {{ Name }}Resolver() {
+    class {{ FieldType }}FieldResolver : GraphQLResolver<{{ FieldType }}>, {{ Name }}Resolver() {
         fun {{ names }}({{ fieldType }}: {{ FieldType }}): List<{{ Name }}> {
             return {{ name }}Service.findBy{{ FieldName }}({{ fieldType }}.id!!)
         }
