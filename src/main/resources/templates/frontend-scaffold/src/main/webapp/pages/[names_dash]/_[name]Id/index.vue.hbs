@@ -3,7 +3,7 @@
     <h1>Show <%Name%></h1>
     <<%Name%>Details :<%name%>-id="this.$route.params.<%name%>Id" />
 
-    <nuxt-link :to="'/<%names%>'">
+    <nuxt-link :to="'/<%names_dash%>'">
       List of <%Names%>
     </nuxt-link>
     <button @click="handleEdit<%Name%>()">
@@ -26,8 +26,8 @@
 </template>
 
 <script lang="ts">
-import <%Name%>Details from '@/components/<%Name%>Details/<%Name%>Details.vue'
-import <%Name%>Form from '@/components/<%Name%>Form/<%Name%>Form.vue'
+import <%Name%>Details from '@/components/<%name_dash%>-details'
+import <%Name%>Form from '@/components/<%name_dash%>-form'
 import Vue from 'vue'
 import Component from 'nuxt-class-component'
 

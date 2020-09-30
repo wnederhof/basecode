@@ -15,7 +15,7 @@
         <td>{{ <%name%>.id }}</td><%#each fields%>
         <td>{{ <%name%>.<%fieldName%> }}</td><%/each%>
         <td>
-          <nuxt-link :to="'/<%names%>/' + <%name%>.id">
+          <nuxt-link :to="'/<%names_dash%>/' + <%name%>.id">
             Show
           </nuxt-link>
           <button ref="edit-<%name%>-btn" type="button" @click="edit<%Name%>(<%name%>.id)">

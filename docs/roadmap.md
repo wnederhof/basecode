@@ -5,16 +5,22 @@
 - X Sealed classes?
 - X 1-N relations FE and BE support
 - X Add unit tests for 1-N BE relations
+- X Fix broken tests
+
+- Add E2E tests
+- Improve tests / FE structure
 
 - Add tests for FE List filter
-- Fix broken tests
-- Add E2E tests
 
 - Pagination
 - Add authentication generators
 
 - Clean up generated code
 - Clean up generator code
+
+- Create proper CLI
+- Fix number support
+- Remove date/nullables support
 
 ## Version 0.2.0
 - Add `date` support

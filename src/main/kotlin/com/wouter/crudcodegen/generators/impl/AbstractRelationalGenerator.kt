@@ -30,6 +30,8 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                         Variable("Names", nameHelper.pluralize(nameHelper.toUpperCamelCase(name))),
                         Variable("_name", nameHelper.toDuckName(name)),
                         Variable("_names", nameHelper.pluralize(nameHelper.toDuckName(name))),
+                        Variable("name_dash", nameHelper.toDashName(name)),
+                        Variable("names_dash", nameHelper.pluralize(nameHelper.toDashName(name))),
                         Variable("NAME", nameHelper.capitalize(nameHelper.toDuckName(name))),
                         Variable("NAMES", nameHelper.capitalize(nameHelper.pluralize(nameHelper.toDuckName(name)))),
                         Variable("hasRelations", fields.any { isRelationship(it.split(":")[1]) }),

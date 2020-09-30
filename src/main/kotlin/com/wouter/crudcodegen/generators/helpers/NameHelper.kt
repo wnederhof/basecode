@@ -11,6 +11,13 @@ class NameHelper {
             c.toLowerCase()
     }.joinToString("")
 
+    fun toDashName(name: String) = name.mapIndexed { i, c ->
+        if (c.isUpperCase() && i > 0)
+            "-$c".toLowerCase()
+        else
+            c.toLowerCase()
+    }.joinToString("")
+
     fun toUpperCamelCase(s: String) = s.take(1).toUpperCase() + s.drop(1)
 
     fun toLowerCamelCase(s: String) = s.take(1).toLowerCase() + s.drop(1)

@@ -21,6 +21,14 @@ internal class NameHelperTest {
     }
 
     @Test
+    fun toDashName() {
+        assertThat(nameHelper.toDuckName("wouterNederhof"),
+                equalTo("wouter-nederhof"))
+        assertThat(nameHelper.toDuckName("WouterNederhof"),
+                equalTo("wouter-nederhof"))
+    }
+
+    @Test
     fun toCapitalCamelCase() {
         assertThat(nameHelper.toUpperCamelCase("wouterNederhof"),
                 equalTo("WouterNederhof"))
