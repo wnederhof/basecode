@@ -1,12 +1,14 @@
 {{=<% %>=}}<template>
   <div>
     <h1>Show <%Name%></h1>
+
     <<%Name%>Details :<%name%>-id="this.$route.params.<%name%>Id" />
 
     <nuxt-link :to="'/<%names_dash%>'">
       List of <%Names%>
     </nuxt-link>
-    <button @click="handleEdit<%Name%>()">
+
+    <button @click="openEditForm">
       Edit <%Name%>
     </button>
 
@@ -15,12 +17,12 @@
     </h2>
 
     <<%Name%>Form
-      :key="edit<%Name%>Id"
       v-if="showEdit<%Name%>"
       ref="<%name%>-form"
+      :key="edit<%Name%>Id"
       :<%name%>-id="edit<%Name%>Id"
-      @save="handleSave<%Name%>"
-      @cancel="handleCancel<%Name%>"
+      @save="closeForm"
+      @cancel="closeForm"
     />
   </div>
 </template>
@@ -35,20 +37,14 @@ import Component from 'nuxt-class-component'
   components: { <%Name%>Details, <%Name%>Form }
 })
 export default class extends Vue {
-  showEdit<%Name%> = false
   edit<%Name%>Id: number | null = null
 
-  handleEdit<%Name%> () {
+  openEditForm () {
     this.showEdit<%Name%> = true
     this.edit<%Name%>Id = parseInt(this.$route.params.<%name%>Id)
   }
 
-  handleSave<%Name%> () {
-    this.showEdit<%Name%> = false
-    this.edit<%Name%>Id = null
-  }
-
-  handleCancel<%Name%> () {
+  closeForm () {
     this.showEdit<%Name%> = false
     this.edit<%Name%>Id = null
   }
