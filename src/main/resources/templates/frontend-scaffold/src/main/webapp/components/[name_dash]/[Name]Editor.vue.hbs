@@ -1,8 +1,8 @@
 {{=<% %>=}}<template>
   <div>
-    <<%Name%>List @edit="handleEdit<%Name%>" ref="editor-<%name%>-list" />
+    <<%Name%>List @edit="openEditForm" ref="editor-<%name%>-list" />
 
-    <button @click="handleNew<%Name%>()">
+    <button @click="openNewForm">
       New <%Name%>
     </button>
 
@@ -16,14 +16,15 @@
 
     <<%Name%>Form
       v-if="showEdit<%Name%>"
-      :key="edit<%Name%>Id"
       ref="editor-<%name%>-form"
+      :key="edit<%Name%>Id"
       :<%name%>-id="edit<%Name%>Id"
-      @save="handleSave<%Name%>"
-      @cancel="handleCancel<%Name%>"
+      @save="closeForm"
+      @cancel="closeForm"
     />
   </div>
 </template>
+
 <script lang="ts">
 import <%Name%>List from '@/components/<%name_dash%>/<%Name%>List.vue'
 import <%Name%>Form from '@/components/<%name_dash%>/<%Name%>Form.vue'
@@ -37,22 +38,17 @@ export default class <%Name%>Editor extends Vue {
   showEdit<%Name%> = false
   edit<%Name%>Id: number | null = null
 
-  handleEdit<%Name%> (<%name%>Id: number) {
+  openEditForm (<%name%>Id: number) {
     this.showEdit<%Name%> = true
     this.edit<%Name%>Id = <%name%>Id
   }
 
-  handleNew<%Name%> () {
+  openNewForm () {
     this.showEdit<%Name%> = true
     this.edit<%Name%>Id = null
   }
 
-  handleSave<%Name%> () {
-    this.showEdit<%Name%> = false
-    this.edit<%Name%>Id = null
-  }
-
-  handleCancel<%Name%> () {
+  closeForm () {
     this.showEdit<%Name%> = false
     this.edit<%Name%>Id = null
   }
