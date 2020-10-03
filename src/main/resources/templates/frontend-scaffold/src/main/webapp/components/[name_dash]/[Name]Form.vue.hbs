@@ -8,7 +8,7 @@
     @submit.prevent="save<%Name%>"
   >
     <input
-      v-if="<%name%>"
+      v-if="<%name%>.id"
       id="id"
       v-model="<%name%>.id"
       type="hidden"
@@ -50,7 +50,8 @@ import gql from 'graphql-tag'
             id<%#each fields%>
             <%fieldName%><%/each%>
           }
-        }`,
+        }
+      `,
 
       variables () {
         return {
@@ -63,7 +64,7 @@ import gql from 'graphql-tag'
       },
 
       result({data}) {
-        this.<%name%> = JSON.parse(JSON.stringify(data.<%name%>))
+        this.<%name%> = Object.assign({}, data.<%name%>)
       }
     }
   },
@@ -83,12 +84,12 @@ export default class <%Name%>Form extends Vue {
       }
     `
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { __typename, ...input } = this.<%name%> as any
+    const variables: any = Object.assign({}, this.<%name%>)
+    delete variables.__typename
 
     await this.$apollo.mutate({
       mutation,
-      variables: { <%name%>: input },
+      variables,
       update: () => {
         this.$apollo.getClient().resetStore()
       }

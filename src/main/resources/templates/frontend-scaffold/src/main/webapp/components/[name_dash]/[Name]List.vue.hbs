@@ -55,7 +55,8 @@ import gql from 'graphql-tag'
             id<%#each fields%>
             <%fieldName%><%/each%>
           }
-        }`,
+        }
+      `,
 
       variables () {
         const id = this.$props.id<%#each fields%><%#if fieldRelationship%>

@@ -1,6 +1,6 @@
-package {{ groupId }}.{{ artifactId }}.{{ names }}
+package {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}
 
-import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Event.*{{#each fields}}{{#if fieldRelationship}}
+import {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}.{{ Name }}Event.*{{#each fields}}{{#if fieldRelationship}}
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service{{/if}}{{/each}}
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull

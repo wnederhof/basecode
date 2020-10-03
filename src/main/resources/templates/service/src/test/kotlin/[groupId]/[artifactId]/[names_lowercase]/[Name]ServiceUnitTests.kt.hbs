@@ -1,8 +1,8 @@
-package {{ groupId }}.{{ artifactId }}.{{ names }}
+package {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}
 {{#each fields}}{{#if fieldRelationship}}
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service{{/if}}{{/each}}
-import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ names }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1{{#each fields}}{{#if fieldRelationship}}
+import {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1{{#each fields}}{{#if fieldRelationship}}
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_WITH_ID_1{{/if}}{{/each}}
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.verify

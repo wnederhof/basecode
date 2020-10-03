@@ -27,6 +27,7 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                         Variable("name", nameHelper.toLowerCamelCase(name)),
                         Variable("Name", nameHelper.toUpperCamelCase(name)),
                         Variable("names", nameHelper.pluralize(nameHelper.toLowerCamelCase(name))),
+                        Variable("names_lowercase", nameHelper.pluralize(name.toLowerCase())),
                         Variable("Names", nameHelper.pluralize(nameHelper.toUpperCamelCase(name))),
                         Variable("_name", nameHelper.toDuckName(name)),
                         Variable("_names", nameHelper.pluralize(nameHelper.toDuckName(name))),

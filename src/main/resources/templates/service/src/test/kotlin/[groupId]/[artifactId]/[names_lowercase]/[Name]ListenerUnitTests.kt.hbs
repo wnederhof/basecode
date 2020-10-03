@@ -1,4 +1,4 @@
-package {{ groupId }}.{{ artifactId }}.{{ names }}
+package {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}
 
 {{#each fields as |f|}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service
