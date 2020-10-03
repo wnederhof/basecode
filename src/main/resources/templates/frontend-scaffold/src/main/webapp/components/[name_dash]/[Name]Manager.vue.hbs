@@ -1,7 +1,7 @@
 {{=<% %>=}}<template>
   <div>
     <<%Name%>List
-      ref="editor-<%name%>-list"
+      ref="<%name%>List"
       @edit:<%name%>="showForm"
     />
 
@@ -11,21 +11,21 @@
 
     <h2
       v-if="<%name%>FormVisible && !selected<%Name%>Id"
-      ref="editor-new-<%name%>-header"
+      ref="new<%Name%>Header"
     >
       New <%Name%>
     </h2>
 
     <h2
       v-if="<%name%>FormVisible && selected<%Name%>Id"
-      ref="editor-edit-<%name%>-header"
+      ref="edit<%Name%>Header"
     >
       Edit <%Name%> {{ selected<%Name%>Id }}
     </h2>
 
     <<%Name%>Form
       v-if="<%name%>FormVisible"
-      ref="editor-<%name%>-form"
+      ref="<%name%>Form"
       :key="selected<%Name%>Id"
       :<%name_dash%>-id="selected<%Name%>Id"
       @save:<%name_dash%>="hideForm"
@@ -43,7 +43,7 @@ import Vue from 'vue'
 @Component({
   components: { <%Name%>Form, <%Name%>List }
 })
-export default class <%Name%>Editor extends Vue {
+export default class <%Name%>Manager extends Vue {
   <%name%>FormVisible: boolean = false
   selected<%Name%>Id: number | null = null
 

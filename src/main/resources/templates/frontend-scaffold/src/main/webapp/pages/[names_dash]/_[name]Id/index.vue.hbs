@@ -13,7 +13,7 @@
     </button>
 
     <h2
-      ref="edit-<%name%>-header"
+      ref="edit<%Name%>Header"
       v-if="<%name%>FormVisible && selected<%Name%>Id"
     >
       Edit <%Name%> {{ selected<%Name%>Id }}
@@ -21,7 +21,7 @@
 
     <<%Name%>Form
       v-if="<%name%>FormVisible"
-      ref="<%name%>-form"
+      ref="<%name%>Form"
       :key="selected<%Name%>Id"
       :<%name%>-id="selected<%Name%>Id"
       @save:<%name%>="hideForm"

@@ -1,0 +1,83 @@
+{{=<% %>=}}import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
+import flushPromises from 'flush-promises'
+import VueApollo from 'vue-apollo'
+import <%Name%>Manager from '@/components/<%name_dash%>/<%Name%>Manager.vue'
+
+const localVue = createLocalVue()
+localVue.use(VueApollo)
+
+describe('<%Name%>Manager', () => {
+  let wrapper: Wrapper<any>
+
+  const createComponent = () => {
+    wrapper = shallowMount(<%Name%>Manager, {
+      localVue,
+      propsData: { <%name%>Id: 1 },
+      stubs: {
+        <%Name%>List: true,
+        <%Name%>Form: true
+      }
+    })
+  }
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  it('is a Vue instance', () => {
+    createComponent()
+    expect(wrapper.vm).toBeTruthy()
+  })
+
+  it('opens <%name%> form when new is pressed', async () => {
+    createComponent()
+    await flushPromises()
+
+    expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
+
+    await wrapper.vm.handleNew<%Name%>()
+
+    expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeTruthy()
+  })
+
+  it('opens <%name%> form when edit is pressed', async () => {
+    createComponent()
+    await flushPromises()
+
+    expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
+
+    await wrapper.vm.handleEdit<%Name%>(1)
+
+    expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeTruthy()
+  })
+
+  it('closes when close is pressed', async () => {
+    createComponent()
+    await flushPromises()
+    await wrapper.vm.handleEdit<%Name%>(1)
+    await wrapper.vm.handleCancel<%Name%>()
+
+    expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
+  })
+
+  it('closes when save is pressed', async () => {
+    createComponent()
+    await flushPromises()
+    await wrapper.vm.handleEdit<%Name%>(1)
+    await wrapper.vm.handleSave<%Name%>()
+
+    expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
+  })
+})<%={{ }}=%>

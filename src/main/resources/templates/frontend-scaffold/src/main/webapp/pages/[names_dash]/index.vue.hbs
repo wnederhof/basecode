@@ -2,17 +2,17 @@
   <div>
     <h1>List of <%Names%></h1>
 
-    <<%Name%>Editor />
+    <<%Name%>Manager />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'nuxt-class-component'
-import <%Name%>Editor from '@/components/<%name_dash%>/<%Name%>Editor.vue'
+import <%Name%>Manager from '@/components/<%name_dash%>/<%Name%>Manager.vue'
 
 @Component({
-  components: { <%Name%>Editor }
+  components: { <%Name%>Manager }
 })
 export default class extends Vue {
 

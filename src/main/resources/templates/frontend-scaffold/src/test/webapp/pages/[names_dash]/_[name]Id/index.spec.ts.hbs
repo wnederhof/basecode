@@ -38,13 +38,13 @@ describe('Index', () => {
     createComponent()
     await flushPromises()
 
-    expect(wrapper.findComponent({ ref: 'edit-<%name%>-header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: '<%name%>-form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
 
     await wrapper.vm.handleEdit<%Name%>()
 
-    expect(wrapper.findComponent({ ref: 'edit-<%name%>-header' }).exists()).toBeTruthy()
-    expect(wrapper.findComponent({ ref: '<%name%>-form' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeTruthy()
   })
 
   it('closes when close is pressed', async () => {
@@ -53,8 +53,8 @@ describe('Index', () => {
     await wrapper.vm.handleEdit<%Name%>()
     await wrapper.vm.handleCancel<%Name%>()
 
-    expect(wrapper.findComponent({ ref: 'edit-<%name%>-header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: '<%name%>-form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
   })
 
   it('closes when save is pressed', async () => {
@@ -63,7 +63,7 @@ describe('Index', () => {
     await wrapper.vm.handleEdit<%Name%>()
     await wrapper.vm.handleSave<%Name%>()
 
-    expect(wrapper.findComponent({ ref: 'edit-<%name%>-header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: '<%name%>-form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
   })
 })<%={{ }}=%>

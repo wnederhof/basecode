@@ -90,7 +90,7 @@ describe('<%Name%>Form', () => {
       }
     `, queryHandler)
 
-    await wrapper.findComponent({ ref: '<%name%>-form' }).trigger('submit.prevent')
+    await wrapper.findComponent({ ref: '<%name%>Form' }).trigger('submit.prevent')
     expect(queryHandler).toBeCalledTimes(1)
 
     await wrapper.vm.$nextTick()
