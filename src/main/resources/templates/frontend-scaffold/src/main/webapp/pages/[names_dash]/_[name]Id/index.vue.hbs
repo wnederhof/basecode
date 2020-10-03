@@ -2,27 +2,30 @@
   <div>
     <h1>Show <%Name%></h1>
 
-    <<%Name%>Details :<%name%>-id="this.$route.params.<%name%>Id" />
+    <<%Name%>Details :<%name_dash%>-id="this.$route.params.<%name%>Id" />
 
-    <nuxt-link :to="'/<%names_dash%>'">
+    <n-link to="/<%names_dash%>">
       List of <%Names%>
-    </nuxt-link>
+    </n-link>
 
-    <button @click="openEditForm">
+    <button @click="showForm">
       Edit <%Name%>
     </button>
 
-    <h2 ref="edit-<%name%>-header" v-if="showEdit<%Name%> && edit<%Name%>Id">
-        Edit <%Name%> {{ edit<%Name%>Id }}
+    <h2
+      ref="edit-<%name%>-header"
+      v-if="<%name%>FormVisible && selected<%Name%>Id"
+    >
+      Edit <%Name%> {{ selected<%Name%>Id }}
     </h2>
 
     <<%Name%>Form
-      v-if="showEdit<%Name%>"
+      v-if="<%name%>FormVisible"
       ref="<%name%>-form"
-      :key="edit<%Name%>Id"
-      :<%name%>-id="edit<%Name%>Id"
-      @save="closeForm"
-      @cancel="closeForm"
+      :key="selected<%Name%>Id"
+      :<%name%>-id="selected<%Name%>Id"
+      @save:<%name%>="hideForm"
+      @close:<%name%>="hideForm"
     />
   </div>
 </template>
@@ -37,16 +40,17 @@ import Component from 'nuxt-class-component'
   components: { <%Name%>Details, <%Name%>Form }
 })
 export default class extends Vue {
-  edit<%Name%>Id: number | null = null
+  <%name%>FormVisible: boolean = false
+  selected<%Name%>Id: number | null = null
 
-  openEditForm () {
-    this.showEdit<%Name%> = true
-    this.edit<%Name%>Id = parseInt(this.$route.params.<%name%>Id)
+  showForm () {
+    this.<%name%>FormVisible = true
+    this.selected<%Name%>Id = parseInt(this.$route.params.<%name%>Id)
   }
 
-  closeForm () {
-    this.showEdit<%Name%> = false
-    this.edit<%Name%>Id = null
+  hideForm () {
+    this.<%name%>FormVisible = false
+    this.selected<%Name%>Id = null
   }
 }
 </script><%={{ }}=%>

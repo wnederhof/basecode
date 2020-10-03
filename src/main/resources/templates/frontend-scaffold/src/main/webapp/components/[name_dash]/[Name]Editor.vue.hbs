@@ -1,26 +1,35 @@
 {{=<% %>=}}<template>
   <div>
-    <<%Name%>List @edit="openEditForm" ref="editor-<%name%>-list" />
+    <<%Name%>List
+      ref="editor-<%name%>-list"
+      @edit:<%name%>="showForm"
+    />
 
-    <button @click="openNewForm">
+    <button @click="showNewForm">
       New <%Name%>
     </button>
 
-    <h2 v-if="showEdit<%Name%> && !edit<%Name%>Id" ref="editor-new-<%name%>-header">
+    <h2
+      v-if="<%name%>FormVisible && !selected<%Name%>Id"
+      ref="editor-new-<%name%>-header"
+    >
       New <%Name%>
     </h2>
 
-    <h2 v-if="showEdit<%Name%> && edit<%Name%>Id" ref="editor-edit-<%name%>-header">
-      Edit <%Name%> {{ edit<%Name%>Id }}
+    <h2
+      v-if="<%name%>FormVisible && selected<%Name%>Id"
+      ref="editor-edit-<%name%>-header"
+    >
+      Edit <%Name%> {{ selected<%Name%>Id }}
     </h2>
 
     <<%Name%>Form
-      v-if="showEdit<%Name%>"
+      v-if="<%name%>FormVisible"
       ref="editor-<%name%>-form"
-      :key="edit<%Name%>Id"
-      :<%name%>-id="edit<%Name%>Id"
-      @save="closeForm"
-      @cancel="closeForm"
+      :key="selected<%Name%>Id"
+      :<%name_dash%>-id="selected<%Name%>Id"
+      @save:<%name_dash%>="hideForm"
+      @close:<%name_dash%>="hideForm"
     />
   </div>
 </template>
@@ -35,22 +44,22 @@ import Vue from 'vue'
   components: { <%Name%>Form, <%Name%>List }
 })
 export default class <%Name%>Editor extends Vue {
-  showEdit<%Name%> = false
-  edit<%Name%>Id: number | null = null
+  <%name%>FormVisible: boolean = false
+  selected<%Name%>Id: number | null = null
 
-  openEditForm (<%name%>Id: number) {
-    this.showEdit<%Name%> = true
-    this.edit<%Name%>Id = <%name%>Id
+  showForm (<%name%>Id: number) {
+    this.<%name%>FormVisible = true
+    this.selected<%Name%>Id = <%name%>Id
   }
 
-  openNewForm () {
-    this.showEdit<%Name%> = true
-    this.edit<%Name%>Id = null
+  showNewForm () {
+    this.<%name%>FormVisible = true
+    this.selected<%Name%>Id = null
   }
 
-  closeForm () {
-    this.showEdit<%Name%> = false
-    this.edit<%Name%>Id = null
+  hideForm () {
+    this.<%name%>FormVisible = false
+    this.selected<%Name%>Id = null
   }
 }
 </script><%={{ }}=%>

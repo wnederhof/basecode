@@ -11,17 +11,28 @@
       </tr>
     </thead>
     <tbody>
-      <tr v-for="<%name%> in <%names%>" :key="<%name%>.id">
+      <tr
+        v-for="<%name%> in <%names%>"
+        :key="<%name%>.id"
+      >
         <td>{{ <%name%>.id }}</td><%#each fields%>
         <td>{{ <%name%>.<%fieldName%> }}</td><%/each%>
         <td>
-          <nuxt-link :to="'/<%names_dash%>/' + <%name%>.id">
+          <n-link :to="'/<%names_dash%>/' + <%name%>.id">
             Show
-          </nuxt-link>
-          <button ref="edit-<%name%>-btn" type="button" @click="edit<%Name%>(<%name%>.id)">
+          </n-link>
+          <button
+            ref="edit-<%name%>-btn"
+            type="button"
+            @click="edit<%Name%>(<%name%>.id)"
+          >
             Edit <%Name%>
           </button>
-          <button ref="delete-<%name%>-btn" type="button" @click="delete<%Name%>ById(<%name%>.id)">
+          <button
+            ref="delete-<%name%>-btn"
+            type="button"
+            @click="delete<%Name%>ById(<%name%>.id)"
+          >
             Delete <%Name%>
           </button>
         </td>
@@ -79,7 +90,7 @@ export default class <%Name%>List extends Vue {
   }
 
   edit<%Name%>(id: number) {
-    this.$emit('edit', id)
+    this.$emit('edit:<%name%>', id)
   }
 }
 </script><%={{ }}=%>

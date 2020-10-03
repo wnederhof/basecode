@@ -39,6 +39,7 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                             it.split(":").let {
                                 mapOf(
                                         "field_name" to nameHelper.toDuckName(it[0]),
+                                        "field_name_dash" to nameHelper.toDashName(it[0]),
                                         "FieldName" to nameHelper.toUpperCamelCase(it[0]),
                                         "isTextInput" to (it[1] == "string" || it[1] == "string?"),
                                         "isNumberInput" to (it[1] == "int" || it[1] == "int?"),
