@@ -51,19 +51,23 @@ import gql from 'graphql-tag'
             <%fieldName%><%/each%>
           }
         }`,
+
       variables () {
         return {
           id: this.$props.<%name%>Id
         }
       },
+
       skip () {
         return !this.$props.<%name%>Id
       },
+
       result({data}) {
         this.<%name%> = JSON.parse(JSON.stringify(data.<%name%>))
       }
     }
   },
+
   props: { <%name%>Id: [Number, String] }
 })
 export default class <%Name%>Form extends Vue {

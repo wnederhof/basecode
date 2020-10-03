@@ -33,6 +33,7 @@ import Component from 'nuxt-class-component'
             <%fieldName%><%/each%>
           }
         }`,
+
       variables () {
         return {
           id: this.$props.<%name%>Id
@@ -40,6 +41,7 @@ import Component from 'nuxt-class-component'
       }
     }
   },
+
   props: { <%name%>Id: [Number, String] }
 })
 export default class <%Name%>Details extends Vue {
