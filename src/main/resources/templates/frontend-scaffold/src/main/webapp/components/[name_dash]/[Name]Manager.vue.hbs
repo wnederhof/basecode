@@ -44,8 +44,8 @@ import Vue from 'vue'
   components: { <%Name%>Form, <%Name%>List }
 })
 export default class <%Name%>Manager extends Vue {
-  <%name%>FormVisible: boolean = false
-  selected<%Name%>Id: number | null = null
+  <%name%>FormVisible = false
+  selected<%Name%>Id = null
 
   showForm (<%name%>Id: number) {
     this.<%name%>FormVisible = true

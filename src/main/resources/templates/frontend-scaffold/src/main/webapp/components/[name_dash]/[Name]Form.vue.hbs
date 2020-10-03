@@ -2,6 +2,9 @@
   <div v-if="$apollo.loading">
     Loading...
   </div>
+  <div v-else-if="error">
+    Unable to load component. Error message: {{ error }}
+  </div>
   <form
     v-else
     ref="<%name%>Form"
@@ -45,13 +48,17 @@ import gql from 'graphql-tag'
   apollo: {
     <%name%>: {
       query: gql`
-        query <%name%>ById($id: Int) {
-          <%name%>: <%name%>ById(id: $id) {
+        query <%name%>($id: Int) {
+          <%name%>: <%name%>(id: $id) {
             id<%#each fields%>
             <%fieldName%><%/each%>
           }
         }
       `,
+
+      error(error) {
+        this.error = error.message
+      },
 
       variables () {
         return {
@@ -63,7 +70,7 @@ import gql from 'graphql-tag'
         return !this.$props.<%name%>Id
       },
 
-      result({data}) {
+      result ({data}) {
         this.<%name%> = Object.assign({}, data.<%name%>)
       }
     }

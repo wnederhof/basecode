@@ -1,11 +1,11 @@
 extend type Query {
-    {{ name }}ById(id: Int): {{ Name }}
+    {{ name }}(id: Int): {{ Name }}
     all{{ Names }}(filter: {{ Name }}Filter): [{{ Name }}!]!
 }
 
 extend type Mutation {
     save{{ Name }}({{ name }}: {{ Name }}Input!): {{ Name }}!
-    delete{{ Name }}ById(id: ID!): Boolean
+    delete{{ Name }}(id: ID!): Boolean
 }
 
 {{#each fields }}{{#if fieldRelationship}}extend type {{ FieldType }} {

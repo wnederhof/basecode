@@ -2,6 +2,9 @@
   <div v-if="$apollo.loading">
     Loading...
   </div>
+  <div v-else-if="error">
+    Unable to load component. Error message: {{ error }}
+  </div>
   <div v-else-if="<%name%>">
     <table>
       <tbody>
@@ -27,13 +30,17 @@ import Component from 'nuxt-class-component'
   apollo: {
     <%name%>: {
       query: gql`
-        query <%name%>ById($id: Int) {
-          <%name%>: <%name%>ById(id: $id) {
+        query <%name%>($id: Int) {
+          <%name%>: <%name%>(id: $id) {
             id<%#each fields%>
             <%fieldName%><%/each%>
           }
         }
       `,
+
+      error(error) {
+        this.error = error.message
+      },
 
       variables () {
         return {
@@ -46,6 +53,7 @@ import Component from 'nuxt-class-component'
   props: { <%name%>Id: [Number, String] }
 })
 export default class <%Name%>Details extends Vue {
-  <%name%> = {}
+  <%name%> = null
+  error = null
 }
 </script><%={{ }}=%>

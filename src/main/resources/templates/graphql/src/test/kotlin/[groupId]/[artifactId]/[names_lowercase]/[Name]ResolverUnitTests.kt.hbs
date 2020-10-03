@@ -27,11 +27,11 @@ class {{ Name }}ResolverUnitTests {
         private lateinit var rootQueryResolver: {{ Name }}Resolver.RootQueryResolver
 
         @Test
-        fun `{{ name }}ById delegates the call to the {{ Name }}Service`() {
+        fun `{{ name }} delegates the call to the {{ Name }}Service`() {
             whenever({{ name }}Service.findById(1))
                 .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
 
-            assertThat(rootQueryResolver.{{ name }}ById(1))
+            assertThat(rootQueryResolver.{{ name }}(1))
                 .isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
         }
 
@@ -68,8 +68,8 @@ class {{ Name }}ResolverUnitTests {
         }
 
         @Test
-        fun `delete{{ Name }}ById delegates the call to the {{ Name }}Service`() {
-            {{ name }}MutationResolver.delete{{ Name }}ById(1)
+        fun `delete{{ Name }} delegates the call to the {{ Name }}Service`() {
+            {{ name }}MutationResolver.delete{{ Name }}(1)
 
             verify({{ name }}Service).deleteById(1)
         }

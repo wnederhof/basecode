@@ -2,6 +2,9 @@
   <div v-if="$apollo.loading">
     Loading...
   </div>
+  <div v-else-if="error">
+    Unable to load component. Error message: {{ error }}
+  </div>
   <table v-else>
     <thead>
       <tr>
@@ -31,7 +34,7 @@
           <button
             ref="delete-<%name%>-btn"
             type="button"
-            @click="delete<%Name%>ById(<%name%>.id)"
+            @click="delete<%Name%>(<%name%>.id)"
           >
             Delete <%Name%>
           </button>
@@ -50,13 +53,17 @@ import gql from 'graphql-tag'
   apollo: {
     <%names%>: {
       query: gql`
-        query all<%Names%>($filter: <%Name%>Filter) {
-          <%names%>: all<%Names%>(filter: $filter) {
+        query <%names%>($filter: <%Name%>Filter) {
+          <%names%>: <%names%>(filter: $filter) {
             id<%#each fields%>
             <%fieldName%><%/each%>
           }
         }
       `,
+
+      error(error) {
+        this.error = error.message
+      },
 
       variables () {
         const id = this.$props.id<%#each fields%><%#if fieldRelationship%>
@@ -74,10 +81,10 @@ import gql from 'graphql-tag'
 export default class <%Name%>List extends Vue {
   <%names%> = null
 
-  async delete<%Name%>ById (id: number) {
+  async delete<%Name%> (id: number) {
     const mutation = gql`
-      mutation delete<%Name%>ById($id: ID!) {
-        delete<%Name%>ById(id: $id)
+      mutation delete<%Name%>($id: ID!) {
+        delete<%Name%>(id: $id)
       }
     `
 
