@@ -12,15 +12,15 @@
   >
     <input
       v-if="<%name%>.id"
-      id="id"
+      :id="$id('id')"
       v-model="<%name%>.id"
       type="hidden"
     >
 <%#each fields%>
     <div>
-      <label for="<%fieldName%>"><%FieldName%></label>
+      <label :for="$id('<%fieldName%>')"><%FieldName%></label>
       <input
-        id="<%fieldName%>"
+        :id="$id('<%fieldName%>')"
         ref="<%fieldName%>-input"
         v-model="<%name%>.<%fieldName%>"
         type="text"
@@ -43,6 +43,7 @@
 import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
 import gql from 'graphql-tag'
+import UniqueId from 'vue-unique-id';
 
 @Component({
   apollo: {
