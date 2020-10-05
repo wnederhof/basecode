@@ -18,8 +18,8 @@ describe('<%Name%>List', () => {
     mockClient = createMockClient()
 
     mockClient.setRequestHandler(gql`
-      query all<%Names%>($filter: <%Name%>Filter) {
-        <%names%>: all<%Names%>(filter: $filter) {
+      query <%names%>($filter: <%Name%>Filter) {
+        <%names%>: <%names%>(filter: $filter) {
           id<%#each fields%>
           <%fieldName%><%/each%>
         }
@@ -43,7 +43,7 @@ describe('<%Name%>List', () => {
       localVue,
       apolloProvider,
       stubs: {
-        NuxtLink: RouterLinkStub
+        NLink: RouterLinkStub
       }
     })
   }
@@ -72,8 +72,8 @@ describe('<%Name%>List', () => {
   it('emits edit event when edit is clicked', async () => {
     createComponent()
     await flushPromises()
-    await wrapper.findComponent({ ref: 'edit-<%name%>-btn' }).trigger('click')
-    expect(wrapper.emitted().edit).toBeTruthy()
+    await wrapper.findComponent({ ref: 'edit<%Name%>Btn' }).trigger('click')
+    expect(wrapper.emitted()['edit:<%name%>']).toBeTruthy()
   })
 
   it('does not run a mutation on delete with no confirmation', async () => {
@@ -82,12 +82,12 @@ describe('<%Name%>List', () => {
     const queryHandler = jest.fn().mockResolvedValue(false)
     global.confirm = () => false
     mockClient.setRequestHandler(gql`
-      mutation delete<%Name%>ById($id: ID!) {
-        delete<%Name%>ById(id: $id)
+      mutation delete<%Name%>($id: ID!) {
+        delete<%Name%>(id: $id)
       }
     `, queryHandler)
 
-    await wrapper.findComponent({ ref: 'delete-<%name%>-btn' }).trigger('click')
+    await wrapper.findComponent({ ref: 'delete<%Name%>Btn' }).trigger('click')
     expect(queryHandler).toBeCalledTimes(0)
   })
 
@@ -97,12 +97,12 @@ describe('<%Name%>List', () => {
     const queryHandler = jest.fn().mockResolvedValue(true)
     global.confirm = () => true
     mockClient.setRequestHandler(gql`
-      mutation delete<%Name%>ById($id: ID!) {
-        delete<%Name%>ById(id: $id)
+      mutation delete<%Name%>($id: ID!) {
+        delete<%Name%>(id: $id)
       }
     `, queryHandler)
 
-    await wrapper.findComponent({ ref: 'delete-<%name%>-btn' }).trigger('click')
+    await wrapper.findComponent({ ref: 'delete<%Name%>Btn' }).trigger('click')
     expect(queryHandler).toBeCalledTimes(1)
   })
 })<%={{ }}=%>

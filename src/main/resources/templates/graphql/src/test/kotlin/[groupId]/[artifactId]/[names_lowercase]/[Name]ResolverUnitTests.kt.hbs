@@ -42,7 +42,7 @@ class {{ Name }}ResolverUnitTests {
             whenever({{ name }}Service.findAll(any{{ Name }}Filter))
                 .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
 
-            assertThat(rootQueryResolver.all{{ Names }}(any{{ Name }}Filter))
+            assertThat(rootQueryResolver.{{ names }}(any{{ Name }}Filter))
                 .isEqualTo(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
         }
 

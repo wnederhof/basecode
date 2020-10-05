@@ -5,8 +5,10 @@ import VueApollo from 'vue-apollo'
 import gql from 'graphql-tag'
 import <%Name%>Form from '@/components/<%name_dash%>/<%Name%>Form.vue'
 import { MockApolloClient } from 'mock-apollo-client/dist/mockClient'
+import UniqueId from 'vue-unique-id'
 
 const localVue = createLocalVue()
+localVue.use(UniqueId)
 localVue.use(VueApollo)
 
 describe('<%Name%>Form', () => {
@@ -18,8 +20,8 @@ describe('<%Name%>Form', () => {
     mockClient = createMockClient()
 
     mockClient.setRequestHandler(gql`
-      query <%name%>ById($id: Int) {
-        <%name%>: <%name%>ById(id: $id) {
+      query <%name%>($id: Int) {
+        <%name%>: <%name%>(id: $id) {
           id<%#each fields%>
           <%fieldName%><%/each%>
         }
@@ -55,7 +57,7 @@ describe('<%Name%>Form', () => {
 
   it('contains <%name%> form with no data if id is not set', () => {
     createComponent({ <%name%>Id: null })<%#each fields%>
-    expect((wrapper.findComponent({ ref: '<%fieldName%>-input' }).element as HTMLInputElement).value).toContain('')<%/each%>
+    expect((wrapper.findComponent({ ref: '<%fieldName%>Input' }).element as HTMLInputElement).value).toContain('')<%/each%>
   })
 
   it('shows loading when fetching data if id is set', () => {
@@ -67,14 +69,14 @@ describe('<%Name%>Form', () => {
     createComponent({ <%name%>Id: 1 })
     await flushPromises()
 <%#each fields%>
-    expect((wrapper.findComponent({ ref: '<%fieldName%>-input' }).element as HTMLInputElement).value).toContain('Some <%FieldName%>')<%/each%>
+    expect((wrapper.findComponent({ ref: '<%fieldName%>Input' }).element as HTMLInputElement).value).toContain('Some <%FieldName%>')<%/each%>
   })
 
   it('emits edit event when edit is clicked', async () => {
     createComponent({ <%name%>Id: null })
     await flushPromises()
-    await wrapper.findComponent({ ref: 'cancel-btn' }).trigger('click')
-    expect(wrapper.emitted().cancel).toBeTruthy()
+    await wrapper.findComponent({ ref: 'cancelBtn' }).trigger('click')
+    expect(wrapper.emitted()['close:<%name%>Form']).toBeTruthy()
   })
 
   it('runs a mutation on submit and emits save event', async () => {
@@ -94,6 +96,6 @@ describe('<%Name%>Form', () => {
     expect(queryHandler).toBeCalledTimes(1)
 
     await wrapper.vm.$nextTick()
-    expect(wrapper.emitted().save).toBeTruthy()
+    expect(wrapper.emitted()['save:<%name%>']).toBeTruthy()
   })
 })<%={{ }}=%>

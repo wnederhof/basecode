@@ -1,7 +1,8 @@
 {{=<% %>=}}import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import VueApollo from 'vue-apollo'
-import <%Name%>Manager from '@/components/<%name_dash%>/<%Name%>Manager.vue'
+import <%Name%>Manager from '@/components/<%name%>/<%Name%>Manager.vue'
+import UniqueId from 'vue-unique-id'
 
 const localVue = createLocalVue()
 localVue.use(VueApollo)
@@ -15,7 +16,8 @@ describe('<%Name%>Manager', () => {
       propsData: { <%name%>Id: 1 },
       stubs: {
         <%Name%>List: true,
-        <%Name%>Form: true
+        <%Name%>Form: true,
+        $id: true
       }
     })
   }
@@ -37,7 +39,7 @@ describe('<%Name%>Manager', () => {
     expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
 
-    await wrapper.vm.handleNew<%Name%>()
+    await wrapper.findComponent({ ref: 'openNewFormBtn' }).trigger('click')
 
     expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeTruthy()
     expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
@@ -52,7 +54,7 @@ describe('<%Name%>Manager', () => {
     expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
 
-    await wrapper.vm.handleEdit<%Name%>(1)
+    await wrapper.findComponent({ ref: '<%name%>List' }).vm.$emit('edit:<%name%>', 1)
 
     expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeTruthy()
@@ -62,8 +64,9 @@ describe('<%Name%>Manager', () => {
   it('closes when close is pressed', async () => {
     createComponent()
     await flushPromises()
-    await wrapper.vm.handleEdit<%Name%>(1)
-    await wrapper.vm.handleCancel<%Name%>()
+
+    await wrapper.findComponent({ ref: '<%name%>List' }).vm.$emit('edit:<%name%>', 1)
+    await wrapper.findComponent({ ref: '<%name%>Form' }).vm.$emit('close:<%name%>Form')
 
     expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
@@ -73,8 +76,9 @@ describe('<%Name%>Manager', () => {
   it('closes when save is pressed', async () => {
     createComponent()
     await flushPromises()
-    await wrapper.vm.handleEdit<%Name%>(1)
-    await wrapper.vm.handleSave<%Name%>()
+
+    await wrapper.findComponent({ ref: '<%name%>List' }).vm.$emit('edit:<%name%>', 1)
+    await wrapper.findComponent({ ref: '<%name%>Form' }).vm.$emit('save:<%name%>')
 
     expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()

@@ -22,7 +22,7 @@ sealed class {{ Name }}Resolver {
             return {{ name }}Service.findById(id)
         }
 
-        fun all{{ Names }}(filter: {{ Name }}Filter?): Iterable<{{ Name }}> {
+        fun {{ names }}(filter: {{ Name }}Filter?): Iterable<{{ Name }}> {
             return {{ name }}Service.findAll(filter)
         }
     }

@@ -21,7 +21,7 @@
       <label :for="$id('<%fieldName%>')"><%FieldName%></label>
       <input
         :id="$id('<%fieldName%>')"
-        ref="<%fieldName%>-input"
+        ref="<%fieldName%>Input"
         v-model="<%name%>.<%fieldName%>"
         type="text"
       >
@@ -29,7 +29,7 @@
     <div>
       <button>Save <%Name%></button>
       <button
-        ref="cancel-btn"
+        ref="cancelBtn"
         type="button"
         @click="close"
       >
@@ -43,7 +43,6 @@
 import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
 import gql from 'graphql-tag'
-import UniqueId from 'vue-unique-id';
 
 @Component({
   apollo: {
@@ -57,7 +56,7 @@ import UniqueId from 'vue-unique-id';
         }
       `,
 
-      error(error) {
+      error (error) {
         this.error = error.message
       },
 
@@ -71,7 +70,7 @@ import UniqueId from 'vue-unique-id';
         return !this.$props.<%name%>Id
       },
 
-      result ({data}) {
+      result ({ data }) {
         this.<%name%> = Object.assign({}, data.<%name%>)
       }
     }
@@ -80,7 +79,7 @@ import UniqueId from 'vue-unique-id';
   props: { <%name%>Id: [Number, String] }
 })
 export default class <%Name%>Form extends Vue {
-  <%name%> = { <%#each fields%><%fieldName%>: '', <%/each%> }
+  <%name%> = { <%#each fields%><%fieldName%>: '', <%/each%>}
 
   async save<%Name%> () {
     const mutation = gql`
@@ -92,12 +91,12 @@ export default class <%Name%>Form extends Vue {
       }
     `
 
-    const variables: any = Object.assign({}, this.<%name%>)
-    delete variables.__typename
+    const <%name%>Input: any = Object.assign({}, this.<%name%>)
+    delete <%name%>Input.__typename
 
     await this.$apollo.mutate({
       mutation,
-      variables,
+      variables: { <%name%>: <%name%>Input },
       update: () => {
         this.$apollo.getClient().resetStore()
       }
@@ -106,7 +105,7 @@ export default class <%Name%>Form extends Vue {
     this.$emit('save:<%name%>', this.<%name%>)
   }
 
-  close() {
+  close () {
     this.$emit('close:<%name%>Form')
   }
 }

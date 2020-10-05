@@ -1,6 +1,6 @@
 extend type Query {
     {{ name }}(id: Int): {{ Name }}
-    all{{ Names }}(filter: {{ Name }}Filter): [{{ Name }}!]!
+    {{ names }}(filter: {{ Name }}Filter): [{{ Name }}!]!
 }
 
 extend type Mutation {

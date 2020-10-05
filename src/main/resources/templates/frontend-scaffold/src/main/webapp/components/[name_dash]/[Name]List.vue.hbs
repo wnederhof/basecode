@@ -25,14 +25,14 @@
             Show
           </n-link>
           <button
-            ref="edit-<%name%>-btn"
+            ref="edit<%Name%>Btn"
             type="button"
             @click="edit<%Name%>(<%name%>.id)"
           >
             Edit <%Name%>
           </button>
           <button
-            ref="delete-<%name%>-btn"
+            ref="delete<%Name%>Btn"
             type="button"
             @click="delete<%Name%>(<%name%>.id)"
           >
@@ -61,7 +61,7 @@ import gql from 'graphql-tag'
         }
       `,
 
-      error(error) {
+      error (error) {
         this.error = error.message
       },
 
@@ -99,7 +99,7 @@ export default class <%Name%>List extends Vue {
     }
   }
 
-  edit<%Name%>(id: number) {
+  edit<%Name%> (id: number) {
     this.$emit('edit:<%name%>', id)
   }
 }

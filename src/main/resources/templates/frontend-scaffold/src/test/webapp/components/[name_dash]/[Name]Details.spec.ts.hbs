@@ -18,8 +18,8 @@ describe('<%Name%>Details', () => {
     mockClient = createMockClient()
 
     mockClient.setRequestHandler(gql`
-      query <%name%>ById($id: Int) {
-        <%name%>: <%name%>ById(id: $id) {
+      query <%name%>($id: Int) {
+        <%name%>: <%name%>(id: $id) {
           id<%#each fields%>
           <%fieldName%><%/each%>
         }

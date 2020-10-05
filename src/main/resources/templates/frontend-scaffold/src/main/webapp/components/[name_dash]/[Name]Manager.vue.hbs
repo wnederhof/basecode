@@ -2,10 +2,13 @@
   <div>
     <<%Name%>List
       ref="<%name%>List"
-      @edit:<%name%>="showForm"
+      @edit:<%name%>="openForm"
     />
 
-    <button @click="showNewForm">
+    <button
+      ref="openNewFormBtn"
+      @click="openNewForm"
+    >
       New <%Name%>
     </button>
 
@@ -27,16 +30,16 @@
       v-if="<%name%>FormVisible"
       ref="<%name%>Form"
       :key="selected<%Name%>Id"
-      :<%name_dash%>-id="selected<%Name%>Id"
-      @save:<%name_dash%>="hideForm"
-      @close:<%name_dash%>="hideForm"
+      :<%name%>-id="selected<%Name%>Id"
+      @save:<%name%>="closeForm"
+      @close:<%name%>Form="closeForm"
     />
   </div>
 </template>
 
 <script lang="ts">
-import <%Name%>List from '@/components/<%name_dash%>/<%Name%>List.vue'
-import <%Name%>Form from '@/components/<%name_dash%>/<%Name%>Form.vue'
+import <%Name%>List from '@/components/<%name%>/<%Name%>List.vue'
+import <%Name%>Form from '@/components/<%name%>/<%Name%>Form.vue'
 import Component from 'nuxt-class-component'
 import Vue from 'vue'
 
@@ -45,19 +48,19 @@ import Vue from 'vue'
 })
 export default class <%Name%>Manager extends Vue {
   <%name%>FormVisible = false
-  selected<%Name%>Id = null
+  selected<%Name%>Id: number | null = null
 
-  showForm (<%name%>Id: number) {
+  openForm (<%name%>Id: number) {
     this.<%name%>FormVisible = true
     this.selected<%Name%>Id = <%name%>Id
   }
 
-  showNewForm () {
+  openNewForm () {
     this.<%name%>FormVisible = true
     this.selected<%Name%>Id = null
   }
 
-  hideForm () {
+  closeForm () {
     this.<%name%>FormVisible = false
     this.selected<%Name%>Id = null
   }
