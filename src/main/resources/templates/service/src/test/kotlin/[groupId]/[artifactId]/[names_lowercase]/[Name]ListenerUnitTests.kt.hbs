@@ -1,7 +1,7 @@
 package {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}
 
-{{#each fields as |f|}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service
+{{#each fields as |f|}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}Service
 {{/if}}{{/each}}{{#if hasRelations}}import com.nhaarman.mockitokotlin2.verify
 import org.junit.jupiter.api.Test{{/if}}
 import org.junit.jupiter.api.extension.ExtendWith

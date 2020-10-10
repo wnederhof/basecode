@@ -2,9 +2,9 @@ package {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}
 
 import {{ groupId }}.{{ artifactId }}.IntegrationTestContext
 import {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1{{#each fields as |f|}}{{#if fieldRelationship}}
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Repository
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Service{{/if}}{{/each}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}Repository
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}Service{{/if}}{{/each}}
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test{{#if hasRelations}}
 import org.junit.jupiter.api.assertThrows{{/if}}

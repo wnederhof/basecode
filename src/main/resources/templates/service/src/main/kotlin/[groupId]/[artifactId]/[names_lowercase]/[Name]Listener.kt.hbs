@@ -1,6 +1,6 @@
 package {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}
 {{#each fields}}{{#if fieldRelationship}}
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent{{/if}}{{/each}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent{{/if}}{{/each}}
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 

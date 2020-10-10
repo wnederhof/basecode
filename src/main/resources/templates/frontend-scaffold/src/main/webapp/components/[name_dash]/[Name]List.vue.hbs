@@ -80,6 +80,7 @@ import gql from 'graphql-tag'
 })
 export default class <%Name%>List extends Vue {
   <%names%> = null
+  error = null
 
   async delete<%Name%> (id: number) {
     const mutation = gql`

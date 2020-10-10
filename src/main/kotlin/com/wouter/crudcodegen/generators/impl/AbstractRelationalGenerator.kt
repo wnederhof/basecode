@@ -49,6 +49,7 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                                         "FieldType" to nameHelper.toUpperCamelCase(it[1]),
                                         "FieldTypes" to nameHelper.toUpperCamelCase(nameHelper.pluralize(it[1])),
                                         "fieldTypes" to nameHelper.toLowerCamelCase(nameHelper.pluralize(it[1])),
+                                        "fieldTypes_lowercase" to nameHelper.pluralize(it[1]).toLowerCase(),
                                         "FIELD_TYPE" to nameHelper.toDuckName(it[1]).toUpperCase(),
                                         "fieldType" to nameHelper.toLowerCamelCase(it[1]),
                                         "field_types" to nameHelper.toLowerCamelCase(nameHelper.pluralize(it[1])),

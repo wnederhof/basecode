@@ -30,7 +30,7 @@
       v-if="<%name%>FormVisible"
       ref="<%name%>Form"
       :key="selected<%Name%>Id"
-      :<%name%>-id="selected<%Name%>Id"
+      :<%name_dash%>-id="selected<%Name%>Id"
       @save:<%name%>="closeForm"
       @close:<%name%>Form="closeForm"
     />
@@ -38,8 +38,8 @@
 </template>
 
 <script lang="ts">
-import <%Name%>List from '@/components/<%name%>/<%Name%>List.vue'
-import <%Name%>Form from '@/components/<%name%>/<%Name%>Form.vue'
+import <%Name%>List from '@/components/<%name_dash%>/<%Name%>List.vue'
+import <%Name%>Form from '@/components/<%name_dash%>/<%Name%>Form.vue'
 import Component from 'nuxt-class-component'
 import Vue from 'vue'
 
