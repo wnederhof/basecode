@@ -6,18 +6,13 @@
 - X 1-N relations FE and BE support
 - X Add unit tests for 1-N BE relations
 - X Fix broken tests
-
+- X Improve tests / FE structure
+- X Clean up generated code
 - Add E2E tests
-- Improve tests / FE structure
-
 - Add tests for FE List filter
-
 - Pagination
 - Add authentication generators
-
-- Clean up generated code
 - Clean up generator code
-
 - Create proper CLI
 - Fix number support
 - Remove date/nullables support
