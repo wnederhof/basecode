@@ -83,21 +83,52 @@ export default class <%Name%>Form extends Vue {
   error = null
 
   async save<%Name%> () {
+    if (this.<%name%>.id) {
+      await this.update<%Name%>()
+    } else {
+      await this.create<%Name%>()
+    }
+  }
+
+  private async updateCompany() {
     const mutation = gql`
-      mutation save<%Name%>($<%name%>: <%Name%>Input!) {
-        save<%Name%>(<%name%>: $<%name%>) {
+      mutation save<%Name%>($id: ID!, $<%name%>: <%Name%>Input!) {
+        update<%Name%>(id: $id, <%name%>: $<%name%>) {
           id<%#each fields%>
           <%fieldName%><%/each%>
         }
       }
     `
 
-    const <%name%>Input: any = Object.assign({}, this.<%name%>)
+    const <%name%>Input = Object.assign({}, this.<%name%>)
+    delete <%name%>Input.__typename
+
+    const { id, ...input } = <%name%>Input
+
+    await this.$apollo.mutate({
+      mutation,
+      variables: { id, input },
+      update: () => {
+        this.$apollo.getClient().resetStore()
+      }
+    })
+
+    this.$emit('save:<%name%>', this.<%name%>)
+  }
+
+  private async createCompany() {
+    const mutation = gql`
+      mutation save<%Name%>($<%name%>: <%Name%>Input!) {
+        create<%Name%>(<%name%>: $<%name%>) { id }
+      }
+    `
+
+    const <%name%>Input = Object.assign({}, this.<%name%>)
     delete <%name%>Input.__typename
 
     await this.$apollo.mutate({
       mutation,
-      variables: { <%name%>: <%name%>Input },
+      variables: { input: <%name%>Input },
       update: () => {
         this.$apollo.getClient().resetStore()
       }

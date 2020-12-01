@@ -30,8 +30,7 @@ input Create{{ Name }}Input { {{#each fields }}
     {{ fieldName }}: {{ FieldGraphQLType }}{{/each}}
 }
 
-input Update{{ Name }}Input {
-    id: ID!{{#each fields }}
+input Update{{ Name }}Input { {{#each fields }}
     {{ fieldName }}: {{ NullFieldGraphQLType }}{{#if isNullable}}
     nullify{{ FieldName }}: Boolean{{/if}}{{/each}}
 }
