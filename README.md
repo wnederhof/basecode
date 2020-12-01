@@ -3,6 +3,8 @@ CrudCodeGen is designed to automate the repetitive job of writing boilerplate co
 
 CrudCodeGen is a tool for generating and managing the basic skeleton of a web application using Kotlin, Spring Boot and zero or more frontends.
 
+Note: CrudCodeGen is currently highly experimental.
+
 Example Usage:
 ```
 # Generate a new blog with groupId `com.myblog` and artifactId `blog`.

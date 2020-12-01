@@ -45,10 +45,9 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                                         "isNullable" to it[1].endsWith("?"),
                                         "isLast" to (fields.size - 1 == idx),
                                         "FieldName" to nameHelper.toUpperCamelCase(it[0]),
-                                        "isTextInput" to (it[1] == "string" || it[1] == "string?"),
-                                        "isNumberInput" to (it[1] == "int" || it[1] == "int?"),
-                                        "isDateInput" to (it[1] == "date" || it[1] == "date?"),
+                                        "isTextInput" to (it[1] == "text" || it[1] == "text?"),
                                         "fieldName" to nameHelper.toLowerCamelCase(it[0]),
+                                        "fieldInputType" to determineFieldInputType(it[1]),
                                         "FieldType" to nameHelper.toUpperCamelCase(it[1]),
                                         "FieldTypes" to nameHelper.toUpperCamelCase(nameHelper.pluralize(it[1])),
                                         "fieldTypes" to nameHelper.toLowerCamelCase(nameHelper.pluralize(it[1])),
@@ -99,13 +98,13 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "int" -> "INT NOT NULL"
             "text" -> "TEXT NOT NULL"
             "date" -> "DATE NOT NULL"
-            "dateTime" -> "DATETIME NOT NULL"
+            "dateTime" -> "TIMESTAMP NOT NULL"
             "boolean" -> "BOOLEAN NOT NULL"
             "string?" -> "VARCHAR(255) NULL"
             "int?" -> "INT NULL"
             "text?" -> "TEXT NULL"
             "date?" -> "DATE NULL"
-            "dateTime?" -> "DATETIME NULL"
+            "dateTime?" -> "TIMESTAMP NULL"
             "boolean?" -> "BOOLEAN NULL"
             else -> "INT NOT NULL"
         }
@@ -116,14 +115,14 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "string" -> "\"Some $name\""
             "int" -> "1"
             "text" -> "\"Some $name\""
-            "date" -> "LocalDate.now()"
-            "dateTime" -> "LocalDateTime.now()"
+            "date" -> "LocalDate.of(2000, 1, 1)"
+            "dateTime" -> "LocalDateTime.of(2000, 1, 1, 0, 0)"
             "boolean" -> "true"
             "string?" -> "\"Some $name\""
             "int?" -> "1"
             "text?" -> "\"Some $name\""
-            "date?" -> "LocalDate.now()"
-            "dateTime?" -> "LocalDateTime.now()"
+            "date?" -> "LocalDate.of(2000, 1, 1)"
+            "dateTime?" -> "LocalDateTime.of(2000, 1, 1, 0, 0)"
             "boolean?" -> "true"
             else -> "10"
         }
@@ -183,6 +182,22 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
         }
     }
 
+    private fun determineFieldInputType(type: String): String {
+        return when (type) {
+            "string" -> "text"
+            "int" -> "number"
+            "date" -> "date"
+            "dateTime" -> "datetime-local"
+            "boolean" -> "checkbox"
+            "string?" -> "text"
+            "int?" -> "number"
+            "date?" -> "date"
+            "dateTime?" -> "datetime-local"
+            "boolean?" -> "checkbox"
+            else -> "text"
+        }
+    }
+
     private fun determineKotlinTypeNullable(type: String): String {
         return when (type) {
             "string" -> "String"
@@ -207,10 +222,12 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "int" -> "Int"
             "text" -> "String"
             "date" -> "Date"
+            "dateTime" -> "Date"
             "string?" -> "String"
             "int?" -> "Int"
             "text?" -> "String"
             "date?" -> "Date"
+            "dateTime?" -> "Date"
             else -> "Int"
         }
     }
@@ -221,10 +238,12 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "int" -> "Int!"
             "text" -> "String!"
             "date" -> "Date!"
+            "datetime" -> "DateTime!"
             "string?" -> "String"
             "int?" -> "Int"
             "text?" -> "String"
             "date?" -> "Date"
+            "datetime?" -> "DateTime"
             else -> "Int!"
         }
     }

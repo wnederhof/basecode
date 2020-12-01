@@ -36,7 +36,15 @@ internal class ScenariosIntegrationTest {
                 listOf(
                         "Company",
                         "name:string",
-                        "about:text"
+                        "about:text",
+                        "age:int",
+                        "dob:date",
+                        "rob:dateTime",
+                        "optname:string?",
+                        "optabout:text?",
+                        "optage:int?",
+                        "optdob:date?",
+                        "optrob:dateTime?"
                 )
         ).map { it.toTypedArray() }.forEach { args ->
             generate("entity", *args)

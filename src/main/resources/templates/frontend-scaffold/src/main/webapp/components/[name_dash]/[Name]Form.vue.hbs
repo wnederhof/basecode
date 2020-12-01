@@ -18,13 +18,18 @@
     >
 <%#each fields%>
     <div>
-      <label :for="$id('<%fieldName%>')"><%FieldName%></label>
+      <label :for="$id('<%fieldName%>')"><%FieldName%></label><%#unless isText%>
       <input
         :id="$id('<%fieldName%>')"
         ref="<%fieldName%>Input"
         v-model="<%name%>.<%fieldName%>"
-        type="text"
-      >
+        type="<%fieldInputType%>"
+      ><%else%>
+      <label :for="$id('<%fieldName%>')"><%FieldName%></label><%#if isText%>
+      <textarea
+        :id="$id('<%fieldName%>')"
+        ref="<%fieldName%>Input"
+        v-model="<%name%>.<%fieldName%>"></textarea><%/if%>
     </div><%/each%>
     <div>
       <button>Save <%Name%></button>
@@ -79,7 +84,9 @@ import gql from 'graphql-tag'
   props: { <%name%>Id: [Number, String] }
 })
 export default class <%Name%>Form extends Vue {
-  <%name%> = { <%#each fields%><%fieldName%>: '', <%/each%>}
+  <%name%> = {
+    id: null,<%#each fields%><%fieldName%>: <%#if isNullable%>''<%else%>null<%/if%>,
+  <%/each%>}
   error = null
 
   async save<%Name%> () {
@@ -92,15 +99,15 @@ export default class <%Name%>Form extends Vue {
 
   private async updateCompany() {
     const mutation = gql`
-      mutation save<%Name%>($id: ID!, $<%name%>: <%Name%>Input!) {
-        update<%Name%>(id: $id, <%name%>: $<%name%>) {
+      mutation save<%Name%>($id: ID!, $input: Update<%Name%>Input!) {
+        update<%Name%>(id: $id, input: $input) {
           id<%#each fields%>
           <%fieldName%><%/each%>
         }
       }
     `
 
-    const <%name%>Input = Object.assign({}, this.<%name%>)
+    const <%name%>Input: any = Object.assign({}, this.<%name%>)
     delete <%name%>Input.__typename
 
     const { id, ...input } = <%name%>Input
@@ -118,12 +125,13 @@ export default class <%Name%>Form extends Vue {
 
   private async createCompany() {
     const mutation = gql`
-      mutation save<%Name%>($<%name%>: <%Name%>Input!) {
-        create<%Name%>(<%name%>: $<%name%>) { id }
+      mutation save<%Name%>($input: Create<%Name%>Input!) {
+        create<%Name%>(input: $input) { id }
       }
     `
 
-    const <%name%>Input = Object.assign({}, this.<%name%>)
+    const <%name%>Input: any = Object.assign({}, this.<%name%>)
+    delete <%name%>Input.id
     delete <%name%>Input.__typename
 
     await this.$apollo.mutate({

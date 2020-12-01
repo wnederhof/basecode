@@ -31,6 +31,6 @@ input Create{{ Name }}Input { {{#each fields }}
 }
 
 input Update{{ Name }}Input { {{#each fields }}
-    {{ fieldName }}: {{ NullFieldGraphQLType }}{{#if isNullable}}
+    {{ fieldName }}: {{ NullFieldGraphQLType }}{{/each}}{{#each fields }}{{#if isNullable}}
     nullify{{ FieldName }}: Boolean{{/if}}{{/each}}
 }

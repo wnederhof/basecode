@@ -18,8 +18,8 @@ describe('<%Name%>List', () => {
     mockClient = createMockClient()
 
     mockClient.setRequestHandler(gql`
-      query <%names%>($filter: <%Name%>Filter) {
-        <%names%>: <%names%>(filter: $filter) {
+      query <%names%><%#if hasRelations%>($filter: <%Name%>Filter)<%/if> {
+        <%names%>: <%names%><%#if hasRelations%>(filter: $filter)<%/if> {
           id<%#each fields%>
           <%fieldName%><%/each%>
         }

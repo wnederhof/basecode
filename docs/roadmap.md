@@ -8,18 +8,20 @@
 - X Fix broken tests
 - X Improve tests / FE structure
 - X Clean up generated code
-- Fix number support
+- X Add update support
+- X Fix number support
+- X Remove/fix date/nullables support
 - Clean up generator code
-- Add update support
-- Add GraphQL tests
-- Add E2E tests
-- Add tests for FE List filter
-- Don't show field when filtering
 - Create proper CLI
-- Remove/fix date/nullables support
+- Don't show field when filtering
+- Add missing tests (incl. frontend filtering)
 
 ## Version 0.2.0
+- Validation
+- Plural
 - Pagination
+- Add GraphQL tests
+- Add E2E tests
 - Add authentication generators
 - Add `date` support
 - Add `enum` support

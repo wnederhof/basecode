@@ -3,6 +3,7 @@ package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
 import {{ groupId }}.{{ artifactId }}.util.MergeUtil.mergeWithNullify
 import org.springframework.data.annotation.*
 import org.springframework.data.relational.core.mapping.Table
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Table("{{ _names }}")
@@ -18,8 +19,8 @@ data class {{ Name }}(
     val updatedAt: LocalDateTime? = null
 ) {
 
-    constructor(create{{ Name }}Input: Create{{ Name }}Input) : this({{#each fields }}
-        {{fieldName}} = create{{ Name }}Input.{{fieldName}},{{/each}}
+    constructor(input: Create{{ Name }}Input) : this({{#each fields }}
+        {{fieldName}} = input.{{fieldName}},{{/each}}
     )
 
     fun merge(update{{ Name }}Input: Update{{ Name }}Input): {{ Name }} {
@@ -31,8 +32,8 @@ data class {{ Name }}(
     )
 
     data class Update{{ Name }}Input({{#each fields}}
-        val {{ fieldName }}: {{ FieldKotlinType }}{{#if isNullable}},
-        val nullify{{ FieldName }}: Boolean{{/if}},{{/each}}
+        val {{ fieldName }}: {{ FieldKotlinType }},{{/each}}{{#each fields}}{{#if isNullable}}
+        val nullify{{ FieldName }}: Boolean? = null{{/if}},{{/each}}
     )
 {{#if hasRelations}}
     data class {{ Name }}FilterInput({{#each fields }}{{#if fieldRelationship}}
