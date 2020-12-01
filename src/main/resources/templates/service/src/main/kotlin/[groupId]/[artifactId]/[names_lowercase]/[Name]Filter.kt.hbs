@@ -1,6 +1,0 @@
-package {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}
-
-data class {{ Name }}Filter(
-    val id: Int? = null{{#each fields }}{{#if fieldRelationship}},
-    val {{ fieldName }}: {{ FieldKotlinTypeNotNullable }}? = null{{/if}}{{/each}}
-)

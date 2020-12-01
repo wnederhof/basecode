@@ -1,7 +1,7 @@
-package {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}
+package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
 
-{{#each fields}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}Service
+{{#each fields}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}
+import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Service
 {{/if}}{{/each}}import graphql.kickstart.tools.GraphQLMutationResolver
 import graphql.kickstart.tools.GraphQLQueryResolver{{#if hasRelations}}
 import graphql.kickstart.tools.GraphQLResolver{{/if}}
@@ -22,15 +22,19 @@ sealed class {{ Name }}Resolver {
             return {{ name }}Service.findById(id)
         }
 
-        fun {{ names }}(filter: {{ Name }}Filter?): Iterable<{{ Name }}> {
-            return {{ name }}Service.findAll(filter)
+        fun {{ names }}({{#if hasRelations}}filter: {{ Name }}.{{ Name }}FilterInput?{{/if}}): Iterable<{{ Name }}> {
+            return {{ name }}Service.findAll({{#if hasRelations}}filter{{/if}})
         }
     }
 
     @Component
     class MutationResolver : GraphQLMutationResolver, {{ Name }}Resolver() {
-        fun save{{ Name }}({{ name }}: {{ Name }}): {{ Name }} {
-            return {{ name }}Service.save({{ name }})
+        fun create{{ Name }}(input: {{ Name }}.Create{{ Name }}Input): {{ Name }} {
+            return {{ name }}Service.create(input)
+        }
+
+        fun update{{ Name }}(id: Int, input: {{ Name }}.Update{{ Name }}Input): {{ Name }}? {
+            return {{ name }}Service.update(id, input)
         }
 
         fun delete{{ Name }}(id: Int) {

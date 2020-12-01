@@ -1,0 +1,86 @@
+package {{ groupId }}.{{ artifactId }}.util
+
+import {{ groupId }}.{{ artifactId }}.util.MergeUtil.mergeWithNullify
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+
+class MergeUtilTest {
+
+    @Test
+    fun mergeTestNoChanges() {
+        val original = SomeDataClass(nonNullableProp = "x", nullableProp = "y")
+        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = null, nullifyNullableProp = false)
+
+        val actual = original mergeWithNullify patch
+        val expected = SomeDataClass(nonNullableProp = "x", nullableProp = "y")
+
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun mergeTestSimpleNonNullChange() {
+        val original = SomeDataClass(nonNullableProp = "x", nullableProp = "y")
+        val patch = SomeDataClassPatch(nonNullableProp = "z", nullableProp = null, nullifyNullableProp = false)
+
+        val actual = original mergeWithNullify patch
+        val expected = SomeDataClass(nonNullableProp = "z", nullableProp = "y")
+
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun mergeTestSimpleNullableChange() {
+        val original = SomeDataClass(nonNullableProp = "x", nullableProp = "y")
+        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = "z", nullifyNullableProp = false)
+
+        val actual = original mergeWithNullify patch
+        val expected = SomeDataClass(nonNullableProp = "x", nullableProp = "z")
+
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun mergeTestSimpleNullableChangeNullNullify() {
+        val original = SomeDataClass(nonNullableProp = "x", nullableProp = "y")
+        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = "z", nullifyNullableProp = null)
+
+        val actual = original mergeWithNullify patch
+        val expected = SomeDataClass(nonNullableProp = "x", nullableProp = "z")
+
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun mergeTestSimpleNullify() {
+        val original = SomeDataClass(nonNullableProp = "x", nullableProp = "y")
+        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = null, nullifyNullableProp = true)
+
+        val actual = original mergeWithNullify patch
+        val expected = SomeDataClass(nonNullableProp = "x", nullableProp = null)
+
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    @Test
+    fun mergeTestNullifyWithNullableChange() {
+        val original = SomeDataClass(nonNullableProp = "x", nullableProp = "y")
+        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = "z", nullifyNullableProp = true)
+
+        val actual = original mergeWithNullify patch
+        val expected = SomeDataClass(nonNullableProp = "x", nullableProp = null)
+
+        assertThat(actual).isEqualTo(expected)
+    }
+
+    data class SomeDataClass(
+        val nonNullableProp: String,
+        val nullableProp: String?
+    )
+
+    data class SomeDataClassPatch(
+        val nonNullableProp: String?,
+        val nullableProp: String?,
+        val nullifyNullableProp: Boolean?
+    )
+
+}

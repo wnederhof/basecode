@@ -1,14 +1,15 @@
 extend type Query {
     {{ name }}(id: Int): {{ Name }}
-    {{ names }}(filter: {{ Name }}Filter): [{{ Name }}!]!
+    {{ names }}{{#if hasRelations}}(filter: {{ Name }}Filter){{/if}}: [{{ Name }}!]!
 }
 
 extend type Mutation {
-    save{{ Name }}({{ name }}: {{ Name }}Input!): {{ Name }}!
-    delete{{ Name }}(id: ID!): Boolean
+    create{{ Name }}(input: Create{{ Name }}Input!): {{ Name }}!
+    update{{ Name }}(id: ID!, input: Update{{ Name }}Input!): {{ Name }}
+    delete{{ Name }}(id: ID!): Boolean!
 }
-
-{{#each fields }}{{#if fieldRelationship}}extend type {{ FieldType }} {
+{{#each fields }}{{#if fieldRelationship}}
+extend type {{ FieldType }} {
     {{ names }}: [{{ Name }}!]!
 }
 {{/if}}{{/each}}
@@ -16,14 +17,21 @@ type {{ Name }} {
     id: ID!{{#each fields }}
     {{ fieldName }}: {{ FieldGraphQLType }}{{/each}}{{#each fields }}{{#if fieldRelationship}}
     {{ fieldType }}: {{ FieldType }}{{/if}}{{/each}}
+    createdAt: Date!
+    updatedAt: Date
 }
-
+{{#if hasRelations}}
 input {{ Name }}Filter {
     id: ID{{#each fields }}{{#if fieldRelationship}}
     {{ fieldName }}: Int{{/if}}{{/each}}
 }
-
-input {{ Name }}Input {
-    id: ID{{#each fields }}
+{{/if}}
+input Create{{ Name }}Input { {{#each fields }}
     {{ fieldName }}: {{ FieldGraphQLType }}{{/each}}
+}
+
+input Update{{ Name }}Input {
+    id: ID!{{#each fields }}
+    {{ fieldName }}: {{ NullFieldGraphQLType }}{{#if isNullable}}
+    nullify{{ FieldName }}: Boolean{{/if}}{{/each}}
 }

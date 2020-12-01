@@ -1,6 +1,6 @@
-package {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}
+{{#if hasRelations}}package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
 {{#each fields}}{{#if fieldRelationship}}
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent{{/if}}{{/each}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent{{/if}}{{/each}}
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
@@ -14,4 +14,4 @@ class {{ Name }}Listener{{#if hasRelations}}(
         {{ name }}Service.deleteBy{{ FieldName }}(event.id)
     }
 {{/if}}{{/each}}
-}{{/if}}
+}{{/if}}{{/if}}

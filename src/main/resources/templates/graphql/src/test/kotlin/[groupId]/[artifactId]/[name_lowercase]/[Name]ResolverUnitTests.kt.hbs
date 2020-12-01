@@ -1,9 +1,10 @@
-package {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}
+package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
 
-import {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1
-{{#each fields}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_WITH_ID_1
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}Service
+import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.CREATE_{{ NAME }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1
+{{#each fields}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_WITH_ID_1
+import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Service
 {{/if}}{{/each}}import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -37,12 +38,12 @@ class {{ Name }}ResolverUnitTests {
 
         @Test
         fun `{{ names }} delegates the call to the {{ Name }}Service`() {
-            val any{{ Name }}Filter = {{ Name }}Filter()
+            {{#if hasRelations}}val any{{ Name }}Filter = {{ Name }}.{{ Name }}FilterInput()
 
-            whenever({{ name }}Service.findAll(any{{ Name }}Filter))
+            {{/if}}whenever({{ name }}Service.findAll({{#if hasRelations}}any{{ Name }}Filter{{/if}}))
                 .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
 
-            assertThat(rootQueryResolver.{{ names }}(any{{ Name }}Filter))
+            assertThat(rootQueryResolver.{{ names }}({{#if hasRelations}}any{{ Name }}Filter{{/if}}))
                 .isEqualTo(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
         }
 
@@ -59,11 +60,11 @@ class {{ Name }}ResolverUnitTests {
         private lateinit var {{ name }}MutationResolver: {{ Name }}Resolver.MutationResolver
 
         @Test
-        fun `save delegates the call to the {{ Name }}Service`() {
-            whenever({{ name }}Service.save({{ NAME }}_FIXTURE_1))
+        fun `create delegates the call to the {{ Name }}Service`() {
+            whenever({{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1))
                 .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
 
-            assertThat({{ name }}MutationResolver.save{{ Name }}({{ NAME }}_FIXTURE_1))
+            assertThat({{ name }}MutationResolver.create{{ Name }}(CREATE_{{ NAME }}_FIXTURE_1))
                 .isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
         }
 

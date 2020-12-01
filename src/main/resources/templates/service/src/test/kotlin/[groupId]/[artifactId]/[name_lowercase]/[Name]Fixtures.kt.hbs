@@ -1,0 +1,23 @@
+package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
+
+import java.time.LocalDate
+import java.time.LocalDateTime
+
+object {{ Name }}Fixtures {
+
+    val {{ NAME }}_FIXTURE_1 = {{ Name }}(
+        id = null{{#each fields}},
+        {{ fieldName }} = {{{ fieldTestValue }}}{{/each}}
+    )
+
+    val CREATE_{{ NAME }}_FIXTURE_1 = {{ Name }}.Create{{ Name }}Input({{#each fields}}
+        {{ fieldName }} = {{{ fieldTestValue }}},{{/each}}
+    )
+
+    val UPDATE_{{ NAME }}_FIXTURE_1 = {{ Name }}.Update{{ Name }}Input({{#each fields}}
+        {{ fieldName }} = {{{ fieldTestValue }}},{{/each}}
+    )
+
+    val {{ NAME }}_FIXTURE_WITH_ID_1 = {{ NAME }}_FIXTURE_1.copy(id = 1)
+
+}

@@ -1,0 +1,37 @@
+package {{ groupId }}.{{ artifactId }}.user
+
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.UserDetails
+
+class UserDetailsAdapter(val user: User): UserDetails {
+
+    override fun getAuthorities(): Collection<GrantedAuthority> {
+        return user.role.let(::SimpleGrantedAuthority).let { listOf(it) }
+    }
+
+    override fun getUsername(): String {
+        return user.username
+    }
+
+    override fun getPassword(): String {
+        return user.password
+    }
+
+    override fun isEnabled(): Boolean {
+        return user.enabled
+    }
+
+    override fun isCredentialsNonExpired(): Boolean {
+        return true
+    }
+
+    override fun isAccountNonExpired(): Boolean {
+        return true
+    }
+
+    override fun isAccountNonLocked(): Boolean {
+        return true
+    }
+
+}

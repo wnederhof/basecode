@@ -1,0 +1,42 @@
+package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
+
+import {{ groupId }}.{{ artifactId }}.util.MergeUtil.mergeWithNullify
+import org.springframework.data.annotation.*
+import org.springframework.data.relational.core.mapping.Table
+import java.time.LocalDateTime
+
+@Table("{{ _names }}")
+data class {{ Name }}(
+    @Id
+    val id: Int? = null{{#each fields }},
+    val {{ fieldName }}: {{ FieldKotlinType }}{{/each}},
+
+    @CreatedDate
+    val createdAt: LocalDateTime? = null,
+
+    @LastModifiedDate
+    val updatedAt: LocalDateTime? = null
+) {
+
+    constructor(create{{ Name }}Input: Create{{ Name }}Input) : this({{#each fields }}
+        {{fieldName}} = create{{ Name }}Input.{{fieldName}},{{/each}}
+    )
+
+    fun merge(update{{ Name }}Input: Update{{ Name }}Input): {{ Name }} {
+        return this mergeWithNullify update{{ Name }}Input
+    }
+
+    data class Create{{ Name }}Input({{#each fields}}
+        val {{ fieldName }}: {{ FieldKotlinType }},{{/each}}
+    )
+
+    data class Update{{ Name }}Input({{#each fields}}
+        val {{ fieldName }}: {{ FieldKotlinType }}{{#if isNullable}},
+        val nullify{{ FieldName }}: Boolean{{/if}},{{/each}}
+    )
+{{#if hasRelations}}
+    data class {{ Name }}FilterInput({{#each fields }}{{#if fieldRelationship}}
+        val {{ fieldName }}: {{ FieldKotlinTypeNotNullable }}? = null,{{/if}}{{/each}}
+    )
+{{/if}}
+}

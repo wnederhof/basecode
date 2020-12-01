@@ -1,7 +1,7 @@
-package {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}
+{{#if hasRelations}}package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
 
-{{#each fields as |f|}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}Service
+{{#each fields as |f|}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercas }}.{{ FieldType }}Service
 {{/if}}{{/each}}{{#if hasRelations}}import com.nhaarman.mockitokotlin2.verify
 import org.junit.jupiter.api.Test{{/if}}
 import org.junit.jupiter.api.extension.ExtendWith
@@ -25,4 +25,4 @@ internal class {{ Name }}ListenerUnitTests{{#if hasRelations}}{
         verify({{ name }}Service).deleteBy{{ FieldName }}(1)
     }
 {{/if}}{{/each}}
-}{{/if}}
+}{{/if}}{{/if}}

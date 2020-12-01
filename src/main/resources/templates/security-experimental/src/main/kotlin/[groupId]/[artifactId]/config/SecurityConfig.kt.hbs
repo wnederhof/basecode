@@ -1,0 +1,57 @@
+package {{ groupId }}.{{ artifactId }}.config
+
+import com.auth0.jwt.JWT
+import com.auth0.jwt.JWTVerifier
+import com.auth0.jwt.algorithms.Algorithm
+import com.auth0.jwt.algorithms.Algorithm.HMAC256
+import {{ groupId }}.{{ artifactId }}.user.UserService
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
+import org.springframework.security.authentication.AuthenticationProvider
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider
+import org.springframework.security.config.annotation.web.builders.HttpSecurity
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
+
+@Configuration
+class SecurityConfig(
+    @Value("\${security.jwt-secret}")
+    private val jwtSecret: String,
+
+    @Value("\${security.jwt-issuer}")
+    private val jwtIssuer: String
+): WebSecurityConfigurerAdapter() {
+
+    @Bean
+    fun jwtAlgorithm(): Algorithm {
+        return HMAC256(jwtSecret)
+    }
+
+    @Bean
+    fun verifier(algorithm: Algorithm?): JWTVerifier {
+        return JWT
+            .require(algorithm)
+            .withIssuer(jwtIssuer)
+            .build()
+    }
+
+    @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        return BCryptPasswordEncoder(10)
+    }
+
+    @Bean
+    fun authenticationProvider(userService: UserService, passwordEncoder: PasswordEncoder): AuthenticationProvider {
+        val provider = DaoAuthenticationProvider()
+        provider.setUserDetailsService(userService)
+        provider.setPasswordEncoder(passwordEncoder)
+        return provider
+    }
+
+    override fun configure(http: HttpSecurity) {
+        http.authorizeRequests().anyRequest().permitAll()
+    }
+
+}

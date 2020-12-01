@@ -19,9 +19,10 @@ class TemplateEngine(
             if (isTemplateFileName(generatedFilename)) {
                 val template = fileManager.readTemplate(templateName, templateFilePath)
                 val generatedContent = templateSolidifier.solidifyTemplate(template, variables)
-                val targetFileName = removeTemplateSuffix(generatedFilename)
-
-                fileManager.writeTargetFileContent(targetRoot, targetFileName, generatedContent)
+                if (generatedContent.trim() != "") {
+                    val targetFileName = removeTemplateSuffix(generatedFilename)
+                    fileManager.writeTargetFileContent(targetRoot, targetFileName, generatedContent)
+                }
             } else {
                 fileManager.copyFile(targetRoot, templateName, templateFilePath, generatedFilename)
             }

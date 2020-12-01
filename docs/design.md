@@ -56,7 +56,8 @@ classes that use both `posts` and `comments` should reside in `comments`.
 In fact, by applying this unidirectional information flow consistently,
 it also means that if the package `comments` is removed (together
 with the GraphQL schema definitions), the application stills works,
-minus the comments. This in itself is already quite powerful.
+minus the comments. This in itself is already quite powerful, because
+it means that features can be developed in isolation.
 
 Consistently making sure that the flow of data is
 unidirectional leads to a highly decoupled architecture, which is probably

@@ -27,7 +27,7 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                         Variable("name", nameHelper.toLowerCamelCase(name)),
                         Variable("Name", nameHelper.toUpperCamelCase(name)),
                         Variable("names", nameHelper.pluralize(nameHelper.toLowerCamelCase(name))),
-                        Variable("names_lowercase", nameHelper.pluralize(name.toLowerCase())),
+                        Variable("name_lowercase", name.toLowerCase()),
                         Variable("Names", nameHelper.pluralize(nameHelper.toUpperCamelCase(name))),
                         Variable("_name", nameHelper.toDuckName(name)),
                         Variable("_names", nameHelper.pluralize(nameHelper.toDuckName(name))),
@@ -36,11 +36,14 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                         Variable("NAME", nameHelper.capitalize(nameHelper.toDuckName(name))),
                         Variable("NAMES", nameHelper.capitalize(nameHelper.pluralize(nameHelper.toDuckName(name)))),
                         Variable("hasRelations", fields.any { isRelationship(it.split(":")[1]) }),
-                        Variable("fields", fields.map {
+                        Variable("anyNullable", fields.any { it.split(":")[1].endsWith("?") }),
+                        Variable("fields", fields.mapIndexed { idx, it ->
                             it.split(":").let {
                                 mapOf(
                                         "field_name" to nameHelper.toDuckName(it[0]),
                                         "field_name_dash" to nameHelper.toDashName(it[0]),
+                                        "isNullable" to it[1].endsWith("?"),
+                                        "isLast" to (fields.size - 1 == idx),
                                         "FieldName" to nameHelper.toUpperCamelCase(it[0]),
                                         "isTextInput" to (it[1] == "string" || it[1] == "string?"),
                                         "isNumberInput" to (it[1] == "int" || it[1] == "int?"),
@@ -49,6 +52,7 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                                         "FieldType" to nameHelper.toUpperCamelCase(it[1]),
                                         "FieldTypes" to nameHelper.toUpperCamelCase(nameHelper.pluralize(it[1])),
                                         "fieldTypes" to nameHelper.toLowerCamelCase(nameHelper.pluralize(it[1])),
+                                        "fieldType_lowercase" to it[1].toLowerCase(),
                                         "fieldTypes_lowercase" to nameHelper.pluralize(it[1]).toLowerCase(),
                                         "FIELD_TYPE" to nameHelper.toDuckName(it[1]).toUpperCase(),
                                         "fieldType" to nameHelper.toLowerCamelCase(it[1]),
@@ -56,6 +60,7 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
                                         "FIELD_DATABASE_TYPE" to determineDatabaseType(it[1]),
                                         "FieldKotlinType" to determineKotlinTypeNullable(it[1]),
                                         "FieldKotlinTypeNotNullable" to determineKotlinType(it[1]),
+                                        "NullFieldGraphQLType" to determineNullableGraphQLType(it[1]),
                                         "FieldGraphQLType" to determineGraphQLType(it[1]),
                                         "fieldKotlinAnnotations" to determineKotlinAnnotations(it[1]),
                                         "fieldTestValue" to determineSomeTestValue(nameHelper.toUpperCamelCase(it[0]), it[1]),
@@ -93,9 +98,15 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "string" -> "VARCHAR(255) NOT NULL"
             "int" -> "INT NOT NULL"
             "text" -> "TEXT NOT NULL"
+            "date" -> "DATE NOT NULL"
+            "dateTime" -> "DATETIME NOT NULL"
+            "boolean" -> "BOOLEAN NOT NULL"
             "string?" -> "VARCHAR(255) NULL"
             "int?" -> "INT NULL"
             "text?" -> "TEXT NULL"
+            "date?" -> "DATE NULL"
+            "dateTime?" -> "DATETIME NULL"
+            "boolean?" -> "BOOLEAN NULL"
             else -> "INT NOT NULL"
         }
     }
@@ -106,10 +117,14 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "int" -> "1"
             "text" -> "\"Some $name\""
             "date" -> "LocalDate.now()"
+            "dateTime" -> "LocalDateTime.now()"
+            "boolean" -> "true"
             "string?" -> "\"Some $name\""
             "int?" -> "1"
             "text?" -> "\"Some $name\""
             "date?" -> "LocalDate.now()"
+            "dateTime?" -> "LocalDateTime.now()"
+            "boolean?" -> "true"
             else -> "10"
         }
     }
@@ -120,10 +135,14 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
             "int" -> null
             "text" -> "@Lob"
             "date" -> null
+            "boolean" -> null
+            "dateTime" -> null
             "string?" -> null
             "int?" -> null
             "text?" -> "@Lob"
             "date?" -> null
+            "boolean?" -> null
+            "dateTime?" -> null
             else -> null
         }
     }
@@ -131,13 +150,17 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
     private fun isRelationship(type: String): Boolean {
         return when (type) {
             "string" -> false
-            "text" -> false
             "int" -> false
+            "text" -> false
             "date" -> false
+            "dateTime" -> false
+            "boolean" -> false
             "string?" -> false
-            "text?" -> false
             "int?" -> false
+            "text?" -> false
             "date?" -> false
+            "boolean?" -> false
+            "dateTime?" -> false
             else -> true
         }
     }
@@ -145,13 +168,17 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
     private fun determineKotlinType(type: String): String {
         return when (type) {
             "string" -> "String"
-            "text" -> "String"
             "int" -> "Int"
+            "text" -> "String"
             "date" -> "LocalDate"
+            "dateTime" -> "LocalDateTime"
+            "boolean" -> "Boolean"
             "string?" -> "String"
-            "text?" -> "String"
             "int?" -> "Int"
+            "text?" -> "String"
             "date?" -> "LocalDate"
+            "dateTime?" -> "LocalDateTime"
+            "boolean?" -> "Boolean"
             else -> "Int"
         }
     }
@@ -159,13 +186,31 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
     private fun determineKotlinTypeNullable(type: String): String {
         return when (type) {
             "string" -> "String"
-            "text" -> "String"
             "int" -> "Int"
+            "text" -> "String"
             "date" -> "LocalDate"
+            "dateTime" -> "LocalDateTime"
+            "boolean" -> "Boolean"
             "string?" -> "String?"
-            "text?" -> "String?"
             "int?" -> "Int?"
+            "text?" -> "String?"
             "date?" -> "LocalDate?"
+            "dateTime?" -> "LocalDateTime?"
+            "boolean?" -> "Boolean?"
+            else -> "Int"
+        }
+    }
+
+    private fun determineNullableGraphQLType(type: String): String {
+        return when (type) {
+            "string" -> "String"
+            "int" -> "Int"
+            "text" -> "String"
+            "date" -> "Date"
+            "string?" -> "String"
+            "int?" -> "Int"
+            "text?" -> "String"
+            "date?" -> "Date"
             else -> "Int"
         }
     }
@@ -173,13 +218,13 @@ abstract class AbstractRelationalGenerator(private val nameHelper: NameHelper) :
     private fun determineGraphQLType(type: String): String {
         return when (type) {
             "string" -> "String!"
-            "text" -> "String!"
             "int" -> "Int!"
-            "date" -> "LocalDate!"
+            "text" -> "String!"
+            "date" -> "Date!"
             "string?" -> "String"
-            "text?" -> "String"
             "int?" -> "Int"
-            "date?" -> "LocalDate"
+            "text?" -> "String"
+            "date?" -> "Date"
             else -> "Int!"
         }
     }

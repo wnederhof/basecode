@@ -1,9 +1,10 @@
-package {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}
+package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
 {{#each fields}}{{#if fieldRelationship}}
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}Service{{/if}}{{/each}}
-import {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ names_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1{{#each fields}}{{#if fieldRelationship}}
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercase }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_WITH_ID_1{{/if}}{{/each}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Service{{/if}}{{/each}}
+import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.CREATE_{{ NAME }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1{{#each fields}}{{#if fieldRelationship}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_WITH_ID_1{{/if}}{{/each}}
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -48,7 +49,7 @@ internal class {{ Name }}ServiceUnitTests {
         whenever({{ name }}Repository.findAll())
             .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
 
-        val actual = {{ name }}Service.findAll({{ Name }}Filter())
+        val actual = {{ name }}Service.findAll({{#if hasRelations}}{{ Name }}.{{ Name }}FilterInput(){{/if}})
 
         assertThat(actual).containsExactly({{ NAME }}_FIXTURE_WITH_ID_1)
     }
@@ -58,21 +59,11 @@ internal class {{ Name }}ServiceUnitTests {
         whenever({{ name }}Repository.findBy{{FieldName}}(1))
             .thenReturn(listOf({{ NAME }}_FIXTURE_1))
 
-        val actual = {{ name }}Service.findAll({{ Name }}Filter({{fieldName}} = 1))
+        val actual = {{ name }}Service.findAll({{ Name }}.{{ Name }}FilterInput({{fieldName}} = 1))
 
         assertThat(actual).containsExactly({{ NAME }}_FIXTURE_1)
     }
-{{/if}}{{/each}}{{#if hasRelations}}
-    @Test
-    fun `findAll with multiple filter attributes is not supported`() {
-        assertThrows<RuntimeException> {
-            {{ name }}Service.findAll({{ Name }}Filter(id = 1{{#each fields}}{{#if fieldRelationship}}, {{fieldName}} = 1{{/if}}{{/each}}))
-        }
-
-        verify({{ name }}Repository, times(0)).findAll(){{#each fields}}{{#if fieldRelationship}}
-        verify({{ name }}Repository, times(0)).findBy{{ FieldName }}(1){{/if}}{{/each}}
-    }
-{{/if}}
+{{/if}}{{/each}}
     @Test
     fun `findById returns the contained value of findById in {{ Name }}Repository if it is non-empty`() {
         whenever({{ name }}Repository.findById(1))
@@ -104,68 +95,72 @@ internal class {{ Name }}ServiceUnitTests {
     }
 
     @Test
-    fun `save calls save on repository if all requirements are met`() {
+    fun `create calls save on repository if all requirements are met`() {
         whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
             .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
 {{#each fields}}{{#if fieldRelationship}}
         whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
             .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
 {{/if}}{{/each}}
-        val actual = {{ name }}Service.save({{ NAME }}_FIXTURE_1)
+        val actual = {{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1)
 
         assertThat(actual).isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
     }
 {{#if hasRelations}}
     @Test
-    fun `save fails when related objects cannot be found`() { {{#each fields}}{{#if fieldRelationship}}
+    fun `create fails when related objects cannot be found`() { {{#each fields}}{{#if fieldRelationship}}
         whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
             .thenReturn(null)
 {{/if}}{{/each}}
         assertThrows<RuntimeException> {
-            {{ name }}Service.save({{ NAME }}_FIXTURE_1)
+            {{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1)
         }
 
         verify({{ name }}Repository, times(0)).save({{ NAME }}_FIXTURE_1)
     }
 {{/if}}
     @Test
-    fun `save publishes a Before{{ Name }}SavedEvent before saving`() {
+    fun `create publishes a Before{{ Name }}CreatedEvent before saving`() {
         whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
             .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
 {{#each fields}}{{#if fieldRelationship}}
         whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
             .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
 {{/if}}{{/each}}
-        val actual = {{ name }}Service.save({{ NAME }}_FIXTURE_1)
+        val actual = {{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1)
 
         assertThat(actual).isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
 
         val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
 
-        inOrder.verify(applicationEventPublisher)
-                .publishEvent({{ Name }}Event.Before{{ Name }}SavedEvent({{ name }}Service, {{ NAME }}_FIXTURE_1))
-        inOrder.verify({{ name }}Repository)
-                .save({{ NAME }}_FIXTURE_1)
+        inOrder
+            .verify(applicationEventPublisher)
+            .publishEvent({{ Name }}Event.Before{{ Name }}CreatedEvent({{ name }}Service, {{ NAME }}_FIXTURE_1))
+        inOrder
+            .verify({{ name }}Repository)
+            .save({{ NAME }}_FIXTURE_1)
     }
 
     @Test
-    fun `save publishes an After{{ Name }}SavedEvent after saving`() {
+    fun `create publishes an After{{ Name }}CreatedEvent after saving`() {
         whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
             .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
 {{#each fields}}{{#if fieldRelationship}}
         whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
             .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
 {{/if}}{{/each}}
-        val actual = {{ name }}Service.save({{ NAME }}_FIXTURE_1)
+        val actual = {{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1)
 
         assertThat(actual).isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
 
         val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
 
-        inOrder.verify({{ name }}Repository)
-                .save({{ NAME }}_FIXTURE_1)
-        inOrder.verify(applicationEventPublisher)
-                .publishEvent({{ Name }}Event.After{{ Name }}SavedEvent({{ name }}Service, {{ NAME }}_FIXTURE_WITH_ID_1))
+        inOrder
+            .verify({{ name }}Repository)
+            .save({{ NAME }}_FIXTURE_1)
+        inOrder
+            .verify(applicationEventPublisher)
+            .publishEvent({{ Name }}Event.After{{ Name }}CreatedEvent({{ name }}Service, {{ NAME }}_FIXTURE_WITH_ID_1))
     }
 
     @Test
@@ -181,9 +176,11 @@ internal class {{ Name }}ServiceUnitTests {
 
         val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
 
-        inOrder.verify(applicationEventPublisher)
+        inOrder
+            .verify(applicationEventPublisher)
             .publishEvent({{ Name }}Event.Before{{ Name }}DeletedEvent({{ name }}Service, 1))
-        inOrder.verify({{ name }}Repository)
+        inOrder
+            .verify({{ name }}Repository)
             .deleteById(1)
     }
 
@@ -193,9 +190,11 @@ internal class {{ Name }}ServiceUnitTests {
 
         val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
 
-        inOrder.verify({{ name }}Repository)
+        inOrder
+            .verify({{ name }}Repository)
             .deleteById(1)
-        inOrder.verify(applicationEventPublisher)
+        inOrder
+            .verify(applicationEventPublisher)
             .publishEvent({{ Name }}Event.After{{ Name }}DeletedEvent({{ name }}Service, 1))
     }
 

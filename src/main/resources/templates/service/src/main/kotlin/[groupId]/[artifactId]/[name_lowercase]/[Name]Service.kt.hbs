@@ -1,0 +1,84 @@
+package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
+
+import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Event.*{{#each fields}}{{#if fieldRelationship}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Service{{/if}}{{/each}}
+import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
+@Service
+@Transactional
+class {{ Name }}Service(
+    private val {{ name }}Repository: {{ Name }}Repository,{{#each fields}}{{#if fieldRelationship}}
+    private val {{ fieldType }}Service: {{ FieldType }}Service,{{/if}}{{/each}}
+    private val applicationEventPublisher: ApplicationEventPublisher
+) {
+
+    fun findById(id: Int): {{ Name }}? {
+        return {{ name }}Repository.findByIdOrNull(id)
+    }
+
+    fun findAll({{#if hasRelations}}filterInput: {{ Name }}.{{ Name }}FilterInput? = null{{/if}}): Iterable<{{ Name }}> { {{#if hasRelations}}
+        if (filterInput != null && hasMultipleFilters(filterInput)) {
+            error("Using multiple filters is not supported.")
+        }
+{{/if}}{{#each fields as |f|}}{{#if fieldRelationship}}
+        if (filterInput?.{{ fieldName }} != null) {
+            return {{ name }}Repository.findBy{{ FieldName }}(filterInput.{{ fieldName }})
+        }
+{{/if}}{{/each}}
+        return {{ name }}Repository.findAll()
+    }
+{{#if hasRelations}}
+    private fun hasMultipleFilters(filterInput: {{ Name }}.{{ Name }}FilterInput): Boolean {
+        val filterCount = listOfNotNull(
+            filterInput.id{{#each fields as |f|}}{{#if fieldRelationship}},
+            filterInput.{{fieldName}}{{/if}}{{/each}}
+        )
+
+        return filterCount.size > 1
+    }
+{{/if}}{{#each fields as |f|}}{{#if fieldRelationship}}
+    fun findBy{{ FieldName }}({{ fieldName }}: Int): List<{{ Name }}> {
+        return {{ name }}Repository.findBy{{ FieldName }}({{ fieldName }})
+    }
+{{/if}}{{/each}}
+    fun create(create{{ Name }}Input: {{ Name }}.Create{{ Name }}Input): {{ Name }} { {{#each fields}}{{#if fieldRelationship}}
+        requireNotNull({{ fieldType }}Service.findById({{ name }}.{{ fieldName }}))
+{{/if}}{{/each}}
+        val {{ name }} = {{ Name }}(create{{ Name }}Input)
+
+        applicationEventPublisher.publishEvent(Before{{ Name }}CreatedEvent(this, {{ name }}))
+        val saved{{ Name }} = {{ name }}Repository.save({{ name }})
+        applicationEventPublisher.publishEvent(After{{ Name }}CreatedEvent(this, saved{{ Name }}))
+
+        return saved{{ Name }}
+    }
+{{#each fields as |f|}}{{#if fieldRelationship}}
+    fun deleteBy{{ FieldName }}({{ fieldName }}: Int) {
+        {{ name }}Repository.findBy{{ FieldName }}({{ fieldName }})
+            .forEach({{ name }}Repository::delete)
+    }
+{{/if}}{{/each}}
+    fun update(id: Int, update{{ Name }}Input: {{ Name }}.Update{{ Name }}Input): {{ Name }}? { {{#each fields}}{{#if fieldRelationship}}
+        requireNotNull({{ fieldType }}Service.findById({{ name }}.{{ fieldName }}))
+{{/if}}{{/each}}
+        val original{{ Name }} = {{ name }}Repository.findByIdOrNull(id) ?: return null
+
+        val updated{{ Name }} = original{{ Name }}.merge(update{{ Name }}Input)
+
+        applicationEventPublisher.publishEvent(Before{{ Name }}UpdatedEvent(this, original{{ Name }}, updated{{ Name }}))
+        val saved{{ Name }} = {{ name }}Repository.save(updated{{ Name }})
+        applicationEventPublisher.publishEvent(After{{ Name }}UpdatedEvent(this, original{{ Name }}, saved{{ Name }}))
+
+        return saved{{ Name }}
+    }
+
+    fun deleteById(id: Int) {
+        applicationEventPublisher.publishEvent(Before{{ Name }}DeletedEvent(this, id))
+        {{ name }}Repository.deleteById(id)
+        applicationEventPublisher.publishEvent(After{{ Name }}DeletedEvent(this, id))
+    }
+
+}
