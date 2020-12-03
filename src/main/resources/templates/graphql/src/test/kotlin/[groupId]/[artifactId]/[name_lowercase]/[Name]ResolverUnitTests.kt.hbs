@@ -3,8 +3,8 @@ package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
 import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.CREATE_{{ NAME }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1
-{{#each fields}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_WITH_ID_1
-import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Service
+{{#each fields}}{{#if isFieldRelational}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Fixtures.{{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Service
 {{/if}}{{/each}}import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -79,40 +79,40 @@ class {{ Name }}ResolverUnitTests {
 {{#if hasRelations}}
     @Nested
     @ExtendWith(MockitoExtension::class)
-    inner class {{ Name }}ResolverUnitTests { {{#each fields}}{{#if fieldRelationship}}
+    inner class {{ Name }}ResolverUnitTests { {{#each fields}}{{#if isFieldRelational}}
 
         @Mock
-        private lateinit var {{ fieldType }}Service: {{ FieldType }}Service{{/if}}{{/each}}
+        private lateinit var {{ fieldTypeCamelCase }}Service: {{ fieldTypePascalCase }}Service{{/if}}{{/each}}
 
         @InjectMocks
         private lateinit var {{ name }}QueryResolver: {{ Name }}Resolver.{{ Name }}QueryResolver
-{{#each fields}}{{#if fieldRelationship}}
+{{#each fields}}{{#if isFieldRelational}}
         @Test
-        fun `{{ fieldType }} delegates the call to the {{ FieldType }}Service`() {
-            whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
-                .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
+        fun `{{ fieldTypeCamelCase }} delegates the call to the {{ fieldTypePascalCase }}Service`() {
+            whenever({{ fieldTypeCamelCase }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
+                .thenReturn({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
-            assertThat({{ name }}QueryResolver.{{ fieldType }}({{ NAME }}_FIXTURE_WITH_ID_1))
-                .isEqualTo({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
+            assertThat({{ name }}QueryResolver.{{ fieldTypeCamelCase }}({{ NAME }}_FIXTURE_WITH_ID_1))
+                .isEqualTo({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
         }{{/if}}{{/each}}
     }
-{{/if}}{{#each fields}}{{#if fieldRelationship}}
+{{/if}}{{#each fields}}{{#if isFieldRelational}}
     @Nested
     @ExtendWith(MockitoExtension::class)
-    inner class {{ FieldType }}ResolverUnitTests {
+    inner class {{ fieldTypePascalCase }}ResolverUnitTests {
 
         @Mock
         private lateinit var {{ name }}Service: {{ Name }}Service
 
         @InjectMocks
-        private lateinit var {{ fieldType }}FieldResolver: {{ Name }}Resolver.{{ FieldType }}FieldResolver
+        private lateinit var {{ fieldTypeCamelCase }}FieldResolver: {{ Name }}Resolver.{{ fieldTypePascalCase }}FieldResolver
 
         @Test
         fun `{{ name }} delegates the call to the {{ name }}Service`() {
-            whenever({{ name }}Service.findBy{{ FieldName }}({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1.id!!))
+            whenever({{ name }}Service.findBy{{ fieldNamePascalCase }}({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.id!!))
                 .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
 
-            assertThat({{ fieldType }}FieldResolver.{{ names }}({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1))
+            assertThat({{ fieldTypeCamelCase }}FieldResolver.{{ names }}({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
                 .isEqualTo(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
         }
 

@@ -21,14 +21,14 @@ describe('<%Name%>Details', () => {
       query <%name%>($id: Int) {
         <%name%>: <%name%>(id: $id) {
           id<%#each fields%>
-          <%fieldName%><%/each%>
+          <%fieldNameCamelCase%><%/each%>
         }
       }
     `, jest.fn().mockResolvedValue({
       data: {
         <%name%>: {
           id: 1<%#each fields%>,
-          <%fieldName%>: 'Some <%FieldName%>'<%/each%>
+          <%fieldNameCamelCase%>: 'Some <%fieldNamePascalCase%>'<%/each%>
         }
       }
     }))
@@ -62,6 +62,6 @@ describe('<%Name%>Details', () => {
     createComponent()
     await flushPromises()
 <%#each fields%>
-    expect(wrapper.text()).toContain('Some <%FieldName%>')<%/each%>
+    expect(wrapper.text()).toContain('Some <%fieldNamePascalCase%>')<%/each%>
   })
 })<%={{ }}=%>

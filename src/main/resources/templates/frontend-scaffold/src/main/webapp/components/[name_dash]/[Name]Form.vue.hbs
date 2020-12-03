@@ -18,18 +18,18 @@
     >
 <%#each fields%>
     <div>
-      <label :for="$id('<%fieldName%>')"><%FieldName%></label><%#unless isText%>
+      <label :for="$id('<%fieldNameCamelCase%>')"><%fieldNamePascalCase%></label><%#unless isFieldOfTypeText%>
       <input
-        :id="$id('<%fieldName%>')"
-        ref="<%fieldName%>Input"
-        v-model="<%name%>.<%fieldName%>"
-        type="<%fieldInputType%>"<%#unless isNullable%><%#if isString%>
+        :id="$id('<%fieldNameCamelCase%>')"
+        ref="<%fieldNameCamelCase%>Input"
+        v-model="<%name%>.<%fieldNameCamelCase%>"
+        type="<%fieldHtmlInputType%>"<%#unless isFieldNullable%><%#if isString%>
         required<%/if%><%/unless%>
       ><%else%>
       <textarea
-        :id="$id('<%fieldName%>')"
-        ref="<%fieldName%>Input"
-        v-model="<%name%>.<%fieldName%>"<%#unless isNullable%><%#if isString%>
+        :id="$id('<%fieldNameCamelCase%>')"
+        ref="<%fieldNameCamelCase%>Input"
+        v-model="<%name%>.<%fieldNameCamelCase%>"<%#unless isFieldNullable%><%#if isString%>
         required<%/if%><%/unless%>
       ></textarea><%/unless%>
     </div><%/each%>
@@ -58,7 +58,7 @@ import gql from 'graphql-tag'
         query <%name%>($id: Int) {
           <%name%>: <%name%>(id: $id) {
             id<%#each fields%>
-            <%fieldName%><%/each%>
+            <%fieldNameCamelCase%><%/each%>
           }
         }
       `,
@@ -87,7 +87,7 @@ import gql from 'graphql-tag'
 })
 export default class <%Name%>Form extends Vue {
   <%name%> = {
-    id: null,<%#each fields%><%fieldName%>: <%#if isNullable%>''<%else%>null<%/if%>,
+    id: null,<%#each fields%><%fieldNameCamelCase%>: <%#if isFieldNullable%>''<%else%>null<%/if%>,
   <%/each%>}
   error = null
 
@@ -104,7 +104,7 @@ export default class <%Name%>Form extends Vue {
       mutation save<%Name%>($id: ID!, $input: Update<%Name%>Input!) {
         update<%Name%>(id: $id, input: $input) {
           id<%#each fields%>
-          <%fieldName%><%/each%>
+          <%fieldNameCamelCase%><%/each%>
         }
       }
     `

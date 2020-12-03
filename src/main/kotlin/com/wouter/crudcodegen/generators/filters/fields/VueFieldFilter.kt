@@ -8,9 +8,7 @@ import org.springframework.stereotype.Component
 class VueFieldFilter : FieldTemplateFilter {
     override fun enrichProperties(fieldIndex: Int, settings: FieldTemplateFilter.FieldTemplateSettings): Iterable<Variable> {
         val field = settings.fields[fieldIndex]
-        return listOf(
-                Variable("fieldInputType", determineFieldInputType(field.type))
-        )
+        return listOf(Variable("fieldHtmlInputType", determineFieldInputType(field.type)))
     }
 
     private fun determineFieldInputType(type: String): String {

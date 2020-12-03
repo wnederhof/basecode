@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 data class {{ Name }}(
     @Id
     val id: Int? = null{{#each fields }},
-    val {{ fieldName }}: {{ FieldKotlinType }}{{/each}},
+    val {{ fieldNameCamelCase }}: {{ fieldKotlinType }}{{/each}},
 
     @CreatedDate
     val createdAt: LocalDateTime? = null,
@@ -20,7 +20,7 @@ data class {{ Name }}(
 ) {
 
     constructor(input: Create{{ Name }}Input) : this({{#each fields }}
-        {{fieldName}} = input.{{fieldName}},{{/each}}
+        {{fieldNameCamelCase}} = input.{{fieldNameCamelCase}},{{/each}}
     )
 
     fun merge(update{{ Name }}Input: Update{{ Name }}Input): {{ Name }} {
@@ -28,16 +28,16 @@ data class {{ Name }}(
     }
 
     data class Create{{ Name }}Input({{#each fields}}
-        val {{ fieldName }}: {{ FieldKotlinType }},{{/each}}
+        val {{ fieldNameCamelCase }}: {{ fieldKotlinType }},{{/each}}
     )
 
     data class Update{{ Name }}Input({{#each fields}}
-        val {{ fieldName }}: {{ FieldKotlinType }},{{/each}}{{#each fields}}{{#if isNullable}}
-        val nullify{{ FieldName }}: Boolean? = null,{{/if}}{{/each}}
+        val {{ fieldNameCamelCase }}: {{ fieldKotlinType }},{{/each}}{{#each fields}}{{#if isFieldNullable}}
+        val nullify{{ fieldNamePascalCase }}: Boolean? = null,{{/if}}{{/each}}
     )
 {{#if hasRelations}}
-    data class {{ Name }}FilterInput({{#each fields }}{{#if fieldRelationship}}
-        val {{ fieldName }}: {{ FieldKotlinTypeNotNullable }}? = null,{{/if}}{{/each}}
+    data class {{ Name }}FilterInput({{#each fields }}{{#if isFieldRelational}}
+        val {{ fieldNameCamelCase }}: {{ fieldKotlinTypeNotNullable }}? = null,{{/if}}{{/each}}
     )
 {{/if}}
 }

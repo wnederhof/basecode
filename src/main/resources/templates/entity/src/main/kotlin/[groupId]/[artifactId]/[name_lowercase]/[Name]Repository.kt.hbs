@@ -3,7 +3,7 @@ package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
 import org.springframework.data.repository.CrudRepository
 
 interface {{ Name }}Repository : CrudRepository<{{ Name }}, Int>{{#if hasRelations}} {
-{{#each fields}}{{#if fieldRelationship}}
-    fun findBy{{ FieldName }}({{ fieldName }}: Int): List<{{ Name }}>
+{{#each fields}}{{#if isFieldRelational}}
+    fun findBy{{ fieldNamePascalCase }}({{ fieldNameCamelCase }}: Int): List<{{ Name }}>
 {{/if}}{{/each}}
 }{{/if}}

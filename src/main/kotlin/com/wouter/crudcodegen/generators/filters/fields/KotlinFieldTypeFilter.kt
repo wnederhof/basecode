@@ -11,9 +11,9 @@ class KotlinFieldTypeFilter(private val nameHelper: NameHelper) : FieldTemplateF
         val field = settings.fields[fieldIndex]
         return listOf(
                 Variable("fieldKotlinAnnotations", determineKotlinAnnotations(field.type)),
-                Variable("FieldKotlinType", determineKotlinTypeNullable(field.type)),
-                Variable("FieldKotlinTypeNotNullable", determineKotlinType(field.type)),
-                Variable("fieldTestValue", determineSomeTestValue(nameHelper.toUpperCamelCase(field.name), field.type))
+                Variable("fieldKotlinType", determineKotlinTypeNullable(field.type)),
+                Variable("fieldKotlinTypeNotNullable", determineKotlinType(field.type)),
+                Variable("fieldKotlinTestDummyValue", determineSomeTestValue(nameHelper.toUpperCamelCase(field.name), field.type))
         )
     }
 

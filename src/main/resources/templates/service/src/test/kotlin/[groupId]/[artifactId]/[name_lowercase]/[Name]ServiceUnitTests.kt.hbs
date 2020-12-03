@@ -1,10 +1,10 @@
 package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
-{{#each fields}}{{#if fieldRelationship}}
-import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Service{{/if}}{{/each}}
+{{#each fields}}{{#if isFieldRelational}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Service{{/if}}{{/each}}
 import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.CREATE_{{ NAME }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1{{#each fields}}{{#if fieldRelationship}}
-import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_WITH_ID_1{{/if}}{{/each}}
+import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1{{#each fields}}{{#if isFieldRelational}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Fixtures.{{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1{{/if}}{{/each}}
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -27,9 +27,9 @@ internal class {{ Name }}ServiceUnitTests {
 
     @Mock
     private lateinit var {{ name }}Repository: {{ Name }}Repository
-{{#each fields}}{{#if fieldRelationship}}
+{{#each fields}}{{#if isFieldRelational}}
     @Mock
-    private lateinit var {{ fieldType }}Service: {{ FieldType }}Service
+    private lateinit var {{ fieldTypeCamelCase }}Service: {{ fieldTypePascalCase }}Service
 {{/if}}{{/each}}
     @InjectMocks
     private lateinit var {{ name }}Service: {{ Name }}Service
@@ -53,13 +53,13 @@ internal class {{ Name }}ServiceUnitTests {
 
         assertThat(actual).containsExactly({{ NAME }}_FIXTURE_WITH_ID_1)
     }
-{{#each fields}}{{#if fieldRelationship}}
+{{#each fields}}{{#if isFieldRelational}}
     @Test
-    fun `findAll delegates to findBy{{FieldName}} when filter only contains {{fieldName}}`() {
-        whenever({{ name }}Repository.findBy{{FieldName}}(1))
+    fun `findAll delegates to findBy{{fieldNamePascalCase}} when filter only contains {{fieldNameCamelCase}}`() {
+        whenever({{ name }}Repository.findBy{{fieldNamePascalCase}}(1))
             .thenReturn(listOf({{ NAME }}_FIXTURE_1))
 
-        val actual = {{ name }}Service.findAll({{ Name }}.{{ Name }}FilterInput({{fieldName}} = 1))
+        val actual = {{ name }}Service.findAll({{ Name }}.{{ Name }}FilterInput({{fieldNameCamelCase}} = 1))
 
         assertThat(actual).containsExactly({{ NAME }}_FIXTURE_1)
     }
@@ -73,13 +73,13 @@ internal class {{ Name }}ServiceUnitTests {
 
         assertThat(actual).isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
     }
-{{#each fields}}{{#if fieldRelationship}}
+{{#each fields}}{{#if isFieldRelational}}
     @Test
-    fun `findBy{{FieldName}} returns the contents of the corresponding repository call`() {
-        whenever({{ name }}Repository.findBy{{ FieldName }}(1))
+    fun `findBy{{fieldNamePascalCase}} returns the contents of the corresponding repository call`() {
+        whenever({{ name }}Repository.findBy{{ fieldNamePascalCase }}(1))
             .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
 
-        val actual = {{ name }}Service.findBy{{ FieldName }}(1)
+        val actual = {{ name }}Service.findBy{{ fieldNamePascalCase }}(1)
 
         assertThat(actual).isEqualTo(actual)
     }
@@ -98,9 +98,9 @@ internal class {{ Name }}ServiceUnitTests {
     fun `create calls save on repository if all requirements are met`() {
         whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
             .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
-{{#each fields}}{{#if fieldRelationship}}
-        whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
-            .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
+{{#each fields}}{{#if isFieldRelational}}
+        whenever({{ fieldTypeCamelCase }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
+            .thenReturn({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 {{/if}}{{/each}}
         val actual = {{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1)
 
@@ -108,8 +108,8 @@ internal class {{ Name }}ServiceUnitTests {
     }
 {{#if hasRelations}}
     @Test
-    fun `create fails when related objects cannot be found`() { {{#each fields}}{{#if fieldRelationship}}
-        whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
+    fun `create fails when related objects cannot be found`() { {{#each fields}}{{#if isFieldRelational}}
+        whenever({{ fieldTypeCamelCase }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
             .thenReturn(null)
 {{/if}}{{/each}}
         assertThrows<RuntimeException> {
@@ -123,9 +123,9 @@ internal class {{ Name }}ServiceUnitTests {
     fun `create publishes a Before{{ Name }}CreatedEvent before saving`() {
         whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
             .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
-{{#each fields}}{{#if fieldRelationship}}
-        whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
-            .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
+{{#each fields}}{{#if isFieldRelational}}
+        whenever({{ fieldTypeCamelCase }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
+            .thenReturn({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 {{/if}}{{/each}}
         val actual = {{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1)
 
@@ -145,9 +145,9 @@ internal class {{ Name }}ServiceUnitTests {
     fun `create publishes an After{{ Name }}CreatedEvent after saving`() {
         whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
             .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
-{{#each fields}}{{#if fieldRelationship}}
-        whenever({{ fieldType }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldName }}))
-            .thenReturn({{ FIELD_TYPE }}_FIXTURE_WITH_ID_1)
+{{#each fields}}{{#if isFieldRelational}}
+        whenever({{ fieldTypeCamelCase }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
+            .thenReturn({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 {{/if}}{{/each}}
         val actual = {{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1)
 

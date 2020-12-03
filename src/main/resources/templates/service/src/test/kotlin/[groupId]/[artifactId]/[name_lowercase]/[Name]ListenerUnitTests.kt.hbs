@@ -1,7 +1,7 @@
 {{#if hasRelations}}package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
 
-{{#each fields as |f|}}{{#if fieldRelationship}}import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Event.Before{{ FieldType }}DeletedEvent
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypes_lowercas }}.{{ FieldType }}Service
+{{#each fields as |f|}}{{#if isFieldRelational}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Event.Before{{ fieldTypePascalCase }}DeletedEvent
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypeCamelCases_lowercas }}.{{ fieldTypePascalCase }}Service
 {{/if}}{{/each}}{{#if hasRelations}}import com.nhaarman.mockitokotlin2.verify
 import org.junit.jupiter.api.Test{{/if}}
 import org.junit.jupiter.api.extension.ExtendWith
@@ -17,12 +17,12 @@ internal class {{ Name }}ListenerUnitTests{{#if hasRelations}}{
 
     @InjectMocks
     private lateinit var {{ name }}Listener: {{ Name }}Listener
-{{#each fields as |f|}}{{#if fieldRelationship}}
+{{#each fields as |f|}}{{#if isFieldRelational}}
     @Test
-    fun `deleteBefore{{ FieldType }}Deleted deletes related {{ Names }} in Before{{ FieldType }}DeletedEvent`() {
-        {{ name }}Listener.deleteBefore{{ FieldType }}Deleted(Before{{ FieldType }}DeletedEvent(this, 1))
+    fun `deleteBefore{{ fieldTypePascalCase }}Deleted deletes related {{ Names }} in Before{{ fieldTypePascalCase }}DeletedEvent`() {
+        {{ name }}Listener.deleteBefore{{ fieldTypePascalCase }}Deleted(Before{{ fieldTypePascalCase }}DeletedEvent(this, 1))
 
-        verify({{ name }}Service).deleteBy{{ FieldName }}(1)
+        verify({{ name }}Service).deleteBy{{ fieldNamePascalCase }}(1)
     }
 {{/if}}{{/each}}
 }{{/if}}{{/if}}

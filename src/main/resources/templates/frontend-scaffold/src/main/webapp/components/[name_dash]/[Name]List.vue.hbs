@@ -9,7 +9,7 @@
     <thead>
       <tr>
         <th>Id</th><%#each fields%>
-        <th><%FieldName%></th><%/each%>
+        <th><%fieldNamePascalCase%></th><%/each%>
         <th>Actions</th>
       </tr>
     </thead>
@@ -19,7 +19,7 @@
         :key="<%name%>.id"
       >
         <td>{{ <%name%>.id }}</td><%#each fields%>
-        <td>{{ <%name%>.<%fieldName%> }}</td><%/each%>
+        <td>{{ <%name%>.<%fieldNameCamelCase%> }}</td><%/each%>
         <td>
           <n-link :to="'/<%names_dash%>/' + <%name%>.id">
             Show
@@ -56,7 +56,7 @@ import gql from 'graphql-tag'
         query <%names%><%#if hasRelations%>($filter: <%Name%>Filter)<%/if%> {
           <%names%>: <%names%><%#if hasRelations%>(filter: $filter)<%/if%> {
             id<%#each fields%>
-            <%fieldName%><%/each%>
+            <%fieldNameCamelCase%><%/each%>
           }
         }
       `,
@@ -65,16 +65,16 @@ import gql from 'graphql-tag'
         this.error = error.message
       }<%#if hasRelations%>,
 
-      variables () {<%#each fields%><%#if fieldRelationship%>
-        const <%fieldName%> = this.$props.<%fieldName%><%/if%><%/each%>
-        return { filter: { <%#each fields%><%#if fieldRelationship%>, <%fieldName%><%/if%><%/each%> } }
+      variables () {<%#each fields%><%#if isFieldRelational%>
+        const <%fieldNameCamelCase%> = this.$props.<%fieldNameCamelCase%><%/if%><%/each%>
+        return { filter: { <%#each fields%><%#if isFieldRelational%>, <%fieldNameCamelCase%><%/if%><%/each%> } }
       }<%/if%>
     }
   },
 
   props: {
-    id: [Number, String]<%#each fields%><%#if fieldRelationship%>,
-    <%fieldName%>: [Number, String]<%/if%><%/each%>
+    id: [Number, String]<%#each fields%><%#if isFieldRelational%>,
+    <%fieldNameCamelCase%>: [Number, String]<%/if%><%/each%>
   }
 })
 export default class <%Name%>List extends Vue {

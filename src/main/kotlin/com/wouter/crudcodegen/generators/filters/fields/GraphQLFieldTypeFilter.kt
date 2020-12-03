@@ -9,8 +9,8 @@ class GraphQLFieldTypeFilter : FieldTemplateFilter {
     override fun enrichProperties(fieldIndex: Int, settings: FieldTemplateFilter.FieldTemplateSettings): Iterable<Variable> {
         val field = settings.fields[fieldIndex]
         return listOf(
-                Variable("NullFieldGraphQLType", determineNullableGraphQLType(field.type)),
-                Variable("FieldGraphQLType", determineGraphQLType(field.type))
+                Variable("nullableGraphQLFieldType", determineNullableGraphQLType(field.type)),
+                Variable("graphQLFieldType", determineGraphQLType(field.type))
         )
     }
 

@@ -1,10 +1,10 @@
 package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
 
 import {{ groupId }}.{{ artifactId }}.IntegrationTestContext
-import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.CREATE_{{ NAME }}_FIXTURE_1{{#each fields as |f|}}{{#if fieldRelationship}}
-import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Fixtures.{{ FIELD_TYPE }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Repository
-import {{ groupId }}.{{ artifactId }}.{{ fieldType_lowercase }}.{{ FieldType }}Service{{/if}}{{/each}}
+import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.CREATE_{{ NAME }}_FIXTURE_1{{#each fields as |f|}}{{#if isFieldRelational}}
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Fixtures.{{ fieldTypeScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Repository
+import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Service{{/if}}{{/each}}
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test{{#if hasRelations}}
 import org.junit.jupiter.api.assertThrows{{/if}}
@@ -14,12 +14,12 @@ class {{ Name }}IntegrationTests : IntegrationTestContext() {
 
     @Autowired
     private lateinit var {{ name }}Service: {{ Name }}Service
-{{#each fields as |f|}}{{#if fieldRelationship}}
+{{#each fields as |f|}}{{#if isFieldRelational}}
     @Autowired
-    private lateinit var {{ fieldType }}Service: {{ FieldType }}Service
+    private lateinit var {{ fieldTypeCamelCase }}Service: {{ fieldTypePascalCase }}Service
 
     @Autowired
-    private lateinit var {{ fieldType }}Repository: {{ FieldType }}Repository
+    private lateinit var {{ fieldTypeCamelCase }}Repository: {{ fieldTypePascalCase }}Repository
 {{/if}}{{/each}}{{# if hasRelations }}
     @Test
     fun `{{ Name }}s cannot be created if related entities do not exist`() {
@@ -30,33 +30,33 @@ class {{ Name }}IntegrationTests : IntegrationTestContext() {
     }
 {{/if}}
     @Test
-    fun `{{ Name }}s can be created, fetched and destroyed`() { {{#each fields as |f|}}{{#if fieldRelationship}}
-        val {{ fieldType }} = {{ fieldType }}Repository.create({{ FIELD_TYPE }}_FIXTURE_1)
+    fun `{{ Name }}s can be created, fetched and destroyed`() { {{#each fields as |f|}}{{#if isFieldRelational}}
+        val {{ fieldTypeCamelCase }} = {{ fieldTypeCamelCase }}Repository.create({{ fieldTypeScreamingSnakeCase }}_FIXTURE_1)
 {{/if}}{{/each}}
-        val {{ name }} = {{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1{{#if hasRelations}}.copy({{#each fields as |f|}}{{#if fieldRelationship}}
-            {{ fieldName }} = {{ fieldType }}.id!!,{{/if}}{{/each}}
+        val {{ name }} = {{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1{{#if hasRelations}}.copy({{#each fields as |f|}}{{#if isFieldRelational}}
+            {{ fieldNameCamelCase }} = {{ fieldTypeCamelCase }}.id!!,{{/if}}{{/each}}
         ){{/if}})
 
         assertThat({{ name }}Service.findAll()).isNotEmpty
         assertThat({{ name }}Service.findById({{ name }}.id!!)).isNotNull
-{{#each fields}}{{#if fieldRelationship}}
-        assertThat({{ name }}Service.findAll({{ Name }}.{{ Name }}FilterInput({{ fieldName }} = {{ fieldType }}.id!!))).isNotNull
-        assertThat({{ name }}Service.findBy{{ FieldName }}({{ fieldType }}.id!!)).isNotNull
+{{#each fields}}{{#if isFieldRelational}}
+        assertThat({{ name }}Service.findAll({{ Name }}.{{ Name }}FilterInput({{ fieldNameCamelCase }} = {{ fieldTypeCamelCase }}.id!!))).isNotNull
+        assertThat({{ name }}Service.findBy{{ fieldNamePascalCase }}({{ fieldTypeCamelCase }}.id!!)).isNotNull
 {{/if}}{{/each}}
         {{ name }}Service.deleteById({{ name }}.id!!)
 
         assertThat({{ name }}Service.findAll()).isEmpty()
     }
-{{#each fields as |f|}}{{#if fieldRelationship}}
+{{#each fields as |f|}}{{#if isFieldRelational}}
     @Test
-    fun `{{ Name }}s are deleted when related {{ FieldTypes }} are deleted`() {
-{{#each fields as |f|}}{{#if fieldRelationship}}        val {{ fieldType }} = {{ fieldType }}Repository.create({{ FIELD_TYPE }}_FIXTURE_1)
+    fun `{{ Name }}s are deleted when related {{ fieldTypePascalCases }} are deleted`() {
+{{#each fields as |f|}}{{#if isFieldRelational}}        val {{ fieldTypeCamelCase }} = {{ fieldTypeCamelCase }}Repository.create({{ fieldTypeScreamingSnakeCase }}_FIXTURE_1)
 {{/if}}{{/each}}
-        val {{ name }} = {{ name }}Service.create({{ NAME }}_FIXTURE_1.copy({{#each fields as |f|}}{{#if fieldRelationship}}
-            {{ fieldName }} = {{ fieldType }}.id!!,{{/if}}{{/each}}
+        val {{ name }} = {{ name }}Service.create({{ NAME }}_FIXTURE_1.copy({{#each fields as |f|}}{{#if isFieldRelational}}
+            {{ fieldNameCamelCase }} = {{ fieldTypeCamelCase }}.id!!,{{/if}}{{/each}}
         ))
 
-        {{ fieldType }}Service.deleteById({{ name }}.{{ fieldName }})
+        {{ fieldTypeCamelCase }}Service.deleteById({{ name }}.{{ fieldNameCamelCase }})
 
         assertThat({{ name }}Service.findAll()).isEmpty()
     }

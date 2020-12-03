@@ -21,7 +21,7 @@ describe('<%Name%>List', () => {
       query <%names%><%#if hasRelations%>($filter: <%Name%>Filter)<%/if%> {
         <%names%>: <%names%><%#if hasRelations%>(filter: $filter)<%/if%> {
           id<%#each fields%>
-          <%fieldName%><%/each%>
+          <%fieldNameCamelCase%><%/each%>
         }
       }
     `, jest.fn().mockResolvedValue({
@@ -29,7 +29,7 @@ describe('<%Name%>List', () => {
         <%names%>: [
           {
             id: 1<%#each fields%>,
-            <%fieldName%>: 'Some <%FieldName%>'<%/each%>
+            <%fieldNameCamelCase%>: 'Some <%fieldNamePascalCase%>'<%/each%>
           }
         ]
       }
@@ -66,7 +66,7 @@ describe('<%Name%>List', () => {
     createComponent()
     await flushPromises()
 <%#each fields%>
-    expect(wrapper.text()).toContain('Some <%FieldName%>')<%/each%>
+    expect(wrapper.text()).toContain('Some <%fieldNamePascalCase%>')<%/each%>
   })
 
   it('emits edit event when edit is clicked', async () => {

@@ -13,8 +13,8 @@
           <td>{{ <%name%>.id }}</td>
         </tr><%#each fields%>
         <tr>
-          <td><%FieldName%></td>
-          <td>{{ <%name%>.<%fieldName%> }}</td>
+          <td><%fieldNamePascalCase%></td>
+          <td>{{ <%name%>.<%fieldNameCamelCase%> }}</td>
         </tr><%/each%>
       </tbody>
     </table>
@@ -33,7 +33,7 @@ import Component from 'nuxt-class-component'
         query <%name%>($id: Int) {
           <%name%>: <%name%>(id: $id) {
             id<%#each fields%>
-            <%fieldName%><%/each%>
+            <%fieldNameCamelCase%><%/each%>
           }
         }
       `,

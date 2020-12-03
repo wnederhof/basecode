@@ -12,10 +12,9 @@ class FieldNameFilter(
     override fun enrichProperties(fieldIndex: Int, settings: FieldTemplateFilter.FieldTemplateSettings): Iterable<Variable> {
         val field = settings.fields[fieldIndex]
         return listOf(
-                Variable("field_name", nameHelper.toDuckName(field.name)),
-                Variable("field_name_dash", nameHelper.toDashName(field.name)),
-                Variable("FieldName", nameHelper.toUpperCamelCase(field.name)),
-                Variable("fieldName", nameHelper.toLowerCamelCase(field.name))
+                Variable("fieldNameSnakeCase", nameHelper.toDuckName(field.name)),
+                Variable("fieldNamePascalCase", nameHelper.toUpperCamelCase(field.name)),
+                Variable("fieldNameCamelCase", nameHelper.toLowerCamelCase(field.name))
         )
     }
 }

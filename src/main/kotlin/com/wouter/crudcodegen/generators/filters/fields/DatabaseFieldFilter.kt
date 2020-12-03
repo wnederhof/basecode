@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 class DatabaseFieldFilter : FieldTemplateFilter {
     override fun enrichProperties(fieldIndex: Int, settings: FieldTemplateFilter.FieldTemplateSettings): Iterable<Variable> {
         val field = settings.fields[fieldIndex]
-        return listOf(Variable("FIELD_DATABASE_TYPE", determineDatabaseType(field.type)))
+        return listOf(Variable("fieldDatabaseDefinitionType", determineDatabaseType(field.type)))
     }
 
     private fun determineDatabaseType(type: String): String {
@@ -28,5 +28,4 @@ class DatabaseFieldFilter : FieldTemplateFilter {
             else -> "INT NOT NULL"
         }
     }
-
 }

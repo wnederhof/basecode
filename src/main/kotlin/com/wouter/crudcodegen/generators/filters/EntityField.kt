@@ -1,7 +1,7 @@
 package com.wouter.crudcodegen.generators.filters
 
 data class EntityField(val name: String, val type: String) {
-    val isNullable: Boolean = type.endsWith("?")
+    val isFieldNullable: Boolean = type.endsWith("?")
 
     val isRelationship = when (type) {
         "string" -> false
