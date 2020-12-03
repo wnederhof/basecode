@@ -1,29 +1,38 @@
 package com.wouter.crudcodegen.generators.filters.fields
 
 import com.wouter.crudcodegen.engine.Variable
+import com.wouter.crudcodegen.generators.EntityType
+import com.wouter.crudcodegen.generators.EntityType.*
+import com.wouter.crudcodegen.generators.filters.EntityField
 import com.wouter.crudcodegen.generators.filters.FieldTemplateFilter
 import org.springframework.stereotype.Component
 
 @Component
 class VueFieldFilter : FieldTemplateFilter {
     override fun enrichProperties(fieldIndex: Int, settings: FieldTemplateFilter.FieldTemplateSettings): Iterable<Variable> {
-        val field = settings.fields[fieldIndex]
-        return listOf(Variable("fieldHtmlInputType", determineFieldInputType(field.type)))
+        return when (val field = settings.fields[fieldIndex]) {
+            is EntityField.RelationalEntityField ->
+                listOf(Variable("fieldHtmlInputType", "number"))
+            is EntityField.PrimitiveEntityField ->
+                listOf(Variable("fieldHtmlInputType", determineFieldInputType(field.entityType)))
+        }
     }
 
-    private fun determineFieldInputType(type: String): String {
+    private fun determineFieldInputType(type: EntityType): String {
         return when (type) {
-            "string" -> "text"
-            "int" -> "number"
-            "date" -> "date"
-            "dateTime" -> "datetime-local"
-            "boolean" -> "checkbox"
-            "string?" -> "text"
-            "int?" -> "number"
-            "date?" -> "date"
-            "dateTime?" -> "datetime-local"
-            "boolean?" -> "checkbox"
-            else -> "text"
+            STRING -> "text"
+            INT -> "number"
+            DATE -> "date"
+            DATETIME -> "datetime-local"
+            BOOLEAN -> "checkbox"
+            TEXT -> "text"
+
+            NULL_STRING -> "text"
+            NULL_INT -> "number"
+            NULL_DATE -> "date"
+            NULL_DATETIME -> "datetime-local"
+            NULL_BOOLEAN -> "checkbox"
+            NULL_TEXT -> "text"
         }
     }
 }

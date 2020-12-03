@@ -8,19 +8,18 @@ import org.springframework.stereotype.Service
 import java.io.File
 
 @Service
-class GeneratorSettingsHelper {
+class VariablesHelper {
 
-    fun generate(
+    fun createVariables(
             targetPath: File,
             properties: ProjectProperties,
             name: String,
             fields: List<EntityField>? = null,
             filters: List<GeneratorFilter>
-    ): GeneratorSettings {
+    ): List<Variable> {
         val groupId = properties.groupId ?: error("groupId required but not set.")
         val artifactId = properties.artifactId ?: error("artifactId required but not set.")
         val variables = mutableListOf<Variable>()
-        val fieldVariables = mutableListOf<Variable>()
         val projectTemplateFilters = filters.filterIsInstance(ProjectTemplateFilter::class.java)
         val entityTemplateFilters = filters.filterIsInstance(EntityTemplateFilter::class.java)
         val fieldTemplateFilters = filters.filterIsInstance(FieldTemplateFilter::class.java)
@@ -40,11 +39,7 @@ class GeneratorSettingsHelper {
                 }.map { it.name to it.value }.toMap()
             })
         }
-
-        return GeneratorSettings(
-                updatedProperties = properties,
-                variables = variables
-        )
+        return variables
     }
 
 }

@@ -4,7 +4,7 @@ import com.wouter.crudcodegen.generators.Generator
 import com.wouter.crudcodegen.generators.GeneratorSettings
 import com.wouter.crudcodegen.generators.ProjectProperties
 import com.wouter.crudcodegen.generators.filters.ProjectTemplateFilter
-import com.wouter.crudcodegen.generators.helpers.GeneratorSettingsHelper
+import com.wouter.crudcodegen.generators.helpers.VariablesHelper
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.io.File
@@ -13,7 +13,7 @@ import java.io.File
 @Order(1)
 class NewProjectGenerator(
         private val projectTemplateFilters: List<ProjectTemplateFilter>,
-        private val generatorSettingsHelper: GeneratorSettingsHelper
+        private val variablesHelper: VariablesHelper
 ) : Generator {
 
     override fun getSyntax() =
@@ -28,11 +28,11 @@ class NewProjectGenerator(
 
     override fun initializeGenerator(targetPath: File, properties: ProjectProperties, args: List<String>): GeneratorSettings {
         val (groupId, artifactId) = args
-
         val updatedProperties = properties.copy(artifactId = artifactId, groupId = groupId)
-
-        return generatorSettingsHelper.generate(targetPath, updatedProperties, args[0], null, projectTemplateFilters)
-
+        return GeneratorSettings(
+                updatedProperties = updatedProperties,
+                variables = variablesHelper.createVariables(targetPath, updatedProperties, args[0], null, projectTemplateFilters)
+        )
     }
 
 }

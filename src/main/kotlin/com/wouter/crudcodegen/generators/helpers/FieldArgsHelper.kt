@@ -10,7 +10,7 @@ class FieldArgsHelper {
         return args
                 .drop(1)
                 .map { it.split(":") }
-                .map { EntityField(it[0], it[1]) }
+                .map { EntityField.fromUserInput(it[0], it[1]) }
     }
 
 }

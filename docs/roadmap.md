@@ -11,7 +11,7 @@
 - X Add update support
 - X Fix number support
 - X Remove/fix date/nullables support
-- Clean up generator code
+- X Clean up generator code
 - Create proper CLI
 - Don't show field when filtering
 - Add missing tests (incl. frontend filtering)
@@ -22,11 +22,11 @@
 - Add GraphQL tests
 - Add E2E tests
 - Add GraphQL backend tests
+- Dockerfile
 
 ## Version 0.3.0
 - Pagination
 - Add authentication generators
-- Dockerfile
 
 ## Version 0.4.0
 - Add optional Bootstrap support

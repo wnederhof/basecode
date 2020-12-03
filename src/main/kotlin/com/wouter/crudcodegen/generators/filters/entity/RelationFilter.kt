@@ -8,6 +8,6 @@ import org.springframework.stereotype.Component
 class RelationFilter : EntityTemplateFilter {
     override fun enrichProperties(settings: EntityTemplateFilter.EntityTemplateSettings): Iterable<Variable> {
         val fields = settings.fields
-        return listOf(Variable("hasRelations", fields.any { it.isRelationship }))
+        return listOf(Variable("hasRelations", fields.any { it.isFieldRelational }))
     }
 }

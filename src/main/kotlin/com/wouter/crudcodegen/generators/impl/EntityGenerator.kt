@@ -3,12 +3,11 @@ package com.wouter.crudcodegen.generators.impl
 import com.wouter.crudcodegen.generators.Generator
 import com.wouter.crudcodegen.generators.GeneratorSettings
 import com.wouter.crudcodegen.generators.ProjectProperties
-import com.wouter.crudcodegen.generators.filters.EntityField
 import com.wouter.crudcodegen.generators.filters.EntityTemplateFilter
 import com.wouter.crudcodegen.generators.filters.FieldTemplateFilter
 import com.wouter.crudcodegen.generators.filters.ProjectTemplateFilter
 import com.wouter.crudcodegen.generators.helpers.FieldArgsHelper
-import com.wouter.crudcodegen.generators.helpers.GeneratorSettingsHelper
+import com.wouter.crudcodegen.generators.helpers.VariablesHelper
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
 import java.io.File
@@ -20,7 +19,7 @@ class EntityGenerator(
         private val projectTemplateFilters: List<ProjectTemplateFilter>,
         private val fieldTemplateFilters: List<FieldTemplateFilter>,
         private val fieldArgsHelper: FieldArgsHelper,
-        private val generatorSettingsHelper: GeneratorSettingsHelper
+        private val variablesHelper: VariablesHelper
 ) : Generator {
 
     override fun getSyntax() =
@@ -36,7 +35,10 @@ class EntityGenerator(
     override fun initializeGenerator(targetPath: File, properties: ProjectProperties, args: List<String>): GeneratorSettings {
         val fields = fieldArgsHelper.mapArgsToEntityFields(args.drop(1))
         val filters = entityTemplateFilters + projectTemplateFilters + fieldTemplateFilters
-        return generatorSettingsHelper.generate(targetPath, properties, args[0], fields, filters)
+        return GeneratorSettings(
+                updatedProperties = properties,
+                variables = variablesHelper.createVariables(targetPath, properties, args[0], fields, filters)
+        )
     }
 
 }

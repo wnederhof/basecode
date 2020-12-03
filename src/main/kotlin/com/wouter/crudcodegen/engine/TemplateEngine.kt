@@ -8,11 +8,7 @@ class TemplateEngine(
         private val fileManager: FileManager,
         private val templateSolidifier: TemplateSolidifier
 ) {
-    fun generate(
-            targetRoot: File,
-            templateName: String,
-            variables: List<Variable>
-    ) {
+    fun generate(targetRoot: File, templateName: String, variables: List<Variable>) {
         val files = fileManager.listTemplateFilesRecursively(templateName)
         files.forEach { templateFilePath ->
             val generatedFilename = templateSolidifier.solidifyFilename(templateFilePath, variables)

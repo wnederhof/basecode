@@ -7,7 +7,7 @@ import org.springframework.boot.runApplication
 import java.io.File
 
 @SpringBootApplication
-class CrudcodegenApplication(
+class Application(
         private val commandLineInterface: CommandLineInterface
 ): CommandLineRunner {
     override fun run(vararg args: String) {
@@ -17,5 +17,5 @@ class CrudcodegenApplication(
 }
 
 fun main(args: Array<String>) {
-    runApplication<CrudcodegenApplication>(*args)
+    runApplication<Application>(*args)
 }
