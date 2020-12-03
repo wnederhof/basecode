@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.io.File
 
+// Please note that the integration tests have only been tested on MacOS.
 @SpringBootTest
 internal class ScenariosIntegrationTest {
     @Autowired
@@ -28,31 +29,22 @@ internal class ScenariosIntegrationTest {
     }
 
     @Test
-    fun `User scaffolds a book store`() {
-        generate("new", "com.employeeman", "employeeman")
-        generate("frontend", "employeeman")
+    fun `Integration test using all features builds without test errors`() {
+        generate("new", "com.petty", "petstore")
+        generate("frontend", "petstore")
 
-        listOf(
-                listOf(
-                        "Company",
-                        "name:string",
-                        "about:text",
-                        "age:int",
-                        "dob:date",
-                        "rob:dateTime",
-                        "optname:string?",
-                        "optabout:text?",
-                        "optage:int?",
-                        "optdob:date?",
-                        "optrob:dateTime?"
-                )
-        ).map { it.toTypedArray() }.forEach { args ->
+        val ownerArgs = listOf("Owner", "name:string", "about:text", "age:int", "dateOfBirth:date", "timeOfBirth:dateTime")
+        val petArgs = listOf("Pet", "ownerId:Owner", "name:string?", "about:text?", "age:int?", "dateOfBirth:date?", "timeOfBirth:dateTime?")
+
+        listOf(ownerArgs, petArgs).map { it.toTypedArray() }.forEach { args ->
             generate("entity", *args)
             generate("service", *args)
             generate("graphql", *args)
             generate("frontend-scaffold", *args)
         }
+
         assertThat(executeBackendTests(tempDir), equalTo(true))
+        assertThat(executeFrontendTests(tempDir), equalTo(true))
     }
 
     private fun generate(vararg args: String) {
@@ -63,6 +55,14 @@ internal class ScenariosIntegrationTest {
 
     private fun executeBackendTests(tempDir: File): Boolean {
         return OK_RETURN_STATUS == ProcessBuilder("sh", "mvnw", "verify")
+                .inheritIO()
+                .directory(File(tempDir.path))
+                .start()
+                .waitFor()
+    }
+
+    private fun executeFrontendTests(tempDir: File): Boolean {
+        return OK_RETURN_STATUS == ProcessBuilder("sh", "-c", "npm install && npm test")
                 .inheritIO()
                 .directory(File(tempDir.path))
                 .start()
