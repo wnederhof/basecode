@@ -64,7 +64,7 @@ internal class ScenariosIntegrationTest {
     private fun executeBackendTests(tempDir: File): Boolean {
         return OK_RETURN_STATUS == ProcessBuilder("sh", "mvnw", "verify")
                 .inheritIO()
-                .directory(File(tempDir.path + "/backend"))
+                .directory(File(tempDir.path))
                 .start()
                 .waitFor()
     }

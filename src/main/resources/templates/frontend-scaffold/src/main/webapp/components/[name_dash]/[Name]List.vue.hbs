@@ -65,10 +65,10 @@ import gql from 'graphql-tag'
         this.error = error.message
       }<%#if hasRelations%>,
 
-      variables () {
+      variables () {<%#each fields%><%#if fieldRelationship%>
         const <%fieldName%> = this.$props.<%fieldName%><%/if%><%/each%>
         return { filter: { <%#each fields%><%#if fieldRelationship%>, <%fieldName%><%/if%><%/each%> } }
-      }<%/if>
+      }<%/if%>
     }
   },
 

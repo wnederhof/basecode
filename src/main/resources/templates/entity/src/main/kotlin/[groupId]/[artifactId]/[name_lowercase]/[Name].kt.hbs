@@ -33,7 +33,7 @@ data class {{ Name }}(
 
     data class Update{{ Name }}Input({{#each fields}}
         val {{ fieldName }}: {{ FieldKotlinType }},{{/each}}{{#each fields}}{{#if isNullable}}
-        val nullify{{ FieldName }}: Boolean? = null{{/if}},{{/each}}
+        val nullify{{ FieldName }}: Boolean? = null,{{/if}}{{/each}}
     )
 {{#if hasRelations}}
     data class {{ Name }}FilterInput({{#each fields }}{{#if fieldRelationship}}

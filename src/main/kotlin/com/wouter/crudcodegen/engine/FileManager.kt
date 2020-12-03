@@ -57,8 +57,6 @@ class FileManager(private val resourceLoader: ResourceLoader) {
         val directories = path.split("/").dropLast(1).joinToString("/")
         File("${root.path}/$directories").mkdirs()
         File("${root.path }/$path").writeText(content)
-
-        println("[F] $path")
     }
 
     fun readTargetFile(root: File, path: String): String? {
