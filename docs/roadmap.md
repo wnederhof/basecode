@@ -19,24 +19,16 @@
 ## Version 0.2.0
 - Validation
 - Plural
-- Pagination
 - Add GraphQL tests
 - Add E2E tests
-- Add authentication generators
-- Add `date` support
-- Add `enum` support
-- Make sure `numbers` are properly supported
 - Add GraphQL backend tests
-- Dockerfile
-- Add optional Bootstrap support
 
 ## Version 0.3.0
-- Fix page transition scrolling delay
-- Also test Codegen for linting, FE, E2E
+- Pagination
+- Add authentication generators
+- Dockerfile
 
 ## Version 0.4.0
-- Relational code generation
-
-## Version 1.0.0
-- Consolidated concepts
-- CI/CD config
+- Add optional Bootstrap support
+- Fix page transition scrolling delay
+- Also test Codegen for linting, FE, E2E

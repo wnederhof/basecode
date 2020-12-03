@@ -23,13 +23,16 @@
         :id="$id('<%fieldName%>')"
         ref="<%fieldName%>Input"
         v-model="<%name%>.<%fieldName%>"
-        type="<%fieldInputType%>"
+        type="<%fieldInputType%>"<%#unless isNullable%><%#if isString%>
+        required<%/if%><%/if%>
       ><%else%>
       <label :for="$id('<%fieldName%>')"><%FieldName%></label><%#if isText%>
       <textarea
         :id="$id('<%fieldName%>')"
         ref="<%fieldName%>Input"
-        v-model="<%name%>.<%fieldName%>"></textarea><%/if%>
+        v-model="<%name%>.<%fieldName%>"<%#unless isNullable%><%#if isString%>
+        required<%/if%><%/if%>
+      ></textarea><%/if%>
     </div><%/each%>
     <div>
       <button>Save <%Name%></button>
