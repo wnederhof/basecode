@@ -14,14 +14,14 @@ import org.mockito.junit.jupiter.MockitoExtension
 @ExtendWith(MockitoExtension::class)
 class VueFieldFilterTest {
     @InjectMocks
-    private lateinit var databaseFieldFilter: DatabaseFieldFilter
+    private lateinit var vueFieldFilter: VueFieldFilter
 
     @Test
     fun `enrichProperties yields the fieldHtmlInputType number for any relation`() {
         val fields = listOf(EntityField.RelationalEntityField("userId", "User"))
         val settings = FieldTemplateFilter.FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
 
-        val singleActualVariable = databaseFieldFilter.enrichProperties(0, settings).single()
+        val singleActualVariable = vueFieldFilter.enrichProperties(0, settings).single()
 
         assertThat(singleActualVariable.name).isEqualTo("fieldHtmlInputType")
         assertThat(singleActualVariable.value).isEqualTo("number")
@@ -32,7 +32,7 @@ class VueFieldFilterTest {
         val fields = listOf(EntityField.PrimitiveEntityField("name", EntityType.STRING))
         val settings = FieldTemplateFilter.FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
 
-        val singleActualVariable = databaseFieldFilter.enrichProperties(0, settings).single()
+        val singleActualVariable = vueFieldFilter.enrichProperties(0, settings).single()
 
         assertThat(singleActualVariable.name).isEqualTo("fieldHtmlInputType")
         assertThat(singleActualVariable.value).isEqualTo("VARCHAR(255) NOT NULL")
@@ -44,7 +44,7 @@ class VueFieldFilterTest {
         val fields = listOf(EntityField.PrimitiveEntityField("userId", entityType))
         val settings = FieldTemplateFilter.FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
 
-        val singleActualVariable = databaseFieldFilter.enrichProperties(0, settings).single()
+        val singleActualVariable = vueFieldFilter.enrichProperties(0, settings).single()
 
         assertThat(singleActualVariable.name).isEqualTo("fieldHtmlInputType")
     }

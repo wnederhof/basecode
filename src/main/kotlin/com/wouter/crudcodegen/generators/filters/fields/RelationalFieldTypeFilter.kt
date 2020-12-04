@@ -21,7 +21,7 @@ class RelationalFieldTypeFilter(
                 Variable("fieldTypePascalCase", nameHelper.toUpperCamelCase(fieldType)),
                 Variable("fieldTypeLowerCase", fieldType.toLowerCase()),
                 Variable("fieldTypeScreamingSnakeCase", nameHelper.toDuckName(fieldType).toUpperCase()),
-                Variable("fieldTypeSnakeCase", nameHelper.toLowerCamelCase(fieldType))
+                Variable("fieldTypeCamelCase", nameHelper.toLowerCamelCase(fieldType))
         )
     }
 }

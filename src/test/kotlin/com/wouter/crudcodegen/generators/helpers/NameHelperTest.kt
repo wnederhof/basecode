@@ -22,9 +22,9 @@ internal class NameHelperTest {
 
     @Test
     fun toDashName() {
-        assertThat(nameHelper.toDuckName("wouterNederhof"),
+        assertThat(nameHelper.toDashName("wouterNederhof"),
                 equalTo("wouter-nederhof"))
-        assertThat(nameHelper.toDuckName("WouterNederhof"),
+        assertThat(nameHelper.toDashName("WouterNederhof"),
                 equalTo("wouter-nederhof"))
     }
 
