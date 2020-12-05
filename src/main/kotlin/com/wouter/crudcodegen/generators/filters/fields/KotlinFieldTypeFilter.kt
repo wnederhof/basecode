@@ -15,7 +15,7 @@ class KotlinFieldTypeFilter(
     override fun enrichProperties(fieldIndex: Int, settings: FieldTemplateFilter.FieldTemplateSettings): Iterable<Variable> {
         val field = settings.fields[fieldIndex]
         val testDummyValueName = nameHelper.toUpperCamelCase(field.name)
-        return when (val field = settings.fields[fieldIndex]) {
+        return when (field) {
             is EntityField.RelationalEntityField -> listOf(
                     Variable("fieldKotlinAnnotations", null),
                     Variable("fieldKotlinType", "Int"),

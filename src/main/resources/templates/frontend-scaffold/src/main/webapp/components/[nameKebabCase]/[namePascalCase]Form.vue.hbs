@@ -87,8 +87,9 @@ import gql from 'graphql-tag'
 })
 export default class <%namePascalCase%>Form extends Vue {
   <%nameCamelCase%> = {
-    id: null,<%#each fields%><%fieldNameCamelCase%>: <%#if isFieldNullable%>''<%else%>null<%/if%>,
-  <%/each%>}
+    id: null,<%#each fields%>
+    <%fieldNameCamelCase%>: <%#if isFieldNullable%>''<%else%>null<%/if%>,<%/each%>
+  }
   error = null
 
   async save<%namePascalCase%> () {
@@ -99,7 +100,7 @@ export default class <%namePascalCase%>Form extends Vue {
     }
   }
 
-  private async updateCompany() {
+  private async update<%namePascalCase%>() {
     const mutation = gql`
       mutation save<%namePascalCase%>($id: ID!, $input: Update<%namePascalCase%>Input!) {
         update<%namePascalCase%>(id: $id, input: $input) {
@@ -125,7 +126,7 @@ export default class <%namePascalCase%>Form extends Vue {
     this.$emit('save:<%nameCamelCase%>', this.<%nameCamelCase%>)
   }
 
-  private async createCompany() {
+  private async create<%namePascalCase%>() {
     const mutation = gql`
       mutation save<%namePascalCase%>($input: Create<%namePascalCase%>Input!) {
         create<%namePascalCase%>(input: $input) { id }
