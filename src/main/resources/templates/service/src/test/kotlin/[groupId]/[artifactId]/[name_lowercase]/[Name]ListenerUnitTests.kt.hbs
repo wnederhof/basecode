@@ -1,4 +1,4 @@
-{{#if hasRelations}}package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
+{{#if hasRelations}}package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 
 {{#each fields as |f|}}{{#if isFieldRelational}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Event.Before{{ fieldTypePascalCase }}DeletedEvent
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypeCamelCases_lowercas }}.{{ fieldTypePascalCase }}Service
@@ -10,19 +10,19 @@ import org.mockito.Mock{{/if}}
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-internal class {{ Name }}ListenerUnitTests{{#if hasRelations}}{
+internal class {{ namePascalCase }}ListenerUnitTests{{#if hasRelations}}{
 
     @Mock
-    private lateinit var {{ name }}Service: {{ Name }}Service
+    private lateinit var {{ nameCamelCase }}Service: {{ namePascalCase }}Service
 
     @InjectMocks
-    private lateinit var {{ name }}Listener: {{ Name }}Listener
+    private lateinit var {{ nameCamelCase }}Listener: {{ namePascalCase }}Listener
 {{#each fields as |f|}}{{#if isFieldRelational}}
     @Test
-    fun `deleteBefore{{ fieldTypePascalCase }}Deleted deletes related {{ Names }} in Before{{ fieldTypePascalCase }}DeletedEvent`() {
-        {{ name }}Listener.deleteBefore{{ fieldTypePascalCase }}Deleted(Before{{ fieldTypePascalCase }}DeletedEvent(this, 1))
+    fun `deleteBefore{{ fieldTypePascalCase }}Deleted deletes related {{ namePluralPascalCase }} in Before{{ fieldTypePascalCase }}DeletedEvent`() {
+        {{ nameCamelCase }}Listener.deleteBefore{{ fieldTypePascalCase }}Deleted(Before{{ fieldTypePascalCase }}DeletedEvent(this, 1))
 
-        verify({{ name }}Service).deleteBy{{ fieldNamePascalCase }}(1)
+        verify({{ nameCamelCase }}Service).deleteBy{{ fieldNamePascalCase }}(1)
     }
 {{/if}}{{/each}}
 }{{/if}}{{/if}}

@@ -1,8 +1,8 @@
-package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
+package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 
-import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.CREATE_{{ NAME }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1
 {{#each fields}}{{#if isFieldRelational}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Fixtures.{{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Service
 {{/if}}{{/each}}import com.nhaarman.mockitokotlin2.verify
@@ -15,36 +15,36 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 
-class {{ Name }}ResolverUnitTests {
+class {{ namePascalCase }}ResolverUnitTests {
 
     @Nested
     @ExtendWith(MockitoExtension::class)
     inner class RootQueryResolverUnitTests {
 
         @Mock
-        private lateinit var {{ name }}Service: {{ Name }}Service
+        private lateinit var {{ nameCamelCase }}Service: {{ namePascalCase }}Service
 
         @InjectMocks
-        private lateinit var rootQueryResolver: {{ Name }}Resolver.RootQueryResolver
+        private lateinit var rootQueryResolver: {{ namePascalCase }}Resolver.RootQueryResolver
 
         @Test
-        fun `{{ name }} delegates the call to the {{ Name }}Service`() {
-            whenever({{ name }}Service.findById(1))
-                .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
+        fun `{{ nameCamelCase }} delegates the call to the {{ namePascalCase }}Service`() {
+            whenever({{ nameCamelCase }}Service.findById(1))
+                .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
-            assertThat(rootQueryResolver.{{ name }}(1))
-                .isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
+            assertThat(rootQueryResolver.{{ nameCamelCase }}(1))
+                .isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
         }
 
         @Test
-        fun `{{ names }} delegates the call to the {{ Name }}Service`() {
-            {{#if hasRelations}}val any{{ Name }}Filter = {{ Name }}.{{ Name }}FilterInput()
+        fun `{{ namePluralCamelCase }} delegates the call to the {{ namePascalCase }}Service`() {
+            {{#if hasRelations}}val any{{ namePascalCase }}Filter = {{ namePascalCase }}.{{ namePascalCase }}FilterInput()
 
-            {{/if}}whenever({{ name }}Service.findAll({{#if hasRelations}}any{{ Name }}Filter{{/if}}))
-                .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
+            {{/if}}whenever({{ nameCamelCase }}Service.findAll({{#if hasRelations}}any{{ namePascalCase }}Filter{{/if}}))
+                .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
-            assertThat(rootQueryResolver.{{ names }}({{#if hasRelations}}any{{ Name }}Filter{{/if}}))
-                .isEqualTo(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
+            assertThat(rootQueryResolver.{{ namePluralCamelCase }}({{#if hasRelations}}any{{ namePascalCase }}Filter{{/if}}))
+                .isEqualTo(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
         }
 
     }
@@ -54,45 +54,45 @@ class {{ Name }}ResolverUnitTests {
     inner class MutationResolverUnitTests {
 
         @Mock
-        private lateinit var {{ name }}Service: {{ Name }}Service
+        private lateinit var {{ nameCamelCase }}Service: {{ namePascalCase }}Service
 
         @InjectMocks
-        private lateinit var {{ name }}MutationResolver: {{ Name }}Resolver.MutationResolver
+        private lateinit var {{ nameCamelCase }}MutationResolver: {{ namePascalCase }}Resolver.MutationResolver
 
         @Test
-        fun `create delegates the call to the {{ Name }}Service`() {
-            whenever({{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1))
-                .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
+        fun `create delegates the call to the {{ namePascalCase }}Service`() {
+            whenever({{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
+                .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
-            assertThat({{ name }}MutationResolver.create{{ Name }}(CREATE_{{ NAME }}_FIXTURE_1))
-                .isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
+            assertThat({{ nameCamelCase }}MutationResolver.create{{ namePascalCase }}(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
+                .isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
         }
 
         @Test
-        fun `delete{{ Name }} delegates the call to the {{ Name }}Service`() {
-            {{ name }}MutationResolver.delete{{ Name }}(1)
+        fun `delete{{ namePascalCase }} delegates the call to the {{ namePascalCase }}Service`() {
+            {{ nameCamelCase }}MutationResolver.delete{{ namePascalCase }}(1)
 
-            verify({{ name }}Service).deleteById(1)
+            verify({{ nameCamelCase }}Service).deleteById(1)
         }
 
     }
 {{#if hasRelations}}
     @Nested
     @ExtendWith(MockitoExtension::class)
-    inner class {{ Name }}ResolverUnitTests { {{#each fields}}{{#if isFieldRelational}}
+    inner class {{ namePascalCase }}ResolverUnitTests { {{#each fields}}{{#if isFieldRelational}}
 
         @Mock
         private lateinit var {{ fieldTypeCamelCase }}Service: {{ fieldTypePascalCase }}Service{{/if}}{{/each}}
 
         @InjectMocks
-        private lateinit var {{ name }}QueryResolver: {{ Name }}Resolver.{{ Name }}QueryResolver
+        private lateinit var {{ nameCamelCase }}QueryResolver: {{ namePascalCase }}Resolver.{{ namePascalCase }}QueryResolver
 {{#each fields}}{{#if isFieldRelational}}
         @Test
         fun `{{ fieldTypeCamelCase }} delegates the call to the {{ fieldTypePascalCase }}Service`() {
-            whenever({{ fieldTypeCamelCase }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
+            whenever({{ fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
                 .thenReturn({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
-            assertThat({{ name }}QueryResolver.{{ fieldTypeCamelCase }}({{ NAME }}_FIXTURE_WITH_ID_1))
+            assertThat({{ nameCamelCase }}QueryResolver.{{ fieldTypeCamelCase }}({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
                 .isEqualTo({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
         }{{/if}}{{/each}}
     }
@@ -102,18 +102,18 @@ class {{ Name }}ResolverUnitTests {
     inner class {{ fieldTypePascalCase }}ResolverUnitTests {
 
         @Mock
-        private lateinit var {{ name }}Service: {{ Name }}Service
+        private lateinit var {{ nameCamelCase }}Service: {{ namePascalCase }}Service
 
         @InjectMocks
-        private lateinit var {{ fieldTypeCamelCase }}FieldResolver: {{ Name }}Resolver.{{ fieldTypePascalCase }}FieldResolver
+        private lateinit var {{ fieldTypeCamelCase }}FieldResolver: {{ namePascalCase }}Resolver.{{ fieldTypePascalCase }}FieldResolver
 
         @Test
-        fun `{{ name }} delegates the call to the {{ name }}Service`() {
-            whenever({{ name }}Service.findBy{{ fieldNamePascalCase }}({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.id!!))
-                .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
+        fun `{{ nameCamelCase }} delegates the call to the {{ nameCamelCase }}Service`() {
+            whenever({{ nameCamelCase }}Service.findBy{{ fieldNamePascalCase }}({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.id!!))
+                .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
-            assertThat({{ fieldTypeCamelCase }}FieldResolver.{{ names }}({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-                .isEqualTo(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
+            assertThat({{ fieldTypeCamelCase }}FieldResolver.{{ namePluralCamelCase }}({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+                .isEqualTo(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
         }
 
     }

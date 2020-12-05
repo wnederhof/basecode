@@ -1,6 +1,6 @@
 {{=<% %>=}}import { shallowMount, createLocalVue, RouterLinkStub, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
-import Index from '@/pages/<%names_dash%>/_<%name%>Id/index.vue'
+import Index from '@/pages/<%namePluralKebabCase%>/_<%nameCamelCase%>Id/index.vue'
 
 const localVue = createLocalVue()
 
@@ -8,7 +8,7 @@ describe('Index', () => {
   let wrapper: Wrapper<any>
 
   const push = jest.fn()
-  const $route = { params: { <%name%>Id: 1 } }
+  const $route = { params: { <%nameCamelCase%>Id: 1 } }
   const $router = { push }
 
   const createComponent = () => {
@@ -16,7 +16,7 @@ describe('Index', () => {
       localVue,
       stubs: {
         NLink: RouterLinkStub,
-        <%Name%>Details: true
+        <%namePascalCase%>Details: true
       },
       mocks: {
         $route,
@@ -34,38 +34,38 @@ describe('Index', () => {
     expect(wrapper.vm).toBeTruthy()
   })
 
-  it('opens <%name%> form when edit is pressed', async () => {
+  it('opens <%nameCamelCase%> form when edit is pressed', async () => {
     createComponent()
     await flushPromises()
 
-    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%namePascalCase%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).exists()).toBeFalsy()
 
-    await wrapper.findComponent({ ref: 'edit<%Name%>Btn' }).trigger('click')
+    await wrapper.findComponent({ ref: 'edit<%namePascalCase%>Btn' }).trigger('click')
 
-    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeTruthy()
-    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: 'edit<%namePascalCase%>Header' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).exists()).toBeTruthy()
   })
 
   it('closes when close is pressed', async () => {
     createComponent()
     await flushPromises()
 
-    await wrapper.findComponent({ ref: 'edit<%Name%>Btn' }).trigger('click')
-    await wrapper.findComponent({ ref: '<%name%>Form' }).vm.$emit('close:<%name%>Form')
+    await wrapper.findComponent({ ref: 'edit<%namePascalCase%>Btn' }).trigger('click')
+    await wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).vm.$emit('close:<%nameCamelCase%>Form')
 
-    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%namePascalCase%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).exists()).toBeFalsy()
   })
 
   it('closes when save is pressed', async () => {
     createComponent()
     await flushPromises()
 
-    await wrapper.findComponent({ ref: 'edit<%Name%>Btn' }).trigger('click')
-    await wrapper.findComponent({ ref: '<%name%>Form' }).vm.$emit('save:<%name%>')
+    await wrapper.findComponent({ ref: 'edit<%namePascalCase%>Btn' }).trigger('click')
+    await wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).vm.$emit('save:<%nameCamelCase%>')
 
-    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%namePascalCase%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).exists()).toBeFalsy()
   })
 })<%={{ }}=%>

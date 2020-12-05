@@ -1,19 +1,19 @@
-package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
+package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 
 import org.springframework.context.ApplicationEvent
 
-sealed class {{ Name }}Event(source: Any) : ApplicationEvent(source) {
+sealed class {{ namePascalCase }}Event(source: Any) : ApplicationEvent(source) {
 
-    data class Before{{ Name }}CreatedEvent(private val _source: Any, val entity: {{ Name }}) : {{ Name }}Event(_source)
+    data class Before{{ namePascalCase }}CreatedEvent(private val _source: Any, val entity: {{ namePascalCase }}) : {{ namePascalCase }}Event(_source)
 
-    data class After{{ Name }}CreatedEvent(private val _source: Any, val entity: {{ Name }}) : {{ Name }}Event(_source)
+    data class After{{ namePascalCase }}CreatedEvent(private val _source: Any, val entity: {{ namePascalCase }}) : {{ namePascalCase }}Event(_source)
 
-    data class Before{{ Name }}UpdatedEvent(private val _source: Any, val original: {{ Name }}, val updated: {{ Name }}) : {{ Name }}Event(_source)
+    data class Before{{ namePascalCase }}UpdatedEvent(private val _source: Any, val original: {{ namePascalCase }}, val updated: {{ namePascalCase }}) : {{ namePascalCase }}Event(_source)
 
-    data class After{{ Name }}UpdatedEvent(private val _source: Any, val original: {{ Name }}, val updated: {{ Name }}) : {{ Name }}Event(_source)
+    data class After{{ namePascalCase }}UpdatedEvent(private val _source: Any, val original: {{ namePascalCase }}, val updated: {{ namePascalCase }}) : {{ namePascalCase }}Event(_source)
 
-    data class Before{{ Name }}DeletedEvent(private val _source: Any, val id: Int) : {{ Name }}Event(_source)
+    data class Before{{ namePascalCase }}DeletedEvent(private val _source: Any, val id: Int) : {{ namePascalCase }}Event(_source)
 
-    data class After{{ Name }}DeletedEvent(private val _source: Any, val id: Int) : {{ Name }}Event(_source)
+    data class After{{ namePascalCase }}DeletedEvent(private val _source: Any, val id: Int) : {{ namePascalCase }}Event(_source)
 
 }

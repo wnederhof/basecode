@@ -1,4 +1,4 @@
-package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
+package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 
 import {{ groupId }}.{{ artifactId }}.util.MergeUtil.mergeWithNullify
 import org.springframework.data.annotation.*
@@ -6,8 +6,8 @@ import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-@Table("{{ _names }}")
-data class {{ Name }}(
+@Table("{{ namePluralSnakeCase }}")
+data class {{ namePascalCase }}(
     @Id
     val id: Int? = null{{#each fields }},
     val {{ fieldNameCamelCase }}: {{ fieldKotlinType }}{{/each}},
@@ -19,24 +19,24 @@ data class {{ Name }}(
     val updatedAt: LocalDateTime? = null
 ) {
 
-    constructor(input: Create{{ Name }}Input) : this({{#each fields }}
+    constructor(input: Create{{ namePascalCase }}Input) : this({{#each fields }}
         {{fieldNameCamelCase}} = input.{{fieldNameCamelCase}},{{/each}}
     )
 
-    fun merge(update{{ Name }}Input: Update{{ Name }}Input): {{ Name }} {
-        return this mergeWithNullify update{{ Name }}Input
+    fun merge(update{{ namePascalCase }}Input: Update{{ namePascalCase }}Input): {{ namePascalCase }} {
+        return this mergeWithNullify update{{ namePascalCase }}Input
     }
 
-    data class Create{{ Name }}Input({{#each fields}}
+    data class Create{{ namePascalCase }}Input({{#each fields}}
         val {{ fieldNameCamelCase }}: {{ fieldKotlinType }},{{/each}}
     )
 
-    data class Update{{ Name }}Input({{#each fields}}
+    data class Update{{ namePascalCase }}Input({{#each fields}}
         val {{ fieldNameCamelCase }}: {{ fieldKotlinType }},{{/each}}{{#each fields}}{{#if isFieldNullable}}
         val nullify{{ fieldNamePascalCase }}: Boolean? = null,{{/if}}{{/each}}
     )
 {{#if hasRelations}}
-    data class {{ Name }}FilterInput({{#each fields }}{{#if isFieldRelational}}
+    data class {{ namePascalCase }}FilterInput({{#each fields }}{{#if isFieldRelational}}
         val {{ fieldNameCamelCase }}: {{ fieldKotlinTypeNotNullable }}? = null,{{/if}}{{/each}}
     )
 {{/if}}

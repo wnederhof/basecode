@@ -1,9 +1,9 @@
-package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
+package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 {{#each fields}}{{#if isFieldRelational}}
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Service{{/if}}{{/each}}
-import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.CREATE_{{ NAME }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}.{{ Name }}Fixtures.{{ NAME }}_FIXTURE_WITH_ID_1{{#each fields}}{{#if isFieldRelational}}
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1{{#each fields}}{{#if isFieldRelational}}
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Fixtures.{{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1{{/if}}{{/each}}
 import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.verify
@@ -20,182 +20,182 @@ import com.nhaarman.mockitokotlin2.times{{/if}}
 import java.util.*
 
 @ExtendWith(MockitoExtension::class)
-internal class {{ Name }}ServiceUnitTests {
+internal class {{ namePascalCase }}ServiceUnitTests {
 
     @Mock
     private lateinit var applicationEventPublisher: ApplicationEventPublisher
 
     @Mock
-    private lateinit var {{ name }}Repository: {{ Name }}Repository
+    private lateinit var {{ nameCamelCase }}Repository: {{ namePascalCase }}Repository
 {{#each fields}}{{#if isFieldRelational}}
     @Mock
     private lateinit var {{ fieldTypeCamelCase }}Service: {{ fieldTypePascalCase }}Service
 {{/if}}{{/each}}
     @InjectMocks
-    private lateinit var {{ name }}Service: {{ Name }}Service
+    private lateinit var {{ nameCamelCase }}Service: {{ namePascalCase }}Service
 
     @Test
-    fun `findAll returns the values of findAll in {{ Name }}Repository`() {
-        whenever({{ name }}Repository.findAll())
-            .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
+    fun `findAll returns the values of findAll in {{ namePascalCase }}Repository`() {
+        whenever({{ nameCamelCase }}Repository.findAll())
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
-        val actual = {{ name }}Service.findAll()
+        val actual = {{ nameCamelCase }}Service.findAll()
 
-        assertThat(actual).containsExactly({{ NAME }}_FIXTURE_WITH_ID_1)
+        assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
     }
 
     @Test
     fun `findAll returns the values of findAll in CommentRepository when filter is empty`() {
-        whenever({{ name }}Repository.findAll())
-            .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
+        whenever({{ nameCamelCase }}Repository.findAll())
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
-        val actual = {{ name }}Service.findAll({{#if hasRelations}}{{ Name }}.{{ Name }}FilterInput(){{/if}})
+        val actual = {{ nameCamelCase }}Service.findAll({{#if hasRelations}}{{ namePascalCase }}.{{ namePascalCase }}FilterInput(){{/if}})
 
-        assertThat(actual).containsExactly({{ NAME }}_FIXTURE_WITH_ID_1)
+        assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
     }
 {{#each fields}}{{#if isFieldRelational}}
     @Test
     fun `findAll delegates to findBy{{fieldNamePascalCase}} when filter only contains {{fieldNameCamelCase}}`() {
-        whenever({{ name }}Repository.findBy{{fieldNamePascalCase}}(1))
-            .thenReturn(listOf({{ NAME }}_FIXTURE_1))
+        whenever({{ nameCamelCase }}Repository.findBy{{fieldNamePascalCase}}(1))
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_1))
 
-        val actual = {{ name }}Service.findAll({{ Name }}.{{ Name }}FilterInput({{fieldNameCamelCase}} = 1))
+        val actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}.{{ namePascalCase }}FilterInput({{fieldNameCamelCase}} = 1))
 
-        assertThat(actual).containsExactly({{ NAME }}_FIXTURE_1)
+        assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_1)
     }
 {{/if}}{{/each}}
     @Test
-    fun `findById returns the contained value of findById in {{ Name }}Repository if it is non-empty`() {
-        whenever({{ name }}Repository.findById(1))
-            .thenReturn(Optional.of({{ NAME }}_FIXTURE_WITH_ID_1))
+    fun `findById returns the contained value of findById in {{ namePascalCase }}Repository if it is non-empty`() {
+        whenever({{ nameCamelCase }}Repository.findById(1))
+            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
-        val actual = {{ name }}Service.findById(1)
+        val actual = {{ nameCamelCase }}Service.findById(1)
 
-        assertThat(actual).isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
+        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
     }
 {{#each fields}}{{#if isFieldRelational}}
     @Test
     fun `findBy{{fieldNamePascalCase}} returns the contents of the corresponding repository call`() {
-        whenever({{ name }}Repository.findBy{{ fieldNamePascalCase }}(1))
-            .thenReturn(listOf({{ NAME }}_FIXTURE_WITH_ID_1))
+        whenever({{ nameCamelCase }}Repository.findBy{{ fieldNamePascalCase }}(1))
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
-        val actual = {{ name }}Service.findBy{{ fieldNamePascalCase }}(1)
+        val actual = {{ nameCamelCase }}Service.findBy{{ fieldNamePascalCase }}(1)
 
         assertThat(actual).isEqualTo(actual)
     }
 {{/if}}{{/each}}
     @Test
-    fun `findById returns null if findById in {{ Name }}Repository yields an empty Optional`() {
-        whenever({{ name }}Repository.findById(1))
+    fun `findById returns null if findById in {{ namePascalCase }}Repository yields an empty Optional`() {
+        whenever({{ nameCamelCase }}Repository.findById(1))
             .thenReturn(Optional.empty())
 
-        val actual = {{ name }}Service.findById(1)
+        val actual = {{ nameCamelCase }}Service.findById(1)
 
         assertThat(actual).isNull()
     }
 
     @Test
     fun `create calls save on repository if all requirements are met`() {
-        whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
-            .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
+        whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_FIXTURE_1))
+            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 {{#each fields}}{{#if isFieldRelational}}
-        whenever({{ fieldTypeCamelCase }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
+        whenever({{ fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
             .thenReturn({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 {{/if}}{{/each}}
-        val actual = {{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1)
+        val actual = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
 
-        assertThat(actual).isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
+        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
     }
 {{#if hasRelations}}
     @Test
     fun `create fails when related objects cannot be found`() { {{#each fields}}{{#if isFieldRelational}}
-        whenever({{ fieldTypeCamelCase }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
+        whenever({{ fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
             .thenReturn(null)
 {{/if}}{{/each}}
         assertThrows<RuntimeException> {
-            {{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1)
+            {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
         }
 
-        verify({{ name }}Repository, times(0)).save({{ NAME }}_FIXTURE_1)
+        verify({{ nameCamelCase }}Repository, times(0)).save({{ nameScreamingSnakeCase }}_FIXTURE_1)
     }
 {{/if}}
     @Test
-    fun `create publishes a Before{{ Name }}CreatedEvent before saving`() {
-        whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
-            .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
+    fun `create publishes a Before{{ namePascalCase }}CreatedEvent before saving`() {
+        whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_FIXTURE_1))
+            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 {{#each fields}}{{#if isFieldRelational}}
-        whenever({{ fieldTypeCamelCase }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
+        whenever({{ fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
             .thenReturn({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 {{/if}}{{/each}}
-        val actual = {{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1)
+        val actual = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
 
-        assertThat(actual).isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
+        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
-        val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
+        val inOrder = inOrder(applicationEventPublisher, {{ nameCamelCase }}Repository)
 
         inOrder
             .verify(applicationEventPublisher)
-            .publishEvent({{ Name }}Event.Before{{ Name }}CreatedEvent({{ name }}Service, {{ NAME }}_FIXTURE_1))
+            .publishEvent({{ namePascalCase }}Event.Before{{ namePascalCase }}CreatedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_1))
         inOrder
-            .verify({{ name }}Repository)
-            .save({{ NAME }}_FIXTURE_1)
+            .verify({{ nameCamelCase }}Repository)
+            .save({{ nameScreamingSnakeCase }}_FIXTURE_1)
     }
 
     @Test
-    fun `create publishes an After{{ Name }}CreatedEvent after saving`() {
-        whenever({{ name }}Repository.save({{ NAME }}_FIXTURE_1))
-            .thenReturn({{ NAME }}_FIXTURE_WITH_ID_1)
+    fun `create publishes an After{{ namePascalCase }}CreatedEvent after saving`() {
+        whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_FIXTURE_1))
+            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 {{#each fields}}{{#if isFieldRelational}}
-        whenever({{ fieldTypeCamelCase }}Service.findById({{ NAME }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
+        whenever({{ fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
             .thenReturn({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 {{/if}}{{/each}}
-        val actual = {{ name }}Service.create(CREATE_{{ NAME }}_FIXTURE_1)
+        val actual = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
 
-        assertThat(actual).isEqualTo({{ NAME }}_FIXTURE_WITH_ID_1)
+        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
-        val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
+        val inOrder = inOrder(applicationEventPublisher, {{ nameCamelCase }}Repository)
 
         inOrder
-            .verify({{ name }}Repository)
-            .save({{ NAME }}_FIXTURE_1)
+            .verify({{ nameCamelCase }}Repository)
+            .save({{ nameScreamingSnakeCase }}_FIXTURE_1)
         inOrder
             .verify(applicationEventPublisher)
-            .publishEvent({{ Name }}Event.After{{ Name }}CreatedEvent({{ name }}Service, {{ NAME }}_FIXTURE_WITH_ID_1))
+            .publishEvent({{ namePascalCase }}Event.After{{ namePascalCase }}CreatedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
     }
 
     @Test
-    fun `deleteById deletes the {{ Name }} identified by id in the repository`() {
-        {{ name }}Service.deleteById(1)
+    fun `deleteById deletes the {{ namePascalCase }} identified by id in the repository`() {
+        {{ nameCamelCase }}Service.deleteById(1)
 
-        verify({{ name }}Repository).deleteById(1)
+        verify({{ nameCamelCase }}Repository).deleteById(1)
     }
 
     @Test
-    fun `deleteById publishes a Before{{ Name }}DeletedEvent before deletion`() {
-        {{ name }}Service.deleteById(1)
+    fun `deleteById publishes a Before{{ namePascalCase }}DeletedEvent before deletion`() {
+        {{ nameCamelCase }}Service.deleteById(1)
 
-        val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
+        val inOrder = inOrder(applicationEventPublisher, {{ nameCamelCase }}Repository)
 
         inOrder
             .verify(applicationEventPublisher)
-            .publishEvent({{ Name }}Event.Before{{ Name }}DeletedEvent({{ name }}Service, 1))
+            .publishEvent({{ namePascalCase }}Event.Before{{ namePascalCase }}DeletedEvent({{ nameCamelCase }}Service, 1))
         inOrder
-            .verify({{ name }}Repository)
+            .verify({{ nameCamelCase }}Repository)
             .deleteById(1)
     }
 
     @Test
-    fun `deleteById publishes an After{{ Name }}DeletedEvent after deletion`() {
-        {{ name }}Service.deleteById(1)
+    fun `deleteById publishes an After{{ namePascalCase }}DeletedEvent after deletion`() {
+        {{ nameCamelCase }}Service.deleteById(1)
 
-        val inOrder = inOrder(applicationEventPublisher, {{ name }}Repository)
+        val inOrder = inOrder(applicationEventPublisher, {{ nameCamelCase }}Repository)
 
         inOrder
-            .verify({{ name }}Repository)
+            .verify({{ nameCamelCase }}Repository)
             .deleteById(1)
         inOrder
             .verify(applicationEventPublisher)
-            .publishEvent({{ Name }}Event.After{{ Name }}DeletedEvent({{ name }}Service, 1))
+            .publishEvent({{ namePascalCase }}Event.After{{ namePascalCase }}DeletedEvent({{ nameCamelCase }}Service, 1))
     }
 
 }

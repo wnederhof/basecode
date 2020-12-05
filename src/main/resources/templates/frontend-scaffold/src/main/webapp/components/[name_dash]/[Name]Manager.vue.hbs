@@ -1,68 +1,68 @@
 {{=<% %>=}}<template>
   <div>
-    <<%Name%>List
-      ref="<%name%>List"
-      @edit:<%name%>="openForm"
+    <<%namePascalCase%>List
+      ref="<%nameCamelCase%>List"
+      @edit:<%nameCamelCase%>="openForm"
     />
 
     <button
       ref="openNewFormBtn"
       @click="openNewForm"
     >
-      New <%Name%>
+      New <%namePascalCase%>
     </button>
 
     <h2
-      v-if="<%name%>FormVisible && !selected<%Name%>Id"
-      ref="new<%Name%>Header"
+      v-if="<%nameCamelCase%>FormVisible && !selected<%namePascalCase%>Id"
+      ref="new<%namePascalCase%>Header"
     >
-      New <%Name%>
+      New <%namePascalCase%>
     </h2>
 
     <h2
-      v-if="<%name%>FormVisible && selected<%Name%>Id"
-      ref="edit<%Name%>Header"
+      v-if="<%nameCamelCase%>FormVisible && selected<%namePascalCase%>Id"
+      ref="edit<%namePascalCase%>Header"
     >
-      Edit <%Name%> {{ selected<%Name%>Id }}
+      Edit <%namePascalCase%> {{ selected<%namePascalCase%>Id }}
     </h2>
 
-    <<%Name%>Form
-      v-if="<%name%>FormVisible"
-      ref="<%name%>Form"
-      :key="selected<%Name%>Id"
-      :<%name_dash%>-id="selected<%Name%>Id"
-      @save:<%name%>="closeForm"
-      @close:<%name%>Form="closeForm"
+    <<%namePascalCase%>Form
+      v-if="<%nameCamelCase%>FormVisible"
+      ref="<%nameCamelCase%>Form"
+      :key="selected<%namePascalCase%>Id"
+      :<%nameKebabCase%>-id="selected<%namePascalCase%>Id"
+      @save:<%nameCamelCase%>="closeForm"
+      @close:<%nameCamelCase%>Form="closeForm"
     />
   </div>
 </template>
 
 <script lang="ts">
-import <%Name%>List from '@/components/<%name_dash%>/<%Name%>List.vue'
-import <%Name%>Form from '@/components/<%name_dash%>/<%Name%>Form.vue'
+import <%namePascalCase%>List from '@/components/<%nameKebabCase%>/<%namePascalCase%>List.vue'
+import <%namePascalCase%>Form from '@/components/<%nameKebabCase%>/<%namePascalCase%>Form.vue'
 import Component from 'nuxt-class-component'
 import Vue from 'vue'
 
 @Component({
-  components: { <%Name%>Form, <%Name%>List }
+  components: { <%namePascalCase%>Form, <%namePascalCase%>List }
 })
-export default class <%Name%>Manager extends Vue {
-  <%name%>FormVisible = false
-  selected<%Name%>Id: number | null = null
+export default class <%namePascalCase%>Manager extends Vue {
+  <%nameCamelCase%>FormVisible = false
+  selected<%namePascalCase%>Id: number | null = null
 
-  openForm (<%name%>Id: number) {
-    this.<%name%>FormVisible = true
-    this.selected<%Name%>Id = <%name%>Id
+  openForm (<%nameCamelCase%>Id: number) {
+    this.<%nameCamelCase%>FormVisible = true
+    this.selected<%namePascalCase%>Id = <%nameCamelCase%>Id
   }
 
   openNewForm () {
-    this.<%name%>FormVisible = true
-    this.selected<%Name%>Id = null
+    this.<%nameCamelCase%>FormVisible = true
+    this.selected<%namePascalCase%>Id = null
   }
 
   closeForm () {
-    this.<%name%>FormVisible = false
-    this.selected<%Name%>Id = null
+    this.<%nameCamelCase%>FormVisible = false
+    this.selected<%namePascalCase%>Id = null
   }
 }
 </script><%={{ }}=%>

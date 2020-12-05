@@ -1,18 +1,18 @@
 {{=<% %>=}}<template>
   <div>
-    <h1>List of <%Names%></h1>
+    <h1>List of <%namePluralPascalCase%></h1>
 
-    <<%Name%>Manager />
+    <<%namePascalCase%>Manager />
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'nuxt-class-component'
-import <%Name%>Manager from '@/components/<%name_dash%>/<%Name%>Manager.vue'
+import <%namePascalCase%>Manager from '@/components/<%nameKebabCase%>/<%namePascalCase%>Manager.vue'
 
 @Component({
-  components: { <%Name%>Manager }
+  components: { <%namePascalCase%>Manager }
 })
 export default class extends Vue { }
 </script><%={{ }}=%>

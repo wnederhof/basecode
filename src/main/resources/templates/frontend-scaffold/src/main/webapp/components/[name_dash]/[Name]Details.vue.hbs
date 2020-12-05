@@ -5,16 +5,16 @@
   <div v-else-if="error">
     Unable to load component. Error message: {{ error }}
   </div>
-  <div v-else-if="<%name%>">
+  <div v-else-if="<%nameCamelCase%>">
     <table>
       <tbody>
         <tr>
           <td>Id</td>
-          <td>{{ <%name%>.id }}</td>
+          <td>{{ <%nameCamelCase%>.id }}</td>
         </tr><%#each fields%>
         <tr>
           <td><%fieldNamePascalCase%></td>
-          <td>{{ <%name%>.<%fieldNameCamelCase%> }}</td>
+          <td>{{ <%nameCamelCase%>.<%fieldNameCamelCase%> }}</td>
         </tr><%/each%>
       </tbody>
     </table>
@@ -28,10 +28,10 @@ import Component from 'nuxt-class-component'
 
 @Component({
   apollo: {
-    <%name%>: {
+    <%nameCamelCase%>: {
       query: gql`
-        query <%name%>($id: Int) {
-          <%name%>: <%name%>(id: $id) {
+        query <%nameCamelCase%>($id: Int) {
+          <%nameCamelCase%>: <%nameCamelCase%>(id: $id) {
             id<%#each fields%>
             <%fieldNameCamelCase%><%/each%>
           }
@@ -44,16 +44,16 @@ import Component from 'nuxt-class-component'
 
       variables () {
         return {
-          id: this.$props.<%name%>Id
+          id: this.$props.<%nameCamelCase%>Id
         }
       }
     }
   },
 
-  props: { <%name%>Id: [Number, String] }
+  props: { <%nameCamelCase%>Id: [Number, String] }
 })
-export default class <%Name%>Details extends Vue {
-  <%name%> = null
+export default class <%namePascalCase%>Details extends Vue {
+  <%nameCamelCase%> = null
   error = null
 }
 </script><%={{ }}=%>

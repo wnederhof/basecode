@@ -1,59 +1,59 @@
 {{=<% %>=}}<template>
   <div>
-    <h1>Show <%Name%></h1>
+    <h1>Show <%namePascalCase%></h1>
 
-    <<%Name%>Details :<%name_dash%>-id="this.$route.params.<%name%>Id" />
+    <<%namePascalCase%>Details :<%nameKebabCase%>-id="this.$route.params.<%nameCamelCase%>Id" />
 
-    <n-link to="/<%names_dash%>">
-      List of <%Names%>
+    <n-link to="/<%namePluralKebabCase%>">
+      List of <%namePluralPascalCase%>
     </n-link>
 
     <button
-      ref="edit<%Name%>Btn"
+      ref="edit<%namePascalCase%>Btn"
       @click="openForm"
     >
-      Edit <%Name%>
+      Edit <%namePascalCase%>
     </button>
 
     <h2
-      v-if="<%name%>FormVisible && selected<%Name%>Id"
-      ref="edit<%Name%>Header"
+      v-if="<%nameCamelCase%>FormVisible && selected<%namePascalCase%>Id"
+      ref="edit<%namePascalCase%>Header"
     >
-      Edit <%Name%> {{ selected<%Name%>Id }}
+      Edit <%namePascalCase%> {{ selected<%namePascalCase%>Id }}
     </h2>
 
-    <<%Name%>Form
-      v-if="<%name%>FormVisible"
-      ref="<%name%>Form"
-      :key="selected<%Name%>Id"
-      :<%name%>-id="selected<%Name%>Id"
-      @save:<%name%>="closeForm"
-      @close:<%name%>Form="closeForm"
+    <<%namePascalCase%>Form
+      v-if="<%nameCamelCase%>FormVisible"
+      ref="<%nameCamelCase%>Form"
+      :key="selected<%namePascalCase%>Id"
+      :<%nameCamelCase%>-id="selected<%namePascalCase%>Id"
+      @save:<%nameCamelCase%>="closeForm"
+      @close:<%nameCamelCase%>Form="closeForm"
     />
   </div>
 </template>
 
 <script lang="ts">
-import <%Name%>Details from '@/components/<%name_dash%>/<%Name%>Details.vue'
-import <%Name%>Form from '@/components/<%name_dash%>/<%Name%>Form.vue'
+import <%namePascalCase%>Details from '@/components/<%nameKebabCase%>/<%namePascalCase%>Details.vue'
+import <%namePascalCase%>Form from '@/components/<%nameKebabCase%>/<%namePascalCase%>Form.vue'
 import Vue from 'vue'
 import Component from 'nuxt-class-component'
 
 @Component({
-  components: { <%Name%>Details, <%Name%>Form }
+  components: { <%namePascalCase%>Details, <%namePascalCase%>Form }
 })
 export default class extends Vue {
-  <%name%>FormVisible = false
-  selected<%Name%>Id: number | null = null
+  <%nameCamelCase%>FormVisible = false
+  selected<%namePascalCase%>Id: number | null = null
 
   openForm () {
-    this.<%name%>FormVisible = true
-    this.selected<%Name%>Id = parseInt(this.$route.params.<%name%>Id)
+    this.<%nameCamelCase%>FormVisible = true
+    this.selected<%namePascalCase%>Id = parseInt(this.$route.params.<%nameCamelCase%>Id)
   }
 
   closeForm () {
-    this.<%name%>FormVisible = false
-    this.selected<%Name%>Id = null
+    this.<%nameCamelCase%>FormVisible = false
+    this.selected<%namePascalCase%>Id = null
   }
 }
 </script><%={{ }}=%>

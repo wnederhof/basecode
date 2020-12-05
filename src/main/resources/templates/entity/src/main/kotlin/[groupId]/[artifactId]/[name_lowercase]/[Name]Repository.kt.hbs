@@ -1,9 +1,9 @@
-package {{ groupId }}.{{ artifactId }}.{{ name_lowercase }}
+package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 
 import org.springframework.data.repository.CrudRepository
 
-interface {{ Name }}Repository : CrudRepository<{{ Name }}, Int>{{#if hasRelations}} {
+interface {{ namePascalCase }}Repository : CrudRepository<{{ namePascalCase }}, Int>{{#if hasRelations}} {
 {{#each fields}}{{#if isFieldRelational}}
-    fun findBy{{ fieldNamePascalCase }}({{ fieldNameCamelCase }}: Int): List<{{ Name }}>
+    fun findBy{{ fieldNamePascalCase }}({{ fieldNameCamelCase }}: Int): List<{{ namePascalCase }}>
 {{/if}}{{/each}}
 }{{/if}}

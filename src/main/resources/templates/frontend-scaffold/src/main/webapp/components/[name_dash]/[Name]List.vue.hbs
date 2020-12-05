@@ -15,28 +15,28 @@
     </thead>
     <tbody>
       <tr
-        v-for="<%name%> in <%names%>"
-        :key="<%name%>.id"
+        v-for="<%nameCamelCase%> in <%namePluralCamelCase%>"
+        :key="<%nameCamelCase%>.id"
       >
-        <td>{{ <%name%>.id }}</td><%#each fields%>
-        <td>{{ <%name%>.<%fieldNameCamelCase%> }}</td><%/each%>
+        <td>{{ <%nameCamelCase%>.id }}</td><%#each fields%>
+        <td>{{ <%nameCamelCase%>.<%fieldNameCamelCase%> }}</td><%/each%>
         <td>
-          <n-link :to="'/<%names_dash%>/' + <%name%>.id">
+          <n-link :to="'/<%namePluralKebabCase%>/' + <%nameCamelCase%>.id">
             Show
           </n-link>
           <button
-            ref="edit<%Name%>Btn"
+            ref="edit<%namePascalCase%>Btn"
             type="button"
-            @click="edit<%Name%>(<%name%>.id)"
+            @click="edit<%namePascalCase%>(<%nameCamelCase%>.id)"
           >
-            Edit <%Name%>
+            Edit <%namePascalCase%>
           </button>
           <button
-            ref="delete<%Name%>Btn"
+            ref="delete<%namePascalCase%>Btn"
             type="button"
-            @click="delete<%Name%>(<%name%>.id)"
+            @click="delete<%namePascalCase%>(<%nameCamelCase%>.id)"
           >
-            Delete <%Name%>
+            Delete <%namePascalCase%>
           </button>
         </td>
       </tr>
@@ -51,10 +51,10 @@ import gql from 'graphql-tag'
 
 @Component({
   apollo: {
-    <%names%>: {
+    <%namePluralCamelCase%>: {
       query: gql`
-        query <%names%><%#if hasRelations%>($filter: <%Name%>Filter)<%/if%> {
-          <%names%>: <%names%><%#if hasRelations%>(filter: $filter)<%/if%> {
+        query <%namePluralCamelCase%><%#if hasRelations%>($filter: <%namePascalCase%>Filter)<%/if%> {
+          <%namePluralCamelCase%>: <%namePluralCamelCase%><%#if hasRelations%>(filter: $filter)<%/if%> {
             id<%#each fields%>
             <%fieldNameCamelCase%><%/each%>
           }
@@ -77,14 +77,14 @@ import gql from 'graphql-tag'
     <%fieldNameCamelCase%>: [Number, String]<%/if%><%/each%>
   }
 })
-export default class <%Name%>List extends Vue {
-  <%names%> = null
+export default class <%namePascalCase%>List extends Vue {
+  <%namePluralCamelCase%> = null
   error = null
 
-  async delete<%Name%> (id: number) {
+  async delete<%namePascalCase%> (id: number) {
     const mutation = gql`
-      mutation delete<%Name%>($id: ID!) {
-        delete<%Name%>(id: $id)
+      mutation delete<%namePascalCase%>($id: ID!) {
+        delete<%namePascalCase%>(id: $id)
       }
     `
 
@@ -99,8 +99,8 @@ export default class <%Name%>List extends Vue {
     }
   }
 
-  edit<%Name%> (id: number) {
-    this.$emit('edit:<%name%>', id)
+  edit<%namePascalCase%> (id: number) {
+    this.$emit('edit:<%nameCamelCase%>', id)
   }
 }
 </script><%={{ }}=%>

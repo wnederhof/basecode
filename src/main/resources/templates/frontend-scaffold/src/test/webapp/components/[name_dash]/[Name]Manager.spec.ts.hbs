@@ -1,21 +1,21 @@
 {{=<% %>=}}import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import VueApollo from 'vue-apollo'
-import <%Name%>Manager from '@/components/<%name_dash%>/<%Name%>Manager.vue'
+import <%namePascalCase%>Manager from '@/components/<%nameKebabCase%>/<%namePascalCase%>Manager.vue'
 
 const localVue = createLocalVue()
 localVue.use(VueApollo)
 
-describe('<%Name%>Manager', () => {
+describe('<%namePascalCase%>Manager', () => {
   let wrapper: Wrapper<any>
 
   const createComponent = () => {
-    wrapper = shallowMount(<%Name%>Manager, {
+    wrapper = shallowMount(<%namePascalCase%>Manager, {
       localVue,
-      propsData: { <%name%>Id: 1 },
+      propsData: { <%nameCamelCase%>Id: 1 },
       stubs: {
-        <%Name%>List: true,
-        <%Name%>Form: true,
+        <%namePascalCase%>List: true,
+        <%namePascalCase%>Form: true,
         $id: true
       }
     })
@@ -30,57 +30,57 @@ describe('<%Name%>Manager', () => {
     expect(wrapper.vm).toBeTruthy()
   })
 
-  it('opens <%name%> form when new is pressed', async () => {
+  it('opens <%nameCamelCase%> form when new is pressed', async () => {
     createComponent()
     await flushPromises()
 
-    expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'new<%namePascalCase%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%namePascalCase%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).exists()).toBeFalsy()
 
     await wrapper.findComponent({ ref: 'openNewFormBtn' }).trigger('click')
 
-    expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeTruthy()
-    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: 'new<%namePascalCase%>Header' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: 'edit<%namePascalCase%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).exists()).toBeTruthy()
   })
 
-  it('opens <%name%> form when edit is pressed', async () => {
+  it('opens <%nameCamelCase%> form when edit is pressed', async () => {
     createComponent()
     await flushPromises()
 
-    expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'new<%namePascalCase%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%namePascalCase%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).exists()).toBeFalsy()
 
-    await wrapper.findComponent({ ref: '<%name%>List' }).vm.$emit('edit:<%name%>', 1)
+    await wrapper.findComponent({ ref: '<%nameCamelCase%>List' }).vm.$emit('edit:<%nameCamelCase%>', 1)
 
-    expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeTruthy()
-    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: 'new<%namePascalCase%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%namePascalCase%>Header' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).exists()).toBeTruthy()
   })
 
   it('closes when close is pressed', async () => {
     createComponent()
     await flushPromises()
 
-    await wrapper.findComponent({ ref: '<%name%>List' }).vm.$emit('edit:<%name%>', 1)
-    await wrapper.findComponent({ ref: '<%name%>Form' }).vm.$emit('close:<%name%>Form')
+    await wrapper.findComponent({ ref: '<%nameCamelCase%>List' }).vm.$emit('edit:<%nameCamelCase%>', 1)
+    await wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).vm.$emit('close:<%nameCamelCase%>Form')
 
-    expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'new<%namePascalCase%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%namePascalCase%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).exists()).toBeFalsy()
   })
 
   it('closes when save is pressed', async () => {
     createComponent()
     await flushPromises()
 
-    await wrapper.findComponent({ ref: '<%name%>List' }).vm.$emit('edit:<%name%>', 1)
-    await wrapper.findComponent({ ref: '<%name%>Form' }).vm.$emit('save:<%name%>')
+    await wrapper.findComponent({ ref: '<%nameCamelCase%>List' }).vm.$emit('edit:<%nameCamelCase%>', 1)
+    await wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).vm.$emit('save:<%nameCamelCase%>')
 
-    expect(wrapper.findComponent({ ref: 'new<%Name%>Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: 'edit<%Name%>Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: '<%name%>Form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'new<%namePascalCase%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'edit<%namePascalCase%>Header' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).exists()).toBeFalsy()
   })
 })<%={{ }}=%>

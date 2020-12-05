@@ -1,19 +1,19 @@
 extend type Query {
-    {{ name }}(id: Int): {{ Name }}
-    {{ names }}{{#if hasRelations}}(filter: {{ Name }}Filter){{/if}}: [{{ Name }}!]!
+    {{ nameCamelCase }}(id: Int): {{ namePascalCase }}
+    {{ namePluralCamelCase }}{{#if hasRelations}}(filter: {{ namePascalCase }}Filter){{/if}}: [{{ namePascalCase }}!]!
 }
 
 extend type Mutation {
-    create{{ Name }}(input: Create{{ Name }}Input!): {{ Name }}!
-    update{{ Name }}(id: ID!, input: Update{{ Name }}Input!): {{ Name }}
-    delete{{ Name }}(id: ID!): Boolean!
+    create{{ namePascalCase }}(input: Create{{ namePascalCase }}Input!): {{ namePascalCase }}!
+    update{{ namePascalCase }}(id: ID!, input: Update{{ namePascalCase }}Input!): {{ namePascalCase }}
+    delete{{ namePascalCase }}(id: ID!): Boolean!
 }
 {{#each fields }}{{#if isFieldRelational}}
 extend type {{ fieldTypePascalCase }} {
-    {{ names }}: [{{ Name }}!]!
+    {{ namePluralCamelCase }}: [{{ namePascalCase }}!]!
 }
 {{/if}}{{/each}}
-type {{ Name }} {
+type {{ namePascalCase }} {
     id: ID!{{#each fields }}
     {{ fieldNameCamelCase }}: {{ graphQLFieldType }}{{/each}}{{#each fields }}{{#if isFieldRelational}}
     {{ fieldTypeCamelCase }}: {{ fieldTypePascalCase }}{{/if}}{{/each}}
@@ -21,16 +21,16 @@ type {{ Name }} {
     updatedAt: Date
 }
 {{#if hasRelations}}
-input {{ Name }}Filter {
+input {{ namePascalCase }}Filter {
     id: ID{{#each fields }}{{#if isFieldRelational}}
     {{ fieldNameCamelCase }}: Int{{/if}}{{/each}}
 }
 {{/if}}
-input Create{{ Name }}Input { {{#each fields }}
+input Create{{ namePascalCase }}Input { {{#each fields }}
     {{ fieldNameCamelCase }}: {{ graphQLFieldType }}{{/each}}
 }
 
-input Update{{ Name }}Input { {{#each fields }}
+input Update{{ namePascalCase }}Input { {{#each fields }}
     {{ fieldNameCamelCase }}: {{ nullableGraphQLFieldType }}{{/each}}{{#each fields }}{{#if isFieldNullable}}
     nullify{{ fieldNamePascalCase }}: Boolean{{/if}}{{/each}}
 }

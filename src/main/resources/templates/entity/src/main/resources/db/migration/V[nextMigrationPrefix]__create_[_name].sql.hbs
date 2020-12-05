@@ -1,4 +1,4 @@
-CREATE TABLE {{ _names }} (
+CREATE TABLE {{ namePluralSnakeCase }} (
     id SERIAL PRIMARY KEY{{#each fields}},
     {{ fieldNameSnakeCase }} {{ fieldDatabaseDefinitionType }}{{/each}},
     created_at TIMESTAMP,

@@ -7,13 +7,13 @@
   </div>
   <form
     v-else
-    ref="<%name%>Form"
-    @submit.prevent="save<%Name%>"
+    ref="<%nameCamelCase%>Form"
+    @submit.prevent="save<%namePascalCase%>"
   >
     <input
-      v-if="<%name%>.id"
+      v-if="<%nameCamelCase%>.id"
       :id="$id('id')"
-      v-model="<%name%>.id"
+      v-model="<%nameCamelCase%>.id"
       type="hidden"
     >
 <%#each fields%>
@@ -22,25 +22,25 @@
       <input
         :id="$id('<%fieldNameCamelCase%>')"
         ref="<%fieldNameCamelCase%>Input"
-        v-model="<%name%>.<%fieldNameCamelCase%>"
+        v-model="<%nameCamelCase%>.<%fieldNameCamelCase%>"
         type="<%fieldHtmlInputType%>"<%#unless isFieldNullable%><%#if isString%>
         required<%/if%><%/unless%>
       ><%else%>
       <textarea
         :id="$id('<%fieldNameCamelCase%>')"
         ref="<%fieldNameCamelCase%>Input"
-        v-model="<%name%>.<%fieldNameCamelCase%>"<%#unless isFieldNullable%><%#if isString%>
+        v-model="<%nameCamelCase%>.<%fieldNameCamelCase%>"<%#unless isFieldNullable%><%#if isString%>
         required<%/if%><%/unless%>
       ></textarea><%/unless%>
     </div><%/each%>
     <div>
-      <button>Save <%Name%></button>
+      <button>Save <%namePascalCase%></button>
       <button
         ref="cancelBtn"
         type="button"
         @click="close"
       >
-        Close <%Name%>
+        Close <%namePascalCase%>
       </button>
     </div>
   </form>
@@ -53,10 +53,10 @@ import gql from 'graphql-tag'
 
 @Component({
   apollo: {
-    <%name%>: {
+    <%nameCamelCase%>: {
       query: gql`
-        query <%name%>($id: Int) {
-          <%name%>: <%name%>(id: $id) {
+        query <%nameCamelCase%>($id: Int) {
+          <%nameCamelCase%>: <%nameCamelCase%>(id: $id) {
             id<%#each fields%>
             <%fieldNameCamelCase%><%/each%>
           }
@@ -69,50 +69,50 @@ import gql from 'graphql-tag'
 
       variables () {
         return {
-          id: this.$props.<%name%>Id
+          id: this.$props.<%nameCamelCase%>Id
         }
       },
 
       skip () {
-        return !this.$props.<%name%>Id
+        return !this.$props.<%nameCamelCase%>Id
       },
 
       result ({ data }) {
-        this.<%name%> = Object.assign({}, data.<%name%>)
+        this.<%nameCamelCase%> = Object.assign({}, data.<%nameCamelCase%>)
       }
     }
   },
 
-  props: { <%name%>Id: [Number, String] }
+  props: { <%nameCamelCase%>Id: [Number, String] }
 })
-export default class <%Name%>Form extends Vue {
-  <%name%> = {
+export default class <%namePascalCase%>Form extends Vue {
+  <%nameCamelCase%> = {
     id: null,<%#each fields%><%fieldNameCamelCase%>: <%#if isFieldNullable%>''<%else%>null<%/if%>,
   <%/each%>}
   error = null
 
-  async save<%Name%> () {
-    if (this.<%name%>.id) {
-      await this.update<%Name%>()
+  async save<%namePascalCase%> () {
+    if (this.<%nameCamelCase%>.id) {
+      await this.update<%namePascalCase%>()
     } else {
-      await this.create<%Name%>()
+      await this.create<%namePascalCase%>()
     }
   }
 
   private async updateCompany() {
     const mutation = gql`
-      mutation save<%Name%>($id: ID!, $input: Update<%Name%>Input!) {
-        update<%Name%>(id: $id, input: $input) {
+      mutation save<%namePascalCase%>($id: ID!, $input: Update<%namePascalCase%>Input!) {
+        update<%namePascalCase%>(id: $id, input: $input) {
           id<%#each fields%>
           <%fieldNameCamelCase%><%/each%>
         }
       }
     `
 
-    const <%name%>Input: any = Object.assign({}, this.<%name%>)
-    delete <%name%>Input.__typename
+    const <%nameCamelCase%>Input: any = Object.assign({}, this.<%nameCamelCase%>)
+    delete <%nameCamelCase%>Input.__typename
 
-    const { id, ...input } = <%name%>Input
+    const { id, ...input } = <%nameCamelCase%>Input
 
     await this.$apollo.mutate({
       mutation,
@@ -122,33 +122,33 @@ export default class <%Name%>Form extends Vue {
       }
     })
 
-    this.$emit('save:<%name%>', this.<%name%>)
+    this.$emit('save:<%nameCamelCase%>', this.<%nameCamelCase%>)
   }
 
   private async createCompany() {
     const mutation = gql`
-      mutation save<%Name%>($input: Create<%Name%>Input!) {
-        create<%Name%>(input: $input) { id }
+      mutation save<%namePascalCase%>($input: Create<%namePascalCase%>Input!) {
+        create<%namePascalCase%>(input: $input) { id }
       }
     `
 
-    const <%name%>Input: any = Object.assign({}, this.<%name%>)
-    delete <%name%>Input.id
-    delete <%name%>Input.__typename
+    const <%nameCamelCase%>Input: any = Object.assign({}, this.<%nameCamelCase%>)
+    delete <%nameCamelCase%>Input.id
+    delete <%nameCamelCase%>Input.__typename
 
     await this.$apollo.mutate({
       mutation,
-      variables: { input: <%name%>Input },
+      variables: { input: <%nameCamelCase%>Input },
       update: () => {
         this.$apollo.getClient().resetStore()
       }
     })
 
-    this.$emit('save:<%name%>', this.<%name%>)
+    this.$emit('save:<%nameCamelCase%>', this.<%nameCamelCase%>)
   }
 
   close () {
-    this.$emit('close:<%name%>Form')
+    this.$emit('close:<%nameCamelCase%>Form')
   }
 }
 </script><%={{ }}=%>
