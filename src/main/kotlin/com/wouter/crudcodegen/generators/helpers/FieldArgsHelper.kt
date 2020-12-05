@@ -8,7 +8,6 @@ class FieldArgsHelper {
 
     fun mapArgsToEntityFields(args: List<String>): List<EntityField> {
         return args
-                .drop(1)
                 .map { it.split(":") }
                 .map { EntityField.fromUserInput(it[0], it[1]) }
     }

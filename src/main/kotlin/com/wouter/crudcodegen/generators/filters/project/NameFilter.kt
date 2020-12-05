@@ -16,6 +16,7 @@ class NameFilter(
                 Variable("nameCamelCase", nameHelper.toLowerCamelCase(name)),
                 Variable("namePascalCase", nameHelper.toUpperCamelCase(name)),
                 Variable("namePluralCamelCase", nameHelper.pluralize(nameHelper.toLowerCamelCase(name))),
+                Variable("nameSnakeCase", nameHelper.toDuckName(name)),
                 Variable("nameLowerCase", name.toLowerCase()),
                 Variable("namePluralPascalCase", nameHelper.pluralize(nameHelper.toUpperCamelCase(name))),
                 Variable("namePluralSnakeCase", nameHelper.pluralize(nameHelper.toDuckName(name))),

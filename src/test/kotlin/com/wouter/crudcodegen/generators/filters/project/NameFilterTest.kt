@@ -30,7 +30,7 @@ class NameFilterTest {
 
         val actual = nameFilter.enrichProperties(settings)
 
-        assertThat(actual).hasSize(9)
+        assertThat(actual).hasSize(10)
 
         assertThat(actual.single { it.name == "nameCamelCase"}.value).isEqualTo("projectManager")
         assertThat(actual.single { it.name == "namePascalCase"}.value).isEqualTo("ProjectManager")

@@ -8,10 +8,10 @@ sealed class EntityField(
         val isFieldRelational: Boolean
 ) {
 
-    class PrimitiveEntityField(_name: String, val entityType: EntityType)
+    data class PrimitiveEntityField(private val _name: String, val entityType: EntityType)
         : EntityField(_name, entityType.isNullable, false)
 
-    class RelationalEntityField(_name: String, val typeName: String)
+    data class RelationalEntityField(private val _name: String, val typeName: String)
         : EntityField(_name, false, true)
 
     companion object {
@@ -21,7 +21,7 @@ sealed class EntityField(
                 return PrimitiveEntityField(name, entityType)
             }
 
-            if (!name.first().isUpperCase()) {
+            if (!type.first().isUpperCase()) {
                 error("If the type is not a primitive, it must be an entity (which always starts with an uppercase.)")
             }
             return RelationalEntityField(name, type)

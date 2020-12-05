@@ -35,7 +35,7 @@ class VueFieldFilterTest {
         val singleActualVariable = vueFieldFilter.enrichProperties(0, settings).single()
 
         assertThat(singleActualVariable.name).isEqualTo("fieldHtmlInputType")
-        assertThat(singleActualVariable.value).isEqualTo("VARCHAR(255) NOT NULL")
+        assertThat(singleActualVariable.value).isEqualTo("text")
     }
 
     @ParameterizedTest

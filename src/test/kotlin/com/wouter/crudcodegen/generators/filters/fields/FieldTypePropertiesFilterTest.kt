@@ -37,7 +37,7 @@ class FieldTypePropertiesFilterTest {
 
     @Test
     fun `enrichProperties yields false isFieldOfTypeText if the field is not of type text`() {
-        val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.TEXT))
+        val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.INT))
 
         val actual = fieldTypePropertiesFilter.enrichProperties(0,
                 FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
@@ -47,7 +47,17 @@ class FieldTypePropertiesFilterTest {
 
     @Test
     fun `enrichProperties yields true isFieldOfTypeText if the field is of type text`() {
-        val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.NULL_DATE))
+        val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.TEXT))
+
+        val actual = fieldTypePropertiesFilter.enrichProperties(0,
+                FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
+
+        assertThat(actual.single { it.name == "isFieldOfTypeText" }.value).isEqualTo(true)
+    }
+
+    @Test
+    fun `enrichProperties yields true isFieldOfTypeText if the field is of type nullable text`() {
+        val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.NULL_TEXT))
 
         val actual = fieldTypePropertiesFilter.enrichProperties(0,
                 FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
