@@ -32,9 +32,8 @@ class {{ namePascalCase }}Service(
     }
 {{#if hasRelations}}
     private fun hasMultipleFilters(filterInput: {{ namePascalCase }}.{{ namePascalCase }}FilterInput): Boolean {
-        val filterCount = listOfNotNull(
-            filterInput.id{{#each fields as |f|}}{{#if isFieldRelational}},
-            filterInput.{{fieldNameCamelCase}}{{/if}}{{/each}}
+        val filterCount = listOfNotNull({{#each fields as |f|}}{{#if isFieldRelational}}
+            filterInput.{{fieldNameCamelCase}},{{/if}}{{/each}}
         )
 
         return filterCount.size > 1
@@ -45,7 +44,7 @@ class {{ namePascalCase }}Service(
     }
 {{/if}}{{/each}}
     fun create(create{{ namePascalCase }}Input: {{ namePascalCase }}.Create{{ namePascalCase }}Input): {{ namePascalCase }} { {{#each fields}}{{#if isFieldRelational}}
-        requireNotNull({{ fieldTypeCamelCase }}Service.findById({{ nameCamelCase }}.{{ fieldNameCamelCase }}))
+        requireNotNull({{ fieldTypeCamelCase }}Service.findById(create{{ namePascalCase }}Input.{{ fieldNameCamelCase }}))
 {{/if}}{{/each}}
         val {{ nameCamelCase }} = {{ namePascalCase }}(create{{ namePascalCase }}Input)
 
@@ -62,7 +61,7 @@ class {{ namePascalCase }}Service(
     }
 {{/if}}{{/each}}
     fun update(id: Int, update{{ namePascalCase }}Input: {{ namePascalCase }}.Update{{ namePascalCase }}Input): {{ namePascalCase }}? { {{#each fields}}{{#if isFieldRelational}}
-        requireNotNull({{ fieldTypeCamelCase }}Service.findById({{ nameCamelCase }}.{{ fieldNameCamelCase }}))
+        requireNotNull({{ fieldTypeCamelCase }}Service.findById(update{{ namePascalCase }}Input.{{ fieldNameCamelCase }}))
 {{/if}}{{/each}}
         val original{{ namePascalCase }} = {{ nameCamelCase }}Repository.findByIdOrNull(id) ?: return null
 

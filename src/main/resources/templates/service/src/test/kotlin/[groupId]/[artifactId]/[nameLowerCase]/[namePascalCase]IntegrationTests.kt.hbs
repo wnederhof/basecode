@@ -31,7 +31,7 @@ class {{ namePascalCase }}IntegrationTests : IntegrationTestContext() {
 {{/if}}
     @Test
     fun `{{ namePascalCase }}s can be created, fetched and destroyed`() { {{#each fields as |f|}}{{#if isFieldRelational}}
-        val {{ fieldTypeCamelCase }} = {{ fieldTypeCamelCase }}Repository.create({{ fieldTypeScreamingSnakeCase }}_FIXTURE_1)
+        val {{ fieldTypeCamelCase }} = {{ fieldTypeCamelCase }}Repository.save({{ fieldTypeScreamingSnakeCase }}_FIXTURE_1)
 {{/if}}{{/each}}
         val {{ nameCamelCase }} = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{{#if hasRelations}}.copy({{#each fields as |f|}}{{#if isFieldRelational}}
             {{ fieldNameCamelCase }} = {{ fieldTypeCamelCase }}.id!!,{{/if}}{{/each}}
@@ -49,10 +49,10 @@ class {{ namePascalCase }}IntegrationTests : IntegrationTestContext() {
     }
 {{#each fields as |f|}}{{#if isFieldRelational}}
     @Test
-    fun `{{ namePascalCase }}s are deleted when related {{ fieldTypePascalCases }} are deleted`() {
-{{#each fields as |f|}}{{#if isFieldRelational}}        val {{ fieldTypeCamelCase }} = {{ fieldTypeCamelCase }}Repository.create({{ fieldTypeScreamingSnakeCase }}_FIXTURE_1)
+    fun `{{ namePascalCase }}s are deleted when related {{ fieldTypePluralPascalCase }} are deleted`() {
+{{#each fields as |f|}}{{#if isFieldRelational}}        val {{ fieldTypeCamelCase }} = {{ fieldTypeCamelCase }}Repository.save({{ fieldTypeScreamingSnakeCase }}_FIXTURE_1)
 {{/if}}{{/each}}
-        val {{ nameCamelCase }} = {{ nameCamelCase }}Service.create({{ nameScreamingSnakeCase }}_FIXTURE_1.copy({{#each fields as |f|}}{{#if isFieldRelational}}
+        val {{ nameCamelCase }} = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1.copy({{#each fields as |f|}}{{#if isFieldRelational}}
             {{ fieldNameCamelCase }} = {{ fieldTypeCamelCase }}.id!!,{{/if}}{{/each}}
         ))
 

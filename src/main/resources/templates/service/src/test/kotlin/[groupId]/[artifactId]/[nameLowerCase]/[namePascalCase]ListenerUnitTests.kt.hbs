@@ -1,7 +1,6 @@
 {{#if hasRelations}}package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 
 {{#each fields as |f|}}{{#if isFieldRelational}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Event.Before{{ fieldTypePascalCase }}DeletedEvent
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypeCamelCases_lowercas }}.{{ fieldTypePascalCase }}Service
 {{/if}}{{/each}}{{#if hasRelations}}import com.nhaarman.mockitokotlin2.verify
 import org.junit.jupiter.api.Test{{/if}}
 import org.junit.jupiter.api.extension.ExtendWith
