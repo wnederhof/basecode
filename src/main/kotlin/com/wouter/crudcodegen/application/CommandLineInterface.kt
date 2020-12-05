@@ -16,7 +16,10 @@ class CommandLineInterface(
             return false
         }
 
-        if (!generatorExecutor.execute(currentPath, args[0], args.drop(1))) {
+        val generatorName = args[0]
+        val generatorArgs = args.drop(1)
+
+        if (!generatorExecutor.execute(currentPath, generatorName, generatorArgs)) {
             showSyntax()
             println("No generator accepts the \"${args[0]}\" command.")
             return false
