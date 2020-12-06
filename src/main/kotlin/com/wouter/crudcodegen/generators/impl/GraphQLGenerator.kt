@@ -26,7 +26,7 @@ class GraphQLGenerator(
             "graphql <name> (<name>:<type>)+"
 
     override fun getSyntaxDescription() =
-            "Generates a new GraphQL Schema and resolvers. Available types: string, int."
+            "Generates a new GraphQL Schema and resolvers."
 
     override fun acceptsGeneratorName(name: String) = name == "graphql"
 

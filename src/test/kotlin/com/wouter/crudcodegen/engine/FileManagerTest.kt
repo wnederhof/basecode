@@ -1,5 +1,6 @@
 package com.wouter.crudcodegen.engine
 
+import com.wouter.crudcodegen.Application
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
@@ -18,25 +19,7 @@ internal class FileManagerTest {
     // to change structurally.
 
     @Test
-    fun `There is a "new" template, but not a "new" file`() {
-        assertThat(fileManager.listTemplateDirectories(),
-                hasItem("new"))
-
-        assertThat(fileManager.listTemplateFiles(),
-                not(hasItem("new")))
-    }
-
-    @Test
-    fun `The init template has a pom file`() {
-        assertThat(fileManager.listTemplateDirectories("new"),
-                not(hasItem("pom.xml.hbs")))
-
-        assertThat(fileManager.listTemplateFiles("new"),
-                hasItem("pom.xml.hbs"))
-    }
-
-    @Test
-    fun `The contents of the "new" template pom file contains a group id`() {
+    fun `The contents of the new template pom file contains a group id`() {
         assertThat(fileManager.readTemplate("new", "pom.xml.hbs"),
                 containsString("<groupId>"))
     }
@@ -49,6 +32,7 @@ internal class FileManagerTest {
 
     @Test
     fun `All files are listed in a template using templateFileTree`() {
+        println()
         assertThat(fileManager.listTemplateFilesRecursively("new"),
                 hasItems(
                         "pom.xml.hbs",

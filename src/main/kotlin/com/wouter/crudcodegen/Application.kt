@@ -11,8 +11,12 @@ class Application(
         private val commandLineInterface: CommandLineInterface
 ): CommandLineRunner {
     override fun run(vararg args: String) {
-        commandLineInterface.interpret(File(System.getProperty("user.dir")),
-                args.toList())
+        try {
+            commandLineInterface.interpret(File(System.getProperty("user.dir")),
+                    args.toList())
+        } catch(e: IllegalStateException) {
+            println(e.message)
+        }
     }
 }
 

@@ -26,7 +26,7 @@ class FrontendScaffoldGenerator(
             "fe-scaffold <name> (<name>:<type>)+"
 
     override fun getSyntaxDescription() =
-            "Generates a barebones Nuxt Frontend CRUD. Available types: string, int."
+            "Generates a barebones Nuxt Frontend CRUD."
 
     override fun acceptsGeneratorName(name: String) = name == "frontend-scaffold"
 

@@ -26,7 +26,7 @@ class EntityGenerator(
             "entity <name> (<name>:<type>)+"
 
     override fun getSyntaxDescription() =
-            "Generates a new Entity and Migration script. Available types: string, int."
+            "Generates a new Entity and Migration script."
 
     override fun acceptsGeneratorName(name: String) = name == "entity"
 

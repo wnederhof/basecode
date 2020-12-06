@@ -16,6 +16,10 @@ sealed class EntityField(
 
     companion object {
         fun fromUserInput(name: String, type: String): EntityField {
+            if (!name.matches("^[a-z][A-Za-z0-9]*$".toRegex())) {
+                error("Field name $name should start with a lower case letter and contain only numbers and letters.")
+            }
+
             if (EntityType.values().any { it.argName == type }) {
                 val entityType = EntityType.values().single { it.argName == type }
                 return PrimitiveEntityField(name, entityType)

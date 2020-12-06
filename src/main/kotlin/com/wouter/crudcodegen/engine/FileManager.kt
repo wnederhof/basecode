@@ -1,36 +1,46 @@
 package com.wouter.crudcodegen.engine
 
+import com.wouter.crudcodegen.Application
+import org.springframework.core.io.ClassPathResource
+import org.springframework.core.io.FileSystemResource
 import org.springframework.core.io.ResourceLoader
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.stereotype.Service
 import java.io.File
 import java.io.IOException
 
 @Service
 class FileManager(private val resourceLoader: ResourceLoader) {
-    fun listTemplateDirectories(path: String = ""): List<String> {
-        return resourceLoader.getResource("templates/$path").file.listFiles()!!
-                .filter { it.isDirectory }
-                .map { it.name }
-    }
+    fun listTemplateFilesRecursively(templateName: String): List<String> {
+        val patternResolver = PathMatchingResourcePatternResolver()
+        val classPath = patternResolver.getResource("classpath:/templates/$templateName/")
 
-    fun listTemplateFiles(path: String = ""): List<String> {
-        return resourceLoader.getResource("templates/$path").file.listFiles()!!
-                .filter { !it.isDirectory }
-                .map { it.name }
-    }
+        // When templates is part of the .jar file
+        val classPathFileNames = patternResolver
+                .getResources("classpath:/templates/$templateName/**")
+                .filterIsInstance<ClassPathResource>()
+                .filter { !it.path.endsWith("/") }
+                .map { it.path.substring((classPath as ClassPathResource).path.length) }
 
-    fun listTemplateFilesRecursively(templateName: String, path: String = ""): List<String> {
-        val templateFiles = listTemplateFiles("$templateName/$path")
-        val templateDirectories = listTemplateDirectories("$templateName/$path")
-        val nestedFiles = templateDirectories
-                .map { if (path == "") it else "$path/$it" }
-                .flatMap { listTemplateFilesRecursively(templateName, it) }
+        val resourcesRootPath = Application::class.java.protectionDomain.codeSource.location.path
+        val templatesDirectory = resourcesRootPath + "templates/$templateName/"
 
-        return templateFiles.map { if (path == "") it else "$path/$it" } + nestedFiles
+        // When using e.g. in the IDE
+        val fileSystemFileNames = patternResolver
+                .getResources("classpath:/templates/$templateName/**")
+                .filterIsInstance<FileSystemResource>()
+                .filter { !it.file.isDirectory }
+                .onEach { check(it.path.startsWith(templatesDirectory)) }
+                .map { it.path.substring(templatesDirectory.length) }
+
+        return classPathFileNames + fileSystemFileNames
     }
 
     fun readTemplate(templateName: String, path: String): String {
-        return resourceLoader.getResource("templates/$templateName/$path").file.readText()
+        return resourceLoader.getResource("classpath:/templates/$templateName/$path")
+                .inputStream
+                .readAllBytes()
+                .let { String(it) }
     }
 
     fun createTargetDirectory(root: File, path: String) {
@@ -44,9 +54,10 @@ class FileManager(private val resourceLoader: ResourceLoader) {
         }
         val directories = targetPath.split("/").dropLast(1).joinToString("/")
         File("${root.path}/$directories").mkdirs()
-        resourceLoader.getResource("templates/$templateName/$templatePath")
-                .file
-                .copyTo(File("${root.path}/$targetPath"))
+        resourceLoader.getResource("classpath:/templates/$templateName/$templatePath")
+                .inputStream
+                .readAllBytes()
+                .let { File("${root.path}/$targetPath").writeBytes(it) }
                 .also { println("[F] $targetPath") }
     }
 
@@ -56,7 +67,7 @@ class FileManager(private val resourceLoader: ResourceLoader) {
         }
         val directories = path.split("/").dropLast(1).joinToString("/")
         File("${root.path}/$directories").mkdirs()
-        File("${root.path }/$path").writeText(content)
+        File("${root.path}/$path").writeText(content)
     }
 
     fun readTargetFile(root: File, path: String): String? {
