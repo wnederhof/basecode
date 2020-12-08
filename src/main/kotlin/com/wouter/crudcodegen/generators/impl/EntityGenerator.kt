@@ -10,5 +10,5 @@ import picocli.CommandLine.Command
     mixinStandardHelpOptions = true
 )
 class EntityGenerator: AbstractFieldBasedGenerator() {
-    override val templateName: String = "entity"
+    override val templateNames = listOf("entity")
 }

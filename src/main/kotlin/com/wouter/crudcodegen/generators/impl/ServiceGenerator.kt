@@ -10,5 +10,5 @@ import picocli.CommandLine.Command
     mixinStandardHelpOptions = true
 )
 class ServiceGenerator: AbstractFieldBasedGenerator() {
-    override val templateName: String = "service"
+    override val templateNames = listOf("service")
 }

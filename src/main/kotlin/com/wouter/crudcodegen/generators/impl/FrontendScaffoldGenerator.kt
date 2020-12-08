@@ -6,9 +6,9 @@ import picocli.CommandLine.Command
 @Component
 @Command(
     name = "fe-scaffold",
-    description = ["Generates a frontend scaffold according to the specified entity."],
+    description = ["Generates frontend scaffold according to the specified entity."],
     mixinStandardHelpOptions = true
 )
-class FrontendScaffoldGenerator: AbstractFieldBasedGenerator() {
-    override val templateName: String = "fe-scaffold"
+class FrontendScaffoldGenerator : AbstractFieldBasedGenerator() {
+    override val templateNames = listOf("frontend-scaffold")
 }

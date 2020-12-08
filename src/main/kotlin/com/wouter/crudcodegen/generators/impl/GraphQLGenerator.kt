@@ -10,5 +10,5 @@ import picocli.CommandLine.Command
     mixinStandardHelpOptions = true
 )
 class GraphQLGenerator: AbstractFieldBasedGenerator() {
-    override val templateName: String = "graphql"
+    override val templateNames = listOf("graphql")
 }

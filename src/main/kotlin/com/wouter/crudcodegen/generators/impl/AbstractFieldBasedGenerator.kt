@@ -8,7 +8,6 @@ import com.wouter.crudcodegen.generators.filters.ProjectTemplateFilter
 import com.wouter.crudcodegen.generators.helpers.FieldArgsHelper
 import com.wouter.crudcodegen.generators.helpers.VariablesHelper
 import org.springframework.beans.factory.annotation.Autowired
-import picocli.CommandLine
 import picocli.CommandLine.Parameters
 import java.io.File
 
@@ -35,13 +34,17 @@ abstract class AbstractFieldBasedGenerator(
     @Autowired
     private lateinit var projectPropertiesManager: ProjectPropertiesManager
 
-    @Parameters(description = ["name and types"])
-    private var positionals: List<String>? = null
+    @Parameters(
+        description = ["<name> (<fieldName>:<fieldType)+ for fieldType string, int, text, date, datetime, boolean, or relation, e.g. Customer."],
+        paramLabel = "NAME AND FIELDS",
+        arity = "1.."
+    )
+    open var nameAndFields: List<String>? = null
 
-    abstract val templateName: String
+    abstract val templateNames: List<String>
 
     override fun run() {
-        val args = positionals ?: listOf()
+        val args = nameAndFields ?: listOf()
         val name = args[0]
         val targetPath = File(System.getProperty("user.dir"))
         val properties = projectPropertiesManager.readProperties(targetPath)
@@ -50,7 +53,9 @@ abstract class AbstractFieldBasedGenerator(
 
         val variables = variablesHelper.createVariables(targetPath, properties, name, fields, filters)
 
-        templateEngine.generate(targetPath, templateName, variables)
+        templateNames.forEach {
+            templateEngine.generate(targetPath, it, variables)
+        }
     }
 
 }
