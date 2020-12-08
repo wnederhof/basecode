@@ -1,44 +1,14 @@
 package com.wouter.crudcodegen.generators.impl
 
-import com.wouter.crudcodegen.generators.Generator
-import com.wouter.crudcodegen.generators.GeneratorSettings
-import com.wouter.crudcodegen.generators.ProjectProperties
-import com.wouter.crudcodegen.generators.filters.EntityTemplateFilter
-import com.wouter.crudcodegen.generators.filters.FieldTemplateFilter
-import com.wouter.crudcodegen.generators.filters.ProjectTemplateFilter
-import com.wouter.crudcodegen.generators.helpers.FieldArgsHelper
-import com.wouter.crudcodegen.generators.helpers.VariablesHelper
-import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
-import java.io.File
+import picocli.CommandLine.Command
 
 @Component
-@Order(3)
-class ServiceGenerator(
-        private val entityTemplateFilters: List<EntityTemplateFilter>,
-        private val projectTemplateFilters: List<ProjectTemplateFilter>,
-        private val fieldTemplateFilters: List<FieldTemplateFilter>,
-        private val fieldArgsHelper: FieldArgsHelper,
-        private val variablesHelper: VariablesHelper
-) : Generator {
-
-    override fun getSyntax() =
-            "service <name> (<name>:<type>)+"
-
-    override fun getSyntaxDescription() =
-            "Generates a new Entity and Migration script."
-
-    override fun acceptsGeneratorName(name: String) = name == "service"
-
-    override fun templateName() = "service"
-
-    override fun initializeGenerator(targetPath: File, properties: ProjectProperties, args: List<String>): GeneratorSettings {
-        val fields = fieldArgsHelper.mapArgsToEntityFields(args.drop(1))
-        val filters = entityTemplateFilters + projectTemplateFilters + fieldTemplateFilters
-        return GeneratorSettings(
-                updatedProperties = properties,
-                variables = variablesHelper.createVariables(targetPath, properties, args[0], fields, filters)
-        )
-    }
-
+@Command(
+    name = "service",
+    description = ["Generates a Service, Events and Event Listeners according to the specified entity."],
+    mixinStandardHelpOptions = true
+)
+class ServiceGenerator: AbstractFieldBasedGenerator() {
+    override val templateName: String = "service"
 }

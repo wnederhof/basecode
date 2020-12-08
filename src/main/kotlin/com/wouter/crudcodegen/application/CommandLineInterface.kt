@@ -1,45 +1,81 @@
 package com.wouter.crudcodegen.application
 
+import com.wouter.crudcodegen.application.CommandLineInterface.GenerateCommand
+import com.wouter.crudcodegen.application.CommandLineInterface.NewCommand
+import com.wouter.crudcodegen.engine.TemplateEngine
 import com.wouter.crudcodegen.generators.Generator
-import org.springframework.stereotype.Service
+import com.wouter.crudcodegen.generators.filters.EntityTemplateFilter
+import com.wouter.crudcodegen.generators.filters.FieldTemplateFilter
+import com.wouter.crudcodegen.generators.filters.ProjectTemplateFilter
+import com.wouter.crudcodegen.generators.helpers.VariablesHelper
+import com.wouter.crudcodegen.generators.impl.*
+import org.springframework.stereotype.Component
+import picocli.CommandLine
+import picocli.CommandLine.*
 import java.io.File
 
-@Service
-class CommandLineInterface(
-        private val generatorExecutor: GeneratorExecutor,
-        private val generators: List<Generator>
-) {
-    fun interpret(currentPath: File, args: List<String>): Boolean {
-        showAbout()
-        if (args.isEmpty()) {
-            showSyntax()
-            return false
-        }
+@Component
+@Command(
+    name = "ccg",
+    header = ["CrudCodeGen - Open Source Full Stack Code Generator", ""],
+    subcommands = [GenerateCommand::class, NewCommand::class]
+)
+class CommandLineInterface {
 
-        val generatorName = args[0]
-        val generatorArgs = args.drop(1)
+    @Option(usageHelp = true, names = ["-h", "--help"])
+    var usageHelp: Boolean = false
 
-        if (!generatorExecutor.execute(currentPath, generatorName, generatorArgs)) {
-            showSyntax()
-            println("No generator accepts the \"${args[0]}\" command.")
-            return false
-        }
-        return true
+    @Component
+    @Command(
+        name = "generate",
+        aliases = ["g"],
+        subcommands = [
+            EntityGenerator::class,
+            FrontendGenerator::class,
+            FrontendScaffoldGenerator::class,
+            GraphQLGenerator::class,
+            ServiceGenerator::class
+        ]
+    )
+    class GenerateCommand {
+
+        @Option(usageHelp = true, names = ["-h", "--help"])
+        var usageHelp: Boolean = false
+
     }
 
-    private fun showAbout() {
-        println("Crud CodeGen")
-        println("  Generate all your CRUDs in an instant!")
-        println()
-    }
+    @Component
+    @Command(
+        name = "new",
+        aliases = ["n"]
+    )
+    class NewCommand(
+        private val entityTemplateFilters: List<EntityTemplateFilter>,
+        private val projectTemplateFilters: List<ProjectTemplateFilter>,
+        private val fieldTemplateFilters: List<FieldTemplateFilter>,
+        private val variablesHelper: VariablesHelper,
+        private val templateEngine: TemplateEngine,
+        private val projectPropertiesManager: ProjectPropertiesManager
+    ) : Runnable {
 
-    private fun showSyntax() {
-        println("Syntax")
+        @Option(usageHelp = true, names = ["-h", "--help"])
+        var usageHelp: Boolean = false
 
-        generators.forEach {
-            println("  ${it.getSyntax()}")
-            println("    ${it.getSyntaxDescription()}")
-            println()
+        @Parameters(description = ["name and types"])
+        private var positionals: List<String>? = null
+
+        override fun run() {
+            val args = positionals ?: listOf()
+            val (groupId, artifactId) = args
+            val targetPath = File(System.getProperty("user.dir") + "/$artifactId")
+            targetPath.mkdirs()
+            val properties = projectPropertiesManager.readProperties(targetPath)
+                .copy(artifactId = artifactId, groupId = groupId)
+            val filters = entityTemplateFilters + projectTemplateFilters + fieldTemplateFilters
+
+            val variables = variablesHelper.createVariables(targetPath, properties, artifactId, null, filters)
+
+            templateEngine.generate(targetPath, "new", variables)
         }
     }
 }

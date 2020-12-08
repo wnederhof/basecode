@@ -2,24 +2,30 @@ package com.wouter.crudcodegen
 
 import com.wouter.crudcodegen.application.CommandLineInterface
 import org.springframework.boot.CommandLineRunner
+import org.springframework.boot.ExitCodeGenerator
+import org.springframework.boot.SpringApplication.exit
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import java.io.File
+import picocli.CommandLine
+import picocli.CommandLine.IFactory
+import kotlin.system.exitProcess
 
 @SpringBootApplication
 class Application(
-        private val commandLineInterface: CommandLineInterface
-): CommandLineRunner {
+        private val commandLineInterface: CommandLineInterface,
+        private val factory: IFactory
+): CommandLineRunner, ExitCodeGenerator {
+    private var _exitCode: Int = 0
+
     override fun run(vararg args: String) {
-        try {
-            commandLineInterface.interpret(File(System.getProperty("user.dir")),
-                    args.toList())
-        } catch(e: IllegalStateException) {
-            println(e.message)
-        }
+        _exitCode = CommandLine(commandLineInterface, factory).execute(*args)
+    }
+
+    override fun getExitCode(): Int {
+        return _exitCode
     }
 }
 
 fun main(args: Array<String>) {
-    runApplication<Application>(*args)
+    exitProcess(exit(runApplication<Application>(*args)))
 }

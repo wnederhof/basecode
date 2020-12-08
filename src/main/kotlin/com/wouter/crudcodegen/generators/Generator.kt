@@ -5,8 +5,6 @@ import java.io.File
 interface Generator {
     fun getSyntax(): String
 
-    fun getSyntaxDescription(): String
-
     fun acceptsGeneratorName(name: String): Boolean
 
     fun templateName(): String

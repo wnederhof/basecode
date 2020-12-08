@@ -48,9 +48,9 @@ internal class ScenariosIntegrationTest {
     }
 
     private fun generate(vararg args: String) {
-        if (!commandLineInterface.interpret(tempDir, args.toList())) {
-            throw RuntimeException("Interpreter failed.")
-        }
+//        if (!commandLineInterface.interpret(tempDir, args.toList())) {
+//            throw RuntimeException("Interpreter failed.")
+//        }
     }
 
     private fun executeBackendTests(tempDir: File): Boolean {
