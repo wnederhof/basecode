@@ -1,6 +1,7 @@
 package com.wouter.crudcodegen.generators.impl
 
 import com.wouter.crudcodegen.application.ProjectPropertiesManager
+import com.wouter.crudcodegen.engine.FileManager
 import com.wouter.crudcodegen.engine.TemplateEngine
 import com.wouter.crudcodegen.generators.filters.EntityTemplateFilter
 import com.wouter.crudcodegen.generators.filters.FieldTemplateFilter
@@ -24,11 +25,12 @@ class FrontendSupportGenerator(
     private val fieldArgsHelper: FieldArgsHelper,
     private val variablesHelper: VariablesHelper,
     private val templateEngine: TemplateEngine,
-    private val projectPropertiesManager: ProjectPropertiesManager
+    private val projectPropertiesManager: ProjectPropertiesManager,
+    private val fileManager: FileManager
 ) : Runnable {
 
     override fun run() {
-        val targetPath = File(System.getProperty("user.dir"))
+        val targetPath = File(fileManager.currentDir)
         val properties = projectPropertiesManager.readProperties(targetPath)
         val fields = fieldArgsHelper.mapArgsToEntityFields(listOf())
         val filters = projectTemplateFilters

@@ -11,6 +11,8 @@ import java.io.IOException
 
 @Service
 class FileManager(private val resourceLoader: ResourceLoader) {
+    var currentDir: String = System.getProperty("user.dir")
+
     fun listTemplateFilesRecursively(templateName: String): List<String> {
         val patternResolver = PathMatchingResourcePatternResolver()
         val classPath = patternResolver.getResource("classpath:/templates/$templateName/")

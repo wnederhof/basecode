@@ -2,6 +2,7 @@ package com.wouter.crudcodegen.application
 
 import com.wouter.crudcodegen.application.CommandLineInterface.GenerateCommand
 import com.wouter.crudcodegen.application.CommandLineInterface.NewCommand
+import com.wouter.crudcodegen.engine.FileManager
 import com.wouter.crudcodegen.engine.TemplateEngine
 import com.wouter.crudcodegen.generators.filters.EntityTemplateFilter
 import com.wouter.crudcodegen.generators.filters.FieldTemplateFilter
@@ -55,6 +56,7 @@ class CommandLineInterface {
         private val fieldTemplateFilters: List<FieldTemplateFilter>,
         private val variablesHelper: VariablesHelper,
         private val templateEngine: TemplateEngine,
+        private val fileManager: FileManager,
         private val projectPropertiesManager: ProjectPropertiesManager
     ) : Runnable {
 
@@ -71,7 +73,7 @@ class CommandLineInterface {
         private var artifactId: String? = null
 
         override fun run() {
-            val targetPath = File(System.getProperty("user.dir") + "/$artifactId")
+            val targetPath = File(fileManager.currentDir + "/$artifactId")
             targetPath.mkdirs()
             val properties = projectPropertiesManager.readProperties(targetPath)
                 .copy(artifactId = artifactId!!, groupId = groupId!!)

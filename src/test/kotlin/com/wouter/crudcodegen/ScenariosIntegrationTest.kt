@@ -1,6 +1,7 @@
 package com.wouter.crudcodegen
 
 import com.wouter.crudcodegen.application.CommandLineInterface
+import com.wouter.crudcodegen.engine.FileManager
 import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.jupiter.api.AfterEach
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import picocli.CommandLine
 import java.io.File
 
 // Please note that the integration tests have only been tested on MacOS.
@@ -16,11 +18,18 @@ internal class ScenariosIntegrationTest {
     @Autowired
     private lateinit var commandLineInterface: CommandLineInterface
 
+    @Autowired
+    private lateinit var factory: CommandLine.IFactory
+
+    @Autowired
+    private lateinit var fileManager: FileManager
+
     private lateinit var tempDir: File
 
     @BeforeEach
     fun setup() {
         tempDir = createTempDir("crudcodegen_")
+        fileManager.currentDir = tempDir.path
     }
 
     @AfterEach
@@ -30,27 +39,27 @@ internal class ScenariosIntegrationTest {
 
     @Test
     fun `Integration test using all features builds without test errors`() {
-        generate("new", "com.petty", "petstore")
-        generate("frontend", "petstore")
+        executeCommand("new", "com.petty", "petstore")
 
-        val ownerArgs = listOf("Owner", "name:string", "about:text", "age:int", "dateOfBirth:date", "timeOfBirth:dateTime")
-        val petArgs = listOf("Pet", "ownerId:Owner", "name:string?", "about:text?", "age:int?", "dateOfBirth:date?", "timeOfBirth:dateTime?")
+        val projectContextDir = tempDir.path + "/petstore"
 
-        listOf(ownerArgs, petArgs).map { it.toTypedArray() }.forEach { args ->
-            generate("entity", *args)
-            generate("service", *args)
-            generate("graphql", *args)
-            generate("frontend-scaffold", *args)
-        }
+        fileManager.currentDir = projectContextDir
 
-        assertThat(executeBackendTests(tempDir), equalTo(true))
-        assertThat(executeFrontendTests(tempDir), equalTo(true))
+        executeCommand("generate", "scaffold",
+            "Owner", "name:string", "about:text", "age:int", "dateOfBirth:date", "timeOfBirth:dateTime")
+
+        executeCommand("generate", "scaffold",
+            "Pet", "ownerId:Owner", "name:string?", "about:text?", "age:int?", "dateOfBirth:date?", "timeOfBirth:dateTime?")
+
+        assertThat(executeBackendTests(File(projectContextDir)), equalTo(true))
+        assertThat(executeFrontendTests(File(projectContextDir)), equalTo(true))
     }
 
-    private fun generate(vararg args: String) {
-//        if (!commandLineInterface.interpret(tempDir, args.toList())) {
-//            throw RuntimeException("Interpreter failed.")
-//        }
+    private fun executeCommand(vararg args: String) {
+        val exitCode = CommandLine(commandLineInterface, factory).execute(*args)
+        if (exitCode != 0) {
+            throw RuntimeException("Interpreter failed.")
+        }
     }
 
     private fun executeBackendTests(tempDir: File): Boolean {

@@ -1,5 +1,6 @@
 package com.wouter.crudcodegen.generators.filters.fields
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import com.wouter.crudcodegen.generators.EntityType.INT
 import com.wouter.crudcodegen.generators.filters.EntityField
@@ -33,16 +34,18 @@ class RelationalFieldTypeFilterTest {
     fun `enrichProperties yields field type in pascal, lower, camel and snake case`() {
         val fields = listOf(EntityField.RelationalEntityField("salesManId", "SalesMan"))
 
-        whenever(nameHelper.toUpperCamelCase("SalesMan")).thenCallRealMethod()
-        whenever(nameHelper.toDuckName("SalesMan")).thenCallRealMethod()
-        whenever(nameHelper.toLowerCamelCase("SalesMan")).thenCallRealMethod()
+        whenever(nameHelper.toUpperCamelCase(any())).thenCallRealMethod()
+        whenever(nameHelper.toDuckName(any())).thenCallRealMethod()
+        whenever(nameHelper.toLowerCamelCase(any())).thenCallRealMethod()
+        whenever(nameHelper.pluralize(any())).thenCallRealMethod()
 
         val actual = relationalFieldTypeFilter.enrichProperties(0,
                 FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
 
-        assertThat(actual).hasSize(4)
+        assertThat(actual).hasSize(5)
 
         assertThat(actual.single { it.name == "fieldTypePascalCase" }.value).isEqualTo("SalesMan")
+        assertThat(actual.single { it.name == "fieldTypePluralPascalCase" }.value).isEqualTo("SalesMans")
         assertThat(actual.single { it.name == "fieldTypeLowerCase" }.value).isEqualTo("salesman")
         assertThat(actual.single { it.name == "fieldTypeScreamingSnakeCase" }.value).isEqualTo("SALES_MAN")
         assertThat(actual.single { it.name == "fieldTypeCamelCase" }.value).isEqualTo("salesMan")

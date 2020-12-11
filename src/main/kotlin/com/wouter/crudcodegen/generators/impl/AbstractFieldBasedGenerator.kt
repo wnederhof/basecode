@@ -1,6 +1,7 @@
 package com.wouter.crudcodegen.generators.impl
 
 import com.wouter.crudcodegen.application.ProjectPropertiesManager
+import com.wouter.crudcodegen.engine.FileManager
 import com.wouter.crudcodegen.engine.TemplateEngine
 import com.wouter.crudcodegen.generators.filters.EntityTemplateFilter
 import com.wouter.crudcodegen.generators.filters.FieldTemplateFilter
@@ -11,8 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import picocli.CommandLine.Parameters
 import java.io.File
 
-abstract class AbstractFieldBasedGenerator(
-) : Runnable {
+abstract class AbstractFieldBasedGenerator : Runnable {
     @Autowired
     private lateinit var entityTemplateFilters: List<EntityTemplateFilter>
 
@@ -32,6 +32,9 @@ abstract class AbstractFieldBasedGenerator(
     private lateinit var templateEngine: TemplateEngine
 
     @Autowired
+    private lateinit var fileManager: FileManager
+
+    @Autowired
     private lateinit var projectPropertiesManager: ProjectPropertiesManager
 
     @Parameters(
@@ -46,7 +49,7 @@ abstract class AbstractFieldBasedGenerator(
     override fun run() {
         val args = nameAndFields ?: listOf()
         val name = args[0]
-        val targetPath = File(System.getProperty("user.dir"))
+        val targetPath = File(fileManager.currentDir)
         val properties = projectPropertiesManager.readProperties(targetPath)
         val fields = fieldArgsHelper.mapArgsToEntityFields(args.drop(1))
         val filters = entityTemplateFilters + projectTemplateFilters + fieldTemplateFilters
