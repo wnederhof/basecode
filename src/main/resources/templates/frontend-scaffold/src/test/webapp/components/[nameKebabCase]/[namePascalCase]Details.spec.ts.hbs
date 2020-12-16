@@ -28,7 +28,7 @@ describe('<%namePascalCase%>Details', () => {
       data: {
         <%nameCamelCase%>: {
           id: 1<%#each fields%>,
-          <%fieldNameCamelCase%>: 'Some <%fieldNamePascalCase%>'<%/each%>
+          <%fieldNameCamelCase%>: <%fieldVueTypescriptTestValue%><%/each%>
         }
       }
     }))
@@ -62,6 +62,6 @@ describe('<%namePascalCase%>Details', () => {
     createComponent()
     await flushPromises()
 <%#each fields%>
-    expect(wrapper.text()).toContain('Some <%fieldNamePascalCase%>')<%/each%>
+    expect(wrapper.text()).toContain(<%fieldVueTypescriptTestValue%>)<%/each%>
   })
 })<%={{ }}=%>

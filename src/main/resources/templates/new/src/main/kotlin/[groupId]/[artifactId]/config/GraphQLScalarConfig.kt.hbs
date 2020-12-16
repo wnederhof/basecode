@@ -1,84 +1,30 @@
 package {{ groupId }}.{{ artifactId }}.config
 
-import graphql.language.StringValue
-import graphql.schema.*
+import {{ groupId }}.{{ artifactId }}.config.coercing.DateCoercing
+import {{ groupId }}.{{ artifactId }}.config.coercing.DateTimeCoercing
+import graphql.schema.GraphQLScalarType
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.format.DateTimeParseException
 
 @Configuration
 class GraphQLScalarConfig {
 
     @Bean
-    fun dateScalarType(): GraphQLScalarType {
-        return GraphQLScalarType.newScalar().name("Date").coercing(object : Coercing<LocalDate, String> {
-            override fun serialize(dataFetcherResult: Any): String {
-                if (dataFetcherResult !is LocalDate) {
-                    throw CoercingSerializeException("Expected a LocalDate object.")
-                }
-                return "$dataFetcherResult"
-            }
-
-            override fun parseValue(input: Any): LocalDate {
-                try {
-                    if (input is String) {
-                        return LocalDate.parse(input)
-                    }
-                    throw CoercingParseValueException("Expected a String.")
-                } catch (e: DateTimeParseException) {
-                    throw CoercingParseValueException(String.format("Not a valid date: '%s'.", input), e)
-                }
-            }
-
-            override fun parseLiteral(input: Any): LocalDate {
-                return if (input is StringValue) {
-                    try {
-                        LocalDate.parse(input.value)
-                    } catch (e: DateTimeParseException) {
-                        throw CoercingParseLiteralException(e)
-                    }
-                } else {
-                    throw CoercingParseLiteralException("Expected a StringValue.")
-                }
-            }
-        }).build()
+    fun dateScalarType(dateCoercing: DateCoercing): GraphQLScalarType {
+        return GraphQLScalarType
+            .newScalar()
+            .name("Date")
+            .coercing(dateCoercing)
+            .build()
     }
 
     @Bean
-    fun dateTimeScalarType(): GraphQLScalarType {
-        return GraphQLScalarType.newScalar().name("DateTime").coercing(object : Coercing<LocalDateTime, String> {
-            override fun serialize(dataFetcherResult: Any): String {
-                if (dataFetcherResult !is LocalDateTime) {
-                    throw CoercingSerializeException("Expected a LocalDateTime object.")
-                }
-                return "$dataFetcherResult"
-            }
-
-            override fun parseValue(input: Any): LocalDateTime {
-                try {
-                    if (input is String) {
-                        return LocalDateTime.parse(input)
-                    }
-                    throw CoercingParseValueException("Expected a String.")
-                } catch (e: DateTimeParseException) {
-                    throw CoercingParseValueException(String.format("Not a valid datetime: '%s'.", input), e)
-                }
-            }
-
-            override fun parseLiteral(input: Any): LocalDateTime {
-                return if (input is StringValue) {
-                    try {
-                        LocalDateTime.parse(input.value)
-                    } catch (e: DateTimeParseException) {
-                        throw CoercingParseLiteralException(e)
-                    }
-                } else {
-                    throw CoercingParseLiteralException("Expected a StringValue.")
-                }
-            }
-        }).build()
+    fun dateTimeScalarType(dateTimeCoercing: DateTimeCoercing): GraphQLScalarType {
+        return GraphQLScalarType
+            .newScalar()
+            .name("DateTime")
+            .coercing(dateTimeCoercing)
+            .build()
     }
 
 }

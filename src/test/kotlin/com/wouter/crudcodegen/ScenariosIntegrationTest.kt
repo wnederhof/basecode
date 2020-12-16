@@ -14,7 +14,7 @@ import java.io.File
 
 // Please note that the integration tests have only been tested on MacOS.
 @SpringBootTest
-internal class ScenariosIntegrationTest {
+class ScenariosIntegrationTest {
     @Autowired
     private lateinit var commandLineInterface: CommandLineInterface
 
@@ -46,10 +46,10 @@ internal class ScenariosIntegrationTest {
         fileManager.currentDir = projectContextDir
 
         executeCommand("generate", "scaffold",
-            "Owner", "name:string", "about:text", "age:int", "dateOfBirth:date", "timeOfBirth:dateTime")
+            "Owner", "name:string", "about:text", "age:int", "dateOfBirth:date", "timeOfBirth:datetime")
 
         executeCommand("generate", "scaffold",
-            "Pet", "ownerId:Owner", "name:string?", "about:text?", "age:int?", "dateOfBirth:date?", "timeOfBirth:dateTime?")
+            "Pet", "ownerId:Owner", "name:string_o", "about:text_o", "age:int_o", "dateOfBirth:date_o", "timeOfBirth:datetime_o")
 
         assertThat(executeBackendTests(File(projectContextDir)), equalTo(true))
         assertThat(executeFrontendTests(File(projectContextDir)), equalTo(true))

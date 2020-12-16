@@ -102,7 +102,7 @@ export default class <%namePascalCase%>Form extends Vue {
 
   private async update<%namePascalCase%>() {
     const mutation = gql`
-      mutation save<%namePascalCase%>($id: ID!, $input: Update<%namePascalCase%>Input!) {
+      mutation update<%namePascalCase%>($id: ID!, $input: Update<%namePascalCase%>Input!) {
         update<%namePascalCase%>(id: $id, input: $input) {
           id<%#each fields%>
           <%fieldNameCamelCase%><%/each%>
@@ -128,7 +128,7 @@ export default class <%namePascalCase%>Form extends Vue {
 
   private async create<%namePascalCase%>() {
     const mutation = gql`
-      mutation save<%namePascalCase%>($input: Create<%namePascalCase%>Input!) {
+      mutation create<%namePascalCase%>($input: Create<%namePascalCase%>Input!) {
         create<%namePascalCase%>(input: $input) { id }
       }
     `

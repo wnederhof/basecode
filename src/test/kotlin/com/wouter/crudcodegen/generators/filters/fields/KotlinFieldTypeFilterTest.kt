@@ -26,8 +26,10 @@ class KotlinFieldTypeFilterTest {
     fun `enrichProperties for primitives has a fixed value`() {
         val fields = listOf(EntityField.RelationalEntityField("userId", "User"))
 
-        val actual = kotlinFieldTypeFilter.enrichProperties(0,
-                FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
+        val actual = kotlinFieldTypeFilter.enrichProperties(
+            0,
+            FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        )
 
         assertThat(actual).hasSize(4)
 
@@ -38,13 +40,13 @@ class KotlinFieldTypeFilterTest {
     }
 
     @Test
-    fun `enrichProperties for primitives is based on the type`() {
+    fun `enrichProperties for relations is based on the type`() {
         whenever(nameHelper.toUpperCamelCase("about")).thenCallRealMethod()
 
         val fields = listOf(EntityField.PrimitiveEntityField("about", EntityType.NULL_TEXT))
+        val fieldTemplateSettings = FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
 
-        val actual = kotlinFieldTypeFilter.enrichProperties(0,
-                FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
+        val actual = kotlinFieldTypeFilter.enrichProperties(0, fieldTemplateSettings)
 
         assertThat(actual).hasSize(4)
 

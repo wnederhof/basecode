@@ -1,7 +1,8 @@
 package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 
 import {{ groupId }}.{{ artifactId }}.IntegrationTestContext
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{{#each fields as |f|}}{{#if isFieldRelational}}
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{{#each fields as |f|}}{{#if isFieldRelational}}
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Fixtures.{{ fieldTypeScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Repository
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Service{{/if}}{{/each}}
@@ -30,12 +31,15 @@ class {{ namePascalCase }}IntegrationTests : IntegrationTestContext() {
     }
 {{/if}}
     @Test
-    fun `{{ namePascalCase }}s can be created, fetched and destroyed`() { {{#each fields as |f|}}{{#if isFieldRelational}}
+    fun `{{ namePluralPascalCase }} can be created, fetched and destroyed`() { {{#each fields as |f|}}{{#if isFieldRelational}}
         val {{ fieldTypeCamelCase }} = {{ fieldTypeCamelCase }}Repository.save({{ fieldTypeScreamingSnakeCase }}_FIXTURE_1)
 {{/if}}{{/each}}
-        val {{ nameCamelCase }} = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{{#if hasRelations}}.copy({{#each fields as |f|}}{{#if isFieldRelational}}
+        var {{ nameCamelCase }} = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{{#if hasRelations}}.copy({{#each fields as |f|}}{{#if isFieldRelational}}
             {{ fieldNameCamelCase }} = {{ fieldTypeCamelCase }}.id!!,{{/if}}{{/each}}
         ){{/if}})
+        {{ nameCamelCase }} = {{ nameCamelCase }}Service.update({{ nameCamelCase }}.id!!, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{{#if hasRelations}}.copy({{#each fields as |f|}}{{#if isFieldRelational}}
+            {{ fieldNameCamelCase }} = {{ fieldTypeCamelCase }}.id!!,{{/if}}{{/each}}
+        )!!{{/if}})!!
 
         assertThat({{ nameCamelCase }}Service.findAll()).isNotEmpty
         assertThat({{ nameCamelCase }}Service.findById({{ nameCamelCase }}.id!!)).isNotNull

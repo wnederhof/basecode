@@ -2,6 +2,7 @@ package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1
 {{#each fields}}{{#if isFieldRelational}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Fixtures.{{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Service
@@ -65,6 +66,15 @@ class {{ namePascalCase }}ResolverUnitTests {
                 .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
             assertThat({{ nameCamelCase }}MutationResolver.create{{ namePascalCase }}(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
+                .isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+        }
+
+        @Test
+        fun `update delegates the call to the {{ namePascalCase }}Service`() {
+            whenever({{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
+                .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+
+            assertThat({{ nameCamelCase }}MutationResolver.update{{ namePascalCase }}(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
                 .isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
         }
 

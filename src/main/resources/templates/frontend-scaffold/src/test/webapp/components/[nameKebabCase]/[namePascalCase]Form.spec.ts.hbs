@@ -30,7 +30,7 @@ describe('<%namePascalCase%>Form', () => {
       data: {
         <%nameCamelCase%>: {
           id: 1<%#each fields%>,
-          <%fieldNameCamelCase%>: 'Some <%fieldNamePascalCase%>'<%/each%>
+          <%fieldNameCamelCase%>: <%fieldVueTypescriptTestValue%><%/each%>
         }
       }
     }))
@@ -69,7 +69,7 @@ describe('<%namePascalCase%>Form', () => {
     createComponent({ <%nameCamelCase%>Id: 1 })
     await flushPromises()
 <%#each fields%>
-    expect((wrapper.findComponent({ ref: '<%fieldNameCamelCase%>Input' }).element as HTMLInputElement).value).toContain('Some <%fieldNamePascalCase%>')<%/each%>
+    expect((wrapper.findComponent({ ref: '<%fieldNameCamelCase%>Input' }).element as HTMLInputElement).value).toContain(<%fieldVueTypescriptTestValue%>)<%/each%>
   })
 
   it('emits edit event when edit is clicked', async () => {
@@ -84,8 +84,8 @@ describe('<%namePascalCase%>Form', () => {
     await flushPromises()
     const queryHandler = jest.fn().mockResolvedValue(true)
     mockClient.setRequestHandler(gql`
-      mutation save<%namePascalCase%>($<%nameCamelCase%>: <%namePascalCase%>Input!) {
-        save<%namePascalCase%>(<%nameCamelCase%>: $<%nameCamelCase%>) {
+      mutation update<%namePascalCase%>($id: ID!, $input: Update<%namePascalCase%>Input!) {
+        update<%namePascalCase%>(id: $id, input: $input) {
           id<%#each fields%>
           <%fieldNameCamelCase%><%/each%>
         }

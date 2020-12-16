@@ -10,23 +10,26 @@ import org.springframework.stereotype.Component
 
 @Component
 class KotlinFieldTypeFilter(
-        private val nameHelper: NameHelper
+    private val nameHelper: NameHelper
 ) : FieldTemplateFilter {
-    override fun enrichProperties(fieldIndex: Int, settings: FieldTemplateFilter.FieldTemplateSettings): Iterable<Variable> {
+    override fun enrichProperties(
+        fieldIndex: Int,
+        settings: FieldTemplateFilter.FieldTemplateSettings
+    ): Iterable<Variable> {
         val field = settings.fields[fieldIndex]
         val testDummyValueName = nameHelper.toUpperCamelCase(field.name)
         return when (field) {
             is EntityField.RelationalEntityField -> listOf(
-                    Variable("fieldKotlinAnnotations", null),
-                    Variable("fieldKotlinType", "Int"),
-                    Variable("fieldKotlinTypeNotNullable", "Int"),
-                    Variable("fieldKotlinTestDummyValue", "10")
+                Variable("fieldKotlinAnnotations", null),
+                Variable("fieldKotlinType", "Int"),
+                Variable("fieldKotlinTypeNotNullable", "Int"),
+                Variable("fieldKotlinTestDummyValue", "10")
             )
             is EntityField.PrimitiveEntityField -> listOf(
-                    Variable("fieldKotlinAnnotations", determineKotlinAnnotations(field.entityType)),
-                    Variable("fieldKotlinType", determineKotlinTypeNullable(field.entityType)),
-                    Variable("fieldKotlinTypeNotNullable", determineKotlinType(field.entityType)),
-                    Variable("fieldKotlinTestDummyValue", determineSomeTestValue(testDummyValueName, field.entityType))
+                Variable("fieldKotlinAnnotations", determineKotlinAnnotations(field.entityType)),
+                Variable("fieldKotlinType", determineKotlinTypeNullable(field.entityType)),
+                Variable("fieldKotlinTypeNotNullable", determineKotlinType(field.entityType)),
+                Variable("fieldKotlinTestDummyValue", determineSomeTestValue(testDummyValueName, field.entityType))
             )
         }
     }

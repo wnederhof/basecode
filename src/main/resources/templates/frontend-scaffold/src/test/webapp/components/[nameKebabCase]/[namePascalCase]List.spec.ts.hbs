@@ -29,7 +29,7 @@ describe('<%namePascalCase%>List', () => {
         <%namePluralCamelCase%>: [
           {
             id: 1<%#each fields%>,
-            <%fieldNameCamelCase%>: 'Some <%fieldNamePascalCase%>'<%/each%>
+            <%fieldNameCamelCase%>: <%fieldVueTypescriptTestValue%><%/each%>
           }
         ]
       }
@@ -66,7 +66,7 @@ describe('<%namePascalCase%>List', () => {
     createComponent()
     await flushPromises()
 <%#each fields%>
-    expect(wrapper.text()).toContain('Some <%fieldNamePascalCase%>')<%/each%>
+    expect(wrapper.text()).toContain(<%fieldVueTypescriptTestValue%>)<%/each%>
   })
 
   it('emits edit event when edit is clicked', async () => {

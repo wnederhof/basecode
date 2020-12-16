@@ -38,7 +38,8 @@ abstract class AbstractFieldBasedGenerator : Runnable {
     private lateinit var projectPropertiesManager: ProjectPropertiesManager
 
     @Parameters(
-        description = ["<name> (<fieldName>:<fieldType)+ for fieldType string, int, text, date, datetime, boolean, or relation, e.g. Customer."],
+        description = ["<name> (<fieldName>:<fieldType)+ for fieldType string, int, text, date, datetime, boolean, " +
+                "or relation, e.g. Customer. Add _o for optional, e.g. string_o."],
         paramLabel = "NAME AND FIELDS",
         arity = "1.."
     )

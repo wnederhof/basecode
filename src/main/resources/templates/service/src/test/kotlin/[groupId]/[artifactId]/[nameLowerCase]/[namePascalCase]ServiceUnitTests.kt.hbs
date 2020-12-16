@@ -3,6 +3,7 @@ package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Service{{/if}}{{/each}}
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1{{#each fields}}{{#if isFieldRelational}}
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Fixtures.{{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1{{/if}}{{/each}}
 import com.nhaarman.mockitokotlin2.inOrder
@@ -161,6 +162,84 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         inOrder
             .verify(applicationEventPublisher)
             .publishEvent({{ namePascalCase }}Event.After{{ namePascalCase }}CreatedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+    }
+
+    @Test
+    fun `update calls save on repository if all requirements are met`() {
+        whenever({{ nameCamelCase }}Repository.findById(1))
+            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+
+        whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+{{#each fields}}{{#if isFieldRelational}}
+        whenever({{ fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
+            .thenReturn({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+{{/if}}{{/each}}
+        val actual = {{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
+
+        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+    }
+{{#if hasRelations}}
+    @Test
+    fun `update fails when related objects cannot be found`() { {{#each fields}}{{#if isFieldRelational}}
+        whenever({{ fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
+            .thenReturn(null)
+{{/if}}{{/each}}
+        assertThrows<RuntimeException> {
+            {{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
+        }
+
+        verify({{ nameCamelCase }}Repository, times(0)).save({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+    }
+{{/if}}
+    @Test
+    fun `update publishes a Before{{ namePascalCase }}UpdatedEvent before saving`() {
+        whenever({{ nameCamelCase }}Repository.findById(1))
+            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+
+        whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+{{#each fields}}{{#if isFieldRelational}}
+        whenever({{ fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
+            .thenReturn({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+{{/if}}{{/each}}
+        val actual = {{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
+
+        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+
+        val inOrder = inOrder(applicationEventPublisher, {{ nameCamelCase }}Repository)
+
+        inOrder
+            .verify(applicationEventPublisher)
+            .publishEvent({{ namePascalCase }}Event.Before{{ namePascalCase }}UpdatedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+        inOrder
+            .verify({{ nameCamelCase }}Repository)
+            .save({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+    }
+
+    @Test
+    fun `update publishes an After{{ namePascalCase }}UpdatedEvent after saving`() {
+        whenever({{ nameCamelCase }}Repository.findById(1))
+            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+
+        whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+{{#each fields}}{{#if isFieldRelational}}
+        whenever({{ fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
+            .thenReturn({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+{{/if}}{{/each}}
+        val actual = {{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
+
+        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+
+        val inOrder = inOrder(applicationEventPublisher, {{ nameCamelCase }}Repository)
+
+        inOrder
+            .verify({{ nameCamelCase }}Repository)
+            .save({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+        inOrder
+            .verify(applicationEventPublisher)
+            .publishEvent({{ namePascalCase }}Event.After{{ namePascalCase }}UpdatedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
     }
 
     @Test
