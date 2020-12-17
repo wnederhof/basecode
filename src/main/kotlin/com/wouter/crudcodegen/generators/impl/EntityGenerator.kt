@@ -6,6 +6,7 @@ import picocli.CommandLine.Command
 @Component
 @Command(
     name = "entity",
+    aliases = ["e"],
     description = ["Generates a new Entity and Migration script according to the specified entity."],
     mixinStandardHelpOptions = true
 )

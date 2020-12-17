@@ -14,7 +14,7 @@
 - X Clean up generator code
 - X Create proper CLI
 - Don't show field when filtering
-- Add missing/fix tests (incl. frontend filtering)
+- X Add missing/fix tests (incl. frontend filtering)
 
 ## Version 0.1.1
 - Better tests for update

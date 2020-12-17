@@ -6,6 +6,7 @@ import picocli.CommandLine.Command
 @Component
 @Command(
     name = "graphql",
+    aliases = ["g"],
     description = ["Generates GraphQL definitions and resolvers according to the specified entity."],
     mixinStandardHelpOptions = true
 )

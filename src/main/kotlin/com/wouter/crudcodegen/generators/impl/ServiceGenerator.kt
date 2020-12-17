@@ -6,6 +6,7 @@ import picocli.CommandLine.Command
 @Component
 @Command(
     name = "service",
+    aliases = ["srv"],
     description = ["Generates a Service, Events and Event Listeners according to the specified entity."],
     mixinStandardHelpOptions = true
 )

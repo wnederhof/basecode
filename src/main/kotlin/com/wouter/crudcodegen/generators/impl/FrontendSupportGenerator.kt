@@ -17,6 +17,7 @@ import java.io.File
 @Component
 @Command(
     name = "frontend-support",
+    aliases = ["fes"],
     description = ["Generates all required files for running the frontend."],
     mixinStandardHelpOptions = true
 )

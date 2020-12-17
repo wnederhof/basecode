@@ -6,6 +6,7 @@ import picocli.CommandLine.Command
 @Component
 @Command(
     name = "scaffold",
+    aliases = ["s"],
     description = ["Generates front and backend scaffold according to the specified entity."],
     mixinStandardHelpOptions = true
 )

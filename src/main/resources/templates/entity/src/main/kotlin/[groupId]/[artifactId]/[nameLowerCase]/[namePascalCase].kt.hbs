@@ -32,7 +32,7 @@ data class {{ namePascalCase }}(
     )
 
     data class Update{{ namePascalCase }}Input({{#each fields}}
-        val {{ fieldNameCamelCase }}: {{ fieldKotlinType }},{{/each}}{{#each fields}}{{#if isFieldNullable}}
+        val {{ fieldNameCamelCase }}: {{ fieldKotlinTypeNotNullable }}?,{{/each}}{{#each fields}}{{#if isFieldNullable}}
         val nullify{{ fieldNamePascalCase }}: Boolean? = null,{{/if}}{{/each}}
     )
 {{#if hasRelations}}
