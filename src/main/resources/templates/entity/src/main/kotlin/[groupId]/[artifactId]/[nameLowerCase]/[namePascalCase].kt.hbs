@@ -1,6 +1,7 @@
 package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 
-import {{ groupId }}.{{ artifactId }}.util.MergeUtil.mergeWithNullify
+import {{ groupId }}.{{ artifactId }}.util.DynamicDataTransformer.withPropertyValuesOf
+import {{ groupId }}.{{ artifactId }}.util.DynamicDataTransformer.learedProperties
 import org.springframework.data.annotation.*
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDate
@@ -19,12 +20,14 @@ data class {{ namePascalCase }}(
     val updatedAt: LocalDateTime? = null
 ) {
 
-    constructor(input: Create{{ namePascalCase }}Input) : this({{#each fields }}
-        {{fieldNameCamelCase}} = input.{{fieldNameCamelCase}},{{/each}}
-    )
+    fun withUpdate(update{{ namePascalCase }}Input: Update{{ namePascalCase }}Input) = this
+        .withPropertyValuesOf(update{{ namePascalCase }}Input)
+        .withClearedProperties((update{{ namePascalCase }}Input.deletions ?: listOf()) - "id")
 
-    fun merge(update{{ namePascalCase }}Input: Update{{ namePascalCase }}Input): {{ namePascalCase }} {
-        return this mergeWithNullify update{{ namePascalCase }}Input
+    companion object {
+        fun newInstance(input: Create{{ namePascalCase }}Input) = {{ namePascalCase }}({{#each fields }}
+            {{fieldNameCamelCase}} = input.{{fieldNameCamelCase}},{{/each}}
+        )
     }
 
     data class Create{{ namePascalCase }}Input({{#each fields}}
@@ -32,8 +35,8 @@ data class {{ namePascalCase }}(
     )
 
     data class Update{{ namePascalCase }}Input({{#each fields}}
-        val {{ fieldNameCamelCase }}: {{ fieldKotlinTypeNotNullable }}?,{{/each}}{{#each fields}}{{#if isFieldNullable}}
-        val nullify{{ fieldNamePascalCase }}: Boolean? = null,{{/if}}{{/each}}
+        val {{ fieldNameCamelCase }}: {{ fieldKotlinTypeNotNullable }}?,{{/each}}{{#if hasNullableFields}}
+        val deletions: List<String>? = null,{{/if}}
     )
 {{#if hasRelations}}
     data class {{ namePascalCase }}FilterInput({{#each fields }}{{#if isFieldRelational}}

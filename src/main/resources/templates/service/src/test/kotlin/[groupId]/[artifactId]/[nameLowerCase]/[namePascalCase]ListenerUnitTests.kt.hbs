@@ -1,9 +1,10 @@
 {{#if hasRelations}}package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 
-{{#each fields as |f|}}{{#if isFieldRelational}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Event.Before{{ fieldTypePascalCase }}DeletedEvent
-{{/if}}{{/each}}{{#if hasRelations}}import com.nhaarman.mockitokotlin2.verify
-import org.junit.jupiter.api.Test{{/if}}
-import org.junit.jupiter.api.extension.ExtendWith
+{{#each fields as |f|}}{{#if isFieldRelational}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Event.{{ fieldTypePascalCase }}DeleteEvent
+{{/if}}{{/each}}import com.nhaarman.mockitokotlin2.verify
+import org.junit.jupiter.api.Test
+{{#each fields as |f|}}{{#if isFieldRelational}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Fixtures.{{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
+{{/if}}{{/each}}import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks{{#if hasRelations}}
 import org.mockito.Mock{{/if}}
 import org.mockito.junit.jupiter.MockitoExtension
@@ -18,10 +19,10 @@ internal class {{ namePascalCase }}ListenerUnitTests{{#if hasRelations}}{
     private lateinit var {{ nameCamelCase }}Listener: {{ namePascalCase }}Listener
 {{#each fields as |f|}}{{#if isFieldRelational}}
     @Test
-    fun `deleteBefore{{ fieldTypePascalCase }}Deleted deletes related {{ namePluralPascalCase }} in Before{{ fieldTypePascalCase }}DeletedEvent`() {
-        {{ nameCamelCase }}Listener.deleteBefore{{ fieldTypePascalCase }}Deleted(Before{{ fieldTypePascalCase }}DeletedEvent(this, 1))
+    fun `When {{ fieldTypePascalCase }}DeleteEvent is triggered, related {{ namePluralPascalCase }} are deleted`() {
+        {{ nameCamelCase }}Listener.onEvent({{ fieldTypePascalCase }}DeleteEvent(this, {{ fieldTypePascalCase }}_FIXTURE_WITH_ID_1))
 
-        verify({{ nameCamelCase }}Service).deleteBy{{ fieldNamePascalCase }}(1)
+        verify({{ nameCamelCase }}Service).deleteBy{{ fieldNamePascalCase }}({{ fieldTypePascalCase }}_FIXTURE_WITH_ID_1.id!!)
     }
 {{/if}}{{/each}}
 }{{/if}}{{/if}}

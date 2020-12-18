@@ -1,17 +1,18 @@
 package {{ groupId }}.{{ artifactId }}.util
 
-import {{ groupId }}.{{ artifactId }}.util.MergeUtil.mergeWithNullify
+import {{ groupId }}.{{ artifactId }}.util.DynamicDataTransformer.withPropertyValuesOf
+import {{ groupId }}.{{ artifactId }}.util.DynamicDataTransformer.learedProperties
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 
-class MergeUtilTest {
+class DynamicDataTransformerTest {
 
     @Test
     fun mergeTestNoChanges() {
         val original = SomeDataClass(nonNullableProp = "x", nullableProp = "y")
-        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = null, nullifyNullableProp = false)
+        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = null)
 
-        val actual = original mergeWithNullify patch
+        val actual = original.withPropertyValuesOf(patch)
         val expected = SomeDataClass(nonNullableProp = "x", nullableProp = "y")
 
         assertThat(actual).isEqualTo(expected)
@@ -20,9 +21,9 @@ class MergeUtilTest {
     @Test
     fun mergeTestSimpleNonNullChange() {
         val original = SomeDataClass(nonNullableProp = "x", nullableProp = "y")
-        val patch = SomeDataClassPatch(nonNullableProp = "z", nullableProp = null, nullifyNullableProp = false)
+        val patch = SomeDataClassPatch(nonNullableProp = "z", nullableProp = null)
 
-        val actual = original mergeWithNullify patch
+        val actual = original.withPropertyValuesOf(patch)
         val expected = SomeDataClass(nonNullableProp = "z", nullableProp = "y")
 
         assertThat(actual).isEqualTo(expected)
@@ -31,9 +32,9 @@ class MergeUtilTest {
     @Test
     fun mergeTestSimpleNullableChange() {
         val original = SomeDataClass(nonNullableProp = "x", nullableProp = "y")
-        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = "z", nullifyNullableProp = false)
+        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = "z")
 
-        val actual = original mergeWithNullify patch
+        val actual = original.withPropertyValuesOf(patch)
         val expected = SomeDataClass(nonNullableProp = "x", nullableProp = "z")
 
         assertThat(actual).isEqualTo(expected)
@@ -42,9 +43,9 @@ class MergeUtilTest {
     @Test
     fun mergeTestSimpleNullableChangeNullNullify() {
         val original = SomeDataClass(nonNullableProp = "x", nullableProp = "y")
-        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = "z", nullifyNullableProp = null)
+        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = "z")
 
-        val actual = original mergeWithNullify patch
+        val actual = original.withPropertyValuesOf(patch)
         val expected = SomeDataClass(nonNullableProp = "x", nullableProp = "z")
 
         assertThat(actual).isEqualTo(expected)
@@ -53,9 +54,9 @@ class MergeUtilTest {
     @Test
     fun mergeTestSimpleNullify() {
         val original = SomeDataClass(nonNullableProp = "x", nullableProp = "y")
-        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = null, nullifyNullableProp = true)
+        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = null)
 
-        val actual = original mergeWithNullify patch
+        val actual = original.withPropertyValuesOf(patch).withClearedProperties(listOf("nullableProp"))
         val expected = SomeDataClass(nonNullableProp = "x", nullableProp = null)
 
         assertThat(actual).isEqualTo(expected)
@@ -64,9 +65,9 @@ class MergeUtilTest {
     @Test
     fun mergeTestNullifyWithNullableChange() {
         val original = SomeDataClass(nonNullableProp = "x", nullableProp = "y")
-        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = "z", nullifyNullableProp = true)
+        val patch = SomeDataClassPatch(nonNullableProp = null, nullableProp = "z")
 
-        val actual = original mergeWithNullify patch
+        val actual = original.withPropertyValuesOf(patch).withClearedProperties(listOf("nullableProp"))
         val expected = SomeDataClass(nonNullableProp = "x", nullableProp = null)
 
         assertThat(actual).isEqualTo(expected)
@@ -79,8 +80,7 @@ class MergeUtilTest {
 
     data class SomeDataClassPatch(
         val nonNullableProp: String?,
-        val nullableProp: String?,
-        val nullifyNullableProp: Boolean?
+        val nullableProp: String?
     )
 
 }

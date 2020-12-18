@@ -67,7 +67,7 @@ import gql from 'graphql-tag'
 
       variables () {<%#each fields%><%#if isFieldRelational%>
         const <%fieldNameCamelCase%> = this.$props.<%fieldNameCamelCase%><%/if%><%/each%>
-        return { filter: { <%#each fields%><%#if isFieldRelational%>, <%fieldNameCamelCase%><%/if%><%/each%> } }
+        return { filter: { <%#each fields%><%#if isFieldRelational%><%fieldNameCamelCase%>, <%/if%><%/each%>} }
       }<%/if%>
     }
   },

@@ -24,7 +24,7 @@ import java.util.*
 internal class {{ namePascalCase }}ServiceUnitTests {
 
     @Mock
-    private lateinit var applicationEventPublisher: ApplicationEventPublisher
+    private lateinit var publisher: ApplicationEventPublisher
 
     @Mock
     private lateinit var {{ nameCamelCase }}Repository: {{ namePascalCase }}Repository
@@ -121,7 +121,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     }
 {{/if}}
     @Test
-    fun `create publishes a Before{{ namePascalCase }}CreatedEvent before saving`() {
+    fun `create publishes an {{ namePascalCase }}CreateEvent after saving`() {
         whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_FIXTURE_1))
             .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 {{#each fields}}{{#if isFieldRelational}}
@@ -132,36 +132,14 @@ internal class {{ namePascalCase }}ServiceUnitTests {
 
         assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
-        val inOrder = inOrder(applicationEventPublisher, {{ nameCamelCase }}Repository)
-
-        inOrder
-            .verify(applicationEventPublisher)
-            .publishEvent({{ namePascalCase }}Event.Before{{ namePascalCase }}CreatedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_1))
-        inOrder
-            .verify({{ nameCamelCase }}Repository)
-            .save({{ nameScreamingSnakeCase }}_FIXTURE_1)
-    }
-
-    @Test
-    fun `create publishes an After{{ namePascalCase }}CreatedEvent after saving`() {
-        whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_FIXTURE_1))
-            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-{{#each fields}}{{#if isFieldRelational}}
-        whenever({{ fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
-            .thenReturn({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-{{/if}}{{/each}}
-        val actual = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
-
-        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-
-        val inOrder = inOrder(applicationEventPublisher, {{ nameCamelCase }}Repository)
+        val inOrder = inOrder(publisher, {{ nameCamelCase }}Repository)
 
         inOrder
             .verify({{ nameCamelCase }}Repository)
             .save({{ nameScreamingSnakeCase }}_FIXTURE_1)
         inOrder
-            .verify(applicationEventPublisher)
-            .publishEvent({{ namePascalCase }}Event.After{{ namePascalCase }}CreatedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .verify(publisher)
+            .publishEvent({{ namePascalCase }}Event.{{ namePascalCase }}CreateEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
     }
 
     @Test
@@ -193,7 +171,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     }
 {{/if}}
     @Test
-    fun `update publishes a Before{{ namePascalCase }}UpdatedEvent before saving`() {
+    fun `update publishes an {{ namePascalCase }}UpdateEvent after saving`() {
         whenever({{ nameCamelCase }}Repository.findById(1))
             .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
@@ -207,39 +185,14 @@ internal class {{ namePascalCase }}ServiceUnitTests {
 
         assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
-        val inOrder = inOrder(applicationEventPublisher, {{ nameCamelCase }}Repository)
-
-        inOrder
-            .verify(applicationEventPublisher)
-            .publishEvent({{ namePascalCase }}Event.Before{{ namePascalCase }}UpdatedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-        inOrder
-            .verify({{ nameCamelCase }}Repository)
-            .save({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-    }
-
-    @Test
-    fun `update publishes an After{{ namePascalCase }}UpdatedEvent after saving`() {
-        whenever({{ nameCamelCase }}Repository.findById(1))
-            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-
-        whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-{{#each fields}}{{#if isFieldRelational}}
-        whenever({{ fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
-            .thenReturn({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-{{/if}}{{/each}}
-        val actual = {{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
-
-        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-
-        val inOrder = inOrder(applicationEventPublisher, {{ nameCamelCase }}Repository)
+        val inOrder = inOrder(publisher, {{ nameCamelCase }}Repository)
 
         inOrder
             .verify({{ nameCamelCase }}Repository)
             .save({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
         inOrder
-            .verify(applicationEventPublisher)
-            .publishEvent({{ namePascalCase }}Event.After{{ namePascalCase }}UpdatedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .verify(publisher)
+            .publishEvent({{ namePascalCase }}Event.{{ namePascalCase }}UpdateEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
     }
 
     @Test
@@ -250,31 +203,20 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     }
 
     @Test
-    fun `deleteById publishes a Before{{ namePascalCase }}DeletedEvent before deletion`() {
+    fun `deleteById publishes an {{ namePascalCase }}DeleteEvent after deletion`() {
+        whenever({{ nameCamelCase }}Repository.findById(1))
+            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+
         {{ nameCamelCase }}Service.deleteById(1)
 
-        val inOrder = inOrder(applicationEventPublisher, {{ nameCamelCase }}Repository)
-
-        inOrder
-            .verify(applicationEventPublisher)
-            .publishEvent({{ namePascalCase }}Event.Before{{ namePascalCase }}DeletedEvent({{ nameCamelCase }}Service, 1))
-        inOrder
-            .verify({{ nameCamelCase }}Repository)
-            .deleteById(1)
-    }
-
-    @Test
-    fun `deleteById publishes an After{{ namePascalCase }}DeletedEvent after deletion`() {
-        {{ nameCamelCase }}Service.deleteById(1)
-
-        val inOrder = inOrder(applicationEventPublisher, {{ nameCamelCase }}Repository)
+        val inOrder = inOrder(publisher, {{ nameCamelCase }}Repository)
 
         inOrder
             .verify({{ nameCamelCase }}Repository)
             .deleteById(1)
         inOrder
-            .verify(applicationEventPublisher)
-            .publishEvent({{ namePascalCase }}Event.After{{ namePascalCase }}DeletedEvent({{ nameCamelCase }}Service, 1))
+            .verify(publisher)
+            .publishEvent({{ namePascalCase }}Event.{{ namePascalCase }}DeleteEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
     }
 
 }

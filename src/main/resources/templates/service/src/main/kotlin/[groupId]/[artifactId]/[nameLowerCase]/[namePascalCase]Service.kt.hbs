@@ -1,5 +1,8 @@
 package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.Update{{ namePascalCase }}Input
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.Create{{ namePascalCase }}Input{{#if hasRelations}}
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.{{ namePascalCase }}FilterInput{{/if}}
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Event.*{{#each fields}}{{#if isFieldRelational}}
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Service{{/if}}{{/each}}
 import org.springframework.context.ApplicationEventPublisher
@@ -12,47 +15,32 @@ import org.springframework.transaction.annotation.Transactional
 class {{ namePascalCase }}Service(
     private val {{ nameCamelCase }}Repository: {{ namePascalCase }}Repository,{{#each fields}}{{#if isFieldRelational}}
     private val {{ fieldTypeCamelCase }}Service: {{ fieldTypePascalCase }}Service,{{/if}}{{/each}}
-    private val applicationEventPublisher: ApplicationEventPublisher
+    private val publisher: ApplicationEventPublisher,
 ) {
 
     fun findById(id: Int): {{ namePascalCase }}? {
         return {{ nameCamelCase }}Repository.findByIdOrNull(id)
     }
 
-    fun findAll({{#if hasRelations}}filterInput: {{ namePascalCase }}.{{ namePascalCase }}FilterInput? = null{{/if}}): Iterable<{{ namePascalCase }}> { {{#if hasRelations}}
-        if (filterInput != null && hasMultipleFilters(filterInput)) {
-            error("Using multiple filters is not supported.")
-        }
-{{/if}}{{#each fields as |f|}}{{#if isFieldRelational}}
+    fun findAll({{#if hasRelations}}filterInput: {{ namePascalCase }}FilterInput? = null{{/if}}): Iterable<{{ namePascalCase }}> { {{#each fields as |f|}}{{#if isFieldRelational}}
         if (filterInput?.{{ fieldNameCamelCase }} != null) {
             return {{ nameCamelCase }}Repository.findBy{{ fieldNamePascalCase }}(filterInput.{{ fieldNameCamelCase }})
         }
 {{/if}}{{/each}}
         return {{ nameCamelCase }}Repository.findAll()
     }
-{{#if hasRelations}}
-    private fun hasMultipleFilters(filterInput: {{ namePascalCase }}.{{ namePascalCase }}FilterInput): Boolean {
-        val filterCount = listOfNotNull({{#each fields as |f|}}{{#if isFieldRelational}}
-            filterInput.{{fieldNameCamelCase}},{{/if}}{{/each}}
-        )
-
-        return filterCount.size > 1
-    }
-{{/if}}{{#each fields as |f|}}{{#if isFieldRelational}}
+{{#each fields as |f|}}{{#if isFieldRelational}}
     fun findBy{{ fieldNamePascalCase }}({{ fieldNameCamelCase }}: Int): List<{{ namePascalCase }}> {
         return {{ nameCamelCase }}Repository.findBy{{ fieldNamePascalCase }}({{ fieldNameCamelCase }})
     }
 {{/if}}{{/each}}
-    fun create(create{{ namePascalCase }}Input: {{ namePascalCase }}.Create{{ namePascalCase }}Input): {{ namePascalCase }} { {{#each fields}}{{#if isFieldRelational}}
-        requireNotNull({{ fieldTypeCamelCase }}Service.findById(create{{ namePascalCase }}Input.{{ fieldNameCamelCase }}))
+    fun create(input: Create{{ namePascalCase }}Input): {{ namePascalCase }} { {{#each fields}}{{#if isFieldRelational}}
+        requireNotNull({{ fieldTypeCamelCase }}Service.findById(input.{{ fieldNameCamelCase }}))
 {{/if}}{{/each}}
-        val {{ nameCamelCase }} = {{ namePascalCase }}(create{{ namePascalCase }}Input)
-
-        applicationEventPublisher.publishEvent(Before{{ namePascalCase }}CreatedEvent(this, {{ nameCamelCase }}))
-        val saved{{ namePascalCase }} = {{ nameCamelCase }}Repository.save({{ nameCamelCase }})
-        applicationEventPublisher.publishEvent(After{{ namePascalCase }}CreatedEvent(this, saved{{ namePascalCase }}))
-
-        return saved{{ namePascalCase }}
+        var {{ nameCamelCase }} = {{ namePascalCase }}.newInstance(input)
+        {{ nameCamelCase }} = {{ nameCamelCase }}Repository.save({{ nameCamelCase }})
+        publisher.publishEvent({{ namePascalCase }}CreateEvent(this, {{ nameCamelCase }}))
+        return {{ nameCamelCase }}
     }
 {{#each fields as |f|}}{{#if isFieldRelational}}
     fun deleteBy{{ fieldNamePascalCase }}({{ fieldNameCamelCase }}: Int) {
@@ -60,24 +48,23 @@ class {{ namePascalCase }}Service(
             .forEach({{ nameCamelCase }}Repository::delete)
     }
 {{/if}}{{/each}}
-    fun update(id: Int, update{{ namePascalCase }}Input: {{ namePascalCase }}.Update{{ namePascalCase }}Input): {{ namePascalCase }}? { {{#each fields}}{{#if isFieldRelational}}
-        requireNotNull({{ fieldTypeCamelCase }}Service.findById(update{{ namePascalCase }}Input.{{ fieldNameCamelCase }}))
+    fun update(id: Int, input: Update{{ namePascalCase }}Input): {{ namePascalCase }}? { {{#each fields}}{{#if isFieldRelational}}
+        if (input.{{ fieldNameCamelCase }} != null) {
+            requireNotNull({{ fieldTypeCamelCase }}Service.findById(input.{{ fieldNameCamelCase }}))
+        }
 {{/if}}{{/each}}
-        val original{{ namePascalCase }} = {{ nameCamelCase }}Repository.findByIdOrNull(id) ?: return null
-
-        val updated{{ namePascalCase }} = original{{ namePascalCase }}.merge(update{{ namePascalCase }}Input)
-
-        applicationEventPublisher.publishEvent(Before{{ namePascalCase }}UpdatedEvent(this, original{{ namePascalCase }}, updated{{ namePascalCase }}))
-        val saved{{ namePascalCase }} = {{ nameCamelCase }}Repository.save(updated{{ namePascalCase }})
-        applicationEventPublisher.publishEvent(After{{ namePascalCase }}UpdatedEvent(this, original{{ namePascalCase }}, saved{{ namePascalCase }}))
-
-        return saved{{ namePascalCase }}
+        var {{ nameCamelCase }} = {{ nameCamelCase }}Repository.findByIdOrNull(id) ?: return null
+        {{ nameCamelCase }} = {{ nameCamelCase }}.withUpdate(input)
+        {{ nameCamelCase }} = {{ nameCamelCase }}Repository.save({{ nameCamelCase }})
+        publisher.publishEvent({{ namePascalCase }}UpdateEvent(this, {{ nameCamelCase }}))
+        return {{ nameCamelCase }}
     }
 
-    fun deleteById(id: Int) {
-        applicationEventPublisher.publishEvent(Before{{ namePascalCase }}DeletedEvent(this, id))
+    fun deleteById(id: Int): Boolean {
+        val {{ nameCamelCase }} = {{ nameCamelCase }}Repository.findByIdOrNull(id) ?: return false
         {{ nameCamelCase }}Repository.deleteById(id)
-        applicationEventPublisher.publishEvent(After{{ namePascalCase }}DeletedEvent(this, id))
+        publisher.publishEvent({{ namePascalCase }}DeleteEvent(this, {{ nameCamelCase }}))
+        return true
     }
 
 }

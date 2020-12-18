@@ -4,16 +4,10 @@ import org.springframework.context.ApplicationEvent
 
 sealed class {{ namePascalCase }}Event(source: Any) : ApplicationEvent(source) {
 
-    data class Before{{ namePascalCase }}CreatedEvent(private val _source: Any, val entity: {{ namePascalCase }}) : {{ namePascalCase }}Event(_source)
+    data class {{ namePascalCase }}CreateEvent(private val _source: Any, val entity: {{ namePascalCase }}) : {{ namePascalCase }}Event(_source)
 
-    data class After{{ namePascalCase }}CreatedEvent(private val _source: Any, val entity: {{ namePascalCase }}) : {{ namePascalCase }}Event(_source)
+    data class {{ namePascalCase }}UpdateEvent(private val _source: Any, val entity: {{ namePascalCase }}) : {{ namePascalCase }}Event(_source)
 
-    data class Before{{ namePascalCase }}UpdatedEvent(private val _source: Any, val original: {{ namePascalCase }}, val updated: {{ namePascalCase }}) : {{ namePascalCase }}Event(_source)
-
-    data class After{{ namePascalCase }}UpdatedEvent(private val _source: Any, val original: {{ namePascalCase }}, val updated: {{ namePascalCase }}) : {{ namePascalCase }}Event(_source)
-
-    data class Before{{ namePascalCase }}DeletedEvent(private val _source: Any, val id: Int) : {{ namePascalCase }}Event(_source)
-
-    data class After{{ namePascalCase }}DeletedEvent(private val _source: Any, val id: Int) : {{ namePascalCase }}Event(_source)
+    data class {{ namePascalCase }}DeleteEvent(private val _source: Any, val entity: {{ namePascalCase }}) : {{ namePascalCase }}Event(_source)
 
 }

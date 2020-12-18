@@ -31,6 +31,6 @@ input Create{{ namePascalCase }}Input { {{#each fields }}
 }
 
 input Update{{ namePascalCase }}Input { {{#each fields }}
-    {{ fieldNameCamelCase }}: {{ nullableGraphQLFieldType }}{{/each}}{{#each fields }}{{#if isFieldNullable}}
-    nullify{{ fieldNamePascalCase }}: Boolean{{/if}}{{/each}}
+    {{ fieldNameCamelCase }}: {{ nullableGraphQLFieldType }}{{/each}}{{#if hasNullableFields}}
+    deletions: [String!]?{{/if}}
 }
