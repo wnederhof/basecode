@@ -1,3 +1,8 @@
+---
+layout: page
+title: Roadmap
+permalink: /roadmap
+---
 # Roadmap
 ## Version 0.1.0
 - X Add unit tests for entire FE
