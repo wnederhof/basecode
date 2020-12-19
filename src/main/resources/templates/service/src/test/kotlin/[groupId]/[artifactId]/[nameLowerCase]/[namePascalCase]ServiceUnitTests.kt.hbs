@@ -7,6 +7,7 @@ import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fi
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1{{#each fields}}{{#if isFieldRelational}}
 import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Fixtures.{{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1{{/if}}{{/each}}
 import com.nhaarman.mockitokotlin2.inOrder
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -196,10 +197,23 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     }
 
     @Test
-    fun `deleteById deletes the {{ namePascalCase }} identified by id in the repository`() {
+    fun `deleteById deletes the {{ namePascalCase }} identified by id in the repository if it exists`() {
+        whenever({{ nameCamcelCase }}Repository.findById(1))
+            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+
         {{ nameCamelCase }}Service.deleteById(1)
 
         verify({{ nameCamelCase }}Repository).deleteById(1)
+    }
+
+    @Test
+    fun `deleteById does not delete the {{ namePascalCase }} identified by id in the repository if it doesn't exist`() {
+        whenever({{ nameCamcelCase }}Repository.findById(1))
+            .thenReturn(Optional.empty())
+
+        {{ nameCamelCase }}Service.deleteById(1)
+
+        verify({{ nameCamelCase }}Repository, times(0)).deleteById(1)
     }
 
     @Test

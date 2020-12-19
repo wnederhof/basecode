@@ -10,21 +10,19 @@ import org.springframework.context.annotation.Configuration
 class GraphQLScalarConfig {
 
     @Bean
-    fun dateScalarType(dateCoercing: DateCoercing): GraphQLScalarType {
-        return GraphQLScalarType
+    fun dateScalarType(dateCoercing: DateCoercing): GraphQLScalarType =
+        GraphQLScalarType
             .newScalar()
             .name("Date")
             .coercing(dateCoercing)
             .build()
-    }
 
     @Bean
-    fun dateTimeScalarType(dateTimeCoercing: DateTimeCoercing): GraphQLScalarType {
-        return GraphQLScalarType
+    fun dateTimeScalarType(dateTimeCoercing: DateTimeCoercing): GraphQLScalarType =
+        GraphQLScalarType
             .newScalar()
             .name("DateTime")
             .coercing(dateTimeCoercing)
             .build()
-    }
 
 }

@@ -37,7 +37,7 @@ class {{ namePascalCase }}Service(
     fun create(input: Create{{ namePascalCase }}Input): {{ namePascalCase }} { {{#each fields}}{{#if isFieldRelational}}
         requireNotNull({{ fieldTypeCamelCase }}Service.findById(input.{{ fieldNameCamelCase }}))
 {{/if}}{{/each}}
-        var {{ nameCamelCase }} = {{ namePascalCase }}.newInstance(input)
+        var {{ nameCamelCase }} = {{ namePascalCase }}.create(input)
         {{ nameCamelCase }} = {{ nameCamelCase }}Repository.save({{ nameCamelCase }})
         publisher.publishEvent({{ namePascalCase }}CreateEvent(this, {{ nameCamelCase }}))
         return {{ nameCamelCase }}
@@ -54,7 +54,7 @@ class {{ namePascalCase }}Service(
         }
 {{/if}}{{/each}}
         var {{ nameCamelCase }} = {{ nameCamelCase }}Repository.findByIdOrNull(id) ?: return null
-        {{ nameCamelCase }} = {{ nameCamelCase }}.withUpdate(input)
+        {{ nameCamelCase }} = {{ nameCamelCase }}.update(input)
         {{ nameCamelCase }} = {{ nameCamelCase }}Repository.save({{ nameCamelCase }})
         publisher.publishEvent({{ namePascalCase }}UpdateEvent(this, {{ nameCamelCase }}))
         return {{ nameCamelCase }}

@@ -1,7 +1,5 @@
 package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 
-import {{ groupId }}.{{ artifactId }}.util.DynamicDataTransformer.withPropertyValuesOf
-import {{ groupId }}.{{ artifactId }}.util.DynamicDataTransformer.learedProperties
 import org.springframework.data.annotation.*
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDate
@@ -20,12 +18,12 @@ data class {{ namePascalCase }}(
     val updatedAt: LocalDateTime? = null
 ) {
 
-    fun withUpdate(update{{ namePascalCase }}Input: Update{{ namePascalCase }}Input) = this
-        .withPropertyValuesOf(update{{ namePascalCase }}Input)
-        .withClearedProperties((update{{ namePascalCase }}Input.deletions ?: listOf()) - "id")
+    fun update(input: Update{{ namePascalCase }}Input) = copy({{#each fields }}
+        {{fieldNameCamelCase}} = input.{{fieldNameCamelCase}},{{/each}}
+    )
 
     companion object {
-        fun newInstance(input: Create{{ namePascalCase }}Input) = {{ namePascalCase }}({{#each fields }}
+        fun create(input: Create{{ namePascalCase }}Input) = {{ namePascalCase }}({{#each fields }}
             {{fieldNameCamelCase}} = input.{{fieldNameCamelCase}},{{/each}}
         )
     }
@@ -35,8 +33,7 @@ data class {{ namePascalCase }}(
     )
 
     data class Update{{ namePascalCase }}Input({{#each fields}}
-        val {{ fieldNameCamelCase }}: {{ fieldKotlinTypeNotNullable }}?,{{/each}}{{#if hasNullableFields}}
-        val deletions: List<String>? = null,{{/if}}
+        val {{ fieldNameCamelCase }}: {{ fieldKotlinTypeNotNullable }}?,{{/each}}
     )
 {{#if hasRelations}}
     data class {{ namePascalCase }}FilterInput({{#each fields }}{{#if isFieldRelational}}
