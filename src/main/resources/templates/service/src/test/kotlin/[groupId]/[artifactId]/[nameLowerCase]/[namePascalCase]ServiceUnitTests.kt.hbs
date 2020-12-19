@@ -198,7 +198,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
 
     @Test
     fun `deleteById deletes the {{ namePascalCase }} identified by id in the repository if it exists`() {
-        whenever({{ nameCamcelCase }}Repository.findById(1))
+        whenever({{ nameCamelCase }}Repository.findById(1))
             .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
         {{ nameCamelCase }}Service.deleteById(1)
@@ -208,7 +208,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
 
     @Test
     fun `deleteById does not delete the {{ namePascalCase }} identified by id in the repository if it doesn't exist`() {
-        whenever({{ nameCamcelCase }}Repository.findById(1))
+        whenever({{ nameCamelCase }}Repository.findById(1))
             .thenReturn(Optional.empty())
 
         {{ nameCamelCase }}Service.deleteById(1)

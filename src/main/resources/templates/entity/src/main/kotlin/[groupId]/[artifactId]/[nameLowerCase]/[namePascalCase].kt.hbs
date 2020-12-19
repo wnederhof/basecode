@@ -19,7 +19,7 @@ data class {{ namePascalCase }}(
 ) {
 
     fun update(input: Update{{ namePascalCase }}Input) = copy({{#each fields }}
-        {{fieldNameCamelCase}} = input.{{fieldNameCamelCase}},{{/each}}
+        {{fieldNameCamelCase}} = input.{{fieldNameCamelCase}} ?: {{fieldNameCamelCase}},{{/each}}
     )
 
     companion object {
