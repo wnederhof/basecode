@@ -7,8 +7,7 @@ import picocli.CommandLine.Command
 @Command(
     name = "service",
     aliases = ["srv"],
-    description = ["Generates a Service, Events and Event Listeners according to the specified entity."],
-    mixinStandardHelpOptions = true
+    description = ["Generates a Service, Events and Event Listeners according to the specified entity."]
 )
 class ServiceGenerator: AbstractFieldBasedGenerator() {
     override val templateNames = listOf("service")

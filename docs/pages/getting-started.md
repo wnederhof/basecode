@@ -2,14 +2,15 @@
 layout: page
 title: Getting Started
 permalink: /getting-started
+nav_order: 2
 ---
 # Getting Started
 
 ## Prerequisites
 Before getting started using CrudCodeGen, make sure you have Java 11 or higher, Git and Docker installed.
 
-## From Source Code
-### Installation
+## Installation
+### From Source Code
 - Clone the `crudcodegen` repository into `~/.crudcodegen` (where `~` is your home folder) and `cd` into the folder.
 - Build the project using `./mvnw clean package -DskipTests`.
 - Locate the built artifact in the `target` folder. E.g. `crudcodegen-<version>.jar`
@@ -22,7 +23,8 @@ alias ccg="java -jar $HOME/.crudcodegen/target/crudcodegen-<version>.jar"
 CrudCodeGen - Open Source Full Stack Code Generator
 ```
 
-### Updating
+## Updating
+### From Source Code
 In order to update, simply pull the crudcodegen repository and build the image.
 ```
 cd ~/.crudcodegen

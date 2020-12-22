@@ -50,9 +50,9 @@ class FileManager(private val resourceLoader: ResourceLoader) {
         println("[D] $path")
     }
 
-    fun copyFile(root: File, templateName: String, templatePath: String, targetPath: String) {
-        if (File(root.path + "/$targetPath").exists()) {
-            throw IOException("File already exists: $targetPath")
+    fun copyFile(root: File, templateName: String, templatePath: String, targetPath: String, overwrite: Boolean = true) {
+        if (!overwrite && File(root.path + "/$targetPath").exists()) {
+            error("File already exists: $targetPath")
         }
         val directories = targetPath.split("/").dropLast(1).joinToString("/")
         File("${root.path}/$directories").mkdirs()
@@ -65,7 +65,7 @@ class FileManager(private val resourceLoader: ResourceLoader) {
 
     fun writeTargetFileContent(root: File, path: String, content: String, overwrite: Boolean = false) {
         if (!overwrite && File(root.path + "/$path").exists()) {
-            throw IOException("File already exists: $path")
+            error("File already exists: $path")
         }
         val directories = path.split("/").dropLast(1).joinToString("/")
         File("${root.path}/$directories").mkdirs()
@@ -77,5 +77,22 @@ class FileManager(private val resourceLoader: ResourceLoader) {
             return null
         }
         return File(root.path + "/$path").readText()
+    }
+
+    fun deleteFile(root: File, path: String, removeDirIfEmpty: Boolean): Boolean {
+        val file = File(root.path + "/$path")
+        if (file.exists()) {
+            file.delete()
+            if (removeDirIfEmpty && file.parentFile.listFiles()!!.isEmpty()) {
+                file.parentFile.delete()
+            }
+            return true
+        }
+        return false
+    }
+
+    fun exists(root: File, path: String): Boolean {
+        val file = File(root.path + "/$path")
+        return file.exists()
     }
 }

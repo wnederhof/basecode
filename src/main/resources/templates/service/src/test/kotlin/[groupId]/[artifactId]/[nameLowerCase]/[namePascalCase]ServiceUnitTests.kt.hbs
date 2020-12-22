@@ -110,10 +110,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     }
 {{#if hasRelations}}
     @Test
-    fun `create fails when related objects cannot be found`() { {{#each fields}}{{#if isFieldRelational}}
-        whenever({{ fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
-            .thenReturn(null)
-{{/if}}{{/each}}
+    fun `create fails when related objects cannot be found`() {
         assertThrows<RuntimeException> {
             {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
         }
@@ -160,10 +157,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     }
 {{#if hasRelations}}
     @Test
-    fun `update fails when related objects cannot be found`() { {{#each fields}}{{#if isFieldRelational}}
-        whenever({{ fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
-            .thenReturn(null)
-{{/if}}{{/each}}
+    fun `update fails when related objects cannot be found`() {
         assertThrows<RuntimeException> {
             {{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
         }

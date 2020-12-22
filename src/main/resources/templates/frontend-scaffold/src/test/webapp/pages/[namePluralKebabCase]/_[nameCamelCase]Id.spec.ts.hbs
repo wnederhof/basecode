@@ -1,10 +1,10 @@
 {{=<% %>=}}import { shallowMount, createLocalVue, RouterLinkStub, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
-import Index from '@/pages/<%namePluralKebabCase%>/_<%nameCamelCase%>Id/index.vue'
+import Show<%namePascalCase%>Page from '@/pages/<%namePluralKebabCase%>/_<%nameCamelCase%>Id.vue'
 
 const localVue = createLocalVue()
 
-describe('Index', () => {
+describe('Show<%namePascalCase%>Page', () => {
   let wrapper: Wrapper<any>
 
   const push = jest.fn()
@@ -12,7 +12,7 @@ describe('Index', () => {
   const $router = { push }
 
   const createComponent = () => {
-    wrapper = shallowMount(Index, {
+    wrapper = shallowMount(Show<%namePascalCase%>Page, {
       localVue,
       stubs: {
         NLink: RouterLinkStub,

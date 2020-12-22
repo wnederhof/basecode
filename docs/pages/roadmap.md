@@ -2,6 +2,7 @@
 layout: page
 title: Roadmap
 permalink: /roadmap
+nav_order: 5
 ---
 # Roadmap
 ## Version 0.1.0
@@ -24,6 +25,7 @@ permalink: /roadmap
 ## Version 0.1.1
 - Better tests for update
 - Test booleans
+- Error reporting
 
 ## Version 0.2.0
 - Validation

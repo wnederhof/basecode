@@ -9,6 +9,7 @@ import com.wouter.crudcodegen.generators.filters.ProjectTemplateFilter
 import com.wouter.crudcodegen.generators.helpers.FieldArgsHelper
 import com.wouter.crudcodegen.generators.helpers.VariablesHelper
 import org.springframework.beans.factory.annotation.Autowired
+import picocli.CommandLine.Option
 import picocli.CommandLine.Parameters
 import java.io.File
 
@@ -37,6 +38,15 @@ abstract class AbstractFieldBasedGenerator : Runnable {
     @Autowired
     private lateinit var projectPropertiesManager: ProjectPropertiesManager
 
+    @Option(names = ["-d", "--delete"])
+    var deleteFlag: Boolean = false
+
+    @Option(names = ["-o", "--overwrite"])
+    var overwriteFlag: Boolean = false
+
+    @Option(usageHelp = true, names = ["-h", "--help"])
+    var usageHelp: Boolean = false
+
     @Parameters(
         description = ["<name> (<fieldName>:<fieldType)+ for fieldType string, int, text, date, datetime, boolean, " +
                 "or relation, e.g. Customer. Add _o for optional, e.g. string_o."],
@@ -46,6 +56,8 @@ abstract class AbstractFieldBasedGenerator : Runnable {
     open var nameAndFields: List<String>? = null
 
     abstract val templateNames: List<String>
+
+    open val generateAfterDeletionTemplateNames: List<String> = listOf()
 
     override fun run() {
         val args = nameAndFields ?: listOf()
@@ -57,8 +69,26 @@ abstract class AbstractFieldBasedGenerator : Runnable {
 
         val variables = variablesHelper.createVariables(targetPath, properties, name, fields, filters)
 
+        val alreadyExistingTemplateFile = templateNames
+            .flatMap { templateEngine.findAlreadyExistingTargetFiles(targetPath, it, variables) }
+            .firstOrNull()
+
+        if (alreadyExistingTemplateFile != null && !overwriteFlag && !deleteFlag) {
+            error("Aborting. File already exists: $alreadyExistingTemplateFile. If you wish to overwrite existing files, please use -o or --overwrite.")
+        }
+
         templateNames.forEach {
-            templateEngine.generate(targetPath, it, variables)
+            if (deleteFlag) {
+                templateEngine.delete(targetPath, it, variables)
+            } else {
+                templateEngine.generate(targetPath, it, variables)
+            }
+        }
+
+        if (deleteFlag) {
+            generateAfterDeletionTemplateNames.forEach {
+                templateEngine.generate(targetPath, it, variables)
+            }
         }
     }
 

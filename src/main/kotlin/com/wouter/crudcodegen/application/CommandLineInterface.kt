@@ -60,10 +60,13 @@ class CommandLineInterface {
         private val projectPropertiesManager: ProjectPropertiesManager
     ) : Runnable {
 
+        @Option(names = ["-o", "--overwrite"])
+        var overwriteFlag: Boolean = false
+
         @Option(usageHelp = true, names = ["-h", "--help"])
         var usageHelp: Boolean = false
 
-        @Option(names = ["-be", "--backend-only"])
+        @Option(names = ["-b", "--backend-only"])
         var backendOnly: Boolean = false
 
         @Parameters(description = ["groupId, e.g. com.petparadise"], index = "0")
@@ -81,9 +84,18 @@ class CommandLineInterface {
 
             val variables = variablesHelper.createVariables(targetPath, properties, artifactId!!, null, filters)
 
-            templateEngine.generate(targetPath, "new", variables)
-            if (!backendOnly) {
-                templateEngine.generate(targetPath, "frontend", variables)
+            val templateNames = if (backendOnly) listOf("new") else listOf("new", "frontend")
+
+            val alreadyExistingTemplateFile = templateNames
+                .flatMap { templateEngine.findAlreadyExistingTargetFiles(targetPath, it, variables) }
+                .firstOrNull()
+
+            if (alreadyExistingTemplateFile != null && !overwriteFlag) {
+                error("Aborting. File already exists: $alreadyExistingTemplateFile. If you wish to overwrite existing files, please use -o or --overwrite.")
+            }
+
+            templateNames.forEach {
+                templateEngine.generate(targetPath, it, variables)
             }
 
             projectPropertiesManager.writeProperties(targetPath, properties)

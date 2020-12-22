@@ -7,9 +7,9 @@ import picocli.CommandLine.Command
 @Command(
     name = "scaffold",
     aliases = ["s"],
-    description = ["Generates front and backend scaffold according to the specified entity."],
-    mixinStandardHelpOptions = true
+    description = ["Generates front and backend scaffold according to the specified entity."]
 )
 class FullStackScaffoldGenerator: AbstractFieldBasedGenerator() {
     override val templateNames = listOf("service", "entity", "graphql", "frontend-scaffold")
+    override val generateAfterDeletionTemplateNames = listOf("entity-removal")
 }

@@ -7,9 +7,9 @@ import picocli.CommandLine.Command
 @Command(
     name = "entity",
     aliases = ["e"],
-    description = ["Generates a new Entity and Migration script according to the specified entity."],
-    mixinStandardHelpOptions = true
+    description = ["Generates a new Entity and Migration script according to the specified entity."]
 )
 class EntityGenerator: AbstractFieldBasedGenerator() {
     override val templateNames = listOf("entity")
+    override val generateAfterDeletionTemplateNames = listOf("entity-removal")
 }

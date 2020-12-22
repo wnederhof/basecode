@@ -67,7 +67,7 @@ export default {
   ** See https://nuxtjs.org/api/configuration-build/
   */
   pageTransition: {
-    mode: 'in-out' // TODO fix scroll behaviour, or leave better UX transition out...
+    mode: 'in-out'
   },
   build: {
     babel: {
