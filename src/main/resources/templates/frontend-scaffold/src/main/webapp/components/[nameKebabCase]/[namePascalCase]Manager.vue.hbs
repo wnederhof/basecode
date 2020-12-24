@@ -1,36 +1,37 @@
 {{=<% %>=}}<template>
   <div>
     <<%namePascalCase%>List
-      ref="<%nameCamelCase%>List"
+      ref="<%nameCamelCase%>List"<%#each fields%><%#if isFieldRelational%>
+      :<%fieldNameKebabCase%>="<%fieldNameCamelCase%>"<%/if%><%/each%>
       @edit:<%nameCamelCase%>="openForm"
     />
 
-    <button
+    <<%#if usesBootstrapTheme%>b-button><%else%>button<%/if%>
       ref="openNewFormBtn"
       @click="openNewForm"
     >
       New <%namePascalCase%>
-    </button>
+    </<%#if usesBootstrapTheme%>b-button><%else%>button<%/if%>
 
     <h2
-      v-if="<%nameCamelCase%>FormVisible && !selected<%namePascalCase%>Id"
+      v-if="<%nameCamelCase%>FormVisible && !selectedId"
       ref="new<%namePascalCase%>Header"
     >
       New <%namePascalCase%>
     </h2>
 
     <h2
-      v-if="<%nameCamelCase%>FormVisible && selected<%namePascalCase%>Id"
+      v-if="<%nameCamelCase%>FormVisible && selectedId"
       ref="edit<%namePascalCase%>Header"
     >
-      Edit <%namePascalCase%> {{ selected<%namePascalCase%>Id }}
+      Edit <%namePascalCase%> {{ selectedId }}
     </h2>
 
     <<%namePascalCase%>Form
       v-if="<%nameCamelCase%>FormVisible"
       ref="<%nameCamelCase%>Form"
-      :key="selected<%namePascalCase%>Id"
-      :<%nameKebabCase%>-id="selected<%namePascalCase%>Id"
+      :key="selectedId"
+      :id="selectedId"
       @save:<%nameCamelCase%>="closeForm"
       @close:<%nameCamelCase%>Form="closeForm"
     />
@@ -44,25 +45,28 @@ import Component from 'nuxt-class-component'
 import Vue from 'vue'
 
 @Component({
-  components: { <%namePascalCase%>Form, <%namePascalCase%>List }
+  components: { <%namePascalCase%>Form, <%namePascalCase%>List },<%#if hasRelations%>
+  props: {<%#each fields%><%#if isFieldRelational%>
+    <%fieldNameCamelCase%>: [Number, String],<%/if%><%/each%>
+  }<%/if%>
 })
 export default class <%namePascalCase%>Manager extends Vue {
   <%nameCamelCase%>FormVisible = false
-  selected<%namePascalCase%>Id: number | null = null
+  selectedId: number | null = null
 
   openForm (<%nameCamelCase%>Id: number) {
     this.<%nameCamelCase%>FormVisible = true
-    this.selected<%namePascalCase%>Id = <%nameCamelCase%>Id
+    this.selectedId = <%nameCamelCase%>Id
   }
 
   openNewForm () {
     this.<%nameCamelCase%>FormVisible = true
-    this.selected<%namePascalCase%>Id = null
+    this.selectedId = null
   }
 
   closeForm () {
     this.<%nameCamelCase%>FormVisible = false
-    this.selected<%namePascalCase%>Id = null
+    this.selectedId = null
   }
 }
 </script><%={{ }}=%>

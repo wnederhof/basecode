@@ -51,36 +51,36 @@ describe('<%namePascalCase%>Form', () => {
   })
 
   it('is a Vue instance', () => {
-    createComponent({ <%nameCamelCase%>Id: 1 })
+    createComponent({ id: 1 })
     expect(wrapper.vm).toBeTruthy()
   })
 
   it('contains <%nameCamelCase%> form with no data if id is not set', () => {
-    createComponent({ <%nameCamelCase%>Id: null })<%#each fields%>
+    createComponent({ id: null })<%#each fields%>
     expect((wrapper.findComponent({ ref: '<%fieldNameCamelCase%>Input' }).element as HTMLInputElement).value).toContain('')<%/each%>
   })
 
   it('shows loading when fetching data if id is set', () => {
-    createComponent({ <%nameCamelCase%>Id: 1 })
+    createComponent({ id: 1 })
     expect(wrapper.text()).toContain('Loading...')
   })
 
   it('contains <%nameCamelCase%> form with data if id is set', async () => {
-    createComponent({ <%nameCamelCase%>Id: 1 })
+    createComponent({ id: 1 })
     await flushPromises()
 <%#each fields%>
     expect((wrapper.findComponent({ ref: '<%fieldNameCamelCase%>Input' }).element as HTMLInputElement).value).toContain(<%fieldVueTypescriptTestValue%>)<%/each%>
   })
 
   it('emits edit event when edit is clicked', async () => {
-    createComponent({ <%nameCamelCase%>Id: null })
+    createComponent({ id: null })
     await flushPromises()
     await wrapper.findComponent({ ref: 'cancelBtn' }).trigger('click')
     expect(wrapper.emitted()['close:<%nameCamelCase%>Form']).toBeTruthy()
   })
 
   it('runs a mutation on submit and emits save event', async () => {
-    createComponent({ <%nameCamelCase%>Id: 1 })
+    createComponent({ id: 1 })
     await flushPromises()
     const queryHandler = jest.fn().mockResolvedValue(true)
     mockClient.setRequestHandler(gql`

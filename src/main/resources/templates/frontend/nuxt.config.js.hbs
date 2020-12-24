@@ -34,7 +34,8 @@ export default {
   ** https://nuxtjs.org/guide/plugins
   */
   plugins: [
-    '@/plugins/vue-uid.ts'
+    '@/plugins/vue-uid.ts'{{#if usesBootstrapTheme}},
+    '@/plugins/bootstrap.ts'{{/if}}
   ],
   /*
   ** Auto import components

@@ -19,7 +19,7 @@ class GraphQLFieldTypeFilterTest {
     @Test
     fun `enrichProperties yields Int, Int! for any relation`() {
         val fields = listOf(EntityField.RelationalEntityField("userId", "User"))
-        val settings = FieldTemplateFilter.FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val settings = FieldTemplateFilter.FieldTemplateSettings(fields)
 
         val actual = graphQLFieldTypeFilter.enrichProperties(0, settings)
 
@@ -33,7 +33,7 @@ class GraphQLFieldTypeFilterTest {
     @EnumSource(EntityType::class)
     fun `enrichProperties always produces nullableGraphQLFieldType and graphQLFieldType fields for primitives`(entityType: EntityType) {
         val fields = listOf(EntityField.PrimitiveEntityField("name", entityType))
-        val settings = FieldTemplateFilter.FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val settings = FieldTemplateFilter.FieldTemplateSettings(fields)
 
         val actual = graphQLFieldTypeFilter.enrichProperties(0, settings)
 
@@ -47,7 +47,7 @@ class GraphQLFieldTypeFilterTest {
     @EnumSource(EntityType::class)
     fun `enrichProperties never ends with exclamation mark for nullableGraphQLFieldType`(entityType: EntityType) {
         val fields = listOf(EntityField.PrimitiveEntityField("name", entityType))
-        val settings = FieldTemplateFilter.FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val settings = FieldTemplateFilter.FieldTemplateSettings(fields)
 
         val actual = graphQLFieldTypeFilter.enrichProperties(0, settings)
 
@@ -60,7 +60,7 @@ class GraphQLFieldTypeFilterTest {
     @EnumSource(EntityType::class)
     fun `enrichProperties ends with exclamation mark for graphQLFieldType for non-nullable types`(entityType: EntityType) {
         val fields = listOf(EntityField.PrimitiveEntityField("name", entityType))
-        val settings = FieldTemplateFilter.FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val settings = FieldTemplateFilter.FieldTemplateSettings(fields)
 
         val actual = graphQLFieldTypeFilter.enrichProperties(0, settings)
 

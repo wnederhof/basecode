@@ -20,7 +20,7 @@ class FieldTypePropertiesFilterTest {
         val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.DATE))
 
         val actual = fieldTypePropertiesFilter.enrichProperties(0,
-                FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
+                FieldTemplateSettings(fields))
 
         assertThat(actual.single { it.name == "isFieldNullable" }.value).isEqualTo(false)
     }
@@ -30,7 +30,7 @@ class FieldTypePropertiesFilterTest {
         val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.NULL_DATE))
 
         val actual = fieldTypePropertiesFilter.enrichProperties(0,
-                FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
+                FieldTemplateSettings(fields))
 
         assertThat(actual.single { it.name == "isFieldNullable" }.value).isEqualTo(true)
     }
@@ -40,7 +40,7 @@ class FieldTypePropertiesFilterTest {
         val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.INT))
 
         val actual = fieldTypePropertiesFilter.enrichProperties(0,
-                FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
+                FieldTemplateSettings(fields))
 
         assertThat(actual.single { it.name == "isFieldOfTypeText" }.value).isEqualTo(false)
     }
@@ -50,7 +50,7 @@ class FieldTypePropertiesFilterTest {
         val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.TEXT))
 
         val actual = fieldTypePropertiesFilter.enrichProperties(0,
-                FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
+                FieldTemplateSettings(fields))
 
         assertThat(actual.single { it.name == "isFieldOfTypeText" }.value).isEqualTo(true)
     }
@@ -60,7 +60,7 @@ class FieldTypePropertiesFilterTest {
         val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.NULL_TEXT))
 
         val actual = fieldTypePropertiesFilter.enrichProperties(0,
-                FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
+                FieldTemplateSettings(fields))
 
         assertThat(actual.single { it.name == "isFieldOfTypeText" }.value).isEqualTo(true)
     }
@@ -70,7 +70,7 @@ class FieldTypePropertiesFilterTest {
         val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.DATE))
 
         val actual = fieldTypePropertiesFilter.enrichProperties(0,
-                FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
+                FieldTemplateSettings(fields))
 
         assertThat(actual.single { it.name == "isFieldRelational" }.value).isEqualTo(false)
     }
@@ -80,7 +80,7 @@ class FieldTypePropertiesFilterTest {
         val fields = listOf(EntityField.RelationalEntityField("userId", "User"))
 
         val actual = fieldTypePropertiesFilter.enrichProperties(0,
-                FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
+                FieldTemplateSettings(fields))
 
         assertThat(actual.single { it.name == "isFieldRelational" }.value).isEqualTo(true)
     }

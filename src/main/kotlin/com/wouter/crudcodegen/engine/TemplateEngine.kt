@@ -14,19 +14,9 @@ class TemplateEngine(
             val generatedFilename = templateSolidifier.solidifyFilename(templateFilePath, variables)
             if (isTemplateFileName(generatedFilename)) {
                 val targetFileName = removeTemplateSuffix(generatedFilename)
-                if (fileManager.exists(targetRoot, targetFileName)
-                        && !File(targetRoot.path + "/$targetFileName").isDirectory) {
-                    targetFileName
-                } else {
-                    null
-                }
+                if (fileManager.exists(targetRoot, targetFileName)) targetFileName else null
             } else {
-                if (fileManager.exists(targetRoot, generatedFilename)
-                        && !File(targetRoot.path + "/$generatedFilename").isDirectory) {
-                    generatedFilename
-                } else {
-                    null
-                }
+                if (fileManager.exists(targetRoot, generatedFilename)) generatedFilename else null
             }
         }
     }
@@ -38,7 +28,7 @@ class TemplateEngine(
             if (isTemplateFileName(generatedFilename)) {
                 val template = fileManager.readTemplate(templateName, templateFilePath)
                 val targetFileName = removeTemplateSuffix(generatedFilename)
-                println("[F] $targetFileName")
+                println("[G] $targetFileName")
                 val generatedContent = templateSolidifier.solidifyTemplate(template, variables)
                 if (generatedContent.trim() != "") {
                     fileManager.writeTargetFileContent(targetRoot, targetFileName, generatedContent, true)

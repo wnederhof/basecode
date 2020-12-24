@@ -4,6 +4,7 @@ import com.wouter.crudcodegen.application.CommandLineInterface.GenerateCommand
 import com.wouter.crudcodegen.application.CommandLineInterface.NewCommand
 import com.wouter.crudcodegen.engine.FileManager
 import com.wouter.crudcodegen.engine.TemplateEngine
+import com.wouter.crudcodegen.generators.ProjectProperties
 import com.wouter.crudcodegen.generators.filters.EntityTemplateFilter
 import com.wouter.crudcodegen.generators.filters.FieldTemplateFilter
 import com.wouter.crudcodegen.generators.filters.ProjectTemplateFilter
@@ -66,6 +67,9 @@ class CommandLineInterface {
         @Option(usageHelp = true, names = ["-h", "--help"])
         var usageHelp: Boolean = false
 
+        @Option(names = ["-t", "--theme"])
+        var theme: ProjectProperties.Theme? = null
+
         @Option(names = ["-b", "--backend-only"])
         var backendOnly: Boolean = false
 
@@ -79,7 +83,7 @@ class CommandLineInterface {
             val targetPath = File(fileManager.currentDir + "/$artifactId")
             targetPath.mkdirs()
             val properties = projectPropertiesManager.readProperties(targetPath)
-                .copy(artifactId = artifactId!!, groupId = groupId!!)
+                .copy(artifactId = artifactId!!, groupId = groupId!!, theme = theme ?: ProjectProperties.Theme.plain)
             val filters = entityTemplateFilters + projectTemplateFilters + fieldTemplateFilters
 
             val variables = variablesHelper.createVariables(targetPath, properties, artifactId!!, null, filters)

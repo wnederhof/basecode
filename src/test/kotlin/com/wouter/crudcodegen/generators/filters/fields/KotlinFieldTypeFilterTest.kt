@@ -28,7 +28,7 @@ class KotlinFieldTypeFilterTest {
 
         val actual = kotlinFieldTypeFilter.enrichProperties(
             0,
-            FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+            FieldTemplateSettings(fields)
         )
 
         assertThat(actual).hasSize(4)
@@ -44,7 +44,7 @@ class KotlinFieldTypeFilterTest {
         whenever(nameHelper.toUpperCamelCase("about")).thenCallRealMethod()
 
         val fields = listOf(EntityField.PrimitiveEntityField("about", EntityType.NULL_TEXT))
-        val fieldTemplateSettings = FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val fieldTemplateSettings = FieldTemplateSettings(fields)
 
         val actual = kotlinFieldTypeFilter.enrichProperties(0, fieldTemplateSettings)
 

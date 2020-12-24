@@ -60,7 +60,6 @@ class FileManager(private val resourceLoader: ResourceLoader) {
                 .inputStream
                 .readAllBytes()
                 .let { File("${root.path}/$targetPath").writeBytes(it) }
-                .also { println("[F] $targetPath") }
     }
 
     fun writeTargetFileContent(root: File, path: String, content: String, overwrite: Boolean = false) {

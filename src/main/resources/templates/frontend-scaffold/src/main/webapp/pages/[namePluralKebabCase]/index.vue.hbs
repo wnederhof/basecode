@@ -1,6 +1,6 @@
 {{=<% %>=}}<template>
   <div>
-    <h1>List of <%namePluralPascalCase%></h1>
+    <h1<%#if usesBootstrapTheme%> class="mt-5 mb-3"<%/if%>>List of <%namePluralPascalCase%></h1>
 
     <<%namePascalCase%>Manager />
   </div>

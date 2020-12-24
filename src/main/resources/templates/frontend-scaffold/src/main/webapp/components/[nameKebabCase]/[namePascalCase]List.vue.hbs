@@ -5,11 +5,11 @@
   <div v-else-if="error">
     Unable to load component. Error message: {{ error }}
   </div>
-  <table v-else>
+  <<%#if usesBootstrapTheme%>b-table-simple fixed<%else%>table<%/if%> v-else>
     <thead>
       <tr>
         <th>Id</th><%#each fields%>
-        <th><%fieldNamePascalCase%></th><%/each%>
+        <th v-if="!$props.<%fieldNameCamelCase%>"><%fieldNamePascalCase%></th><%/each%>
         <th>Actions</th>
       </tr>
     </thead>
@@ -19,25 +19,25 @@
         :key="<%nameCamelCase%>.id"
       >
         <td>{{ <%nameCamelCase%>.id }}</td><%#each fields%>
-        <td>{{ <%nameCamelCase%>.<%fieldNameCamelCase%> }}</td><%/each%>
+        <td v-if="!$props.<%fieldNameCamelCase%>">{{ <%nameCamelCase%>.<%fieldNameCamelCase%> }}</td><%/each%>
         <td>
           <n-link :to="'/<%namePluralKebabCase%>/' + <%nameCamelCase%>.id">
             Show
           </n-link>
-          <button
+          <<%#if usesBootstrapTheme%>b-button><%else%>button<%/if%>
             ref="edit<%namePascalCase%>Btn"
             type="button"
             @click="edit<%namePascalCase%>(<%nameCamelCase%>.id)"
           >
-            Edit <%namePascalCase%>
-          </button>
-          <button
+            Edit
+          </<%#if usesBootstrapTheme%>b-button><%else%>button<%/if%>>
+          <<%#if usesBootstrapTheme%>b-button><%else%>button<%/if%>
             ref="delete<%namePascalCase%>Btn"
             type="button"
             @click="delete<%namePascalCase%>(<%nameCamelCase%>.id)"
           >
-            Delete <%namePascalCase%>
-          </button>
+            Delete
+          </<%#if usesBootstrapTheme%>b-button><%else%>button<%/if%>>
         </td>
       </tr>
     </tbody>

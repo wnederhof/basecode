@@ -6,9 +6,6 @@ interface FieldTemplateFilter: GeneratorFilter {
     fun enrichProperties(fieldIndex: Int, settings: FieldTemplateSettings): Iterable<Variable>
 
     data class FieldTemplateSettings(
-            val groupId: String,
-            val artifactId: String,
-            val name: String,
-            val fields: List<EntityField>
+        val fields: List<EntityField>
     )
 }

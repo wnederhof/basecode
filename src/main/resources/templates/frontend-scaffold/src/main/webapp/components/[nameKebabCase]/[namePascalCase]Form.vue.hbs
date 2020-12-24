@@ -17,7 +17,7 @@
       type="hidden"
     >
 <%#each fields%>
-    <div>
+    <div<%#if isFieldRelational%> v-if="this.$props.<%fieldNamePascalCase%>"<%/if%>>
       <label :for="$id('<%fieldNameCamelCase%>')"><%fieldNamePascalCase%></label><%#unless isFieldOfTypeText%>
       <input
         :id="$id('<%fieldNameCamelCase%>')"
@@ -32,16 +32,23 @@
         v-model="<%nameCamelCase%>.<%fieldNameCamelCase%>"<%#unless isFieldNullable%><%#if isString%>
         required<%/if%><%/unless%>
       ></textarea><%/unless%>
-    </div><%/each%>
+    </div><%#if isFieldRelational%>
+    <input
+      v-if="<%fieldNameCamelCase%>.id"
+      :id="$id('<%fieldNameCamelCase%>')"
+      v-model="<%fieldNameCamelCase%>.id"
+      type="hidden"
+    >
+<%/if%><%/each%>
     <div>
-      <button>Save <%namePascalCase%></button>
-      <button
+      <%#if usesBootstrapTheme%><b-button type="submit">Save</b-button><%else%><button>Save</button><%/if%>
+      <<%#if usesBootstrapTheme%>b-button><%else%>button<%/if%>
         ref="cancelBtn"
         type="button"
         @click="close"
       >
-        Close <%namePascalCase%>
-      </button>
+        Close
+      </<%#if usesBootstrapTheme%>b-button><%else%>button<%/if%>
     </div>
   </form>
 </template>
@@ -69,12 +76,12 @@ import gql from 'graphql-tag'
 
       variables () {
         return {
-          id: this.$props.<%nameCamelCase%>Id
+          id: this.$props.id
         }
       },
 
       skip () {
-        return !this.$props.<%nameCamelCase%>Id
+        return !this.$props.id
       },
 
       result ({ data }) {
@@ -83,7 +90,10 @@ import gql from 'graphql-tag'
     }
   },
 
-  props: { <%nameCamelCase%>Id: [Number, String] }
+  props: {
+    id: [Number, String]<%#each fields%><%#if isFieldRelational%>,
+    <%fieldNameCamelCase%>: [Number, String],<%/if%><%/each%>
+  }
 })
 export default class <%namePascalCase%>Form extends Vue {
   <%nameCamelCase%> = {

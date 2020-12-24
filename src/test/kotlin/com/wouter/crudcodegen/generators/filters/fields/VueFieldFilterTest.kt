@@ -19,7 +19,7 @@ class VueFieldFilterTest {
     @Test
     fun `enrichProperties yields the fieldHtmlInputType number for any relation`() {
         val fields = listOf(EntityField.RelationalEntityField("userId", "User"))
-        val settings = FieldTemplateFilter.FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val settings = FieldTemplateFilter.FieldTemplateSettings(fields)
 
         val singleActualVariable = vueFieldFilter.enrichProperties(0, settings).single()
 
@@ -30,7 +30,7 @@ class VueFieldFilterTest {
     @Test
     fun `enrichProperties may yield a different fieldHtmlInputType for a primitive than for a relation`() {
         val fields = listOf(EntityField.PrimitiveEntityField("name", EntityType.STRING))
-        val settings = FieldTemplateFilter.FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val settings = FieldTemplateFilter.FieldTemplateSettings(fields)
 
         val singleActualVariable = vueFieldFilter.enrichProperties(0, settings).single()
 
@@ -42,7 +42,7 @@ class VueFieldFilterTest {
     @EnumSource(EntityType::class)
     fun `enrichProperties yields a fieldHtmlInputType for every primitive`(entityType: EntityType) {
         val fields = listOf(EntityField.PrimitiveEntityField("userId", entityType))
-        val settings = FieldTemplateFilter.FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val settings = FieldTemplateFilter.FieldTemplateSettings(fields)
 
         val singleActualVariable = vueFieldFilter.enrichProperties(0, settings).single()
 

@@ -13,6 +13,8 @@ class FieldNameFilter(
         val field = settings.fields[fieldIndex]
         return listOf(
                 Variable("fieldNameSnakeCase", nameHelper.toDuckName(field.name)),
+                // TODO add tests...
+                Variable("fieldNameKebabCase", nameHelper.toDashName(field.name)),
                 Variable("fieldNamePascalCase", nameHelper.toUpperCamelCase(field.name)),
                 Variable("fieldNameCamelCase", nameHelper.toLowerCamelCase(field.name))
         )

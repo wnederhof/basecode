@@ -1,6 +1,6 @@
 {{=<% %>=}}<template>
   <div>
-    <h1>Show <%namePascalCase%></h1>
+    <h1<%#if usesBootstrapTheme%> class="mt-5 mb-3"<%/if%>>Show <%namePascalCase%></h1>
 
     <<%namePascalCase%>Details :<%nameKebabCase%>-id="this.$route.params.<%nameCamelCase%>Id" />
 
@@ -8,25 +8,25 @@
       List of <%namePluralPascalCase%>
     </n-link>
 
-    <button
+    <<%#if usesBootstrapTheme%>b-button><%else%>button<%/if%>
       ref="edit<%namePascalCase%>Btn"
       @click="openForm"
     >
       Edit <%namePascalCase%>
-    </button>
+    </<%#if usesBootstrapTheme%>b-button><%else%>button<%/if%>>
 
     <h2
-      v-if="<%nameCamelCase%>FormVisible && selected<%namePascalCase%>Id"
+      v-if="<%nameCamelCase%>FormVisible && selectedId"
       ref="edit<%namePascalCase%>Header"
     >
-      Edit <%namePascalCase%> {{ selected<%namePascalCase%>Id }}
+      Edit <%namePascalCase%> {{ selectedId }}
     </h2>
 
     <<%namePascalCase%>Form
       v-if="<%nameCamelCase%>FormVisible"
       ref="<%nameCamelCase%>Form"
-      :key="selected<%namePascalCase%>Id"
-      :<%nameCamelCase%>-id="selected<%namePascalCase%>Id"
+      :key="selectedId"
+      :id="selectedId"
       @save:<%nameCamelCase%>="closeForm"
       @close:<%nameCamelCase%>Form="closeForm"
     />
@@ -44,16 +44,16 @@ import Component from 'nuxt-class-component'
 })
 export default class extends Vue {
   <%nameCamelCase%>FormVisible = false
-  selected<%namePascalCase%>Id: number | null = null
+  selectedId: number | null = null
 
   openForm () {
     this.<%nameCamelCase%>FormVisible = true
-    this.selected<%namePascalCase%>Id = parseInt(this.$route.params.<%nameCamelCase%>Id)
+    this.selectedId = parseInt(this.$route.params.<%nameCamelCase%>Id)
   }
 
   closeForm () {
     this.<%nameCamelCase%>FormVisible = false
-    this.selected<%namePascalCase%>Id = null
+    this.selectedId = null
   }
 }
 </script><%={{ }}=%>

@@ -19,7 +19,7 @@ nav_order: 5
 - X Remove/fix date/nullables support
 - X Clean up generator code
 - X Create proper CLI
-- Don't show field when filtering
+- X Don't show field when filtering
 - X Add missing/fix tests (incl. frontend filtering)
 
 ## Version 0.1.1

@@ -21,7 +21,7 @@ class VueTypescriptFieldTypeFilterTest {
     fun `enrichProperties for relations has a fixed value`() {
         val fields = listOf(EntityField.PrimitiveEntityField("xyz", EntityType.STRING))
 
-        val fieldTemplateSettings = FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val fieldTemplateSettings = FieldTemplateSettings(fields)
 
         val actual = vueTypescriptFieldTypeFilter.enrichProperties(0, fieldTemplateSettings)
 
@@ -33,7 +33,7 @@ class VueTypescriptFieldTypeFilterTest {
     fun `enrichProperties for primitives always yields 1 for fieldVueTypescriptTestValue`() {
         val fields = listOf(EntityField.RelationalEntityField("userId", "User"))
 
-        val fieldTemplateSettings = FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val fieldTemplateSettings = FieldTemplateSettings(fields)
 
         val actual = vueTypescriptFieldTypeFilter.enrichProperties(0, fieldTemplateSettings)
 

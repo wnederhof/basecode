@@ -6,7 +6,7 @@
     Unable to load component. Error message: {{ error }}
   </div>
   <div v-else-if="<%nameCamelCase%>">
-    <table>
+    <<%#if usesBootstrapTheme%>b-table-simple<%else%>table<%/if%>>
       <tbody>
         <tr>
           <td>Id</td>
@@ -17,7 +17,7 @@
           <td>{{ <%nameCamelCase%>.<%fieldNameCamelCase%> }}</td>
         </tr><%/each%>
       </tbody>
-    </table>
+    </<%#if usesBootstrapTheme%>b-table-simple<%else%>table<%/if%>>
   </div>
 </template>
 

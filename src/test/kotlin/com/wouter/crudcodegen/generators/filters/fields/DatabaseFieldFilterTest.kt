@@ -21,7 +21,7 @@ class DatabaseFieldFilterTest {
     @Test
     fun `enrichProperties yields the fieldDatabaseDefinitionType INT NOT NULL for any relation`() {
         val fields = listOf(RelationalEntityField("userId", "User"))
-        val settings = FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val settings = FieldTemplateSettings(fields)
 
         val singleActualVariable = databaseFieldFilter.enrichProperties(0, settings).single()
 
@@ -32,7 +32,7 @@ class DatabaseFieldFilterTest {
     @Test
     fun `enrichProperties may yield a different fieldDatabaseDefinitionType for a primitive than for a relation`() {
         val fields = listOf(PrimitiveEntityField("name", STRING))
-        val settings = FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val settings = FieldTemplateSettings(fields)
 
         val singleActualVariable = databaseFieldFilter.enrichProperties(0, settings).single()
 
@@ -44,7 +44,7 @@ class DatabaseFieldFilterTest {
     @EnumSource(EntityType::class)
     fun `enrichProperties yields a fieldDatabaseDefinitionType for every primitive`(entityType: EntityType) {
         val fields = listOf(PrimitiveEntityField("userId", entityType))
-        val settings = FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val settings = FieldTemplateSettings(fields)
 
         val singleActualVariable = databaseFieldFilter.enrichProperties(0, settings).single()
 

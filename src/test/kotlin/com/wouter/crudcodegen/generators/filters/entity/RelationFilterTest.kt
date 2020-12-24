@@ -18,7 +18,7 @@ class RelationFilterTest {
     @Test
     fun `enrichProperties yields false hasRelations if there are no fields`() {
         val fields = listOf<EntityField>()
-        val settings = EntityTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val settings = EntityTemplateSettings(fields)
 
         val actual = relationFilter.enrichProperties(settings)
 
@@ -30,7 +30,7 @@ class RelationFilterTest {
     fun `enrichProperties yields false hasRelations if there are only non-relational fields`() {
         val someField = EntityField.PrimitiveEntityField("age", EntityType.INT)
         val fields = listOf(someField)
-        val settings = EntityTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val settings = EntityTemplateSettings(fields)
 
         val actual = relationFilter.enrichProperties(settings)
 
@@ -42,7 +42,7 @@ class RelationFilterTest {
     fun `enrichProperties yields true hasRelations if there are only relational fields`() {
         val someField = EntityField.RelationalEntityField("userId", "User")
         val fields = listOf(someField)
-        val settings = EntityTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val settings = EntityTemplateSettings(fields)
 
         val actual = relationFilter.enrichProperties(settings)
 
@@ -55,7 +55,7 @@ class RelationFilterTest {
         val somePrimitiveField = EntityField.PrimitiveEntityField("age", EntityType.INT)
         val someRelationalField = EntityField.RelationalEntityField("userId", "User")
         val fields = listOf(somePrimitiveField, someRelationalField)
-        val settings = EntityTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields)
+        val settings = EntityTemplateSettings(fields)
 
         val actual = relationFilter.enrichProperties(settings)
 

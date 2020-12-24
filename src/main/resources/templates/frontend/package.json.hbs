@@ -14,7 +14,8 @@
   "dependencies": {
     "@nuxt/typescript-runtime": "^2.0.0",
     "@nuxtjs/apollo": "4.0.1-rc.1",
-    "@types/jest": "^26.0.14",
+    "@types/jest": "^26.0.14",{{#if usesBootstrapTheme}}
+    "bootstrap-vue": "^2.21.1",{{/if}}
     "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",
     "nuxt": "^2.14.0",
@@ -39,6 +40,8 @@
     "babel-jest": "^26.3.0",
     "jest": "^26.4.2",
     "mock-apollo-client": "^0.4.0",
+    "sass": "^1.30.0",
+    "sass-loader": "^10.1.0",
     "ts-jest": "^26.3.0",
     "vue-jest": "^3.0.4"
   }

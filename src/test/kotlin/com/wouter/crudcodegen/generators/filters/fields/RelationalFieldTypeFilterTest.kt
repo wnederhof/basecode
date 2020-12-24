@@ -25,7 +25,7 @@ class RelationalFieldTypeFilterTest {
         val fields = listOf(EntityField.PrimitiveEntityField("age", INT))
 
         val actual = relationalFieldTypeFilter.enrichProperties(0,
-                FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
+                FieldTemplateSettings(fields))
 
         assertThat(actual).isEmpty()
     }
@@ -40,7 +40,7 @@ class RelationalFieldTypeFilterTest {
         whenever(nameHelper.pluralize(any())).thenCallRealMethod()
 
         val actual = relationalFieldTypeFilter.enrichProperties(0,
-                FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
+                FieldTemplateSettings(fields))
 
         assertThat(actual).hasSize(5)
 

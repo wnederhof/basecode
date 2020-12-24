@@ -32,7 +32,7 @@ class FieldNameFilterTest {
         whenever(nameHelper.toUpperCamelCase("dateOfBirth")).thenCallRealMethod()
         whenever(nameHelper.toLowerCamelCase("dateOfBirth")).thenCallRealMethod()
 
-        val actual = fieldNameFilter.enrichProperties(0, FieldTemplateSettings(SOME_STRING, SOME_STRING, SOME_STRING, fields))
+        val actual = fieldNameFilter.enrichProperties(0, FieldTemplateSettings(fields))
 
         assertThat(actual).hasSize(3)
 

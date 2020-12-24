@@ -1,6 +1,7 @@
 package com.wouter.crudcodegen.generators.filters.project
 
 import com.nhaarman.mockitokotlin2.mock
+import com.wouter.crudcodegen.generators.ProjectProperties
 import com.wouter.crudcodegen.generators.filters.ProjectTemplateFilter.ProjectTemplateSettings
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
@@ -18,7 +19,7 @@ class ProjectSettingsFilterTest {
     fun `enrichProperties enriches with artifactId and groupId`() {
         val groupId = "com.mycorp"
         val artifactId = "employeemanager"
-        val settings = ProjectTemplateSettings(groupId, artifactId, SOME_STRING, mock())
+        val settings = ProjectTemplateSettings(groupId, artifactId, ProjectProperties.Theme.plain, SOME_STRING, mock())
         val actual = projectSettingsFilter.enrichProperties(settings)
 
         assertThat(actual).hasSize(2)
