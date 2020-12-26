@@ -1,0 +1,43 @@
+package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
+
+import org.springframework.data.annotation.*
+import org.springframework.data.relational.core.mapping.Table
+import java.time.LocalDate
+import java.time.LocalDateTime
+
+@Table("{{ namePluralSnakeCase }}")
+data class {{ namePascalCase }}(
+    @Id
+    val id: Int? = null{%for field in fields%},
+    val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinType }}{%endfor%},
+
+    @CreatedDate
+    val createdAt: LocalDateTime? = null,
+
+    @LastModifiedDate
+    val updatedAt: LocalDateTime? = null
+) {
+
+    fun update(input: Update{{ namePascalCase }}Input) = copy({%for field in fields%}
+        {{field.fieldNameCamelCase}} = input.{{field.fieldNameCamelCase}} ?: {{field.fieldNameCamelCase}},{%endfor%}
+    )
+
+    companion object {
+        fun create(input: Create{{ namePascalCase }}Input) = {{ namePascalCase }}({%for field in fields%}
+            {{field.fieldNameCamelCase}} = input.{{field.fieldNameCamelCase}},{%endfor%}
+        )
+    }
+
+    data class Create{{ namePascalCase }}Input({%for field in fields%}
+        val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinType }},{%endfor%}
+    )
+
+    data class Update{{ namePascalCase }}Input({%for field in fields%}
+        val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinTypeNotNullable }}?,{%endfor%}
+    )
+{%if hasRelations%}
+    data class {{ namePascalCase }}FilterInput({%for field in fields%}{%if field.isFieldRelational%}
+        val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinTypeNotNullable }}? = null,{%endif%}{%endfor%}
+    )
+{%endif%}
+}

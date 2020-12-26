@@ -1,0 +1,23 @@
+package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
+
+import java.time.LocalDate
+import java.time.LocalDateTime
+
+object {{ namePascalCase }}Fixtures {
+
+    val {{ nameScreamingSnakeCase }}_FIXTURE_1 = {{ namePascalCase }}(
+        id = null{%for field in fields%},
+        {{ field.fieldNameCamelCase }} = {{ field.fieldKotlinTestDummyValue }}{%endfor%}
+    )
+
+    val CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1 = {{ namePascalCase }}.Create{{ namePascalCase }}Input({%for field in fields%}
+        {{ field.fieldNameCamelCase }} = {{ field.fieldKotlinTestDummyValue }},{%endfor%}
+    )
+
+    val UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1 = {{ namePascalCase }}.Update{{ namePascalCase }}Input({%for field in fields%}
+        {{ field.fieldNameCamelCase }} = {{ field.fieldKotlinTestDummyValue }},{%endfor%}
+    )
+
+    val {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1 = {{ nameScreamingSnakeCase }}_FIXTURE_1.copy(id = 1)
+
+}

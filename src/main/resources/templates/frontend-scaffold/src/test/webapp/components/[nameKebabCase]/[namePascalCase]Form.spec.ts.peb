@@ -1,9 +1,9 @@
-{{=<% %>=}}import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
+import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { createMockClient } from 'mock-apollo-client'
 import VueApollo from 'vue-apollo'
 import gql from 'graphql-tag'
-import <%namePascalCase%>Form from '@/components/<%nameKebabCase%>/<%namePascalCase%>Form.vue'
+import {{namePascalCase}}Form from '@/components/{{nameKebabCase}}/{{namePascalCase}}Form.vue'
 import UniqueId from 'vue-unique-id'
 import { MockApolloClient } from 'mock-apollo-client/dist/mockClient'
 
@@ -11,7 +11,7 @@ const localVue = createLocalVue()
 localVue.use(UniqueId)
 localVue.use(VueApollo)
 
-describe('<%namePascalCase%>Form', () => {
+describe('{{namePascalCase}}Form', () => {
   let wrapper: Wrapper<any>
   let mockClient: MockApolloClient
   let apolloProvider: VueApollo
@@ -20,17 +20,17 @@ describe('<%namePascalCase%>Form', () => {
     mockClient = createMockClient()
 
     mockClient.setRequestHandler(gql`
-      query <%nameCamelCase%>($id: Int) {
-        <%nameCamelCase%>: <%nameCamelCase%>(id: $id) {
-          id<%#each fields%>
-          <%fieldNameCamelCase%><%/each%>
+      query {{nameCamelCase}}($id: Int) {
+        {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
+          id{%for field in fields%}
+          {{field.fieldNameCamelCase}}{%endfor%}
         }
       }
     `, jest.fn().mockResolvedValue({
       data: {
-        <%nameCamelCase%>: {
-          id: 1<%#each fields%>,
-          <%fieldNameCamelCase%>: <%fieldVueTypescriptTestValue%><%/each%>
+        {{nameCamelCase}}: {
+          id: 1{%for field in fields%},
+          {{field.fieldNameCamelCase}}: {{field.fieldVueTypescriptTestValue}}{%endfor%}
         }
       }
     }))
@@ -39,7 +39,7 @@ describe('<%namePascalCase%>Form', () => {
       defaultClient: mockClient
     })
 
-    wrapper = shallowMount(<%namePascalCase%>Form, {
+    wrapper = shallowMount({{namePascalCase}}Form, {
       localVue,
       apolloProvider,
       propsData: props
@@ -55,9 +55,9 @@ describe('<%namePascalCase%>Form', () => {
     expect(wrapper.vm).toBeTruthy()
   })
 
-  it('contains <%nameCamelCase%> form with no data if id is not set', () => {
-    createComponent({ id: null })<%#each fields%>
-    expect((wrapper.findComponent({ ref: '<%fieldNameCamelCase%>Input' }).element as HTMLInputElement).value).toContain('')<%/each%>
+  it('contains {{nameCamelCase}} form with no data if id is not set', () => {
+    createComponent({ id: null }){%for field in fields%}
+    expect((wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).element as HTMLInputElement).value).toContain(''){%endfor%}
   })
 
   it('shows loading when fetching data if id is set', () => {
@@ -65,18 +65,18 @@ describe('<%namePascalCase%>Form', () => {
     expect(wrapper.text()).toContain('Loading...')
   })
 
-  it('contains <%nameCamelCase%> form with data if id is set', async () => {
+  it('contains {{nameCamelCase}} form with data if id is set', async () => {
     createComponent({ id: 1 })
     await flushPromises()
-<%#each fields%>
-    expect((wrapper.findComponent({ ref: '<%fieldNameCamelCase%>Input' }).element as HTMLInputElement).value).toContain(<%fieldVueTypescriptTestValue%>)<%/each%>
+{%for field in fields%}
+    expect((wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).element as HTMLInputElement).value).toContain({{field.fieldVueTypescriptTestValue}}){%endfor%}
   })
 
   it('emits edit event when edit is clicked', async () => {
     createComponent({ id: null })
     await flushPromises()
     await wrapper.findComponent({ ref: 'cancelBtn' }).trigger('click')
-    expect(wrapper.emitted()['close:<%nameCamelCase%>Form']).toBeTruthy()
+    expect(wrapper.emitted()['close:{{nameCamelCase}}Form']).toBeTruthy()
   })
 
   it('runs a mutation on submit and emits save event', async () => {
@@ -84,18 +84,18 @@ describe('<%namePascalCase%>Form', () => {
     await flushPromises()
     const queryHandler = jest.fn().mockResolvedValue(true)
     mockClient.setRequestHandler(gql`
-      mutation update<%namePascalCase%>($id: ID!, $input: Update<%namePascalCase%>Input!) {
-        update<%namePascalCase%>(id: $id, input: $input) {
-          id<%#each fields%>
-          <%fieldNameCamelCase%><%/each%>
+      mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
+        update{{namePascalCase}}(id: $id, input: $input) {
+          id{%for field in fields%}
+          {{field.fieldNameCamelCase}}{%endfor%}
         }
       }
     `, queryHandler)
 
-    await wrapper.findComponent({ ref: '<%nameCamelCase%>Form' }).trigger('submit.prevent')
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).trigger('submit.prevent')
     expect(queryHandler).toBeCalledTimes(1)
 
     await wrapper.vm.$nextTick()
-    expect(wrapper.emitted()['save:<%nameCamelCase%>']).toBeTruthy()
+    expect(wrapper.emitted()['save:{{nameCamelCase}}']).toBeTruthy()
   })
-})<%={{ }}=%>
+})

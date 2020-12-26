@@ -1,0 +1,17 @@
+{%if hasRelations%}package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
+{%for field in fields%}{%if field.isFieldRelational%}
+import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Event.{{ field.fieldTypePascalCase }}DeleteEvent{%endif%}{%endfor%}
+import org.springframework.context.event.EventListener
+import org.springframework.stereotype.Component
+
+@Component
+class {{ namePascalCase }}Listener{%if hasRelations%}(
+    private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
+) {
+{%for field in fields%}{%if field.isFieldRelational%}
+    @EventListener
+    fun onEvent(event: {{ field.fieldTypePascalCase }}DeleteEvent) {
+        {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePascalCase }}(event.entity.id!!)
+    }
+{%endif%}{%endfor%}
+}{%endif%}{%endif%}

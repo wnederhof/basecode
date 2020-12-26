@@ -1,9 +1,0 @@
-package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
-
-import org.springframework.data.repository.CrudRepository
-
-interface {{ namePascalCase }}Repository : CrudRepository<{{ namePascalCase }}, Int>{{#if hasRelations}} {
-{{#each fields}}{{#if isFieldRelational}}
-    fun findBy{{ fieldNamePascalCase }}({{ fieldNameCamelCase }}: Int): List<{{ namePascalCase }}>
-{{/if}}{{/each}}
-}{{/if}}

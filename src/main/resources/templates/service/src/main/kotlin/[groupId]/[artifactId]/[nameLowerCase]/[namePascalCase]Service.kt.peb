@@ -1,0 +1,70 @@
+package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
+
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.Update{{ namePascalCase }}Input
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.Create{{ namePascalCase }}Input{%if hasRelations%}
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.{{ namePascalCase }}FilterInput{%endif%}
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Event.*{%for field in fields%}{%if field.isFieldRelational%}
+import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
+import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+
+@Service
+@Transactional
+class {{ namePascalCase }}Service(
+    private val {{ nameCamelCase }}Repository: {{ namePascalCase }}Repository,{%for field in fields%}{%if field.isFieldRelational%}
+    private val {{ field.fieldTypeCamelCase }}Service: {{ field.fieldTypePascalCase }}Service,{%endif%}{%endfor%}
+    private val publisher: ApplicationEventPublisher,
+) {
+
+    fun findById(id: Int): {{ namePascalCase }}? {
+        return {{ nameCamelCase }}Repository.findByIdOrNull(id)
+    }
+
+    fun findAll({%if hasRelations%}filterInput: {{ namePascalCase }}FilterInput? = null{%endif%}): Iterable<{{ namePascalCase }}> { {%for field in fields%}{%if field.isFieldRelational%}
+        if (filterInput?.{{ field.fieldNameCamelCase }} != null) {
+            return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}(filterInput.{{ field.fieldNameCamelCase }})
+        }
+{%endif%}{%endfor%}
+        return {{ nameCamelCase }}Repository.findAll()
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    fun findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }}: Int): List<{{ namePascalCase }}> {
+        return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }})
+    }
+{%endif%}{%endfor%}
+    fun create(input: Create{{ namePascalCase }}Input): {{ namePascalCase }} { {%for field in fields%}{%if field.isFieldRelational%}
+        requireNotNull({{ field.fieldTypeCamelCase }}Service.findById(input.{{ field.fieldNameCamelCase }}))
+{%endif%}{%endfor%}
+        var {{ nameCamelCase }} = {{ namePascalCase }}.create(input)
+        {{ nameCamelCase }} = {{ nameCamelCase }}Repository.save({{ nameCamelCase }})
+        publisher.publishEvent({{ namePascalCase }}CreateEvent(this, {{ nameCamelCase }}))
+        return {{ nameCamelCase }}
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    fun deleteBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }}: Int) {
+        {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }})
+            .forEach({{ nameCamelCase }}Repository::delete)
+    }
+{%endif%}{%endfor%}
+    fun update(id: Int, input: Update{{ namePascalCase }}Input): {{ namePascalCase }}? { {%for field in fields%}{%if field.isFieldRelational%}
+        if (input.{{ field.fieldNameCamelCase }} != null) {
+            requireNotNull({{ field.fieldTypeCamelCase }}Service.findById(input.{{ field.fieldNameCamelCase }}))
+        }
+{%endif%}{%endfor%}
+        var {{ nameCamelCase }} = {{ nameCamelCase }}Repository.findByIdOrNull(id) ?: return null
+        {{ nameCamelCase }} = {{ nameCamelCase }}.update(input)
+        {{ nameCamelCase }} = {{ nameCamelCase }}Repository.save({{ nameCamelCase }})
+        publisher.publishEvent({{ namePascalCase }}UpdateEvent(this, {{ nameCamelCase }}))
+        return {{ nameCamelCase }}
+    }
+
+    fun deleteById(id: Int): Boolean {
+        val {{ nameCamelCase }} = {{ nameCamelCase }}Repository.findByIdOrNull(id) ?: return false
+        {{ nameCamelCase }}Repository.deleteById(id)
+        publisher.publishEvent({{ namePascalCase }}DeleteEvent(this, {{ nameCamelCase }}))
+        return true
+    }
+
+}

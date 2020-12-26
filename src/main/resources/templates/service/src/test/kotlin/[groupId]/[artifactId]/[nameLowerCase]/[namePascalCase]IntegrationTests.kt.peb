@@ -1,0 +1,68 @@
+package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
+
+import {{ groupId }}.{{ artifactId }}.IntegrationTestContext
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%for field in fields%}{%if field.isFieldRelational%}
+import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Repository
+import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test{%if hasRelations%}
+import org.junit.jupiter.api.assertThrows{%endif%}
+import org.springframework.beans.factory.annotation.Autowired
+
+class {{ namePascalCase }}IntegrationTests : IntegrationTestContext() {
+
+    @Autowired
+    private lateinit var {{ nameCamelCase }}Service: {{ namePascalCase }}Service
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Autowired
+    private lateinit var {{ field.fieldTypeCamelCase }}Service: {{ field.fieldTypePascalCase }}Service
+
+    @Autowired
+    private lateinit var {{ field.fieldTypeCamelCase }}Repository: {{ field.fieldTypePascalCase }}Repository
+{%endif%}{%endfor%}{%if hasRelations%}
+    @Test
+    fun `{{ namePascalCase }}s cannot be created if related entities do not exist`() {
+        assertThrows<RuntimeException> {
+            {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
+        }
+        assertThat({{ nameCamelCase }}Service.findAll()).isEmpty()
+    }
+{%endif%}
+    @Test
+    fun `{{ namePluralPascalCase }} can be created, fetched and destroyed`() { {%for field in fields%}{%if field.isFieldRelational%}
+        val {{ field.fieldTypeCamelCase }} = {{ field.fieldTypeCamelCase }}Repository.save({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_1)
+{%endif%}{%endfor%}
+        var {{ nameCamelCase }} = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%if hasRelations%}.copy({%for field in fields%}{%if field.isFieldRelational%}
+            {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!,{%endif%}{%endfor%}
+        ){%endif%})
+        {{ nameCamelCase }} = {{ nameCamelCase }}Service.update({{ nameCamelCase }}.id!!, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%if hasRelations%}.copy({%for field in fields%}{%if field.isFieldRelational%}
+            {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!,{%endif%}{%endfor%}
+        )!!{%endif%})!!
+
+        assertThat({{ nameCamelCase }}Service.findAll()).isNotEmpty
+        assertThat({{ nameCamelCase }}Service.findById({{ nameCamelCase }}.id!!)).isNotNull
+{%for field in fields%}{%if field.isFieldRelational%}
+        assertThat({{ nameCamelCase }}Service.findAll({{ namePascalCase }}.{{ namePascalCase }}FilterInput({{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!))).isNotNull
+        assertThat({{ nameCamelCase }}Service.findBy{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.id!!)).isNotNull
+{%endif%}{%endfor%}
+        {{ nameCamelCase }}Service.deleteById({{ nameCamelCase }}.id!!)
+
+        assertThat({{ nameCamelCase }}Service.findAll()).isEmpty()
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Test
+    fun `{{ namePascalCase }}s are deleted when related {{ field.fieldTypePluralPascalCase }} are deleted`() {
+{%for field in fields%}{%if field.isFieldRelational%}        val {{ field.fieldTypeCamelCase }} = {{ field.fieldTypeCamelCase }}Repository.save({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_1)
+{%endif%}{%endfor%}
+        val {{ nameCamelCase }} = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1.copy({%for field in fields%}{%if field.isFieldRelational%}
+            {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!,{%endif%}{%endfor%}
+        ))
+
+        {{ field.fieldTypeCamelCase }}Service.deleteById({{ nameCamelCase }}.{{ field.fieldNameCamelCase }})
+
+        assertThat({{ nameCamelCase }}Service.findAll()).isEmpty()
+    }
+{%endif%}{%endfor%}
+}

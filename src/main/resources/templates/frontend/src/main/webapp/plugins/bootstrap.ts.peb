@@ -1,5 +1,5 @@
-{{#if usesBootstrapTheme}}import Vue from 'vue'
+{%if usesBootstrapTheme%}import Vue from 'vue'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 Vue.use(BootstrapVue)
-Vue.use(IconsPlugin){{/if}}
+Vue.use(IconsPlugin){%endif%}

@@ -4,9 +4,9 @@ import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fi
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1
-{{#each fields}}{{#if isFieldRelational}}import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Fixtures.{{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
-import {{ groupId }}.{{ artifactId }}.{{ fieldTypeLowerCase }}.{{ fieldTypePascalCase }}Service
-{{/if}}{{/each}}import com.nhaarman.mockitokotlin2.verify
+{%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
+import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service
+{%endif%}{%endfor%}import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
@@ -39,12 +39,12 @@ class {{ namePascalCase }}ResolverUnitTests {
 
         @Test
         fun `{{ namePluralCamelCase }} delegates the call to the {{ namePascalCase }}Service`() {
-            {{#if hasRelations}}val any{{ namePascalCase }}Filter = {{ namePascalCase }}.{{ namePascalCase }}FilterInput()
+            {%if hasRelations%}val any{{ namePascalCase }}Filter = {{ namePascalCase }}.{{ namePascalCase }}FilterInput()
 
-            {{/if}}whenever({{ nameCamelCase }}Service.findAll({{#if hasRelations}}any{{ namePascalCase }}Filter{{/if}}))
+            {%endif%}whenever({{ nameCamelCase }}Service.findAll({%if hasRelations%}any{{ namePascalCase }}Filter{%endif%}))
                 .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
-            assertThat(rootQueryResolver.{{ namePluralCamelCase }}({{#if hasRelations}}any{{ namePascalCase }}Filter{{/if}}))
+            assertThat(rootQueryResolver.{{ namePluralCamelCase }}({%if hasRelations%}any{{ namePascalCase }}Filter{%endif%}))
                 .isEqualTo(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
         }
 
@@ -86,46 +86,46 @@ class {{ namePascalCase }}ResolverUnitTests {
         }
 
     }
-{{#if hasRelations}}
+{%if hasRelations%}
     @Nested
     @ExtendWith(MockitoExtension::class)
-    inner class {{ namePascalCase }}ResolverUnitTests { {{#each fields}}{{#if isFieldRelational}}
+    inner class {{ namePascalCase }}ResolverUnitTests { {%for field in fields%}{%if field.isFieldRelational%}
 
         @Mock
-        private lateinit var {{ fieldTypeCamelCase }}Service: {{ fieldTypePascalCase }}Service{{/if}}{{/each}}
+        private lateinit var {{ field.fieldTypeCamelCase }}Service: {{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
 
         @InjectMocks
         private lateinit var {{ nameCamelCase }}QueryResolver: {{ namePascalCase }}Resolver.{{ namePascalCase }}QueryResolver
-{{#each fields}}{{#if isFieldRelational}}
+{%for field in fields%}{%if field.isFieldRelational%}
         @Test
-        fun `{{ fieldTypeCamelCase }} delegates the call to the {{ fieldTypePascalCase }}Service`() {
-            whenever({{ fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ fieldNameCamelCase }}))
-                .thenReturn({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+        fun `{{ field.fieldTypeCamelCase }} delegates the call to the {{ field.fieldTypePascalCase }}Service`() {
+            whenever({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
+                .thenReturn({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
-            assertThat({{ nameCamelCase }}QueryResolver.{{ fieldTypeCamelCase }}({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-                .isEqualTo({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-        }{{/if}}{{/each}}
+            assertThat({{ nameCamelCase }}QueryResolver.{{ field.fieldTypeCamelCase }}({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+                .isEqualTo({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+        }{%endif%}{%endfor%}
     }
-{{/if}}{{#each fields}}{{#if isFieldRelational}}
+{%endif%}{%for field in fields%}{%if field.isFieldRelational%}
     @Nested
     @ExtendWith(MockitoExtension::class)
-    inner class {{ fieldTypePascalCase }}ResolverUnitTests {
+    inner class {{ field.fieldTypePascalCase }}ResolverUnitTests {
 
         @Mock
         private lateinit var {{ nameCamelCase }}Service: {{ namePascalCase }}Service
 
         @InjectMocks
-        private lateinit var {{ fieldTypeCamelCase }}FieldResolver: {{ namePascalCase }}Resolver.{{ fieldTypePascalCase }}FieldResolver
+        private lateinit var {{ field.fieldTypeCamelCase }}FieldResolver: {{ namePascalCase }}Resolver.{{ field.fieldTypePascalCase }}FieldResolver
 
         @Test
         fun `{{ nameCamelCase }} delegates the call to the {{ nameCamelCase }}Service`() {
-            whenever({{ nameCamelCase }}Service.findBy{{ fieldNamePascalCase }}({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.id!!))
+            whenever({{ nameCamelCase }}Service.findBy{{ field.fieldNamePascalCase }}({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.id!!))
                 .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
-            assertThat({{ fieldTypeCamelCase }}FieldResolver.{{ namePluralCamelCase }}({{ fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            assertThat({{ field.fieldTypeCamelCase }}FieldResolver.{{ namePluralCamelCase }}({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
                 .isEqualTo(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
         }
 
     }
-{{/if}}{{/each}}
+{%endif%}{%endfor%}
 }

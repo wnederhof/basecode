@@ -1,0 +1,18 @@
+<template>
+  <div>
+    <h1{%if usesBootstrapTheme%} class="mt-5 mb-3"{%endif%}>List of {{namePluralPascalCase}}</h1>
+
+    <{{namePascalCase}}Manager />
+  </div>
+</template>
+
+<script lang="ts">
+import Vue from 'vue'
+import Component from 'nuxt-class-component'
+import {{namePascalCase}}Manager from '@/components/{{nameKebabCase}}/{{namePascalCase}}Manager.vue'
+
+@Component({
+  components: { {{namePascalCase}}Manager }
+})
+export default class extends Vue { }
+</script>

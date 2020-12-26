@@ -1,0 +1,64 @@
+package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
+
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.Update{{ namePascalCase }}Input
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.Create{{ namePascalCase }}Input{%if hasRelations%}
+import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.{{ namePascalCase }}FilterInput{%endif%}
+{%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}
+import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service
+{%endif%}{%endfor%}import graphql.kickstart.tools.GraphQLMutationResolver
+import graphql.kickstart.tools.GraphQLQueryResolver{%if hasRelations%}
+import graphql.kickstart.tools.GraphQLResolver{%endif%}
+import org.springframework.stereotype.Component
+
+sealed class {{ namePascalCase }}Resolver {
+
+    @Component
+    class RootQueryResolver(
+        private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
+    ) : GraphQLQueryResolver, {{ namePascalCase }}Resolver() {
+
+        fun {{ nameCamelCase }}(id: Int) =
+            {{ nameCamelCase }}Service.findById(id)
+
+        fun {{ namePluralCamelCase }}({%if hasRelations%}filter: {{ namePascalCase }}FilterInput?{%endif%}) =
+            {{ nameCamelCase }}Service.findAll({%if hasRelations%}filter{%endif%})
+
+    }
+
+    @Component
+    class MutationResolver(
+        private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
+    ) : GraphQLMutationResolver, {{ namePascalCase }}Resolver() {
+
+        fun create{{ namePascalCase }}(input: Create{{ namePascalCase }}Input) =
+            {{ nameCamelCase }}Service.create(input)
+
+        fun update{{ namePascalCase }}(id: Int, input: Update{{ namePascalCase }}Input) =
+            {{ nameCamelCase }}Service.update(id, input)
+
+        fun delete{{ namePascalCase }}(id: Int) =
+            {{ nameCamelCase }}Service.deleteById(id)
+
+    }
+{%if hasRelations%}
+    @Component
+    class {{ namePascalCase }}QueryResolver({%for field in fields%}{%if field.isFieldRelational%}
+        private val {{ field.fieldTypeCamelCase }}Service: {{ field.fieldTypePascalCase }}Service,{%endif%}{%endfor%}
+    ) : GraphQLResolver<{{ namePascalCase }}>, {{ namePascalCase }}Resolver() { {%for field in fields%}{%if field.isFieldRelational%}
+
+        fun {{ field.fieldTypeCamelCase }}({{ nameCamelCase }}: {{ namePascalCase }}) =
+            {{ field.fieldTypeCamelCase }}Service.findById({{ nameCamelCase }}.{{ field.fieldNameCamelCase }})
+{%endif%}{%endfor%}
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Component
+    class {{ field.fieldTypePascalCase }}FieldResolver(
+        private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
+    ) : GraphQLResolver<{{ field.fieldTypePascalCase }}>, {{ namePascalCase }}Resolver() {
+
+        fun {{ namePluralCamelCase }}({{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}) =
+            {{ nameCamelCase }}Service.findBy{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.id!!)
+
+    }
+{%endif%}{%endfor%}{%endif%}
+}

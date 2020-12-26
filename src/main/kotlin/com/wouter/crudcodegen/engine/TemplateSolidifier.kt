@@ -1,15 +1,18 @@
 package com.wouter.crudcodegen.engine
 
-import com.github.jknack.handlebars.Handlebars
+import com.mitchellbosecke.pebble.PebbleEngine
 import org.springframework.stereotype.Service
+import java.io.StringWriter
 
 @Service
-class TemplateSolidifier(private val handlebars: Handlebars) {
+class TemplateSolidifier(private val pebbleEngine: PebbleEngine) {
     fun solidifyTemplate(template: String, variables: List<Variable>): String {
         val variableMap = variables.map { it.name to it.value }.toMap()
 
-        return handlebars.compileInline(template)
-                .apply(variableMap)
+        val writer = StringWriter()
+
+        pebbleEngine.getLiteralTemplate(template).evaluate(writer, variableMap)
+        return writer.toString()
     }
 
     fun solidifyFilename(filename: String, variables: List<Variable>): String {

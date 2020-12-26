@@ -1,0 +1,35 @@
+extend type Query {
+    {{ nameCamelCase }}(id: Int): {{ namePascalCase }}
+    {{ namePluralCamelCase }}{%if hasRelations%}(filter: {{ namePascalCase }}Filter){%endif%}: [{{ namePascalCase }}!]!
+}
+
+extend type Mutation {
+    create{{ namePascalCase }}(input: Create{{ namePascalCase }}Input!): {{ namePascalCase }}!
+    update{{ namePascalCase }}(id: ID!, input: Update{{ namePascalCase }}Input!): {{ namePascalCase }}
+    delete{{ namePascalCase }}(id: ID!): Boolean!
+}
+{%for field in fields%}{%if field.isFieldRelational%}
+extend type {{ field.fieldTypePascalCase }} {
+    {{ namePluralCamelCase }}: [{{ namePascalCase }}!]!
+}
+{%endif%}{%endfor%}
+type {{ namePascalCase }} {
+    id: ID!{%for field in fields%}
+    {{ field.fieldNameCamelCase }}: {{ graphQLFieldType }}{%endfor%}{%for field in fields%}{%if field.isFieldRelational%}
+    {{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}{%endif%}{%endfor%}
+    createdAt: Date!
+    updatedAt: Date
+}
+{%if hasRelations%}
+input {{ namePascalCase }}Filter {
+    id: ID{%for field in fields%}{%if field.isFieldRelational%}
+    {{ field.fieldNameCamelCase }}: Int{%endif%}{%endfor%}
+}
+{%endif%}
+input Create{{ namePascalCase }}Input { {%for field in fields%}
+    {{ field.fieldNameCamelCase }}: {{ graphQLFieldType }}{%endfor%}
+}
+
+input Update{{ namePascalCase }}Input { {%for field in fields%}
+    {{ field.fieldNameCamelCase }}: {{ nullableGraphQLFieldType }}{%endfor%}
+}

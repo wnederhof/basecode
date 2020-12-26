@@ -1,0 +1,59 @@
+<template>
+  <div v-if="$apollo.loading">
+    Loading...
+  </div>
+  <div v-else-if="error">
+    Unable to load component. Error message: {{ error }}
+  </div>
+  <div v-else-if="{{nameCamelCase}}">
+    <{%if usesBootstrapTheme%}b-table-simple{{else}}table{%endif%}>
+      <tbody>
+        <tr>
+          <td>Id</td>
+          <td>{{ "{{" }} {{nameCamelCase}}.id {{ "}}" }}</td>
+        </tr>{%for field in fields%}
+        <tr>
+          <td>{{field.fieldNamePascalCase}}</td>
+          <td>{{ "{{" }} {{nameCamelCase}}.{{field.fieldNameCamelCase}} {{ "}}" }}</td>
+        </tr>{%endfor%}
+      </tbody>
+    </{%if usesBootstrapTheme%}b-table-simple{{else}}table{%endif%}>
+  </div>
+</template>
+
+<script lang="ts">
+import gql from 'graphql-tag'
+import { Vue } from 'vue-property-decorator'
+import Component from 'nuxt-class-component'
+
+@Component({
+  apollo: {
+    {{nameCamelCase}}: {
+      query: gql`
+        query {{nameCamelCase}}($id: Int) {
+          {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
+            id{%for field in fields%}
+            {{field.fieldNameCamelCase}}{%endfor%}
+          }
+        }
+      `,
+
+      error (error) {
+        this.error = error.message
+      },
+
+      variables () {
+        return {
+          id: this.$props.{{nameCamelCase}}Id
+        }
+      }
+    }
+  },
+
+  props: { {{nameCamelCase}}Id: [Number, String] }
+})
+export default class {{namePascalCase}}Details extends Vue {
+  {{nameCamelCase}} = null
+  error = null
+}
+</script>

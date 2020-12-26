@@ -29,18 +29,18 @@ internal class TemplateEngineTest {
 
         whenever(fileManager.listTemplateFilesRecursively("new"))
                 .thenReturn(listOf(
-                        "[pomFileName].xml.hbs",
+                        "[pomFileName].xml.peb",
                         "README.md"
                 ))
 
-        doReturn("pom.xml.hbs")
-                .whenever(templateSolidifier).solidifyFilename("[pomFileName].xml.hbs", someMemoryFields)
+        doReturn("pom.xml.peb")
+                .whenever(templateSolidifier).solidifyFilename("[pomFileName].xml.peb", someMemoryFields)
 
         doReturn("README.md")
                 .whenever(templateSolidifier).solidifyFilename("README.md", someMemoryFields)
 
         doReturn("""<artifact>{{ artifact }}</artifact>""")
-                .whenever(fileManager).readTemplate("new", "[pomFileName].xml.hbs")
+                .whenever(fileManager).readTemplate("new", "[pomFileName].xml.peb")
 
         whenever(templateSolidifier.solidifyTemplate("""<artifact>{{ artifact }}</artifact>""", someMemoryFields))
                 .thenReturn("<artifact>helloworld</artifact>")

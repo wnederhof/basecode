@@ -20,13 +20,13 @@ internal class FileManagerTest {
 
     @Test
     fun `The contents of the new template pom file contains a group id`() {
-        assertThat(fileManager.readTemplate("new", "pom.xml.hbs"),
+        assertThat(fileManager.readTemplate("new", "pom.xml.peb"),
                 containsString("<groupId>"))
     }
 
     @Test
     fun `Temp files and directories can be written directly`() {
-        assertThat(fileManager.readTemplate("new", "pom.xml.hbs"),
+        assertThat(fileManager.readTemplate("new", "pom.xml.peb"),
                 containsString("<groupId>"))
     }
 
@@ -35,8 +35,8 @@ internal class FileManagerTest {
         println()
         assertThat(fileManager.listTemplateFilesRecursively("new"),
                 hasItems(
-                        "pom.xml.hbs",
-                        "src/main/kotlin/[groupId]/[artifactId]/Application.kt.hbs"
+                        "pom.xml.peb",
+                        "src/main/kotlin/[groupId]/[artifactId]/Application.kt.peb"
                 )
         )
 
@@ -112,7 +112,7 @@ internal class FileManagerTest {
     fun `Files can be copied, even when the target directory does not exist`() {
         val tempDir = createTempDir("crudcodegen_")
         try {
-            fileManager.copyFile(tempDir, "new", "pom.xml.hbs", "a/b/c/d")
+            fileManager.copyFile(tempDir, "new", "pom.xml.peb", "a/b/c/d")
 
             assertThat(File(tempDir.path + "/a/b/c/d").exists(), equalTo(true))
             assertThat(File(tempDir.path + "/a/b/c/d").readText(), containsString("<artifactId>"))

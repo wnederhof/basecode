@@ -1,15 +1,15 @@
-{{=<% %>=}}import { shallowMount, createLocalVue, RouterLinkStub, Wrapper } from '@vue/test-utils'
+import { shallowMount, createLocalVue, RouterLinkStub, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { createMockClient } from 'mock-apollo-client'
 import VueApollo from 'vue-apollo'
 import gql from 'graphql-tag'
-import <%namePascalCase%>List from '@/components/<%nameKebabCase%>/<%namePascalCase%>List.vue'
+import {{namePascalCase}}List from '@/components/{{nameKebabCase}}/{{namePascalCase}}List.vue'
 import { MockApolloClient } from 'mock-apollo-client/dist/mockClient'
 
 const localVue = createLocalVue()
 localVue.use(VueApollo)
 
-describe('<%namePascalCase%>List', () => {
+describe('{{namePascalCase}}List', () => {
   let wrapper: Wrapper<any>
   let mockClient: MockApolloClient
   let apolloProvider: VueApollo
@@ -18,18 +18,18 @@ describe('<%namePascalCase%>List', () => {
     mockClient = createMockClient()
 
     mockClient.setRequestHandler(gql`
-      query <%namePluralCamelCase%><%#if hasRelations%>($filter: <%namePascalCase%>Filter)<%/if%> {
-        <%namePluralCamelCase%>: <%namePluralCamelCase%><%#if hasRelations%>(filter: $filter)<%/if%> {
-          id<%#each fields%>
-          <%fieldNameCamelCase%><%/each%>
+      query {{namePluralCamelCase}}{%if hasRelations%}($filter: {{namePascalCase}}Filter){%endif%} {
+        {{namePluralCamelCase}}: {{namePluralCamelCase}}{%if hasRelations%}(filter: $filter){%endif%} {
+          id{%for field in fields%}
+          {{field.fieldNameCamelCase}}{%endfor%}
         }
       }
     `, jest.fn().mockResolvedValue({
       data: {
-        <%namePluralCamelCase%>: [
+        {{namePluralCamelCase}}: [
           {
-            id: 1<%#each fields%>,
-            <%fieldNameCamelCase%>: <%fieldVueTypescriptTestValue%><%/each%>
+            id: 1{%for field in fields%},
+            {{field.fieldNameCamelCase}}: {{field.fieldVueTypescriptTestValue}}{%endfor%}
           }
         ]
       }
@@ -39,7 +39,7 @@ describe('<%namePascalCase%>List', () => {
       defaultClient: mockClient
     })
 
-    wrapper = shallowMount(<%namePascalCase%>List, {
+    wrapper = shallowMount({{namePascalCase}}List, {
       localVue,
       apolloProvider,
       stubs: {
@@ -62,18 +62,18 @@ describe('<%namePascalCase%>List', () => {
     expect(wrapper.text()).toContain('Loading...')
   })
 
-  it('contains <%nameCamelCase%> list', async () => {
+  it('contains {{nameCamelCase}} list', async () => {
     createComponent()
     await flushPromises()
-<%#each fields%>
-    expect(wrapper.text()).toContain(<%fieldVueTypescriptTestValue%>)<%/each%>
+{%for field in fields%}
+    expect(wrapper.text()).toContain({{field.fieldVueTypescriptTestValue}}){%endfor%}
   })
 
   it('emits edit event when edit is clicked', async () => {
     createComponent()
     await flushPromises()
-    await wrapper.findComponent({ ref: 'edit<%namePascalCase%>Btn' }).trigger('click')
-    expect(wrapper.emitted()['edit:<%nameCamelCase%>']).toBeTruthy()
+    await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
+    expect(wrapper.emitted()['edit:{{nameCamelCase}}']).toBeTruthy()
   })
 
   it('does not run a mutation on delete with no confirmation', async () => {
@@ -82,12 +82,12 @@ describe('<%namePascalCase%>List', () => {
     const queryHandler = jest.fn().mockResolvedValue(false)
     global.confirm = () => false
     mockClient.setRequestHandler(gql`
-      mutation delete<%namePascalCase%>($id: ID!) {
-        delete<%namePascalCase%>(id: $id)
+      mutation delete{{namePascalCase}}($id: ID!) {
+        delete{{namePascalCase}}(id: $id)
       }
     `, queryHandler)
 
-    await wrapper.findComponent({ ref: 'delete<%namePascalCase%>Btn' }).trigger('click')
+    await wrapper.findComponent({ ref: 'delete{{namePascalCase}}Btn' }).trigger('click')
     expect(queryHandler).toBeCalledTimes(0)
   })
 
@@ -97,12 +97,12 @@ describe('<%namePascalCase%>List', () => {
     const queryHandler = jest.fn().mockResolvedValue(true)
     global.confirm = () => true
     mockClient.setRequestHandler(gql`
-      mutation delete<%namePascalCase%>($id: ID!) {
-        delete<%namePascalCase%>(id: $id)
+      mutation delete{{namePascalCase}}($id: ID!) {
+        delete{{namePascalCase}}(id: $id)
       }
     `, queryHandler)
 
-    await wrapper.findComponent({ ref: 'delete<%namePascalCase%>Btn' }).trigger('click')
+    await wrapper.findComponent({ ref: 'delete{{namePascalCase}}Btn' }).trigger('click')
     expect(queryHandler).toBeCalledTimes(1)
   })
-})<%={{ }}=%>
+})

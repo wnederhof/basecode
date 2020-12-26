@@ -66,6 +66,6 @@ class TemplateEngine(
             targetFileName.dropLast(TEMPLATE_SUFFIX.length)
 
     private companion object {
-        const val TEMPLATE_SUFFIX = ".hbs"
+        const val TEMPLATE_SUFFIX = ".peb"
     }
 }

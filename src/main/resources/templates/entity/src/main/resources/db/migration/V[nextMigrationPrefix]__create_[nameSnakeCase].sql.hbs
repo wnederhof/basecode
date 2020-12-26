@@ -1,6 +1,0 @@
-CREATE TABLE {{ namePluralSnakeCase }} (
-    id SERIAL PRIMARY KEY{{#each fields}},
-    {{ fieldNameSnakeCase }} {{ fieldDatabaseDefinitionType }}{{/each}},
-    created_at TIMESTAMP,
-    updated_at TIMESTAMP
-);
