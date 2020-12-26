@@ -15,7 +15,7 @@ extend type {{ field.fieldTypePascalCase }} {
 {%endif%}{%endfor%}
 type {{ namePascalCase }} {
     id: ID!{%for field in fields%}
-    {{ field.fieldNameCamelCase }}: {{ graphQLFieldType }}{%endfor%}{%for field in fields%}{%if field.isFieldRelational%}
+    {{ field.fieldNameCamelCase }}: {{ field.graphQLFieldType }}{%endfor%}{%for field in fields%}{%if field.isFieldRelational%}
     {{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}{%endif%}{%endfor%}
     createdAt: Date!
     updatedAt: Date
@@ -27,9 +27,9 @@ input {{ namePascalCase }}Filter {
 }
 {%endif%}
 input Create{{ namePascalCase }}Input { {%for field in fields%}
-    {{ field.fieldNameCamelCase }}: {{ graphQLFieldType }}{%endfor%}
+    {{ field.fieldNameCamelCase }}: {{ field.graphQLFieldType }}{%endfor%}
 }
 
 input Update{{ namePascalCase }}Input { {%for field in fields%}
-    {{ field.fieldNameCamelCase }}: {{ nullableGraphQLFieldType }}{%endfor%}
+    {{ field.fieldNameCamelCase }}: {{ field.nullableGraphQLFieldType }}{%endfor%}
 }

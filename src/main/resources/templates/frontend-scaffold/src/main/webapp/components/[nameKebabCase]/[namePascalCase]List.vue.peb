@@ -5,7 +5,7 @@
   <div v-else-if="error">
     Unable to load component. Error message: {{ error }}
   </div>
-  <{%if usesBootstrapTheme%}b-table-simple fixed{{else}}table{%endif%} v-else>
+  <{%if usesBootstrapTheme%}b-table-simple fixed{%else%}table{%endif%} v-else>
     <thead>
       <tr>
         <th>Id</th>{%for field in fields%}
@@ -24,24 +24,24 @@
           <n-link :to="'/{{namePluralKebabCase}}/' + {{nameCamelCase}}.id">
             Show
           </n-link>
-          <{%if usesBootstrapTheme%}b-button>{{else}}button{%endif%}
+          <{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}
             ref="edit{{namePascalCase}}Btn"
             type="button"
             @click="edit{{namePascalCase}}({{nameCamelCase}}.id)"
           >
             Edit
-          </{%if usesBootstrapTheme%}b-button>{{else}}button{%endif%}>
-          <{%if usesBootstrapTheme%}b-button>{{else}}button{%endif%}
+          </{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}>
+          <{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}
             ref="delete{{namePascalCase}}Btn"
             type="button"
             @click="delete{{namePascalCase}}({{nameCamelCase}}.id)"
           >
             Delete
-          </{%if usesBootstrapTheme%}b-button>{{else}}button{%endif%}>
+          </{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}>
         </td>
       </tr>
     </tbody>
-  </table>
+  </{%if usesBootstrapTheme%}b-table-simple{%else%}table{%endif%}>
 </template>
 
 <script lang="ts">

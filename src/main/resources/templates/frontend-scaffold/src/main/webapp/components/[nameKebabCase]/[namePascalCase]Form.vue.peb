@@ -25,7 +25,7 @@
         v-model="{{nameCamelCase}}.{{field.fieldNameCamelCase}}"
         type="{{field.fieldHtmlInputType}}"{%if not isFieldNullable%}{%if isString%}
         required{%endif%}{%endif%}
-      >{{else}}
+      >{%else%}
       <textarea
         :id="$id('{{field.fieldNameCamelCase}}')"
         ref="{{field.fieldNameCamelCase}}Input"
@@ -41,14 +41,14 @@
     >
 {%endif%}{%endfor%}
     <div>
-      {%if usesBootstrapTheme%}<b-button type="submit">Save</b-button>{{else}}<button>Save</button>{%endif%}
-      <{%if usesBootstrapTheme%}b-button>{{else}}button{%endif%}
+      {%if usesBootstrapTheme%}<b-button type="submit">Save</b-button>{%else%}<button>Save</button>{%endif%}
+      <{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}
         ref="cancelBtn"
         type="button"
         @click="close"
       >
         Close
-      </{%if usesBootstrapTheme%}b-button>{{else}}button{%endif%}
+      </{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}>
     </div>
   </form>
 </template>
@@ -92,13 +92,13 @@ import gql from 'graphql-tag'
 
   props: {
     id: [Number, String]{%for field in fields%}{%if field.isFieldRelational%},
-    {{field.fieldNameCamelCase}}: [Number, String],{%endif%}{%endfor%}
+    {{field.fieldNameCamelCase}}: [Number, String]{%endif%}{%endfor%}
   }
 })
 export default class {{namePascalCase}}Form extends Vue {
   {{nameCamelCase}} = {
     id: null,{%for field in fields%}
-    {{field.fieldNameCamelCase}}: {%if field.isFieldNullable%}''{{else}}null{%endif%},{%endfor%}
+    {{field.fieldNameCamelCase}}: {%if field.isFieldNullable%}''{%else%}null{%endif%},{%endfor%}
   }
   error = null
 

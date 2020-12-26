@@ -6,12 +6,12 @@
       @edit:{{nameCamelCase}}="openForm"
     />
 
-    <{%if usesBootstrapTheme%}b-button>{{else}}button{%endif%}
+    <{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}
       ref="openNewFormBtn"
       @click="openNewForm"
     >
       New {{namePascalCase}}
-    </{%if usesBootstrapTheme%}b-button>{{else}}button{%endif%}
+    </{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}>
 
     <h2
       v-if="{{nameCamelCase}}FormVisible && !selectedId"

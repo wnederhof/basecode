@@ -8,7 +8,7 @@ import com.wouter.crudcodegen.generators.filters.FieldTemplateFilter
 import org.springframework.stereotype.Component
 
 @Component
-class GraphQLFieldTypeFilter : FieldTemplateFilter {
+class graphQLFieldTypeFilter : FieldTemplateFilter {
     override fun enrichProperties(fieldIndex: Int, settings: FieldTemplateFilter.FieldTemplateSettings): Iterable<Variable> {
         return when (val field = settings.fields[fieldIndex]) {
             is EntityField.RelationalEntityField -> listOf(

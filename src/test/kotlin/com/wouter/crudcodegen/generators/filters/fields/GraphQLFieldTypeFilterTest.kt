@@ -12,9 +12,9 @@ import org.mockito.InjectMocks
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class GraphQLFieldTypeFilterTest {
+class graphQLFieldTypeFilterTest {
     @InjectMocks
-    private lateinit var graphQLFieldTypeFilter: GraphQLFieldTypeFilter
+    private lateinit var graphQLFieldTypeFilter: graphQLFieldTypeFilter
 
     @Test
     fun `enrichProperties yields Int, Int! for any relation`() {

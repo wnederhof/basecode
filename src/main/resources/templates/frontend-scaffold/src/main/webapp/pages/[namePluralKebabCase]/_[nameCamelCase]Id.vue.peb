@@ -8,12 +8,12 @@
       List of {{namePluralPascalCase}}
     </n-link>
 
-    <{%if usesBootstrapTheme%}b-button>{{else}}button{%endif%}
+    <{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}
       ref="edit{{namePascalCase}}Btn"
       @click="openForm"
     >
       Edit {{namePascalCase}}
-    </{%if usesBootstrapTheme%}b-button>{{else}}button{%endif%}>
+    </{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}>
 
     <h2
       v-if="{{nameCamelCase}}FormVisible && selectedId"
