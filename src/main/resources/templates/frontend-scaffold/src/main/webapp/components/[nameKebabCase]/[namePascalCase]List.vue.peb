@@ -3,39 +3,31 @@
     Loading...
   </div>
   <div v-else-if="error">
-    Unable to load component. Error message: {{ error }}
+    Unable to load component. Error message: {{ "{{" }} error {{ "}}" }}
+  </div>
+  <div v-else-if="{{namePluralCamelCase}}.length === 0">
+    No entries.
   </div>
   <{%if usesBootstrapTheme%}b-table-simple fixed{%else%}table{%endif%} v-else>
     <thead>
       <tr>
         <th>Id</th>{%for field in fields%}
-        <th v-if="!$props.{{field.fieldNameCamelCase}}">{{field.fieldNamePascalCase}}</th>{%endfor%}
+        <th{% if field.isFieldRelational %} v-if="!$props.{{field.fieldNameCamelCase}}"{% endif %}>{{field.fieldNamePascalCase}}</th>{%endfor%}
         <th>Actions</th>
       </tr>
     </thead>
     <tbody>
-      <tr
-        v-for="{{nameCamelCase}} in {{namePluralCamelCase}}"
-        :key="{{nameCamelCase}}.id"
-      >
+      <tr v-for="{{nameCamelCase}} in {{namePluralCamelCase}}" :key="{{nameCamelCase}}.id">
         <td>{{ "{{" }} {{nameCamelCase}}.id {{ "}}" }}</td>{%for field in fields%}
-        <td v-if="!$props.{{field.fieldNameCamelCase}}">{{ "{{" }} {{nameCamelCase}}.{{field.fieldNameCamelCase}} {{ "}}" }}</td>{%endfor%}
+        <td{% if field.isFieldRelational %} v-if="!$props.{{field.fieldNameCamelCase}}"{% endif %}>{{ "{{" }} {{nameCamelCase}}.{{field.fieldNameCamelCase}} {{ "}}" }}</td>{%endfor%}
         <td>
           <n-link :to="'/{{namePluralKebabCase}}/' + {{nameCamelCase}}.id">
             Show
           </n-link>
-          <{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}
-            ref="edit{{namePascalCase}}Btn"
-            type="button"
-            @click="edit{{namePascalCase}}({{nameCamelCase}}.id)"
-          >
+          <{%if usesBootstrapTheme%}b-button{%else%}button{%endif%} ref="edit{{namePascalCase}}Btn" type="button" @click="edit{{namePascalCase}}({{nameCamelCase}}.id)">
             Edit
           </{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}>
-          <{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}
-            ref="delete{{namePascalCase}}Btn"
-            type="button"
-            @click="delete{{namePascalCase}}({{nameCamelCase}}.id)"
-          >
+          <{%if usesBootstrapTheme%}b-button{%else%}button{%endif%} ref="delete{{namePascalCase}}Btn" type="button" @click="delete{{namePascalCase}}({{nameCamelCase}}.id)">
             Delete
           </{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}>
         </td>

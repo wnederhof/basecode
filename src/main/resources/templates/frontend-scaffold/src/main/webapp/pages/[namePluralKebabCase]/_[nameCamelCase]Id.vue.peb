@@ -14,11 +14,24 @@
     >
       Edit {{namePascalCase}}
     </{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}>
-
-    <h2
-      v-if="{{nameCamelCase}}FormVisible && selectedId"
-      ref="edit{{namePascalCase}}Header"
-    >
+{%if usesBootstrapTheme%}
+    <b-modal v-model="{{nameCamelCase}}FormVisible" hide-footer>
+      <template #modal-header>
+        <h2 v-if="{{nameCamelCase}}FormVisible && selectedId" ref="edit{{namePascalCase}}Header">
+          Edit {{namePascalCase}} {{ selectedId }}
+        </h2>
+      </template>
+      <{{namePascalCase}}Form
+        v-if="{{nameCamelCase}}FormVisible"
+        ref="{{nameCamelCase}}Form"
+        :key="selectedId"
+        :id="selectedId"
+        @save:{{nameCamelCase}}="closeForm"
+        @close:{{nameCamelCase}}Form="closeForm"
+      />
+    </b-modal>
+{%else%}
+    <h2 v-if="{{nameCamelCase}}FormVisible && selectedId" ref="edit{{namePascalCase}}Header">
       Edit {{namePascalCase}} {{ selectedId }}
     </h2>
 
@@ -30,6 +43,7 @@
       @save:{{nameCamelCase}}="closeForm"
       @close:{{nameCamelCase}}Form="closeForm"
     />
+{%endif%}
   </div>
 </template>
 

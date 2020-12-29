@@ -1,10 +1,16 @@
 <template>
   <div>
-    <Nuxt />
+    <b-navbar variant="light" type="light">
+      <b-navbar-brand>{{ artifactId }}</b-navbar-brand>
+    </b-navbar>
+    <b-container>
+      <Nuxt />
+    </b-container>
   </div>
 </template>
 
-<style>
+<style lang="scss">
+{% if not usesBootstrapTheme %}
 html {
   font-family:
     'Source Sans Pro',
@@ -23,7 +29,10 @@ html {
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
 }
-
+{% else %}
+@import 'node_modules/bootstrap/scss/bootstrap.scss';
+@import 'node_modules/bootstrap-vue/src/index.scss';
+{% endif %}
 /*
  * This transition delays the page transition by 100ms while the components are in fact being rendered.
  * This way, fast components that need data from the server are already fully rendered
@@ -41,5 +50,4 @@ html {
 .page-leave-active {
   display: none;
 }
-
 </style>

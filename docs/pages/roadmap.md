@@ -23,7 +23,7 @@ nav_order: 5
 - X Add missing/fix tests (incl. frontend filtering)
 
 ## Version 0.1.1
-- Better tests for update
+- Better tests
 - Test booleans
 - Error reporting
 
@@ -40,6 +40,6 @@ nav_order: 5
 - Add authentication generators
 
 ## Version 0.4.0
-- Add optional Bootstrap support
+- X Add optional Bootstrap support
 - Fix page transition scrolling delay
 - Also test Codegen for linting, FE, E2E

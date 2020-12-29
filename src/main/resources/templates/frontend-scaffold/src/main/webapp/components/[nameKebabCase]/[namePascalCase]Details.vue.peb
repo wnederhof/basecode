@@ -3,7 +3,7 @@
     Loading...
   </div>
   <div v-else-if="error">
-    Unable to load component. Error message: {{ error }}
+    Unable to load component. Error message: {{ "{{" }} error {{ "}}" }}
   </div>
   <div v-else-if="{{nameCamelCase}}">
     <{%if usesBootstrapTheme%}b-table-simple{%else%}table{%endif%}>

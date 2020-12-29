@@ -6,35 +6,46 @@
       @edit:{{nameCamelCase}}="openForm"
     />
 
-    <{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}
-      ref="openNewFormBtn"
-      @click="openNewForm"
-    >
+    <{%if usesBootstrapTheme%}b-button{%else%}button{%endif%} ref="openNewFormBtn" @click="openNewForm">
       New {{namePascalCase}}
     </{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}>
-
-    <h2
-      v-if="{{nameCamelCase}}FormVisible && !selectedId"
-      ref="new{{namePascalCase}}Header"
-    >
+{%if usesBootstrapTheme%}
+    <b-modal v-model="{{nameCamelCase}}FormVisible" hide-footer>
+      <template #modal-header>
+        <h2 v-if="{{nameCamelCase}}FormVisible && !selectedId" ref="new{{namePascalCase}}Header">
+          New {{namePascalCase}}
+        </h2>
+        <h2 v-if="{{nameCamelCase}}FormVisible && selectedId" ref="edit{{namePascalCase}}Header">
+          Edit {{namePascalCase}} {{ selectedId }}
+        </h2>
+      </template>
+      <{{namePascalCase}}Form
+        v-if="{{nameCamelCase}}FormVisible"
+        ref="{{nameCamelCase}}Form"
+        :key="selectedId"
+        :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
+        :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
+        @save:{{nameCamelCase}}="closeForm"
+        @close:{{nameCamelCase}}Form="closeForm"
+      />
+    </b-modal>
+{%else%}
+    <h2 v-if="{{nameCamelCase}}FormVisible && !selectedId" ref="new{{namePascalCase}}Header">
       New {{namePascalCase}}
     </h2>
-
-    <h2
-      v-if="{{nameCamelCase}}FormVisible && selectedId"
-      ref="edit{{namePascalCase}}Header"
-    >
+    <h2 v-if="{{nameCamelCase}}FormVisible && selectedId" ref="edit{{namePascalCase}}Header">
       Edit {{namePascalCase}} {{ selectedId }}
     </h2>
-
     <{{namePascalCase}}Form
       v-if="{{nameCamelCase}}FormVisible"
       ref="{{nameCamelCase}}Form"
       :key="selectedId"
-      :id="selectedId"
+      :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
+      :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
       @save:{{nameCamelCase}}="closeForm"
       @close:{{nameCamelCase}}Form="closeForm"
     />
+{%endif%}
   </div>
 </template>
 

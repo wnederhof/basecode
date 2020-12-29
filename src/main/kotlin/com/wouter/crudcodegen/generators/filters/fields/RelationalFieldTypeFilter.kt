@@ -19,6 +19,8 @@ class RelationalFieldTypeFilter(
         val fieldType = field.typeName
         return listOf(
                 Variable("fieldTypePascalCase", nameHelper.toUpperCamelCase(fieldType)),
+            //TODO update tests...
+                Variable("fieldTypePluralCamelCase", nameHelper.toLowerCamelCase(nameHelper.pluralize(fieldType))),
                 Variable("fieldTypePluralPascalCase", nameHelper.toUpperCamelCase(nameHelper.pluralize(fieldType))),
                 Variable("fieldTypeLowerCase", fieldType.toLowerCase()),
                 Variable("fieldTypeScreamingSnakeCase", nameHelper.toDuckName(fieldType).toUpperCase()),
