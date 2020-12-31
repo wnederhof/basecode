@@ -13,7 +13,22 @@ CrudCodeGen introduces the concept of "relational non-intrusive scaffolding", wh
 - **Non-intrusive:** code generated for one entity will not affect code of any another entity, nor will it *change* any other file in the project.
 
 ## Installation
-Currently, CrudCodeGen can only be built from source. Clone the repository into `~/.crudcodegen` and build using Maven (you need Java 11 or higher):
+### Pre-compiled
+First, download the latest binary into `~/.crudcodegen.jar`.
+```
+curl https://github.com/wnederhof/crudcodegen/releases/latest/download/crudcodegen.jar -o ~/.crudcodegen-latest.jar
+```
+Then, set up an alias for quick access, by adding the following to your `.zshrc` or `.bashrc` file:
+```
+alias ccg="java -jar ~/.crudcodegen-latest.jar"
+```
+Enable the alias in your terminal using:
+```
+source ~/.bashrc      # or .zshrc
+```
+
+### From Source
+Clone the repository into `~/.crudcodegen` and build using Maven (you need Java 11 or higher):
 ```
 cd ~
 git clone https://github.com/wnederhof/crudcodegen.git .crudcodegen
