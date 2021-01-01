@@ -36,10 +36,10 @@ class DatabaseFilterTest {
         migrationFile.createNewFile()
 
         val settings = ProjectTemplateSettings(
-                groupId = SOME_STRING,
-                artifactId = SOME_STRING,
-                name = SOME_STRING,
-                targetPath = tempDir
+            groupId = SOME_STRING,
+            artifactId = SOME_STRING,
+            name = SOME_STRING,
+            targetPath = tempDir
         )
         val actual = databaseFilter.enrichProperties(settings)
 

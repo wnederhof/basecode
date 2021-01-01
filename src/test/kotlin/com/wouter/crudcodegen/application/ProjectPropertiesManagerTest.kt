@@ -19,6 +19,7 @@ import java.io.File
 internal class ProjectPropertiesManagerTest {
     @Mock
     private lateinit var fileManager: FileManager
+
     @InjectMocks
     private lateinit var projectPropertiesManager: ProjectPropertiesManager
 
@@ -33,7 +34,7 @@ internal class ProjectPropertiesManagerTest {
         val contextPath = mock<File>()
 
         whenever(fileManager.readTargetFile(contextPath, PROPERTIES_FILE_NAME))
-                .thenReturn(examplePropsFile)
+            .thenReturn(examplePropsFile)
 
         fileManager.readTargetFile(contextPath, PROPERTIES_FILE_NAME)
 
@@ -47,7 +48,7 @@ internal class ProjectPropertiesManagerTest {
         val contextPath = mock<File>()
 
         whenever(fileManager.readTargetFile(contextPath, PROPERTIES_FILE_NAME))
-                .thenReturn(null)
+            .thenReturn(null)
 
         fileManager.readTargetFile(contextPath, PROPERTIES_FILE_NAME)
 
@@ -69,6 +70,7 @@ internal class ProjectPropertiesManagerTest {
             ---
             groupId: "test 2"
             artifactId: "test"
+            theme: "plain"
         """.trimIndent()
 
         verify(fileManager).writeTargetFileContent(contextPath, PROPERTIES_FILE_NAME, "$expectedPropsFile\n", true)

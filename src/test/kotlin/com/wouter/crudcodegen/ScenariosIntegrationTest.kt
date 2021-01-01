@@ -45,11 +45,22 @@ class ScenariosIntegrationTest {
 
         fileManager.currentDir = projectContextDir
 
-        executeCommand("generate", "scaffold",
-            "Owner", "name:string", "about:text", "age:int", "dateOfBirth:date", "timeOfBirth:datetime")
+        executeCommand(
+            "generate", "scaffold",
+            "Owner", "name:string", "about:text", "age:int", "dateOfBirth:date", "timeOfBirth:datetime"
+        )
 
-        executeCommand("generate", "scaffold",
-            "Pet", "ownerId:Owner", "name:string_o", "about:text_o", "age:int_o", "dateOfBirth:date_o", "timeOfBirth:datetime_o")
+        executeCommand(
+            "generate",
+            "scaffold",
+            "Pet",
+            "ownerId:Owner",
+            "name:string_o",
+            "about:text_o",
+            "age:int_o",
+            "dateOfBirth:date_o",
+            "timeOfBirth:datetime_o"
+        )
 
         assertThat(executeBackendTests(File(projectContextDir)), equalTo(true))
         assertThat(executeFrontendTests(File(projectContextDir)), equalTo(true))
@@ -64,18 +75,18 @@ class ScenariosIntegrationTest {
 
     private fun executeBackendTests(tempDir: File): Boolean {
         return OK_RETURN_STATUS == ProcessBuilder("sh", "mvnw", "verify")
-                .inheritIO()
-                .directory(File(tempDir.path))
-                .start()
-                .waitFor()
+            .inheritIO()
+            .directory(File(tempDir.path))
+            .start()
+            .waitFor()
     }
 
     private fun executeFrontendTests(tempDir: File): Boolean {
         return OK_RETURN_STATUS == ProcessBuilder("sh", "-c", "npm install && npm test")
-                .inheritIO()
-                .directory(File(tempDir.path))
-                .start()
-                .waitFor()
+            .inheritIO()
+            .directory(File(tempDir.path))
+            .start()
+            .waitFor()
     }
 
     private companion object {

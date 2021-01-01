@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component
 
 @Component
 class VueFieldFilter : FieldTemplateFilter {
-    override fun enrichProperties(fieldIndex: Int, settings: FieldTemplateFilter.FieldTemplateSettings): Iterable<Variable> {
+    override fun enrichProperties(
+        fieldIndex: Int,
+        settings: FieldTemplateFilter.FieldTemplateSettings
+    ): Iterable<Variable> {
         return when (val field = settings.fields[fieldIndex]) {
             is EntityField.RelationalEntityField ->
                 listOf(Variable("fieldHtmlInputType", "number"))

@@ -5,10 +5,14 @@ import java.io.File
 
 @Service
 class TemplateEngine(
-        private val fileManager: FileManager,
-        private val templateSolidifier: TemplateSolidifier
+    private val fileManager: FileManager,
+    private val templateSolidifier: TemplateSolidifier
 ) {
-    fun findAlreadyExistingTargetFiles(targetRoot: File, templateName: String, variables: List<Variable>): List<String> {
+    fun findAlreadyExistingTargetFiles(
+        targetRoot: File,
+        templateName: String,
+        variables: List<Variable>
+    ): List<String> {
         val files = fileManager.listTemplateFilesRecursively(templateName)
         return files.mapNotNull { templateFilePath ->
             val generatedFilename = templateSolidifier.solidifyFilename(templateFilePath, variables)
@@ -47,12 +51,14 @@ class TemplateEngine(
             if (isTemplateFileName(generatedFilename)) {
                 val targetFileName = removeTemplateSuffix(generatedFilename)
                 if (!File(targetRoot.path + "/$targetFileName").isDirectory
-                    && fileManager.deleteFile(targetRoot, targetFileName, true)) {
+                    && fileManager.deleteFile(targetRoot, targetFileName, true)
+                ) {
                     println("[D] $targetFileName")
                 }
             } else {
                 if (!File(targetRoot.path + "/$generatedFilename").isDirectory
-                    && fileManager.deleteFile(targetRoot, generatedFilename, true)) {
+                    && fileManager.deleteFile(targetRoot, generatedFilename, true)
+                ) {
                     println("[D] $generatedFilename")
                 }
             }
@@ -60,10 +66,10 @@ class TemplateEngine(
     }
 
     private fun isTemplateFileName(targetFileName: String) =
-            targetFileName.endsWith(TEMPLATE_SUFFIX)
+        targetFileName.endsWith(TEMPLATE_SUFFIX)
 
     private fun removeTemplateSuffix(targetFileName: String) =
-            targetFileName.dropLast(TEMPLATE_SUFFIX.length)
+        targetFileName.dropLast(TEMPLATE_SUFFIX.length)
 
     private companion object {
         const val TEMPLATE_SUFFIX = ".peb"

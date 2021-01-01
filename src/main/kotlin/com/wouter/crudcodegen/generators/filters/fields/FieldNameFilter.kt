@@ -7,16 +7,18 @@ import org.springframework.stereotype.Component
 
 @Component
 class FieldNameFilter(
-        private val nameHelper: NameHelper
-): FieldTemplateFilter {
-    override fun enrichProperties(fieldIndex: Int, settings: FieldTemplateFilter.FieldTemplateSettings): Iterable<Variable> {
+    private val nameHelper: NameHelper
+) : FieldTemplateFilter {
+    override fun enrichProperties(
+        fieldIndex: Int,
+        settings: FieldTemplateFilter.FieldTemplateSettings
+    ): Iterable<Variable> {
         val field = settings.fields[fieldIndex]
         return listOf(
-                Variable("fieldNameSnakeCase", nameHelper.toDuckName(field.name)),
-                // TODO add tests...
-                Variable("fieldNameKebabCase", nameHelper.toDashName(field.name)),
-                Variable("fieldNamePascalCase", nameHelper.toUpperCamelCase(field.name)),
-                Variable("fieldNameCamelCase", nameHelper.toLowerCamelCase(field.name))
+            Variable("fieldNameSnakeCase", nameHelper.toDuckName(field.name)),
+            Variable("fieldNameKebabCase", nameHelper.toDashName(field.name)),
+            Variable("fieldNamePascalCase", nameHelper.toUpperCamelCase(field.name)),
+            Variable("fieldNameCamelCase", nameHelper.toLowerCamelCase(field.name))
         )
     }
 }

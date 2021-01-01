@@ -8,23 +8,25 @@ import org.springframework.stereotype.Component
 
 @Component
 class RelationalFieldTypeFilter(
-        private val nameHelper: NameHelper
+    private val nameHelper: NameHelper
 ) : FieldTemplateFilter {
 
-    override fun enrichProperties(fieldIndex: Int, settings: FieldTemplateFilter.FieldTemplateSettings): Iterable<Variable> {
+    override fun enrichProperties(
+        fieldIndex: Int,
+        settings: FieldTemplateFilter.FieldTemplateSettings
+    ): Iterable<Variable> {
         val field = settings.fields[fieldIndex]
         if (field !is RelationalEntityField) {
             return listOf()
         }
         val fieldType = field.typeName
         return listOf(
-                Variable("fieldTypePascalCase", nameHelper.toUpperCamelCase(fieldType)),
-            //TODO update tests...
-                Variable("fieldTypePluralCamelCase", nameHelper.toLowerCamelCase(nameHelper.pluralize(fieldType))),
-                Variable("fieldTypePluralPascalCase", nameHelper.toUpperCamelCase(nameHelper.pluralize(fieldType))),
-                Variable("fieldTypeLowerCase", fieldType.toLowerCase()),
-                Variable("fieldTypeScreamingSnakeCase", nameHelper.toDuckName(fieldType).toUpperCase()),
-                Variable("fieldTypeCamelCase", nameHelper.toLowerCamelCase(fieldType))
+            Variable("fieldTypePascalCase", nameHelper.toUpperCamelCase(fieldType)),
+            Variable("fieldTypePluralCamelCase", nameHelper.toLowerCamelCase(nameHelper.pluralize(fieldType))),
+            Variable("fieldTypePluralPascalCase", nameHelper.toUpperCamelCase(nameHelper.pluralize(fieldType))),
+            Variable("fieldTypeLowerCase", fieldType.toLowerCase()),
+            Variable("fieldTypeScreamingSnakeCase", nameHelper.toDuckName(fieldType).toUpperCase()),
+            Variable("fieldTypeCamelCase", nameHelper.toLowerCamelCase(fieldType))
         )
     }
 }

@@ -15,9 +15,9 @@ class FieldTypePropertiesFilter : FieldTemplateFilter {
         val isFieldOfTypeText = field is EntityField.PrimitiveEntityField
                 && (field.entityType == TEXT || field.entityType == NULL_TEXT)
         return listOf(
-                Variable("isFieldNullable", field.isFieldNullable),
-                Variable("isFieldOfTypeText", isFieldOfTypeText),
-                Variable("isFieldRelational", field.isFieldRelational)
+            Variable("isFieldNullable", field.isFieldNullable),
+            Variable("isFieldOfTypeText", isFieldOfTypeText),
+            Variable("isFieldRelational", field.isFieldRelational)
         )
     }
 }

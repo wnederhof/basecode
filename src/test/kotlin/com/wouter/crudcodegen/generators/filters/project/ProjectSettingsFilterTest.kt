@@ -22,10 +22,19 @@ class ProjectSettingsFilterTest {
         val settings = ProjectTemplateSettings(groupId, artifactId, ProjectProperties.Theme.plain, SOME_STRING, mock())
         val actual = projectSettingsFilter.enrichProperties(settings)
 
-        assertThat(actual).hasSize(2)
+        assertThat(actual).hasSize(3)
 
         assertThat(actual.single { it.name == "groupId" }.value).isEqualTo("com.mycorp")
         assertThat(actual.single { it.name == "artifactId" }.value).isEqualTo("employeemanager")
+        assertThat(actual.single { it.name == "usesBootstrapTheme" }.value).isEqualTo(false)
+    }
+
+    @Test
+    fun `enrichProperties sets useBootstrapTheme appropriately`() {
+        val settings = ProjectTemplateSettings("", "", ProjectProperties.Theme.bootstrap, SOME_STRING, mock())
+        val actual = projectSettingsFilter.enrichProperties(settings)
+
+        assertThat(actual.single { it.name == "usesBootstrapTheme" }.value).isEqualTo(true)
     }
 
     private companion object {

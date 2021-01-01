@@ -23,34 +23,36 @@ internal class TemplateEngineTest {
     fun `File and filenames are generated from template specs`() {
         val root = mock<File>()
         val someMemoryFields = listOf(
-                Variable("artifact", "helloworld"),
-                Variable("pomFileName", "pom")
+            Variable("artifact", "helloworld"),
+            Variable("pomFileName", "pom")
         )
 
         whenever(fileManager.listTemplateFilesRecursively("new"))
-                .thenReturn(listOf(
-                        "[pomFileName].xml.peb",
-                        "README.md"
-                ))
+            .thenReturn(
+                listOf(
+                    "[pomFileName].xml.peb",
+                    "README.md"
+                )
+            )
 
         doReturn("pom.xml.peb")
-                .whenever(templateSolidifier).solidifyFilename("[pomFileName].xml.peb", someMemoryFields)
+            .whenever(templateSolidifier).solidifyFilename("[pomFileName].xml.peb", someMemoryFields)
 
         doReturn("README.md")
-                .whenever(templateSolidifier).solidifyFilename("README.md", someMemoryFields)
+            .whenever(templateSolidifier).solidifyFilename("README.md", someMemoryFields)
 
         doReturn("""<artifact>{{ artifact }}</artifact>""")
-                .whenever(fileManager).readTemplate("new", "[pomFileName].xml.peb")
+            .whenever(fileManager).readTemplate("new", "[pomFileName].xml.peb")
 
         whenever(templateSolidifier.solidifyTemplate("""<artifact>{{ artifact }}</artifact>""", someMemoryFields))
-                .thenReturn("<artifact>helloworld</artifact>")
+            .thenReturn("<artifact>helloworld</artifact>")
 
         templateEngine.generate(root, "new", someMemoryFields)
 
         verify(fileManager, times(1))
-                .copyFile(root, "new", "README.md", "README.md")
+            .copyFile(root, "new", "README.md", "README.md")
 
         verify(fileManager, times(1))
-                .writeTargetFileContent(root, "pom.xml", "<artifact>helloworld</artifact>")
+            .writeTargetFileContent(root, "pom.xml", "<artifact>helloworld</artifact>", true)
     }
 }

@@ -12,7 +12,7 @@ import org.mockito.InjectMocks
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-class graphQLFieldTypeFilterTest {
+class GraphQLFieldTypeFilterTest {
     @InjectMocks
     private lateinit var graphQLFieldTypeFilter: GraphQLFieldTypeFilter
 
@@ -31,7 +31,9 @@ class graphQLFieldTypeFilterTest {
 
     @ParameterizedTest
     @EnumSource(EntityType::class)
-    fun `enrichProperties always produces nullableGraphQLFieldType and graphQLFieldType fields for primitives`(entityType: EntityType) {
+    fun `enrichProperties always produces nullableGraphQLFieldType and graphQLFieldType fields for primitives`(
+        entityType: EntityType
+    ) {
         val fields = listOf(EntityField.PrimitiveEntityField("name", entityType))
         val settings = FieldTemplateFilter.FieldTemplateSettings(fields)
 

@@ -19,30 +19,30 @@ class FileManager(private val resourceLoader: ResourceLoader) {
 
         // When templates is part of the .jar file
         val classPathFileNames = patternResolver
-                .getResources("classpath:/templates/$templateName/**")
-                .filterIsInstance<ClassPathResource>()
-                .filter { !it.path.endsWith("/") }
-                .map { it.path.substring((classPath as ClassPathResource).path.length) }
+            .getResources("classpath:/templates/$templateName/**")
+            .filterIsInstance<ClassPathResource>()
+            .filter { !it.path.endsWith("/") }
+            .map { it.path.substring((classPath as ClassPathResource).path.length) }
 
         val resourcesRootPath = Application::class.java.protectionDomain.codeSource.location.path
         val templatesDirectory = resourcesRootPath + "templates/$templateName/"
 
         // When using e.g. in the IDE
         val fileSystemFileNames = patternResolver
-                .getResources("classpath:/templates/$templateName/**")
-                .filterIsInstance<FileSystemResource>()
-                .filter { !it.file.isDirectory }
-                .onEach { check(it.path.startsWith(templatesDirectory)) }
-                .map { it.path.substring(templatesDirectory.length) }
+            .getResources("classpath:/templates/$templateName/**")
+            .filterIsInstance<FileSystemResource>()
+            .filter { !it.file.isDirectory }
+            .onEach { check(it.path.startsWith(templatesDirectory)) }
+            .map { it.path.substring(templatesDirectory.length) }
 
         return classPathFileNames + fileSystemFileNames
     }
 
     fun readTemplate(templateName: String, path: String): String {
         return resourceLoader.getResource("classpath:/templates/$templateName/$path")
-                .inputStream
-                .readAllBytes()
-                .let { String(it) }
+            .inputStream
+            .readAllBytes()
+            .let { String(it) }
     }
 
     fun createTargetDirectory(root: File, path: String) {
@@ -50,16 +50,22 @@ class FileManager(private val resourceLoader: ResourceLoader) {
         println("[D] $path")
     }
 
-    fun copyFile(root: File, templateName: String, templatePath: String, targetPath: String, overwrite: Boolean = true) {
+    fun copyFile(
+        root: File,
+        templateName: String,
+        templatePath: String,
+        targetPath: String,
+        overwrite: Boolean = true
+    ) {
         if (!overwrite && File(root.path + "/$targetPath").exists()) {
             error("File already exists: $targetPath")
         }
         val directories = targetPath.split("/").dropLast(1).joinToString("/")
         File("${root.path}/$directories").mkdirs()
         resourceLoader.getResource("classpath:/templates/$templateName/$templatePath")
-                .inputStream
-                .readAllBytes()
-                .let { File("${root.path}/$targetPath").writeBytes(it) }
+            .inputStream
+            .readAllBytes()
+            .let { File("${root.path}/$targetPath").writeBytes(it) }
     }
 
     fun writeTargetFileContent(root: File, path: String, content: String, overwrite: Boolean = false) {

@@ -13,9 +13,10 @@ class PebbleConfig {
         return PebbleEngine.Builder()
             .autoEscaping(false)
             .newLineTrimming(false)
-            .syntax(Syntax.Builder()
-                .setEnableNewLineTrimming(false)
-                .build()
+            .syntax(
+                Syntax.Builder()
+                    .setEnableNewLineTrimming(false)
+                    .build()
             )
             .build()
     }

@@ -9,6 +9,6 @@ import picocli.CommandLine.Command
     aliases = ["g"],
     description = ["Generates GraphQL definitions and resolvers according to the specified entity."]
 )
-class GraphQLGenerator: AbstractFieldBasedGenerator() {
+class GraphQLGenerator : AbstractFieldBasedGenerator() {
     override val templateNames = listOf("graphql")
 }

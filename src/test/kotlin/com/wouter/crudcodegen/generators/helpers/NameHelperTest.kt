@@ -14,48 +14,70 @@ internal class NameHelperTest {
 
     @Test
     fun toDuckName() {
-        assertThat(nameHelper.toDuckName("wouterNederhof"),
-                equalTo("wouter_nederhof"))
-        assertThat(nameHelper.toDuckName("WouterNederhof"),
-                equalTo("wouter_nederhof"))
+        assertThat(
+            nameHelper.toDuckName("wouterNederhof"),
+            equalTo("wouter_nederhof")
+        )
+        assertThat(
+            nameHelper.toDuckName("WouterNederhof"),
+            equalTo("wouter_nederhof")
+        )
     }
 
     @Test
     fun toDashName() {
-        assertThat(nameHelper.toDashName("wouterNederhof"),
-                equalTo("wouter-nederhof"))
-        assertThat(nameHelper.toDashName("WouterNederhof"),
-                equalTo("wouter-nederhof"))
+        assertThat(
+            nameHelper.toDashName("wouterNederhof"),
+            equalTo("wouter-nederhof")
+        )
+        assertThat(
+            nameHelper.toDashName("WouterNederhof"),
+            equalTo("wouter-nederhof")
+        )
     }
 
     @Test
     fun toCapitalCamelCase() {
-        assertThat(nameHelper.toUpperCamelCase("wouterNederhof"),
-                equalTo("WouterNederhof"))
-        assertThat(nameHelper.toUpperCamelCase("WouterNederhof"),
-                equalTo("WouterNederhof"))
+        assertThat(
+            nameHelper.toUpperCamelCase("wouterNederhof"),
+            equalTo("WouterNederhof")
+        )
+        assertThat(
+            nameHelper.toUpperCamelCase("WouterNederhof"),
+            equalTo("WouterNederhof")
+        )
     }
 
     @Test
     fun toLowerCamelCase() {
-        assertThat(nameHelper.toLowerCamelCase("wouterNederhof"),
-                equalTo("wouterNederhof"))
-        assertThat(nameHelper.toLowerCamelCase("WouterNederhof"),
-                equalTo("wouterNederhof"))
+        assertThat(
+            nameHelper.toLowerCamelCase("wouterNederhof"),
+            equalTo("wouterNederhof")
+        )
+        assertThat(
+            nameHelper.toLowerCamelCase("WouterNederhof"),
+            equalTo("wouterNederhof")
+        )
     }
 
     @Test
     fun pluralize() {
-        assertThat(nameHelper.pluralize("post"),
-                equalTo("posts"))
+        assertThat(
+            nameHelper.pluralize("post"),
+            equalTo("posts")
+        )
 
-        assertThat(nameHelper.pluralize("bass"),
-                equalTo("basses"))
+        assertThat(
+            nameHelper.pluralize("bass"),
+            equalTo("basses")
+        )
     }
 
     @Test
     fun capitalize() {
-        assertThat(nameHelper.capitalize("post"),
-                equalTo("POST"))
+        assertThat(
+            nameHelper.capitalize("post"),
+            equalTo("POST")
+        )
     }
 }

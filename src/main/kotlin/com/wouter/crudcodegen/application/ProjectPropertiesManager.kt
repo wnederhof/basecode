@@ -13,14 +13,16 @@ class ProjectPropertiesManager(private val fileManager: FileManager) {
 
     fun readProperties(contextPath: File): ProjectProperties {
         val contents = fileManager.readTargetFile(contextPath, PROPERTIES_FILE_NAME)
-                ?: return ProjectProperties()
+            ?: return ProjectProperties()
 
         return yamlObjectMapper.readValue(contents, ProjectProperties::class.java)
     }
 
     fun writeProperties(contextPath: File, properties: ProjectProperties) {
-        fileManager.writeTargetFileContent(contextPath, PROPERTIES_FILE_NAME,
-                yamlObjectMapper.writeValueAsString(properties), true)
+        fileManager.writeTargetFileContent(
+            contextPath, PROPERTIES_FILE_NAME,
+            yamlObjectMapper.writeValueAsString(properties), true
+        )
     }
 
     companion object {

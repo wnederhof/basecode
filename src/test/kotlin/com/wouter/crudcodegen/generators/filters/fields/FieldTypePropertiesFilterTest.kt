@@ -19,8 +19,10 @@ class FieldTypePropertiesFilterTest {
     fun `enrichProperties yields false isFieldNullable if the field is not nullable`() {
         val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.DATE))
 
-        val actual = fieldTypePropertiesFilter.enrichProperties(0,
-                FieldTemplateSettings(fields))
+        val actual = fieldTypePropertiesFilter.enrichProperties(
+            0,
+            FieldTemplateSettings(fields)
+        )
 
         assertThat(actual.single { it.name == "isFieldNullable" }.value).isEqualTo(false)
     }
@@ -29,8 +31,10 @@ class FieldTypePropertiesFilterTest {
     fun `enrichProperties yields true isFieldNullable if the field is nullable`() {
         val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.NULL_DATE))
 
-        val actual = fieldTypePropertiesFilter.enrichProperties(0,
-                FieldTemplateSettings(fields))
+        val actual = fieldTypePropertiesFilter.enrichProperties(
+            0,
+            FieldTemplateSettings(fields)
+        )
 
         assertThat(actual.single { it.name == "isFieldNullable" }.value).isEqualTo(true)
     }
@@ -39,8 +43,10 @@ class FieldTypePropertiesFilterTest {
     fun `enrichProperties yields false isFieldOfTypeText if the field is not of type text`() {
         val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.INT))
 
-        val actual = fieldTypePropertiesFilter.enrichProperties(0,
-                FieldTemplateSettings(fields))
+        val actual = fieldTypePropertiesFilter.enrichProperties(
+            0,
+            FieldTemplateSettings(fields)
+        )
 
         assertThat(actual.single { it.name == "isFieldOfTypeText" }.value).isEqualTo(false)
     }
@@ -49,8 +55,10 @@ class FieldTypePropertiesFilterTest {
     fun `enrichProperties yields true isFieldOfTypeText if the field is of type text`() {
         val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.TEXT))
 
-        val actual = fieldTypePropertiesFilter.enrichProperties(0,
-                FieldTemplateSettings(fields))
+        val actual = fieldTypePropertiesFilter.enrichProperties(
+            0,
+            FieldTemplateSettings(fields)
+        )
 
         assertThat(actual.single { it.name == "isFieldOfTypeText" }.value).isEqualTo(true)
     }
@@ -59,8 +67,10 @@ class FieldTypePropertiesFilterTest {
     fun `enrichProperties yields true isFieldOfTypeText if the field is of type nullable text`() {
         val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.NULL_TEXT))
 
-        val actual = fieldTypePropertiesFilter.enrichProperties(0,
-                FieldTemplateSettings(fields))
+        val actual = fieldTypePropertiesFilter.enrichProperties(
+            0,
+            FieldTemplateSettings(fields)
+        )
 
         assertThat(actual.single { it.name == "isFieldOfTypeText" }.value).isEqualTo(true)
     }
@@ -69,8 +79,10 @@ class FieldTypePropertiesFilterTest {
     fun `enrichProperties yields false isFieldRelational if the field is not relational`() {
         val fields = listOf(EntityField.PrimitiveEntityField("dateOfBirth", EntityType.DATE))
 
-        val actual = fieldTypePropertiesFilter.enrichProperties(0,
-                FieldTemplateSettings(fields))
+        val actual = fieldTypePropertiesFilter.enrichProperties(
+            0,
+            FieldTemplateSettings(fields)
+        )
 
         assertThat(actual.single { it.name == "isFieldRelational" }.value).isEqualTo(false)
     }
@@ -79,8 +91,10 @@ class FieldTypePropertiesFilterTest {
     fun `enrichProperties yields true isFieldRelational if the field is relational`() {
         val fields = listOf(EntityField.RelationalEntityField("userId", "User"))
 
-        val actual = fieldTypePropertiesFilter.enrichProperties(0,
-                FieldTemplateSettings(fields))
+        val actual = fieldTypePropertiesFilter.enrichProperties(
+            0,
+            FieldTemplateSettings(fields)
+        )
 
         assertThat(actual.single { it.name == "isFieldRelational" }.value).isEqualTo(true)
     }

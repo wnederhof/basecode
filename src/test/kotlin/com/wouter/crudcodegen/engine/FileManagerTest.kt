@@ -20,28 +20,35 @@ internal class FileManagerTest {
 
     @Test
     fun `The contents of the new template pom file contains a group id`() {
-        assertThat(fileManager.readTemplate("new", "pom.xml.peb"),
-                containsString("<groupId>"))
+        assertThat(
+            fileManager.readTemplate("new", "pom.xml.peb"),
+            containsString("<groupId>")
+        )
     }
 
     @Test
     fun `Temp files and directories can be written directly`() {
-        assertThat(fileManager.readTemplate("new", "pom.xml.peb"),
-                containsString("<groupId>"))
+        assertThat(
+            fileManager.readTemplate("new", "pom.xml.peb"),
+            containsString("<groupId>")
+        )
     }
 
     @Test
     fun `All files are listed in a template using templateFileTree`() {
         println()
-        assertThat(fileManager.listTemplateFilesRecursively("new"),
-                hasItems(
-                        "pom.xml.peb",
-                        "src/main/kotlin/[groupId]/[artifactId]/Application.kt.peb"
-                )
+        assertThat(
+            fileManager.listTemplateFilesRecursively("new"),
+            hasItems(
+                "pom.xml.peb",
+                "src/main/kotlin/[groupId]/[artifactId]/Application.kt.peb"
+            )
         )
 
-        assertThat(fileManager.listTemplateFilesRecursively("new"),
-                not(hasItems("src/main/kotlin/[groupId]/[artifactId]")))
+        assertThat(
+            fileManager.listTemplateFilesRecursively("new"),
+            not(hasItems("src/main/kotlin/[groupId]/[artifactId]"))
+        )
     }
 
     @Test
@@ -126,7 +133,7 @@ internal class FileManagerTest {
         val tempDir = createTempDir("crudcodegen_")
         try {
             fileManager.writeTargetFileContent(tempDir, "a/b/c", "test")
-            assertThrows<IOException> {
+            assertThrows<IllegalStateException> {
                 fileManager.writeTargetFileContent(tempDir, "a/b/c", "test")
             }
         } finally {

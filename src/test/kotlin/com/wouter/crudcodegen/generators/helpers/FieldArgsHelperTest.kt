@@ -19,8 +19,8 @@ class FieldArgsHelperTest {
         val actual = fieldArgsHelper.mapArgsToEntityFields(listOf("name:string", "userId:User"))
 
         val expected = listOf(
-                PrimitiveEntityField("name", EntityType.STRING),
-                RelationalEntityField("userId", "User")
+            PrimitiveEntityField("name", EntityType.STRING),
+            RelationalEntityField("userId", "User")
         )
 
         assertThat(actual).isEqualTo(expected)

@@ -1,7 +1,6 @@
 package com.wouter.crudcodegen.generators.helpers
 
 import com.wouter.crudcodegen.engine.Variable
-import com.wouter.crudcodegen.generators.GeneratorSettings
 import com.wouter.crudcodegen.generators.ProjectProperties
 import com.wouter.crudcodegen.generators.filters.*
 import com.wouter.crudcodegen.generators.filters.EntityTemplateFilter.EntityTemplateSettings

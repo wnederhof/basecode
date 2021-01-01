@@ -9,7 +9,7 @@ import java.io.File
 class DatabaseFilter : ProjectTemplateFilter {
     override fun enrichProperties(settings: ProjectTemplateFilter.ProjectTemplateSettings): Iterable<Variable> {
         return listOf(
-                Variable("nextMigrationPrefix", findNextMigrationPrefix(settings.targetPath))
+            Variable("nextMigrationPrefix", findNextMigrationPrefix(settings.targetPath))
         )
     }
 
@@ -20,13 +20,13 @@ class DatabaseFilter : ProjectTemplateFilter {
 
     private fun findLastMigrationNumber(targetPath: File): Int {
         val files = File("$targetPath/src/main/resources/db/migration").listFiles()
-                ?: return 0
+            ?: return 0
 
         return files
-                .filter { it.name.endsWith(".sql") }
-                .map { it.name }
-                .map { findNumberPrefix(it) }
-                .maxBy { it } ?: 0
+            .filter { it.name.endsWith(".sql") }
+            .map { it.name }
+            .map { findNumberPrefix(it) }
+            .maxBy { it } ?: 0
     }
 
     private fun findNumberPrefix(s: String): Int {

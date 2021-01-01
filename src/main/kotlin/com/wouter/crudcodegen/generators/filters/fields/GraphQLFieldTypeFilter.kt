@@ -9,15 +9,18 @@ import org.springframework.stereotype.Component
 
 @Component
 class GraphQLFieldTypeFilter : FieldTemplateFilter {
-    override fun enrichProperties(fieldIndex: Int, settings: FieldTemplateFilter.FieldTemplateSettings): Iterable<Variable> {
+    override fun enrichProperties(
+        fieldIndex: Int,
+        settings: FieldTemplateFilter.FieldTemplateSettings
+    ): Iterable<Variable> {
         return when (val field = settings.fields[fieldIndex]) {
             is EntityField.RelationalEntityField -> listOf(
-                    Variable("nullableGraphQLFieldType", "Int"),
-                    Variable("graphQLFieldType", "Int!")
+                Variable("nullableGraphQLFieldType", "Int"),
+                Variable("graphQLFieldType", "Int!")
             )
             is EntityField.PrimitiveEntityField -> listOf(
-                    Variable("nullableGraphQLFieldType", determineNullableGraphQLType(field.entityType)),
-                    Variable("graphQLFieldType", determineGraphQLType(field.entityType))
+                Variable("nullableGraphQLFieldType", determineNullableGraphQLType(field.entityType)),
+                Variable("graphQLFieldType", determineGraphQLType(field.entityType))
             )
         }
     }

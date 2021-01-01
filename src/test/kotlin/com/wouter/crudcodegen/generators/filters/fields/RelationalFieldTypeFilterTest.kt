@@ -17,6 +17,7 @@ import org.mockito.junit.jupiter.MockitoExtension
 class RelationalFieldTypeFilterTest {
     @Mock
     private lateinit var nameHelper: NameHelper
+
     @InjectMocks
     private lateinit var relationalFieldTypeFilter: RelationalFieldTypeFilter
 
@@ -24,8 +25,10 @@ class RelationalFieldTypeFilterTest {
     fun `enrichProperties returns an empty list if the field is not relational`() {
         val fields = listOf(EntityField.PrimitiveEntityField("age", INT))
 
-        val actual = relationalFieldTypeFilter.enrichProperties(0,
-                FieldTemplateSettings(fields))
+        val actual = relationalFieldTypeFilter.enrichProperties(
+            0,
+            FieldTemplateSettings(fields)
+        )
 
         assertThat(actual).isEmpty()
     }
@@ -39,12 +42,15 @@ class RelationalFieldTypeFilterTest {
         whenever(nameHelper.toLowerCamelCase(any())).thenCallRealMethod()
         whenever(nameHelper.pluralize(any())).thenCallRealMethod()
 
-        val actual = relationalFieldTypeFilter.enrichProperties(0,
-                FieldTemplateSettings(fields))
+        val actual = relationalFieldTypeFilter.enrichProperties(
+            0,
+            FieldTemplateSettings(fields)
+        )
 
-        assertThat(actual).hasSize(5)
+        assertThat(actual).hasSize(6)
 
         assertThat(actual.single { it.name == "fieldTypePascalCase" }.value).isEqualTo("SalesMan")
+        assertThat(actual.single { it.name == "fieldTypePluralCamelCase" }.value).isEqualTo("salesMans")
         assertThat(actual.single { it.name == "fieldTypePluralPascalCase" }.value).isEqualTo("SalesMans")
         assertThat(actual.single { it.name == "fieldTypeLowerCase" }.value).isEqualTo("salesman")
         assertThat(actual.single { it.name == "fieldTypeScreamingSnakeCase" }.value).isEqualTo("SALES_MAN")

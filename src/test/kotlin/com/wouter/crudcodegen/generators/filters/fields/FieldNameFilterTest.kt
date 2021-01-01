@@ -34,9 +34,10 @@ class FieldNameFilterTest {
 
         val actual = fieldNameFilter.enrichProperties(0, FieldTemplateSettings(fields))
 
-        assertThat(actual).hasSize(3)
+        assertThat(actual).hasSize(4)
 
         assertThat(actual.single { it.name == "fieldNameSnakeCase" }.value).isEqualTo("date_of_birth")
+        assertThat(actual.single { it.name == "fieldNameKebabCase" }.value).isEqualTo("date-of-birth")
         assertThat(actual.single { it.name == "fieldNamePascalCase" }.value).isEqualTo("DateOfBirth")
         assertThat(actual.single { it.name == "fieldNameCamelCase" }.value).isEqualTo("dateOfBirth")
     }

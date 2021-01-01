@@ -4,7 +4,7 @@ import com.wouter.crudcodegen.engine.Variable
 import com.wouter.crudcodegen.generators.ProjectProperties
 import java.io.File
 
-interface ProjectTemplateFilter: GeneratorFilter {
+interface ProjectTemplateFilter : GeneratorFilter {
     fun enrichProperties(settings: ProjectTemplateSettings): Iterable<Variable>
 
     data class ProjectTemplateSettings(

@@ -9,7 +9,7 @@ import picocli.CommandLine.Command
     aliases = ["sbe"],
     description = ["Generates backend scaffold according to the specified entity."]
 )
-class BackendScaffoldGenerator: AbstractFieldBasedGenerator() {
+class BackendScaffoldGenerator : AbstractFieldBasedGenerator() {
     override val templateNames = listOf("service", "entity", "graphql")
     override val generateAfterDeletionTemplateNames = listOf("entity-removal")
 }

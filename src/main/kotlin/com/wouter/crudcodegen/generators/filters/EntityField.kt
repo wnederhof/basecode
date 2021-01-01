@@ -3,16 +3,16 @@ package com.wouter.crudcodegen.generators.filters
 import com.wouter.crudcodegen.generators.EntityType
 
 sealed class EntityField(
-        val name: String,
-        val isFieldNullable: Boolean,
-        val isFieldRelational: Boolean
+    val name: String,
+    val isFieldNullable: Boolean,
+    val isFieldRelational: Boolean
 ) {
 
-    data class PrimitiveEntityField(private val _name: String, val entityType: EntityType)
-        : EntityField(_name, entityType.isNullable, false)
+    data class PrimitiveEntityField(private val _name: String, val entityType: EntityType) :
+        EntityField(_name, entityType.isNullable, false)
 
-    data class RelationalEntityField(private val _name: String, val typeName: String)
-        : EntityField(_name, false, true)
+    data class RelationalEntityField(private val _name: String, val typeName: String) :
+        EntityField(_name, false, true)
 
     companion object {
         fun fromUserInput(name: String, type: String): EntityField {

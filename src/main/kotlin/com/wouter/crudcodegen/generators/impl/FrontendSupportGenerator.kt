@@ -42,8 +42,9 @@ class FrontendSupportGenerator(
 
         val variables = variablesHelper.createVariables(targetPath, properties, "", fields, filters)
 
-        val alreadyExistingTemplateFile = templateEngine.findAlreadyExistingTargetFiles(targetPath, "frontend", variables)
-            .firstOrNull()
+        val alreadyExistingTemplateFile =
+            templateEngine.findAlreadyExistingTargetFiles(targetPath, "frontend", variables)
+                .firstOrNull()
 
         if (alreadyExistingTemplateFile != null && !overwriteFlag && !deleteFlag) {
             error("Aborting. File already exists: $alreadyExistingTemplateFile. If you wish to overwrite existing files, please use -o or --overwrite.")
