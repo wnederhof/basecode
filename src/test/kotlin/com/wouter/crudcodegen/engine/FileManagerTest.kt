@@ -1,6 +1,5 @@
 package com.wouter.crudcodegen.engine
 
-import com.wouter.crudcodegen.Application
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.*
 import org.junit.jupiter.api.Test
@@ -8,7 +7,6 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.io.File
-import java.io.IOException
 
 @SpringBootTest
 internal class FileManagerTest {
@@ -59,7 +57,7 @@ internal class FileManagerTest {
 
             assertThat(File(tempDir.path + "/a/b/c").exists(), equalTo(true))
             assertThat(File(tempDir.path + "/a/b/d").exists(), equalTo(false))
-            assertThat(File(tempDir.path + "/a/b/c").isDirectory(), equalTo(true))
+            assertThat(File(tempDir.path + "/a/b/c").isDirectory, equalTo(true))
         } finally {
             tempDir.deleteRecursively()
         }
@@ -73,7 +71,7 @@ internal class FileManagerTest {
 
             assertThat(File(tempDir.path + "/a/b/c").exists(), equalTo(true))
             assertThat(File(tempDir.path + "/a/b/d").exists(), equalTo(false))
-            assertThat(File(tempDir.path + "/a/b/d").isDirectory(), equalTo(false))
+            assertThat(File(tempDir.path + "/a/b/d").isDirectory, equalTo(false))
             assertThat(File(tempDir.path + "/a/b/c").readText(), equalTo("test"))
         } finally {
             tempDir.deleteRecursively()

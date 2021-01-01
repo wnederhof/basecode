@@ -16,13 +16,13 @@ class NameFilter(
             Variable("nameCamelCase", nameHelper.toLowerCamelCase(name)),
             Variable("namePascalCase", nameHelper.toUpperCamelCase(name)),
             Variable("namePluralCamelCase", nameHelper.pluralize(nameHelper.toLowerCamelCase(name))),
-            Variable("nameSnakeCase", nameHelper.toDuckName(name)),
+            Variable("nameSnakeCase", nameHelper.toDuckCase(name)),
             Variable("nameLowerCase", name.toLowerCase()),
             Variable("namePluralPascalCase", nameHelper.pluralize(nameHelper.toUpperCamelCase(name))),
-            Variable("namePluralSnakeCase", nameHelper.pluralize(nameHelper.toDuckName(name))),
-            Variable("nameKebabCase", nameHelper.toDashName(name)),
-            Variable("namePluralKebabCase", nameHelper.pluralize(nameHelper.toDashName(name))),
-            Variable("nameScreamingSnakeCase", nameHelper.capitalize(nameHelper.toDuckName(name)))
+            Variable("namePluralSnakeCase", nameHelper.pluralize(nameHelper.toDuckCase(name))),
+            Variable("nameKebabCase", nameHelper.toDashCase(name)),
+            Variable("namePluralKebabCase", nameHelper.pluralize(nameHelper.toDashCase(name))),
+            Variable("nameScreamingSnakeCase", nameHelper.capitalize(nameHelper.toDuckCase(name)))
         )
     }
 }

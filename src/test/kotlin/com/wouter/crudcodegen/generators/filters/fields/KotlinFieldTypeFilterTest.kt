@@ -3,11 +3,9 @@ package com.wouter.crudcodegen.generators.filters.fields
 import com.nhaarman.mockitokotlin2.whenever
 import com.wouter.crudcodegen.generators.EntityType
 import com.wouter.crudcodegen.generators.filters.EntityField
-import com.wouter.crudcodegen.generators.filters.FieldTemplateFilter
 import com.wouter.crudcodegen.generators.filters.FieldTemplateFilter.FieldTemplateSettings
 import com.wouter.crudcodegen.generators.helpers.NameHelper
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks

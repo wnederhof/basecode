@@ -38,7 +38,7 @@ class RelationalFieldTypeFilterTest {
         val fields = listOf(EntityField.RelationalEntityField("salesManId", "SalesMan"))
 
         whenever(nameHelper.toUpperCamelCase(any())).thenCallRealMethod()
-        whenever(nameHelper.toDuckName(any())).thenCallRealMethod()
+        whenever(nameHelper.toDuckCase(any())).thenCallRealMethod()
         whenever(nameHelper.toLowerCamelCase(any())).thenCallRealMethod()
         whenever(nameHelper.pluralize(any())).thenCallRealMethod()
 

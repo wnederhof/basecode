@@ -1,17 +1,11 @@
 package com.wouter.crudcodegen.generators.filters.project
 
 import com.nhaarman.mockitokotlin2.mock
-import com.wouter.crudcodegen.generators.filters.ProjectTemplateFilter
 import com.wouter.crudcodegen.generators.filters.ProjectTemplateFilter.ProjectTemplateSettings
-import com.wouter.crudcodegen.generators.helpers.NameHelper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.mockito.InjectMocks
-import org.mockito.Mock
-import org.mockito.Mockito.mock
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.io.File
 
 @SpringBootTest
 class NameFilterTest {

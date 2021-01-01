@@ -4,14 +4,14 @@ import org.springframework.stereotype.Service
 
 @Service
 class NameHelper {
-    fun toDuckName(name: String) = name.mapIndexed { i, c ->
+    fun toDuckCase(name: String) = name.mapIndexed { i, c ->
         if (c.isUpperCase() && i > 0)
             "_$c".toLowerCase()
         else
             c.toLowerCase()
     }.joinToString("")
 
-    fun toDashName(name: String) = name.mapIndexed { i, c ->
+    fun toDashCase(name: String) = name.mapIndexed { i, c ->
         if (c.isUpperCase() && i > 0)
             "-$c".toLowerCase()
         else

@@ -15,11 +15,11 @@ internal class NameHelperTest {
     @Test
     fun toDuckName() {
         assertThat(
-            nameHelper.toDuckName("wouterNederhof"),
+            nameHelper.toDuckCase("wouterNederhof"),
             equalTo("wouter_nederhof")
         )
         assertThat(
-            nameHelper.toDuckName("WouterNederhof"),
+            nameHelper.toDuckCase("WouterNederhof"),
             equalTo("wouter_nederhof")
         )
     }
@@ -27,11 +27,11 @@ internal class NameHelperTest {
     @Test
     fun toDashName() {
         assertThat(
-            nameHelper.toDashName("wouterNederhof"),
+            nameHelper.toDashCase("wouterNederhof"),
             equalTo("wouter-nederhof")
         )
         assertThat(
-            nameHelper.toDashName("WouterNederhof"),
+            nameHelper.toDashCase("WouterNederhof"),
             equalTo("wouter-nederhof")
         )
     }

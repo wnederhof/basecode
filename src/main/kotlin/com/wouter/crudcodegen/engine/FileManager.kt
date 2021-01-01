@@ -7,7 +7,6 @@ import org.springframework.core.io.ResourceLoader
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import org.springframework.stereotype.Service
 import java.io.File
-import java.io.IOException
 
 @Service
 class FileManager(private val resourceLoader: ResourceLoader) {

@@ -15,8 +15,8 @@ class FieldNameFilter(
     ): Iterable<Variable> {
         val field = settings.fields[fieldIndex]
         return listOf(
-            Variable("fieldNameSnakeCase", nameHelper.toDuckName(field.name)),
-            Variable("fieldNameKebabCase", nameHelper.toDashName(field.name)),
+            Variable("fieldNameSnakeCase", nameHelper.toDuckCase(field.name)),
+            Variable("fieldNameKebabCase", nameHelper.toDashCase(field.name)),
             Variable("fieldNamePascalCase", nameHelper.toUpperCamelCase(field.name)),
             Variable("fieldNameCamelCase", nameHelper.toLowerCamelCase(field.name))
         )

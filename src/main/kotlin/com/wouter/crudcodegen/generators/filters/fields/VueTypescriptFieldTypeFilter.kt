@@ -5,7 +5,6 @@ import com.wouter.crudcodegen.generators.EntityType
 import com.wouter.crudcodegen.generators.EntityType.*
 import com.wouter.crudcodegen.generators.filters.EntityField
 import com.wouter.crudcodegen.generators.filters.FieldTemplateFilter
-import com.wouter.crudcodegen.generators.helpers.NameHelper
 import org.springframework.stereotype.Component
 
 @Component
