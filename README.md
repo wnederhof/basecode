@@ -1,5 +1,5 @@
 # CrudCodeGen
-NOTE: WORK IN PROGRESS! FOR ANYTHING OTHER THAN EXPERIMENTATION, PLEASE CHECK BACK SOON!
+WORK IN PROGRESS!
 
 CrudCodeGen is a full-stack scaffolding generator for Kotlin, Spring Boot, GraphQL, Vue (Nuxt.js) and PostgreSQL.
 
@@ -120,7 +120,7 @@ Here:
 - `overwrite` will overwrite any existing files. When this option is not specified, CrudCodeGen will abort when a file is about to be overwritten.
 
 ## Development
-For developing your application, you can use `docker-compose` to spin up a database. You can then either start the backend using your IDE by running the `main` method in the `Application.kt` file, or start the Spring Boot server using `./mvnw spring-boot:run`. You should be able to access your GraphQL dashboard at: `http://localhost:8080/graphiql`.
+For developing your application, you can use `docker-compose up` to spin up a development database. You can then either start the backend using your IDE by running the `main` method in the `Application.kt` file, or start the Spring Boot server using `./mvnw spring-boot:run`. You should be able to access your GraphQL dashboard at: `http://localhost:8080/graphiql`.
 
 To start the frontend, make sure your artifacts are installed using `npm install` and run `npm run dev`.
 
