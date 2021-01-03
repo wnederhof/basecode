@@ -1,6 +1,5 @@
 package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
 
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1
@@ -61,7 +60,7 @@ class {{ namePascalCase }}ResolverUnitTests {
         private lateinit var {{ nameCamelCase }}MutationResolver: {{ namePascalCase }}Resolver.MutationResolver
 
         @Test
-        fun `create delegates the call to the {{ namePascalCase }}Service`() {
+        fun `createBook delegates the call to the {{ namePascalCase }}Service`() {
             whenever({{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
                 .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
@@ -70,7 +69,7 @@ class {{ namePascalCase }}ResolverUnitTests {
         }
 
         @Test
-        fun `update delegates the call to the {{ namePascalCase }}Service`() {
+        fun `updateBook delegates the call to the {{ namePascalCase }}Service`() {
             whenever({{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
                 .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 

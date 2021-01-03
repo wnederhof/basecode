@@ -24,7 +24,7 @@
           v-for="{{ field.fieldTypeCamelCase }} in {{ field.fieldTypePluralCamelCase }}"
           :key="{{ field.fieldTypeCamelCase }}.id"
           :value="{{ field.fieldTypeCamelCase }}.id"
-        >{{ "{{" }}{{ field.fieldTypeCamelCase }}.id{{ "}}" }}</b-form-select-option>
+        >{{ "{{" }}{{ field.fieldTypeCamelCase }}.id{{ "}}" }}</{%if usesBootstrapTheme%}b-form-select-option{%else%}option{%endif%}>
       </{%if usesBootstrapTheme%}b-form-select{%else%}select{%endif%}>
 {%elseif not field.isFieldOfTypeText%}
       <{%if usesBootstrapTheme%}b-form-input{%else%}input{%endif%}

@@ -1,15 +1,12 @@
 package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
-{%for field in fields%}{%if field.isFieldRelational%}
+
+import com.nhaarman.mockitokotlin2.*{%for field in fields%}{%if field.isFieldRelational%}
 import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1{%for field in fields%}{%if field.isFieldRelational%}
 import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1{%endif%}{%endfor%}
-import com.nhaarman.mockitokotlin2.inOrder
-import com.nhaarman.mockitokotlin2.times
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -37,36 +34,6 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     private lateinit var {{ nameCamelCase }}Service: {{ namePascalCase }}Service
 
     @Test
-    fun `findAll returns the values of findAll in {{ namePascalCase }}Repository`() {
-        whenever({{ nameCamelCase }}Repository.findAll())
-            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-
-        val actual = {{ nameCamelCase }}Service.findAll()
-
-        assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-    }
-
-    @Test
-    fun `findAll returns the values of findAll in CommentRepository when filter is empty`() {
-        whenever({{ nameCamelCase }}Repository.findAll())
-            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-
-        val actual = {{ nameCamelCase }}Service.findAll({%if hasRelations%}{{ namePascalCase }}.{{ namePascalCase }}FilterInput(){%endif%})
-
-        assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-    }
-{%for field in fields%}{%if field.isFieldRelational%}
-    @Test
-    fun `findAll delegates to findBy{{field.fieldNamePascalCase}} when filter only contains {{field.fieldNameCamelCase}}`() {
-        whenever({{ nameCamelCase }}Repository.findBy{{field.fieldNamePascalCase}}(1))
-            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_1))
-
-        val actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}.{{ namePascalCase }}FilterInput({{field.fieldNameCamelCase}} = 1))
-
-        assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_1)
-    }
-{%endif%}{%endfor%}
-    @Test
     fun `findById returns the contained value of findById in {{ namePascalCase }}Repository if it is non-empty`() {
         whenever({{ nameCamelCase }}Repository.findById(1))
             .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
@@ -74,6 +41,16 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         val actual = {{ nameCamelCase }}Service.findById(1)
 
         assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+    }
+
+    @Test
+    fun `findById returns null if findById in {{ namePascalCase }}Repository yields an empty Optional`() {
+        whenever({{ nameCamelCase }}Repository.findById(1))
+            .thenReturn(Optional.empty())
+
+        val actual = {{ nameCamelCase }}Service.findById(1)
+
+        assertThat(actual).isNull()
     }
 {%for field in fields%}{%if field.isFieldRelational%}
     @Test
@@ -87,17 +64,37 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     }
 {%endif%}{%endfor%}
     @Test
-    fun `findById returns null if findById in {{ namePascalCase }}Repository yields an empty Optional`() {
-        whenever({{ nameCamelCase }}Repository.findById(1))
-            .thenReturn(Optional.empty())
+    fun `findAll returns the values of findAll in {{ namePascalCase }}Repository`() {
+        whenever({{ nameCamelCase }}Repository.findAll())
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
-        val actual = {{ nameCamelCase }}Service.findById(1)
+        val actual = {{ nameCamelCase }}Service.findAll()
 
-        assertThat(actual).isNull()
+        assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
     }
-
+{%if hasRelations%}
     @Test
-    fun `create calls save on repository if all requirements are met`() {
+    fun `findAll returns the values of findAll in CommentRepository when filter is empty`() {
+        whenever({{ nameCamelCase }}Repository.findAll())
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+
+        val actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}.{{ namePascalCase }}FilterInput())
+
+        assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+    }
+{%endif%}{%for field in fields%}{%if field.isFieldRelational%}
+    @Test
+    fun `findAll delegates to findBy{{field.fieldNamePascalCase}} when filter only contains {{field.fieldNameCamelCase}}`() {
+        whenever({{ nameCamelCase }}Repository.findBy{{field.fieldNamePascalCase}}(1))
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_1))
+
+        val actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}.{{ namePascalCase }}FilterInput({{field.fieldNameCamelCase}} = 1))
+
+        assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_1)
+    }
+{%endif%}{%endfor%}
+    @Test
+    fun `create calls save on repository if all requirements are met and publishes an event`() {
         whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_FIXTURE_1))
             .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 {%for field in fields%}{%if field.isFieldRelational%}
@@ -107,41 +104,23 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         val actual = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
 
         assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+
+        verify(publisher)
+            .publishEvent({{ namePascalCase }}Event.{{ namePascalCase }}CreateEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
     }
 {%if hasRelations%}
     @Test
-    fun `create fails when related objects cannot be found`() {
+    fun `create fails when related objects cannot be found and publishes no events`() {
         assertThrows<RuntimeException> {
             {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
         }
 
         verify({{ nameCamelCase }}Repository, times(0)).save({{ nameScreamingSnakeCase }}_FIXTURE_1)
+        verify(publisher, times(0)).publishEvent(any())
     }
 {%endif%}
     @Test
-    fun `create publishes an {{ namePascalCase }}CreateEvent after saving`() {
-        whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_FIXTURE_1))
-            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-{%for field in fields%}{%if field.isFieldRelational%}
-        whenever({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
-            .thenReturn({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-{%endif%}{%endfor%}
-        val actual = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
-
-        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-
-        val inOrder = inOrder(publisher, {{ nameCamelCase }}Repository)
-
-        inOrder
-            .verify({{ nameCamelCase }}Repository)
-            .save({{ nameScreamingSnakeCase }}_FIXTURE_1)
-        inOrder
-            .verify(publisher)
-            .publishEvent({{ namePascalCase }}Event.{{ namePascalCase }}CreateEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-    }
-
-    @Test
-    fun `update calls save on repository if all requirements are met`() {
+    fun `update calls save on repository if all requirements are met and publishes an event`() {
         whenever({{ nameCamelCase }}Repository.findById(1))
             .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
@@ -154,77 +133,67 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         val actual = {{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
 
         assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+
+        verify(publisher)
+            .publishEvent({{ namePascalCase }}Event.{{ namePascalCase }}UpdateEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
     }
 {%if hasRelations%}
     @Test
-    fun `update fails when related objects cannot be found`() {
+    fun `update fails when related objects cannot be found and publishes no events`() {
         assertThrows<RuntimeException> {
             {{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
         }
 
         verify({{ nameCamelCase }}Repository, times(0)).save({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+        verify(publisher, times(0)).publishEvent(any())
     }
 {%endif%}
     @Test
-    fun `update publishes an {{ namePascalCase }}UpdateEvent after saving`() {
-        whenever({{ nameCamelCase }}Repository.findById(1))
-            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-
-        whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-{%for field in fields%}{%if field.isFieldRelational%}
-        whenever({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
-            .thenReturn({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-{%endif%}{%endfor%}
-        val actual = {{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
-
-        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-
-        val inOrder = inOrder(publisher, {{ nameCamelCase }}Repository)
-
-        inOrder
-            .verify({{ nameCamelCase }}Repository)
-            .save({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-        inOrder
-            .verify(publisher)
-            .publishEvent({{ namePascalCase }}Event.{{ namePascalCase }}UpdateEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-    }
-
-    @Test
-    fun `deleteById deletes the {{ namePascalCase }} identified by id in the repository if it exists`() {
+    fun `deleteById deletes the {{ namePascalCase }} identified by id in the repository if it exists and publishes an event`() {
         whenever({{ nameCamelCase }}Repository.findById(1))
             .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
         {{ nameCamelCase }}Service.deleteById(1)
 
         verify({{ nameCamelCase }}Repository).deleteById(1)
+
+        verify(publisher)
+            .publishEvent({{ namePascalCase }}Event.{{ namePascalCase }}DeleteEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
     }
 
     @Test
-    fun `deleteById does not delete the {{ namePascalCase }} identified by id in the repository if it doesn't exist`() {
+    fun `deleteById does not delete the {{ namePascalCase }} identified by id in the repository if it doesn't exist and publishes no events`() {
         whenever({{ nameCamelCase }}Repository.findById(1))
             .thenReturn(Optional.empty())
 
         {{ nameCamelCase }}Service.deleteById(1)
 
         verify({{ nameCamelCase }}Repository, times(0)).deleteById(1)
+        verify(publisher, times(0)).publishEvent(any())
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Test
+    fun `deleteBy{{ field.fieldNamePascalCase }} deletes {{ field.fieldTypePluralCamelCase }} by {{ field.fieldNameCamelCase }} and publishes event`() {
+        whenever({{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}(10))
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+
+        val actual = {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePascalCase }}(10)
+        assertThat(actual).isEqualTo(true)
+
+        verify({{ nameCamelCase }}Repository).deleteAll(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+        verify(publisher).publishEvent({{ namePascalCase }}Event.{{ namePascalCase }}DeleteEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
     }
 
     @Test
-    fun `deleteById publishes an {{ namePascalCase }}DeleteEvent after deletion`() {
-        whenever({{ nameCamelCase }}Repository.findById(1))
-            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+    fun `deleteBy{{ field.fieldNamePascalCase }} returns false if no {{ field.fieldTypePluralCamelCase }} are deleted and publishes no events`() {
+        whenever({{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}(10))
+            .thenReturn(listOf())
 
-        {{ nameCamelCase }}Service.deleteById(1)
+        val actual = {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePascalCase }}(10)
+        assertThat(actual).isEqualTo(false)
 
-        val inOrder = inOrder(publisher, {{ nameCamelCase }}Repository)
-
-        inOrder
-            .verify({{ nameCamelCase }}Repository)
-            .deleteById(1)
-        inOrder
-            .verify(publisher)
-            .publishEvent({{ namePascalCase }}Event.{{ namePascalCase }}DeleteEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+        verify({{ nameCamelCase }}Repository, times(0)).deleteAll(any())
+        verify(publisher, times(0)).publishEvent(any())
     }
-
+{%endif%}{%endfor%}
 }

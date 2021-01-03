@@ -31,7 +31,7 @@ class {{ namePascalCase }}IntegrationTests : IntegrationTestContext() {
     }
 {%endif%}
     @Test
-    fun `{{ namePluralPascalCase }} can be created, fetched and destroyed`() { {%for field in fields%}{%if field.isFieldRelational%}
+    fun `{{ namePluralPascalCase }} can be created, updated, fetched and deleted`() { {%for field in fields%}{%if field.isFieldRelational%}
         val {{ field.fieldTypeCamelCase }} = {{ field.fieldTypeCamelCase }}Repository.save({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_1)
 {%endif%}{%endfor%}
         var {{ nameCamelCase }} = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%if hasRelations%}.copy({%for field in fields%}{%if field.isFieldRelational%}
@@ -39,7 +39,7 @@ class {{ namePascalCase }}IntegrationTests : IntegrationTestContext() {
         ){%endif%})
         {{ nameCamelCase }} = {{ nameCamelCase }}Service.update({{ nameCamelCase }}.id!!, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%if hasRelations%}.copy({%for field in fields%}{%if field.isFieldRelational%}
             {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!,{%endif%}{%endfor%}
-        )!!{%endif%})!!
+        ){%endif%})!!
 
         assertThat({{ nameCamelCase }}Service.findAll()).isNotEmpty
         assertThat({{ nameCamelCase }}Service.findById({{ nameCamelCase }}.id!!)).isNotNull

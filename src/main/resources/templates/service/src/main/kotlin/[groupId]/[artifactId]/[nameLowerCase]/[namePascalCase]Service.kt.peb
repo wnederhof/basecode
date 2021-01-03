@@ -21,7 +21,11 @@ class {{ namePascalCase }}Service(
     fun findById(id: Int): {{ namePascalCase }}? {
         return {{ nameCamelCase }}Repository.findByIdOrNull(id)
     }
-
+{%for field in fields%}{%if field.isFieldRelational%}
+    fun findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }}: Int): List<{{ namePascalCase }}> {
+        return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }})
+    }
+{%endif%}{%endfor%}
     fun findAll({%if hasRelations%}filterInput: {{ namePascalCase }}FilterInput? = null{%endif%}): Iterable<{{ namePascalCase }}> { {%for field in fields%}{%if field.isFieldRelational%}
         if (filterInput?.{{ field.fieldNameCamelCase }} != null) {
             return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}(filterInput.{{ field.fieldNameCamelCase }})
@@ -29,11 +33,7 @@ class {{ namePascalCase }}Service(
 {%endif%}{%endfor%}
         return {{ nameCamelCase }}Repository.findAll()
     }
-{%for field in fields%}{%if field.isFieldRelational%}
-    fun findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }}: Int): List<{{ namePascalCase }}> {
-        return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }})
-    }
-{%endif%}{%endfor%}
+
     fun create(input: Create{{ namePascalCase }}Input): {{ namePascalCase }} { {%for field in fields%}{%if field.isFieldRelational%}
         requireNotNull({{ field.fieldTypeCamelCase }}Service.findById(input.{{ field.fieldNameCamelCase }}))
 {%endif%}{%endfor%}
@@ -42,12 +42,7 @@ class {{ namePascalCase }}Service(
         publisher.publishEvent({{ namePascalCase }}CreateEvent(this, {{ nameCamelCase }}))
         return {{ nameCamelCase }}
     }
-{%for field in fields%}{%if field.isFieldRelational%}
-    fun deleteBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }}: Int) {
-        {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }})
-            .forEach({{ nameCamelCase }}Repository::delete)
-    }
-{%endif%}{%endfor%}
+
     fun update(id: Int, input: Update{{ namePascalCase }}Input): {{ namePascalCase }}? { {%for field in fields%}{%if field.isFieldRelational%}
         if (input.{{ field.fieldNameCamelCase }} != null) {
             requireNotNull({{ field.fieldTypeCamelCase }}Service.findById(input.{{ field.fieldNameCamelCase }}))
@@ -66,5 +61,15 @@ class {{ namePascalCase }}Service(
         publisher.publishEvent({{ namePascalCase }}DeleteEvent(this, {{ nameCamelCase }}))
         return true
     }
-
+{%for field in fields%}{%if field.isFieldRelational%}
+    fun deleteBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }}: Int): Boolean {
+        val {{ namePluralCamelCase }} = {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }})
+        if ({{ namePluralCamelCase }}.isEmpty()) {
+            return false
+        }
+        {{ nameCamelCase }}Repository.deleteAll({{ namePluralCamelCase }})
+        {{ namePluralCamelCase }}.forEach { publisher.publishEvent({{ namePascalCase }}DeleteEvent(this, it)) }
+        return true
+    }
+{%endif%}{%endfor%}
 }
