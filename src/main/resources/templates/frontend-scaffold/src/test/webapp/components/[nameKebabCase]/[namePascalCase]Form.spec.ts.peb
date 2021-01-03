@@ -18,10 +18,10 @@ describe('{{namePascalCase}}Form', () => {
 
   const createComponent = (props: any) => {
     mockClient = createMockClient()
-
+{%for field in fields%}{% if field.isFieldRelational %}
     mockClient.setRequestHandler(gql`query {{ field.fieldTypePluralCamelCase }} { {{ field.fieldTypePluralCamelCase }} { id } }`,
       jest.fn().mockResolvedValue({ data: { {{ field.fieldTypePluralCamelCase }}: [{ id: 1 }] } }))
-
+{%endif%}{%endfor%}
     mockClient.setRequestHandler(gql`
       query {{nameCamelCase}}($id: Int) {
         {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
@@ -62,7 +62,7 @@ describe('{{namePascalCase}}Form', () => {
     createComponent({ id: null })
     await flushPromises()
 {%for field in fields%}
-    expect((wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).element as HTMLInputElement).selectedIndex).toBe({% if field.isFieldRelational %}-1{% else %}''{% endif %}){%endfor%}
+    expect((wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).element as {% if field.isFieldRelational %}HTMLSelectElement).selectedIndex).toBe(-1){% else %}HTMLInputElement).value).toBe(''){% endif %}{% endfor %}
   })
 
   it('shows loading when fetching data if id is set', () => {
