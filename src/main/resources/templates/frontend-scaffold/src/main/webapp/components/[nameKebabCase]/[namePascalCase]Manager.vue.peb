@@ -6,11 +6,11 @@
       @edit:{{nameCamelCase}}="openForm"
     />
 
-    <{%if usesBootstrapTheme%}b-button{%else%}button{%endif%} ref="openNewFormBtn" @click="openNewForm">
+    <{%if usesBootstrapTheme%}BButton{%else%}button{%endif%} ref="openNewFormBtn" @click="openNewForm">
       New {{namePascalCase}}
-    </{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}>
+    </{%if usesBootstrapTheme%}BButton{%else%}button{%endif%}>
 {%if usesBootstrapTheme%}
-    <b-modal v-model="{{nameCamelCase}}FormVisible" hide-footer>
+    <BModal v-model="{{nameCamelCase}}FormVisible" hide-footer>
       <template #modal-header>
         <h2 v-if="{{nameCamelCase}}FormVisible && !selectedId" ref="new{{namePascalCase}}Header">
           New {{namePascalCase}}
@@ -28,7 +28,7 @@
         @save:{{nameCamelCase}}="closeForm"
         @close:{{nameCamelCase}}Form="closeForm"
       />
-    </b-modal>
+    </BModal>
 {%else%}
     <h2 v-if="{{nameCamelCase}}FormVisible && !selectedId" ref="new{{namePascalCase}}Header">
       New {{namePascalCase}}

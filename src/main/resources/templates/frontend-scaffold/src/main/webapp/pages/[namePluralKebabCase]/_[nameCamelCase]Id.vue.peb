@@ -4,18 +4,18 @@
 
     <{{namePascalCase}}Details :{{nameKebabCase}}-id="this.$route.params.{{nameCamelCase}}Id" />
 
-    <n-link to="/{{namePluralKebabCase}}">
+    <NLink to="/{{namePluralKebabCase}}">
       List of {{namePluralPascalCase}}
-    </n-link>
+    </NLink>
 
-    <{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}
+    <{%if usesBootstrapTheme%}BButton{%else%}button{%endif%}
       ref="edit{{namePascalCase}}Btn"
       @click="openForm"
     >
       Edit {{namePascalCase}}
-    </{%if usesBootstrapTheme%}b-button{%else%}button{%endif%}>
+    </{%if usesBootstrapTheme%}BButton{%else%}button{%endif%}>
 {%if usesBootstrapTheme%}
-    <b-modal v-model="{{nameCamelCase}}FormVisible" hide-footer>
+    <BModal v-model="{{nameCamelCase}}FormVisible" hide-footer>
       <template #modal-header>
         <h2 v-if="{{nameCamelCase}}FormVisible && selectedId" ref="edit{{namePascalCase}}Header">
           Edit {{namePascalCase}} {{ selectedId }}
@@ -29,7 +29,7 @@
         @save:{{nameCamelCase}}="closeForm"
         @close:{{nameCamelCase}}Form="closeForm"
       />
-    </b-modal>
+    </BModal>
 {%else%}
     <h2 v-if="{{nameCamelCase}}FormVisible && selectedId" ref="edit{{namePascalCase}}Header">
       Edit {{namePascalCase}} {{ selectedId }}
