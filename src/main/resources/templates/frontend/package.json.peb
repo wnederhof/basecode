@@ -14,7 +14,7 @@
   "dependencies": {
     "@nuxt/typescript-runtime": "^2.0.0",
     "@nuxtjs/apollo": "4.0.1-rc.1",
-    "@types/jest": "^26.0.14",{%if usesBootstrapTheme%}
+    "@types/jest": "^26.0.14",{%if usesBootstrapComponents%}
     "bootstrap-vue": "^2.21.1",{%endif%}
     "graphql": "^15.3.0",
     "graphql-tag": "^2.11.0",

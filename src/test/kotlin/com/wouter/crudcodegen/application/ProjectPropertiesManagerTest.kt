@@ -70,7 +70,7 @@ internal class ProjectPropertiesManagerTest {
             ---
             groupId: "test 2"
             artifactId: "test"
-            theme: "plain"
+            components: "plain"
         """.trimIndent()
 
         verify(fileManager).writeTargetFileContent(contextPath, PROPERTIES_FILE_NAME, "$expectedPropsFile\n", true)

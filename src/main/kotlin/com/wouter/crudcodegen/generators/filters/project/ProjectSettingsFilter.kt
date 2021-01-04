@@ -11,7 +11,7 @@ class ProjectSettingsFilter : ProjectTemplateFilter {
         return listOf(
             Variable("groupId", settings.groupId),
             Variable("artifactId", settings.artifactId),
-            Variable("usesBootstrapTheme", settings.theme == ProjectProperties.Theme.bootstrap)
+            Variable("usesBootstrapComponents", settings.components == ProjectProperties.Components.bootstrap)
         )
     }
 }

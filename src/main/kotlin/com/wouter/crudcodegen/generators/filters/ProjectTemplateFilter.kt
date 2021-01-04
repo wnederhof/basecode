@@ -10,7 +10,7 @@ interface ProjectTemplateFilter : GeneratorFilter {
     data class ProjectTemplateSettings(
         val groupId: String?,
         val artifactId: String?,
-        val theme: ProjectProperties.Theme = ProjectProperties.Theme.plain,
+        val components: ProjectProperties.Components = ProjectProperties.Components.plain,
         val name: String,
         val targetPath: File
     )

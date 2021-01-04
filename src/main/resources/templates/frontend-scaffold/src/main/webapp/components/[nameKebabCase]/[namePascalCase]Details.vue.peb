@@ -6,7 +6,7 @@
     Unable to load component. Error message: {{ "{{" }} error {{ "}}" }}
   </div>
   <div v-else-if="{{nameCamelCase}}">
-    <{%if usesBootstrapTheme%}BTableSimple{%else%}table{%endif%}>
+    <{%if usesBootstrapComponents%}BTableSimple{%else%}table{%endif%}>
       <tbody>
         <tr>
           <td>Id</td>
@@ -17,7 +17,7 @@
           <td>{{ "{{" }} {{nameCamelCase}}.{{field.fieldNameCamelCase}} {{ "}}" }}</td>
         </tr>{%endfor%}
       </tbody>
-    </{%if usesBootstrapTheme%}BTableSimple{%else%}table{%endif%}>
+    </{%if usesBootstrapComponents%}BTableSimple{%else%}table{%endif%}>
   </div>
 </template>
 

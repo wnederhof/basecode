@@ -52,20 +52,21 @@ CrudCodeGen - Open Source Full Stack Code Generator
 ### New project
 You can create a new project using `ccg new`.
 ```
-ccg new [-bho] [-t=<theme>] <groupId> <artifactId>
+ccg new [-bho] [-c=<components>] <groupId> <artifactId>
       <groupId>         groupId, e.g. com.petparadise
       <artifactId>      artifactId, e.g. petstore  -b, --backend-only
   -h, --help
   -o, --overwrite
-  -t, --theme=<theme>
+  -c, --components=<components>
 ```
 For example:
 ```
-ccg new com.mycorp blog --theme=bootstrap
+ccg new com.mycorp blog --components=bootstrap
 ```
-Available themes:
-- plain: A very basic theme (default)
-- bootstrap: Vue-Bootstrap UI
+Available componentss:
+
+- `plain`: A very basic components (default)
+- `bootstrap`: Vue-Bootstrap UI
 
 ### Generate
 Using `ccg generate`, you can generate code based using one of the following generators.
@@ -104,7 +105,7 @@ For each of these types, you can add `_o` to make this type optional. For exampl
 
 When you want, for example, to generate a blog, you can do that as following:
 ```
-ccg new com.mycorp blog --theme=bootstrap
+ccg new com.mycorp blog --components=bootstrap
 cd blog
 ccg generate scaffold Post title:String
 ccg generate scaffold Comment postId:Post comment:String

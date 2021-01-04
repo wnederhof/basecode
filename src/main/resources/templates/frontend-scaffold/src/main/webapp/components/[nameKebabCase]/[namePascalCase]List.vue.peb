@@ -8,7 +8,7 @@
   <div v-else-if="{{namePluralCamelCase}}.length === 0">
     No entries.
   </div>
-  <{%if usesBootstrapTheme%}BTableSimple fixed{%else%}table{%endif%} v-else>
+  <{%if usesBootstrapComponents%}BTableSimple fixed{%else%}table{%endif%} v-else>
     <thead>
       <tr>
         <th>Id</th>{%for field in fields%}
@@ -24,16 +24,16 @@
           <NLink :to="'/{{namePluralKebabCase}}/' + {{nameCamelCase}}.id">
             Show
           </NLink>
-          <{%if usesBootstrapTheme%}BButton{%else%}button{%endif%} ref="edit{{namePascalCase}}Btn" type="button" @click="edit{{namePascalCase}}({{nameCamelCase}}.id)">
+          <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="edit{{namePascalCase}}Btn" type="button" @click="edit{{namePascalCase}}({{nameCamelCase}}.id)">
             Edit
-          </{%if usesBootstrapTheme%}BButton{%else%}button{%endif%}>
-          <{%if usesBootstrapTheme%}BButton{%else%}button{%endif%} ref="delete{{namePascalCase}}Btn" type="button" @click="delete{{namePascalCase}}({{nameCamelCase}}.id)">
+          </{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
+          <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="delete{{namePascalCase}}Btn" type="button" @click="delete{{namePascalCase}}({{nameCamelCase}}.id)">
             Delete
-          </{%if usesBootstrapTheme%}BButton{%else%}button{%endif%}>
+          </{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
         </td>
       </tr>
     </tbody>
-  </{%if usesBootstrapTheme%}BTableSimple{%else%}table{%endif%}>
+  </{%if usesBootstrapComponents%}BTableSimple{%else%}table{%endif%}>
 </template>
 
 <script lang="ts">

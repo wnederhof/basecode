@@ -13,44 +13,44 @@
       type="hidden"
     />
 {%for field in fields%}
-    <{%if usesBootstrapTheme%}BFormGroup{%else%}div{%endif%}{%if field.isFieldRelational%} v-if="!this.$props.{{field.fieldNameCamelCase}}"{%endif%}>
+    <{%if usesBootstrapComponents%}BFormGroup{%else%}div{%endif%}{%if field.isFieldRelational%} v-if="!this.$props.{{field.fieldNameCamelCase}}"{%endif%}>
       <label :for="$id('{{field.fieldNameCamelCase}}')">{{field.fieldNamePascalCase}}</label>{%if field.isFieldRelational%}
-      <{%if usesBootstrapTheme%}BFormSelect{%else%}select{%endif%}
+      <{%if usesBootstrapComponents%}BFormSelect{%else%}select{%endif%}
         :id="$id('{{field.fieldNameCamelCase}}')"
         ref="{{field.fieldNameCamelCase}}Input"
         v-model="{{nameCamelCase}}.{{field.fieldNameCamelCase}}"
       >
-        <{%if usesBootstrapTheme%}BFormSelectOption{%else%}option{%endif%}
+        <{%if usesBootstrapComponents%}BFormSelectOption{%else%}option{%endif%}
           v-for="{{ field.fieldTypeCamelCase }} in {{ field.fieldTypePluralCamelCase }}"
           :key="{{ field.fieldTypeCamelCase }}.id"
           :value="{{ field.fieldTypeCamelCase }}.id"
-        >{{ "{{" }}{{ field.fieldTypeCamelCase }}.id{{ "}}" }}</{%if usesBootstrapTheme%}BFormSelectOption{%else%}option{%endif%}>
-      </{%if usesBootstrapTheme%}BFormSelect{%else%}select{%endif%}>
+        >{{ "{{" }}{{ field.fieldTypeCamelCase }}.id{{ "}}" }}</{%if usesBootstrapComponents%}BFormSelectOption{%else%}option{%endif%}>
+      </{%if usesBootstrapComponents%}BFormSelect{%else%}select{%endif%}>
 {%elseif not field.isFieldOfTypeText%}
-      <{%if usesBootstrapTheme%}BFormInput{%else%}input{%endif%}
+      <{%if usesBootstrapComponents%}BFormInput{%else%}input{%endif%}
         :id="$id('{{field.fieldNameCamelCase}}')"
         ref="{{field.fieldNameCamelCase}}Input"
         v-model="{{nameCamelCase}}.{{field.fieldNameCamelCase}}"
         type="{{field.fieldHtmlInputType}}"{%if not field.isFieldNullable%}{%if isString%}
         required{%endif%}{%endif%}
       />{%else%}
-      <{%if usesBootstrapTheme%}BFormTextarea{%else%}textarea{%endif%}
+      <{%if usesBootstrapComponents%}BFormTextarea{%else%}textarea{%endif%}
         :id="$id('{{field.fieldNameCamelCase}}')"
         ref="{{field.fieldNameCamelCase}}Input"
         v-model="{{nameCamelCase}}.{{field.fieldNameCamelCase}}"{%if not field.isFieldNullable%}{%if isString%}
         required{%endif%}{%endif%}
-      ></{%if usesBootstrapTheme%}BFormTextarea{%else%}textarea{%endif%}>{%endif%}
-    </{%if usesBootstrapTheme%}BFormGroup{%else%}div{%endif%}>{%if field.isFieldRelational%}
+      ></{%if usesBootstrapComponents%}BFormTextarea{%else%}textarea{%endif%}>{%endif%}
+    </{%if usesBootstrapComponents%}BFormGroup{%else%}div{%endif%}>{%if field.isFieldRelational%}
 {%endif%}{%endfor%}
     <div>
-      {%if usesBootstrapTheme%}<BButton type="submit">
+      {%if usesBootstrapComponents%}<BButton type="submit">
         Save
       </BButton>{%else%}<button>
         Save
       </button>{%endif%}
-      <{%if usesBootstrapTheme%}BButton{%else%}button{%endif%} ref="cancelBtn" type="button" @click="close">
+      <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="cancelBtn" type="button" @click="close">
         Close
-      </{%if usesBootstrapTheme%}BButton{%else%}button{%endif%}>
+      </{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
     </div>
   </form>
 </template>
