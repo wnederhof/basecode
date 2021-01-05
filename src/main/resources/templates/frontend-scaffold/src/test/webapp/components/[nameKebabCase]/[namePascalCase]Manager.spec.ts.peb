@@ -1,10 +1,12 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import VueApollo from 'vue-apollo'
-import {{namePascalCase}}Manager from '@/components/{{nameKebabCase}}/{{namePascalCase}}Manager.vue'
+import {{namePascalCase}}Manager from '@/components/{{nameKebabCase}}/{{namePascalCase}}Manager.vue'{% if usesBootstrapComponents %}
+import { BootstrapVue } from 'bootstrap-vue'{% endif %}
 
 const localVue = createLocalVue()
-localVue.use(VueApollo)
+localVue.use(VueApollo){% if usesBootstrapComponents %}
+localVue.use(BootstrapVue){% endif %}
 
 describe('{{namePascalCase}}Manager', () => {
   let wrapper: Wrapper<any>

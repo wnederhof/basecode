@@ -1,11 +1,11 @@
 <template>{% if usesBootstrapComponents %}
   <div>
-    <b-navbar variant="light" type="light">
-      <b-navbar-brand>{{ artifactId }}</b-navbar-brand>
-    </b-navbar>
-    <b-container>
+    <BNavbar variant="light" type="light">
+      <BNavbarBrand>{{ artifactId }}</BNavbarBrand>
+    </BNavbar>
+    <BContainer>
       <Nuxt />
-    </b-container>
+    </BContainer>
   </div>
 {% else %}
   <div>

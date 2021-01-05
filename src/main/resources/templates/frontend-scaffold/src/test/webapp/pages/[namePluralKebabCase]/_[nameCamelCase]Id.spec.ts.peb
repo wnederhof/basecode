@@ -1,8 +1,10 @@
 import { shallowMount, createLocalVue, RouterLinkStub, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
-import Show{{namePascalCase}}Page from '@/pages/{{namePluralKebabCase}}/_{{nameCamelCase}}Id.vue'
+import Show{{namePascalCase}}Page from '@/pages/{{namePluralKebabCase}}/_{{nameCamelCase}}Id.vue'{% if usesBootstrapComponents %}
+import { BootstrapVue } from 'bootstrap-vue'{% endif %}
 
-const localVue = createLocalVue()
+const localVue = createLocalVue(){% if usesBootstrapComponents %}
+localVue.use(BootstrapVue){% endif %}
 
 describe('Show{{namePascalCase}}Page', () => {
   let wrapper: Wrapper<any>

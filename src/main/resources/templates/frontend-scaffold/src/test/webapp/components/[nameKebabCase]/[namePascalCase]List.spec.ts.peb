@@ -4,10 +4,12 @@ import { createMockClient } from 'mock-apollo-client'
 import VueApollo from 'vue-apollo'
 import gql from 'graphql-tag'
 import {{namePascalCase}}List from '@/components/{{nameKebabCase}}/{{namePascalCase}}List.vue'
-import { MockApolloClient } from 'mock-apollo-client/dist/mockClient'
+import { MockApolloClient } from 'mock-apollo-client/dist/mockClient'{% if usesBootstrapComponents %}
+import { BootstrapVue } from 'bootstrap-vue'{% endif %}
 
 const localVue = createLocalVue()
-localVue.use(VueApollo)
+localVue.use(VueApollo){% if usesBootstrapComponents %}
+localVue.use(BootstrapVue){% endif %}
 
 describe('{{namePascalCase}}List', () => {
   let wrapper: Wrapper<any>

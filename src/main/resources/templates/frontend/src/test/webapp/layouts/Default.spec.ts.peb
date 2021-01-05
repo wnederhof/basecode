@@ -1,7 +1,9 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
-import Default from '@/layouts/Default.vue'
+import Default from '@/layouts/Default.vue'{% if usesBootstrapComponents %}
+import { BootstrapVue } from 'bootstrap-vue'{% endif %}
 
-const localVue = createLocalVue()
+const localVue = createLocalVue(){% if usesBootstrapComponents %}
+localVue.use(BootstrapVue){% endif %}
 
 describe('Default', () => {
   let wrapper: Wrapper<any>
