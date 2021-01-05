@@ -5,14 +5,3 @@
     <{{namePascalCase}}Manager />
   </div>
 </template>
-
-<script lang="ts">
-import Vue from 'vue'
-import Component from 'nuxt-class-component'
-import {{namePascalCase}}Manager from '@/components/{{nameKebabCase}}/{{namePascalCase}}Manager.vue'
-
-@Component({
-  components: { {{namePascalCase}}Manager }
-})
-export default class extends Vue { }
-</script>

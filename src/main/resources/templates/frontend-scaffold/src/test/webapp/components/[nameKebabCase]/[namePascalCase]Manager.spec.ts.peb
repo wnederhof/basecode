@@ -67,7 +67,7 @@ describe('{{namePascalCase}}Manager', () => {
     await flushPromises()
 
     await wrapper.findComponent({ ref: '{{nameCamelCase}}List' }).vm.$emit('edit:{{nameCamelCase}}', 1)
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).vm.$emit('close:{{nameCamelCase}}Form')
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).vm.$emit('cancel:{{nameCamelCase}}Form')
 
     expect(wrapper.findComponent({ ref: 'new{{namePascalCase}}Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: 'edit{{namePascalCase}}Header' }).exists()).toBeFalsy()

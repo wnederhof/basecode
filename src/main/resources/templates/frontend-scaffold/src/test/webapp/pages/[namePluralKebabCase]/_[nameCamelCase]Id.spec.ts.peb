@@ -54,7 +54,7 @@ describe('Show{{namePascalCase}}Page', () => {
     await flushPromises()
 
     await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).vm.$emit('close:{{nameCamelCase}}Form')
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).vm.$emit('cancel:{{nameCamelCase}}Form')
 
     expect(wrapper.findComponent({ ref: 'edit{{namePascalCase}}Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()

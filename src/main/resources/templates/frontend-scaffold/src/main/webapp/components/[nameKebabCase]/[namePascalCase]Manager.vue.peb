@@ -16,7 +16,7 @@
           New {{namePascalCase}}
         </h2>
         <h2 v-if="{{nameCamelCase}}FormVisible && selectedId" ref="edit{{namePascalCase}}Header">
-          Edit {{namePascalCase}} {{ selectedId }}
+          Edit {{namePascalCase}}
         </h2>
       </template>
       <{{namePascalCase}}Form
@@ -26,7 +26,7 @@
         :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
         :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
         @save:{{nameCamelCase}}="closeForm"
-        @close:{{nameCamelCase}}Form="closeForm"
+        @cancel:{{nameCamelCase}}Form="closeForm"
       />
     </BModal>
 {%else%}
@@ -34,7 +34,7 @@
       New {{namePascalCase}}
     </h2>
     <h2 v-if="{{nameCamelCase}}FormVisible && selectedId" ref="edit{{namePascalCase}}Header">
-      Edit {{namePascalCase}} {{ selectedId }}
+      Edit {{namePascalCase}}
     </h2>
     <{{namePascalCase}}Form
       v-if="{{nameCamelCase}}FormVisible"
@@ -43,7 +43,7 @@
       :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
       :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
       @save:{{nameCamelCase}}="closeForm"
-      @close:{{nameCamelCase}}Form="closeForm"
+      @cancel:{{nameCamelCase}}Form="closeForm"
     />
 {%endif%}
   </div>
