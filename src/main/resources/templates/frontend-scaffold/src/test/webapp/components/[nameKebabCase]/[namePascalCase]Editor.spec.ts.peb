@@ -1,6 +1,6 @@
 import { shallowMount, createLocalVue, RouterLinkStub, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
-import Show{{namePascalCase}}Page from '@/pages/{{namePluralKebabCase}}/_{{nameCamelCase}}Id.vue'{% if usesBootstrapComponents %}
+import {{namePascalCase}}Editor from '@/components/{{nameKebabCase}}/{{namePascalCase}}Editor.vue'{% if usesBootstrapComponents %}
 import { BootstrapVue } from 'bootstrap-vue'{% endif %}
 
 const localVue = createLocalVue(){% if usesBootstrapComponents %}
@@ -9,21 +9,14 @@ localVue.use(BootstrapVue){% endif %}
 describe('Show{{namePascalCase}}Page', () => {
   let wrapper: Wrapper<any>
 
-  const push = jest.fn()
-  const $route = { params: { {{nameCamelCase}}Id: 1 } }
-  const $router = { push }
-
   const createComponent = () => {
-    wrapper = shallowMount(Show{{namePascalCase}}Page, {
+    wrapper = shallowMount({{namePascalCase}}Editor, {
       localVue,
+      propsData: { {{nameCamelCase}}Id: 1 },
       stubs: {
         NLink: RouterLinkStub,
         {{namePascalCase}}Details: true
       },
-      mocks: {
-        $route,
-        $router
-      }
     })
   }
 
@@ -35,11 +28,11 @@ describe('Show{{namePascalCase}}Page', () => {
     createComponent()
     await flushPromises()
 
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeFalsy()
 
     await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
 
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeTruthy()
   })
 
   it('closes when close is pressed', async () => {
@@ -47,9 +40,9 @@ describe('Show{{namePascalCase}}Page', () => {
     await flushPromises()
 
     await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).vm.$emit('cancel:{{nameCamelCase}}Form')
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).vm.$emit('cancel:{{nameCamelCase}}EditorForm')
 
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeFalsy()
   })
 
   it('closes when save is pressed', async () => {
@@ -57,8 +50,8 @@ describe('Show{{namePascalCase}}Page', () => {
     await flushPromises()
 
     await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).vm.$emit('save:{{nameCamelCase}}')
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).vm.$emit('save:{{nameCamelCase}}')
 
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeFalsy()
   })
 })

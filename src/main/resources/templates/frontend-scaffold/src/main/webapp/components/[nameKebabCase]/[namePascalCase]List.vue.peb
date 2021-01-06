@@ -3,29 +3,29 @@
     <{{namePascalCase}}ListTable ref="{{nameCamelCase}}ListTable"{%for field in fields%}{%if field.isFieldRelational%} :{{field.fieldNameKebabCase}}="{{field.fieldNameCamelCase}}"{%endif%}{%endfor%} @edit:{{nameCamelCase}}="openForm" />
     <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="openNewFormBtn" @click="openNewForm">New {{namePascalCase}}</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>{%if usesBootstrapComponents%}
     <BModal
-      v-model="{{nameCamelCase}}FormVisible"
+      v-model="{{nameCamelCase}}EditorFormVisible"
       :title="modalTitle"
       hide-footer
     >
-      <{{namePascalCase}}Form
-        v-if="pizzaFormVisible"
-        ref="{{nameCamelCase}}Form"
+      <{{namePascalCase}}EditorForm
+        v-if="{{nameCamelCase}}EditorFormVisible"
+        ref="{{nameCamelCase}}EditorForm"
         :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
         :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
         @save:{{nameCamelCase}}="closeForm"
-        @cancel:{{nameCamelCase}}Form="closeForm"
+        @cancel:{{nameCamelCase}}EditorForm="closeForm"
       />
     </BModal>{%else%}
-    <div v-if="{{nameCamelCase}}FormVisible">
+    <div v-if="{{nameCamelCase}}EditorFormVisible">
       <h2>{{ modalTitle }}</h2>
-      <{{namePascalCase}}Form
-        v-if="{{nameCamelCase}}FormVisible"
-        ref="{{nameCamelCase}}Form"
+      <{{namePascalCase}}EditorForm
+        v-if="{{nameCamelCase}}EditorFormVisible"
+        ref="{{nameCamelCase}}EditorForm"
         :key="selectedId"
         :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
         :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
         @save:{{nameCamelCase}}="closeForm"
-        @cancel:{{nameCamelCase}}Form="closeForm"
+        @cancel:{{nameCamelCase}}EditorForm="closeForm"
       />
     </div>{%endif%}
   </div>
@@ -33,36 +33,36 @@
 
 <script lang="ts">
 import {{namePascalCase}}ListTable from '@/components/{{nameKebabCase}}/{{namePascalCase}}ListTable.vue'
-import {{namePascalCase}}Form from '@/components/{{nameKebabCase}}/{{namePascalCase}}Form.vue'
+import {{namePascalCase}}EditorForm from '@/components/{{nameKebabCase}}/{{namePascalCase}}EditorForm.vue'
 import Component from 'nuxt-class-component'
 import Vue from 'vue'
 
 @Component({
-  components: { {{namePascalCase}}Form, {{namePascalCase}}ListTable },{%if hasRelations%}
+  components: { {{namePascalCase}}EditorForm, {{namePascalCase}}ListTable },{%if hasRelations%}
   props: { {%for field in fields%}{%if field.isFieldRelational%}
     {{field.fieldNameCamelCase}}: [Number, String],{%endif%}{%endfor%}
   }{%endif%}
 })
 export default class {{namePascalCase}}List extends Vue {
-  {{nameCamelCase}}FormVisible = false
+  {{nameCamelCase}}EditorFormVisible = false
   selectedId: number | null = null
 
   get modalTitle() {
-    return this.selectedId ? 'Edit Pizza' : 'New Pizza'
+    return this.selectedId ? 'Edit {{ namePascalCase }}' : 'New {{ namePascalCase }}'
   }
 
   openForm ({{nameCamelCase}}Id: number) {
-    this.{{nameCamelCase}}FormVisible = true
+    this.{{nameCamelCase}}EditorFormVisible = true
     this.selectedId = {{nameCamelCase}}Id
   }
 
   openNewForm () {
-    this.{{nameCamelCase}}FormVisible = true
+    this.{{nameCamelCase}}EditorFormVisible = true
     this.selectedId = null
   }
 
   closeForm () {
-    this.{{nameCamelCase}}FormVisible = false
+    this.{{nameCamelCase}}EditorFormVisible = false
     this.selectedId = null
   }
 }

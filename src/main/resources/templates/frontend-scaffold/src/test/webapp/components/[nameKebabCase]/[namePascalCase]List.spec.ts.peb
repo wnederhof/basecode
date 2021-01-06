@@ -17,7 +17,7 @@ describe('{{namePascalCase}}List', () => {
       propsData: { {{nameCamelCase}}Id: 1 },
       stubs: {
         {{namePascalCase}}ListTable: true,
-        {{namePascalCase}}Form: true,
+        {{namePascalCase}}EditorForm: true,
         $id: true
       }
     })
@@ -31,18 +31,18 @@ describe('{{namePascalCase}}List', () => {
     createComponent()
     await flushPromises()
 
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeFalsy()
     await wrapper.findComponent({ ref: 'openNewFormBtn' }).trigger('click')
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeTruthy()
   })
 
   it('opens {{nameCamelCase}} form when edit is pressed', async () => {
     createComponent()
     await flushPromises()
 
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeFalsy()
     await wrapper.findComponent({ ref: '{{nameCamelCase}}ListTable' }).vm.$emit('edit:{{nameCamelCase}}', 1)
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeTruthy()
   })
 
   it('closes when close is pressed', async () => {
@@ -50,8 +50,8 @@ describe('{{namePascalCase}}List', () => {
     await flushPromises()
 
     await wrapper.findComponent({ ref: '{{nameCamelCase}}ListTable' }).vm.$emit('edit:{{nameCamelCase}}', 1)
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).vm.$emit('cancel:{{nameCamelCase}}Form')
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).vm.$emit('cancel:{{nameCamelCase}}EditorForm')
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeFalsy()
   })
 
   it('closes when save is pressed', async () => {
@@ -59,7 +59,7 @@ describe('{{namePascalCase}}List', () => {
     await flushPromises()
 
     await wrapper.findComponent({ ref: '{{nameCamelCase}}ListTable' }).vm.$emit('edit:{{nameCamelCase}}', 1)
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).vm.$emit('save:{{nameCamelCase}}')
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).vm.$emit('save:{{nameCamelCase}}')
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeFalsy()
   })
 })

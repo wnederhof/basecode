@@ -1,7 +1,7 @@
 <template>
   <VLoadingIndicator v-if="$apollo.loading" />
   <VErrorMessage v-else-if="error" :message="error" />
-  <form v-else ref="{{nameCamelCase}}Form" @submit.prevent="save{{namePascalCase}}">
+  <form v-else ref="{{nameCamelCase}}EditorForm" @submit.prevent="save{{namePascalCase}}">
     <input
       v-if="{{nameCamelCase}}.id"
       :id="$id('id')"
@@ -103,7 +103,7 @@ import gql from 'graphql-tag'
     {{field.fieldNameCamelCase}}: [Number, String]{%endif%}{%endfor%}
   }
 })
-export default class {{namePascalCase}}Form extends Vue {
+export default class {{namePascalCase}}EditorForm extends Vue {
   {{nameCamelCase}} = {
     id: null,{%for field in fields%}
     {{field.fieldNameCamelCase}}: {%if field.isFieldNullable%}''{%else%}null{%endif%},{%endfor%}
@@ -176,7 +176,7 @@ export default class {{namePascalCase}}Form extends Vue {
   }
 
   cancel () {
-    this.$emit('cancel:{{nameCamelCase}}Form')
+    this.$emit('cancel:{{nameCamelCase}}EditorForm')
   }
 }
 </script>
