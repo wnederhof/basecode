@@ -1,18 +1,22 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
-import Default from '@/layouts/Default.vue'{% if usesBootstrapComponents %}
+import Page from '@/pages/{{namePluralKebabCase}}/_{{ nameCamelCase }}Id.vue'{% if usesBootstrapComponents %}
 import { BootstrapVue } from 'bootstrap-vue'{% endif %}
 
 const localVue = createLocalVue(){% if usesBootstrapComponents %}
 localVue.use(BootstrapVue){% endif %}
 
-describe('Default', () => {
+describe('Page', () => {
   let wrapper: Wrapper<any>
 
   const createComponent = () => {
-    wrapper = shallowMount(Default, {
+    wrapper = shallowMount(Page, {
       localVue,
       stubs: {
-        Nuxt: true
+        Nuxt: true,
+        {{namePascalCase}}Editor: true,
+      },
+      mocks: {
+        $route: { params: { {{ nameCamelCase }}Id: 1 } }
       },
     })
   }

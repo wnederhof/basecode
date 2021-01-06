@@ -19,7 +19,7 @@ describe('{{namePascalCase}}List', () => {
         {{namePascalCase}}ListTable: true,
         {{namePascalCase}}EditorForm: true,
         $id: true
-      }
+      },
     })
   }
 

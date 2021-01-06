@@ -1,15 +1,15 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
-import Default from '@/layouts/Default.vue'{% if usesBootstrapComponents %}
+import VLoadingIndicator from '@/components/VLoadingIndicator.vue'{% if usesBootstrapComponents %}
 import { BootstrapVue } from 'bootstrap-vue'{% endif %}
 
 const localVue = createLocalVue(){% if usesBootstrapComponents %}
 localVue.use(BootstrapVue){% endif %}
 
-describe('Default', () => {
+describe('VLoadingIndicator', () => {
   let wrapper: Wrapper<any>
 
   const createComponent = () => {
-    wrapper = shallowMount(Default, {
+    wrapper = shallowMount(VLoadingIndicator, {
       localVue,
       stubs: {
         Nuxt: true
