@@ -47,7 +47,11 @@ describe('{{namePascalCase}}Form', () => {
     wrapper = shallowMount({{namePascalCase}}Form, {
       localVue,
       apolloProvider,
-      propsData: props
+      propsData: props,
+      stubs: {
+        VLoadingIndicator: true,
+        VErrorMessage: true,
+      },
     })
   }
 
@@ -55,31 +59,23 @@ describe('{{namePascalCase}}Form', () => {
     wrapper.destroy()
   })
 
-  it('is a Vue instance', () => {
-    createComponent({ id: 1 })
-    expect(wrapper.vm).toBeTruthy()
-  })
-
   it('contains {{nameCamelCase}} form with no data if id is not set', async () => {
     createComponent({ id: null })
     await flushPromises()
-{%for field in fields%}
-    expect((wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).element as {% if field.isFieldRelational %}HTMLSelectElement).selectedIndex).toBe(-1){% else %}HTMLInputElement).value).toBe(''){% endif %}{% endfor %}
-  })
-
-  it('shows loading when fetching data if id is set', () => {
-    createComponent({ id: 1 })
-    expect(wrapper.text()).toContain('Loading...')
+{%for field in fields%}{% if usesBootstrapComponents %}
+    expect(wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).attributes().value).toBe(undefined){% else %}
+    expect((wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).element as {% if field.isFieldRelational %}HTMLSelectElement).selectedIndex).toBe(-1){% else %}HTMLInputElement).value).toBe(''){%endif%}{%endif%}{%endfor%}
   })
 
   it('contains {{nameCamelCase}} form with data if id is set', async () => {
     createComponent({ id: 1 })
     await flushPromises()
-{%for field in fields%}
-    expect((wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).element as HTMLInputElement).value).toContain({{field.fieldVueTypescriptTestValue}}){%endfor%}
+{%for field in fields%}{% if usesBootstrapComponents %}
+    expect(wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).attributes().value).toBe({{field.fieldVueTypescriptTestValue}}){%else%}
+    expect((wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).element as HTMLInputElement).value).toContain({{field.fieldVueTypescriptTestValue}}){%endif%}{%endfor%}
   })
 
-  it('emits edit event when edit is clicked', async () => {
+  it('emits cancel event when edit is clicked', async () => {
     createComponent({ id: null })
     await flushPromises()
     await wrapper.findComponent({ ref: 'cancelBtn' }).trigger('click')

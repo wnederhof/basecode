@@ -31,21 +31,14 @@ describe('Show{{namePascalCase}}Page', () => {
     wrapper.destroy()
   })
 
-  it('is a Vue instance', () => {
-    createComponent()
-    expect(wrapper.vm).toBeTruthy()
-  })
-
   it('opens {{nameCamelCase}} form when edit is pressed', async () => {
     createComponent()
     await flushPromises()
 
-    expect(wrapper.findComponent({ ref: 'edit{{namePascalCase}}Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()
 
     await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
 
-    expect(wrapper.findComponent({ ref: 'edit{{namePascalCase}}Header' }).exists()).toBeTruthy()
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeTruthy()
   })
 
@@ -56,7 +49,6 @@ describe('Show{{namePascalCase}}Page', () => {
     await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
     await wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).vm.$emit('cancel:{{nameCamelCase}}Form')
 
-    expect(wrapper.findComponent({ ref: 'edit{{namePascalCase}}Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()
   })
 
@@ -67,7 +59,6 @@ describe('Show{{namePascalCase}}Page', () => {
     await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
     await wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).vm.$emit('save:{{nameCamelCase}}')
 
-    expect(wrapper.findComponent({ ref: 'edit{{namePascalCase}}Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()
   })
 })

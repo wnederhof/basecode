@@ -1,24 +1,23 @@
 <template>
   <div>
-    <{{namePascalCase}}List
-      ref="{{nameCamelCase}}List"{%for field in fields%}{%if field.isFieldRelational%}
-      :{{field.fieldNameKebabCase}}="{{field.fieldNameCamelCase}}"{%endif%}{%endfor%}
-      @edit:{{nameCamelCase}}="openForm"
-    />
-
-    <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="openNewFormBtn" @click="openNewForm">
-      New {{namePascalCase}}
-    </{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
-{%if usesBootstrapComponents%}
-    <BModal v-model="{{nameCamelCase}}FormVisible" hide-footer>
-      <template #modal-header>
-        <h2 v-if="{{nameCamelCase}}FormVisible && !selectedId" ref="new{{namePascalCase}}Header">
-          New {{namePascalCase}}
-        </h2>
-        <h2 v-if="{{nameCamelCase}}FormVisible && selectedId" ref="edit{{namePascalCase}}Header">
-          Edit {{namePascalCase}}
-        </h2>
-      </template>
+    <{{namePascalCase}}List ref="{{nameCamelCase}}List"{%for field in fields%}{%if field.isFieldRelational%} :{{field.fieldNameKebabCase}}="{{field.fieldNameCamelCase}}"{%endif%}{%endfor%} @edit:{{nameCamelCase}}="openForm" />
+    <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="openNewFormBtn" @click="openNewForm">New {{namePascalCase}}</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>{%if usesBootstrapComponents%}
+    <BModal
+      v-model="{{nameCamelCase}}FormVisible"
+      :title="modalTitle"
+      hide-footer
+    >
+      <{{namePascalCase}}Form
+        v-if="pizzaFormVisible"
+        ref="{{nameCamelCase}}Form"
+        :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
+        :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
+        @save:{{nameCamelCase}}="closeForm"
+        @cancel:{{nameCamelCase}}Form="closeForm"
+      />
+    </BModal>{%else%}
+    <div v-if="{{nameCamelCase}}FormVisible">
+      <h2>{{ modalTitle }}</h2>
       <{{namePascalCase}}Form
         v-if="{{nameCamelCase}}FormVisible"
         ref="{{nameCamelCase}}Form"
@@ -28,24 +27,7 @@
         @save:{{nameCamelCase}}="closeForm"
         @cancel:{{nameCamelCase}}Form="closeForm"
       />
-    </BModal>
-{%else%}
-    <h2 v-if="{{nameCamelCase}}FormVisible && !selectedId" ref="new{{namePascalCase}}Header">
-      New {{namePascalCase}}
-    </h2>
-    <h2 v-if="{{nameCamelCase}}FormVisible && selectedId" ref="edit{{namePascalCase}}Header">
-      Edit {{namePascalCase}}
-    </h2>
-    <{{namePascalCase}}Form
-      v-if="{{nameCamelCase}}FormVisible"
-      ref="{{nameCamelCase}}Form"
-      :key="selectedId"
-      :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
-      :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
-      @save:{{nameCamelCase}}="closeForm"
-      @cancel:{{nameCamelCase}}Form="closeForm"
-    />
-{%endif%}
+    </div>{%endif%}
   </div>
 </template>
 
@@ -64,6 +46,10 @@ import Vue from 'vue'
 export default class {{namePascalCase}}Manager extends Vue {
   {{nameCamelCase}}FormVisible = false
   selectedId: number | null = null
+
+  get modalTitle() {
+    return this.selectedId ? 'Edit Pizza' : 'New Pizza'
+  }
 
   openForm ({{nameCamelCase}}Id: number) {
     this.{{nameCamelCase}}FormVisible = true

@@ -27,23 +27,12 @@ describe('{{namePascalCase}}Manager', () => {
     wrapper.destroy()
   })
 
-  it('is a Vue instance', () => {
-    createComponent()
-    expect(wrapper.vm).toBeTruthy()
-  })
-
   it('opens {{nameCamelCase}} form when new is pressed', async () => {
     createComponent()
     await flushPromises()
 
-    expect(wrapper.findComponent({ ref: 'new{{namePascalCase}}Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: 'edit{{namePascalCase}}Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()
-
     await wrapper.findComponent({ ref: 'openNewFormBtn' }).trigger('click')
-
-    expect(wrapper.findComponent({ ref: 'new{{namePascalCase}}Header' }).exists()).toBeTruthy()
-    expect(wrapper.findComponent({ ref: 'edit{{namePascalCase}}Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeTruthy()
   })
 
@@ -51,14 +40,8 @@ describe('{{namePascalCase}}Manager', () => {
     createComponent()
     await flushPromises()
 
-    expect(wrapper.findComponent({ ref: 'new{{namePascalCase}}Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: 'edit{{namePascalCase}}Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()
-
     await wrapper.findComponent({ ref: '{{nameCamelCase}}List' }).vm.$emit('edit:{{nameCamelCase}}', 1)
-
-    expect(wrapper.findComponent({ ref: 'new{{namePascalCase}}Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: 'edit{{namePascalCase}}Header' }).exists()).toBeTruthy()
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeTruthy()
   })
 
@@ -68,9 +51,6 @@ describe('{{namePascalCase}}Manager', () => {
 
     await wrapper.findComponent({ ref: '{{nameCamelCase}}List' }).vm.$emit('edit:{{nameCamelCase}}', 1)
     await wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).vm.$emit('cancel:{{nameCamelCase}}Form')
-
-    expect(wrapper.findComponent({ ref: 'new{{namePascalCase}}Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: 'edit{{namePascalCase}}Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()
   })
 
@@ -80,9 +60,6 @@ describe('{{namePascalCase}}Manager', () => {
 
     await wrapper.findComponent({ ref: '{{nameCamelCase}}List' }).vm.$emit('edit:{{nameCamelCase}}', 1)
     await wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).vm.$emit('save:{{nameCamelCase}}')
-
-    expect(wrapper.findComponent({ ref: 'new{{namePascalCase}}Header' }).exists()).toBeFalsy()
-    expect(wrapper.findComponent({ ref: 'edit{{namePascalCase}}Header' }).exists()).toBeFalsy()
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Form' }).exists()).toBeFalsy()
   })
 })

@@ -42,22 +42,16 @@ describe('{{namePascalCase}}Details', () => {
     wrapper = shallowMount({{namePascalCase}}Details, {
       localVue,
       apolloProvider,
-      propsData: { {{nameCamelCase}}Id: 1 }
+      propsData: { {{nameCamelCase}}Id: 1 },
+      stubs: {
+        VLoadingIndicator: true,
+        VErrorMessage: true,
+      },
     })
   }
 
   afterEach(() => {
     wrapper.destroy()
-  })
-
-  it('is a Vue instance', () => {
-    createComponent()
-    expect(wrapper.vm).toBeTruthy()
-  })
-
-  it('shows loading when fetching data', () => {
-    createComponent()
-    expect(wrapper.text()).toContain('Loading...')
   })
 
   it('contains {{nameCamelCase}} details', async () => {

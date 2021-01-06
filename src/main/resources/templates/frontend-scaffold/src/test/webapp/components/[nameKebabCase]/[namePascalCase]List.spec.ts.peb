@@ -45,23 +45,15 @@ describe('{{namePascalCase}}List', () => {
       localVue,
       apolloProvider,
       stubs: {
-        NLink: RouterLinkStub
-      }
+        NLink: RouterLinkStub,
+        VLoadingIndicator: true,
+        VErrorMessage: true,
+      },
     })
   }
 
   afterEach(() => {
     wrapper.destroy()
-  })
-
-  it('is a Vue instance', () => {
-    createComponent()
-    expect(wrapper.vm).toBeTruthy()
-  })
-
-  it('shows loading when fetching data', () => {
-    createComponent()
-    expect(wrapper.text()).toContain('Loading...')
   })
 
   it('contains {{nameCamelCase}} list', async () => {

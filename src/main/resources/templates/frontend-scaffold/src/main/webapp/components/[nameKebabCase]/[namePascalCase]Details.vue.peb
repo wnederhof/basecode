@@ -1,11 +1,7 @@
 <template>
-  <div v-if="$apollo.loading">
-    Loading...
-  </div>
-  <div v-else-if="error">
-    Unable to load component. Error message: {{ "{{" }} error {{ "}}" }}
-  </div>
-  <div v-else-if="{{nameCamelCase}}">
+  <VLoadingIndicator v-if="$apollo.loading" />
+  <VErrorMessage v-else-if="error" :message="error" />
+  <div v-else>
     <{%if usesBootstrapComponents%}BTableSimple{%else%}table{%endif%}>
       <tbody>
         <tr>

@@ -1,13 +1,7 @@
 <template>
-  <div v-if="$apollo.loading">
-    Loading...
-  </div>
-  <div v-else-if="error">
-    Unable to load component. Error message: {{ "{{" }} error {{ "}}" }}
-  </div>
-  <div v-else-if="{{namePluralCamelCase}}.length === 0">
-    No entries.
-  </div>
+  <VLoadingIndicator v-if="$apollo.loading" />
+  <VErrorMessage v-else-if="error" :message="error" />
+  <div v-else-if="{{namePluralCamelCase}}.length === 0">No entries.</div>
   <{%if usesBootstrapComponents%}BTableSimple fixed{%else%}table{%endif%} v-else>
     <thead>
       <tr>
@@ -21,15 +15,9 @@
         <td>{{ "{{" }} {{nameCamelCase}}.id {{ "}}" }}</td>{%for field in fields%}
         <td{% if field.isFieldRelational %} v-if="!$props.{{field.fieldNameCamelCase}}"{% endif %}>{{ "{{" }} {{nameCamelCase}}.{{field.fieldNameCamelCase}} {{ "}}" }}</td>{%endfor%}
         <td>
-          <NLink :to="'/{{namePluralKebabCase}}/' + {{nameCamelCase}}.id">
-            Show
-          </NLink>
-          <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="edit{{namePascalCase}}Btn" type="button" @click="edit{{namePascalCase}}({{nameCamelCase}}.id)">
-            Edit
-          </{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
-          <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="delete{{namePascalCase}}Btn" type="button" @click="delete{{namePascalCase}}({{nameCamelCase}}.id)">
-            Delete
-          </{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
+          <NLink :to="'/{{namePluralKebabCase}}/' + {{nameCamelCase}}.id">Show</NLink>
+          <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="edit{{namePascalCase}}Btn" type="button" @click="edit{{namePascalCase}}({{nameCamelCase}}.id)">Edit</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
+          <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="delete{{namePascalCase}}Btn" type="button" @click="delete{{namePascalCase}}({{nameCamelCase}}.id)">Delete</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
         </td>
       </tr>
     </tbody>
