@@ -1,13 +1,11 @@
 <template>
   <div>
-    <h1{%if usesBootstrapComponents%} class="mt-5 mb-3"{%endif%}>Show {{namePascalCase}}</h1>
-
     <{{namePascalCase}}Details :{{nameKebabCase}}-id="$props.{{nameCamelCase}}Id" />
 
     <NLink to="/{{namePluralKebabCase}}">
       List of {{namePluralPascalCase}}
     </NLink>
-    <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="edit{{namePascalCase}}Btn" @click="openForm">
+    <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="edit{{namePascalCase}}Btn" @click="toggleEditor">
       Edit {{namePascalCase}}
     </{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
 {%if usesBootstrapComponents%}
@@ -21,8 +19,8 @@
         :id="$props.{{nameCamelCase}}Id"{%for field in fields%}{%if field.isFieldRelational%}
         :{{ field.fieldNameKebabCase }}="$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
         ref="{{nameCamelCase}}EditorForm"
-        @save:{{nameCamelCase}}="closeForm"
-        @cancel:{{nameCamelCase}}EditorForm="closeForm"
+        @save:{{nameCamelCase}}="toggleEditor"
+        @cancel:{{nameCamelCase}}EditorForm="toggleEditor"
       />
     </BModal>{%else%}
     <div v-if="{{nameCamelCase}}EditorFormVisible">
@@ -32,8 +30,8 @@
         ref="{{nameCamelCase}}EditorForm"
         :id="$props.{{nameCamelCase}}Id"{%for field in fields%}{%if field.isFieldRelational%}
         :{{ field.fieldNameKebabCase }}="$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
-        @save:{{nameCamelCase}}="closeForm"
-        @cancel:{{nameCamelCase}}EditorForm="closeForm"
+        @save:{{nameCamelCase}}="toggleEditor"
+        @cancel:{{nameCamelCase}}EditorForm="toggleEditor"
       />
     </div>{%endif%}
   </div>
@@ -51,12 +49,8 @@ import Component from 'nuxt-class-component'
 export default class extends Vue {
   {{nameCamelCase}}EditorFormVisible = false
 
-  openForm () {
-    this.{{nameCamelCase}}EditorFormVisible = true
-  }
-
-  closeForm () {
-    this.{{nameCamelCase}}EditorFormVisible = false
+  toggleEditor () {
+    this.{{nameCamelCase}}EditorFormVisible = !this.{{nameCamelCase}}EditorFormVisible
   }
 }
 </script>

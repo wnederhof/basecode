@@ -1,7 +1,7 @@
 <template>
   <div>
-    <{{namePascalCase}}ListTable ref="{{nameCamelCase}}ListTable"{%for field in fields%}{%if field.isFieldRelational%} :{{field.fieldNameKebabCase}}="{{field.fieldNameCamelCase}}"{%endif%}{%endfor%} @edit:{{nameCamelCase}}="openForm" />
-    <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="openNewFormBtn" @click="openNewForm">New {{namePascalCase}}</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>{%if usesBootstrapComponents%}
+    <{{namePascalCase}}ListTable ref="{{nameCamelCase}}ListTable"{%for field in fields%}{%if field.isFieldRelational%} :{{field.fieldNameKebabCase}}="{{field.fieldNameCamelCase}}"{%endif%}{%endfor%} @edit:{{nameCamelCase}}="openEditor" />
+    <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="openNewEditorBtn" @click="openNewEditor">New {{namePascalCase}}</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>{%if usesBootstrapComponents%}
     <BModal
       v-model="{{nameCamelCase}}EditorFormVisible"
       :title="modalTitle"
@@ -12,8 +12,8 @@
         ref="{{nameCamelCase}}EditorForm"
         :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
         :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
-        @save:{{nameCamelCase}}="closeForm"
-        @cancel:{{nameCamelCase}}EditorForm="closeForm"
+        @save:{{nameCamelCase}}="closeEditor"
+        @cancel:{{nameCamelCase}}EditorForm="closeEditor"
       />
     </BModal>{%else%}
     <div v-if="{{nameCamelCase}}EditorFormVisible">
@@ -24,8 +24,8 @@
         :key="selectedId"
         :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
         :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
-        @save:{{nameCamelCase}}="closeForm"
-        @cancel:{{nameCamelCase}}EditorForm="closeForm"
+        @save:{{nameCamelCase}}="closeEditor"
+        @cancel:{{nameCamelCase}}EditorForm="closeEditor"
       />
     </div>{%endif%}
   </div>
@@ -50,17 +50,17 @@ export default class {{namePascalCase}}List extends Vue {
     return this.selectedId ? 'Edit {{ namePascalCase }}' : 'New {{ namePascalCase }}'
   }
 
-  openForm ({{nameCamelCase}}Id: number) {
+  openEditor ({{nameCamelCase}}Id: number) {
     this.{{nameCamelCase}}EditorFormVisible = true
     this.selectedId = {{nameCamelCase}}Id
   }
 
-  openNewForm () {
+  openNewEditor () {
     this.{{nameCamelCase}}EditorFormVisible = true
     this.selectedId = null
   }
 
-  closeForm () {
+  closeEditor () {
     this.{{nameCamelCase}}EditorFormVisible = false
     this.selectedId = null
   }

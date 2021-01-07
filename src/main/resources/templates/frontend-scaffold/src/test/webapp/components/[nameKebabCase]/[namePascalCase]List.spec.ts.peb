@@ -32,7 +32,7 @@ describe('{{namePascalCase}}List', () => {
     await flushPromises()
 
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeFalsy()
-    await wrapper.findComponent({ ref: 'openNewFormBtn' }).trigger('click')
+    await wrapper.findComponent({ ref: 'openNewEditorBtn' }).trigger('click')
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeTruthy()
   })
 
