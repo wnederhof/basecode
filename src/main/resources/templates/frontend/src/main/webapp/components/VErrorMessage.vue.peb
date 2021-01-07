@@ -13,7 +13,9 @@ import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
 
 @Component({
-  message: [String],
+  props: {
+    message: [String],
+  }
 })
 export default class VErrorMessage extends Vue {
 

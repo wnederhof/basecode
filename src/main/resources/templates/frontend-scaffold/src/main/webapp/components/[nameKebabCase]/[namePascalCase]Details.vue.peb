@@ -46,7 +46,9 @@ import Component from 'nuxt-class-component'
     }
   },
 
-  props: { {{nameCamelCase}}Id: [Number, String] }
+  props: {
+    {{nameCamelCase}}Id: [Number, String]
+  }
 })
 export default class {{namePascalCase}}Details extends Vue {
   {{nameCamelCase}} = null

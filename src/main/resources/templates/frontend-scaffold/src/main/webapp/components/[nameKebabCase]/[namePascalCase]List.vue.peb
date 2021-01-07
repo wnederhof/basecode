@@ -37,12 +37,11 @@ import {{namePascalCase}}EditorForm from '@/components/{{nameKebabCase}}/{{nameP
 import Component from 'nuxt-class-component'
 import Vue from 'vue'
 
-@Component({
-  components: { {{namePascalCase}}EditorForm, {{namePascalCase}}ListTable },{%if hasRelations%}
+@Component{%if hasRelations%}({
   props: { {%for field in fields%}{%if field.isFieldRelational%}
     {{field.fieldNameCamelCase}}: [Number, String],{%endif%}{%endfor%}
-  }{%endif%}
-})
+  }
+}){%endif%}
 export default class {{namePascalCase}}List extends Vue {
   {{nameCamelCase}}EditorFormVisible = false
   selectedId: number | null = null
