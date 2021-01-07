@@ -20,7 +20,7 @@
         :{{ field.fieldNameKebabCase }}="$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
         ref="{{nameCamelCase}}EditorForm"
         @save:{{nameCamelCase}}="toggleEditor"
-        @cancel:{{nameCamelCase}}EditorForm="toggleEditor"
+        @cancel:{{nameCamelCase}}="toggleEditor"
       />
     </BModal>{%else%}
     <div v-if="{{nameCamelCase}}EditorFormVisible">
@@ -31,7 +31,7 @@
         :id="$props.{{nameCamelCase}}Id"{%for field in fields%}{%if field.isFieldRelational%}
         :{{ field.fieldNameKebabCase }}="$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
         @save:{{nameCamelCase}}="toggleEditor"
-        @cancel:{{nameCamelCase}}EditorForm="toggleEditor"
+        @cancel:{{nameCamelCase}}="toggleEditor"
       />
     </div>{%endif%}
   </div>

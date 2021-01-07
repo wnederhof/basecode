@@ -79,7 +79,7 @@ describe('{{namePascalCase}}EditorForm', () => {
     createComponent({ id: null })
     await flushPromises()
     await wrapper.findComponent({ ref: 'cancelBtn' }).trigger('click')
-    expect(wrapper.emitted()['cancel:{{nameCamelCase}}EditorForm']).toBeTruthy()
+    expect(wrapper.emitted()['cancel:{{nameCamelCase}}']).toBeTruthy()
   })
 
   it('runs a mutation on submit and emits save event', async () => {

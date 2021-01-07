@@ -176,7 +176,7 @@ export default class {{namePascalCase}}EditorForm extends Vue {
   }
 
   cancel () {
-    this.$emit('cancel:{{nameCamelCase}}EditorForm')
+    this.$emit('cancel:{{nameCamelCase}}')
   }
 }
 </script>

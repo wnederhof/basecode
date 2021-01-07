@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component
 @Component
 class VueTypescriptFieldTypeFilter : FieldTemplateFilter {
 
-    // TODO add tests...
-
     override fun enrichProperties(
         fieldIndex: Int,
         settings: FieldTemplateFilter.FieldTemplateSettings

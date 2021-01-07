@@ -15,7 +15,8 @@ describe('Show{{namePascalCase}}Page', () => {
       propsData: { {{nameCamelCase}}Id: 1 },
       stubs: {
         NLink: RouterLinkStub,
-        {{namePascalCase}}Details: true
+        {{namePascalCase}}Details: true,
+        {{namePascalCase}}EditorForm: true
       },
     })
   }
@@ -40,7 +41,7 @@ describe('Show{{namePascalCase}}Page', () => {
     await flushPromises()
 
     await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).vm.$emit('cancel:{{nameCamelCase}}EditorForm')
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).vm.$emit('cancel:{{nameCamelCase}}')
 
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeFalsy()
   })

@@ -13,7 +13,7 @@
         :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
         :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
         @save:{{nameCamelCase}}="closeEditor"
-        @cancel:{{nameCamelCase}}EditorForm="closeEditor"
+        @cancel:{{nameCamelCase}}="closeEditor"
       />
     </BModal>{%else%}
     <div v-if="{{nameCamelCase}}EditorFormVisible">
@@ -25,15 +25,13 @@
         :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
         :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
         @save:{{nameCamelCase}}="closeEditor"
-        @cancel:{{nameCamelCase}}EditorForm="closeEditor"
+        @cancel:{{nameCamelCase}}="closeEditor"
       />
     </div>{%endif%}
   </div>
 </template>
 
 <script lang="ts">
-import {{namePascalCase}}ListTable from '@/components/{{nameKebabCase}}/{{namePascalCase}}ListTable.vue'
-import {{namePascalCase}}EditorForm from '@/components/{{nameKebabCase}}/{{namePascalCase}}EditorForm.vue'
 import Component from 'nuxt-class-component'
 import Vue from 'vue'
 

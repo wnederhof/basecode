@@ -50,7 +50,7 @@ describe('{{namePascalCase}}List', () => {
     await flushPromises()
 
     await wrapper.findComponent({ ref: '{{nameCamelCase}}ListTable' }).vm.$emit('edit:{{nameCamelCase}}', 1)
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).vm.$emit('cancel:{{nameCamelCase}}EditorForm')
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).vm.$emit('cancel:{{nameCamelCase}}')
     expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeFalsy()
   })
 
