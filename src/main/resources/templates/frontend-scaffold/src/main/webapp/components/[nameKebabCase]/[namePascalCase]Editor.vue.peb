@@ -4,8 +4,12 @@
 
     <{{namePascalCase}}Details :{{nameKebabCase}}-id="$props.{{nameCamelCase}}Id" />
 
-    <NLink to="/{{namePluralKebabCase}}">List of {{namePluralPascalCase}}</NLink>
-    <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="edit{{namePascalCase}}Btn" @click="openForm">Edit {{namePascalCase}}</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
+    <NLink to="/{{namePluralKebabCase}}">
+      List of {{namePluralPascalCase}}
+    </NLink>
+    <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="edit{{namePascalCase}}Btn" @click="openForm">
+      Edit {{namePascalCase}}
+    </{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
 {%if usesBootstrapComponents%}
     <BModal
       v-model="{{nameCamelCase}}EditorFormVisible"
@@ -14,9 +18,9 @@
     >
       <{{namePascalCase}}EditorForm
         v-if="{{nameCamelCase}}EditorFormVisible"
-        ref="{{nameCamelCase}}EditorForm"
         :id="$props.{{nameCamelCase}}Id"{%for field in fields%}{%if field.isFieldRelational%}
         :{{ field.fieldNameKebabCase }}="$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
+        ref="{{nameCamelCase}}EditorForm"
         @save:{{nameCamelCase}}="closeForm"
         @cancel:{{nameCamelCase}}EditorForm="closeForm"
       />

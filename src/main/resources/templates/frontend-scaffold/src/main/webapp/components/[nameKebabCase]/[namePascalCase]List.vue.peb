@@ -47,7 +47,7 @@ export default class {{namePascalCase}}List extends Vue {
   {{nameCamelCase}}EditorFormVisible = false
   selectedId: number | null = null
 
-  get modalTitle() {
+  get modalTitle () {
     return this.selectedId ? 'Edit {{ namePascalCase }}' : 'New {{ namePascalCase }}'
   }
 

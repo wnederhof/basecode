@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h1{%if usesBootstrapComponents%} class="mt-5 mb-3"{%endif%}>List of {{namePluralPascalCase}}</h1>
+    <h1{%if usesBootstrapComponents%} class="mt-5 mb-3"{%endif%}>
+      List of {{namePluralPascalCase}}
+    </h1>
 
     <{{namePascalCase}}List />
   </div>

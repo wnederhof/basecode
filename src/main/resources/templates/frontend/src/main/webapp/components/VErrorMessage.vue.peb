@@ -1,7 +1,11 @@
 <template>{%if usesBootstrapComponents%}
-  <BAlert variant="danger">{{ "{{" }} message {{ "}}" }}</BAlert>
+  <BAlert variant="danger">
+    {{ "{{" }} message {{ "}}" }}
+  </BAlert>
 {% else %}
-  <p>{{ "{{" }} message {{ "}}" }}</p>
+  <p>
+    {{ "{{" }} message {{ "}}" }}
+  </p>
 {% endif %}</template>
 
 <script lang="ts">
@@ -9,7 +13,7 @@ import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
 
 @Component({
-    message: [String],
+  message: [String],
 })
 export default class VErrorMessage extends Vue {
 

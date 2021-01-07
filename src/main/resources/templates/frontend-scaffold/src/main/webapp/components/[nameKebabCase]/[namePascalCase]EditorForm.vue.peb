@@ -119,7 +119,7 @@ export default class {{namePascalCase}}EditorForm extends Vue {
     }
   }
 
-  private async update{{namePascalCase}}() {
+  private async update{{namePascalCase}} () {
     const mutation = gql`
       mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
         update{{namePascalCase}}(id: $id, input: $input) {
@@ -149,7 +149,7 @@ export default class {{namePascalCase}}EditorForm extends Vue {
     this.$emit('save:{{nameCamelCase}}', this.{{nameCamelCase}})
   }
 
-  private async create{{namePascalCase}}() {
+  private async create{{namePascalCase}} () {
     const mutation = gql`
       mutation create{{namePascalCase}}($input: Create{{namePascalCase}}Input!) {
         create{{namePascalCase}}(input: $input) { id }
