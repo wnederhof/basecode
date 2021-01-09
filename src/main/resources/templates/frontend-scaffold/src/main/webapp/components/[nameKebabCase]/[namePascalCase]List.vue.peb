@@ -1,66 +1,86 @@
 <template>
-  <div>
-    <{{namePascalCase}}ListTable ref="{{nameCamelCase}}ListTable"{%for field in fields%}{%if field.isFieldRelational%} :{{field.fieldNameKebabCase}}="{{field.fieldNameCamelCase}}"{%endif%}{%endfor%} @edit:{{nameCamelCase}}="openEditor" />
-    <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="openNewEditorBtn" @click="openNewEditor">New {{namePascalCase}}</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>{%if usesBootstrapComponents%}
-    <BModal
-      v-model="{{nameCamelCase}}EditorFormVisible"
-      :title="modalTitle"
-      hide-footer
-    >
-      <{{namePascalCase}}EditorForm
-        v-if="{{nameCamelCase}}EditorFormVisible"
-        ref="{{nameCamelCase}}EditorForm"
-        :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
-        :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
-        @save:{{nameCamelCase}}="closeEditor"
-        @cancel:{{nameCamelCase}}="closeEditor"
-      />
-    </BModal>{%else%}
-    <div v-if="{{nameCamelCase}}EditorFormVisible">
-      <h2>{{ modalTitle }}</h2>
-      <{{namePascalCase}}EditorForm
-        v-if="{{nameCamelCase}}EditorFormVisible"
-        ref="{{nameCamelCase}}EditorForm"
-        :key="selectedId"
-        :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
-        :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
-        @save:{{nameCamelCase}}="closeEditor"
-        @cancel:{{nameCamelCase}}="closeEditor"
-      />
-    </div>{%endif%}
-  </div>
+  <VLoadingIndicator v-if="$apollo.loading" />
+  <VErrorMessage v-else-if="error" :message="error" />
+  <div v-else-if="{{namePluralCamelCase}}.length === 0">No entries.</div>
+  <{%if usesBootstrapComponents%}BTableSimple fixed{%else%}table{%endif%} v-else>
+    <thead>
+      <tr>
+        <th>Id</th>{%for field in fields%}
+        <th{% if field.isFieldRelational %} v-if="!$props.{{field.fieldNameCamelCase}}"{% endif %}>{{field.fieldNamePascalCase}}</th>{%endfor%}
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="{{nameCamelCase}} in {{namePluralCamelCase}}" :key="{{nameCamelCase}}.id">
+        <td>{{ "{{" }} {{nameCamelCase}}.id {{ "}}" }}</td>{%for field in fields%}
+        <td{% if field.isFieldRelational %} v-if="!$props.{{field.fieldNameCamelCase}}"{% endif %}>{{ "{{" }} {{nameCamelCase}}.{{field.fieldNameCamelCase}} {{ "}}" }}</td>{%endfor%}
+        <td>
+          <NLink :to="'/{{namePluralKebabCase}}/' + {{nameCamelCase}}.id">Show</NLink>
+          <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="edit{{namePascalCase}}Btn" type="button" @click="edit{{namePascalCase}}({{nameCamelCase}}.id)">Edit</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
+          <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="delete{{namePascalCase}}Btn" type="button" @click="delete{{namePascalCase}}({{nameCamelCase}}.id)">Delete</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
+        </td>
+      </tr>
+    </tbody>
+  </{%if usesBootstrapComponents%}BTableSimple{%else%}table{%endif%}>
 </template>
 
 <script lang="ts">
+import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
-import Vue from 'vue'
+import gql from 'graphql-tag'
 
-@Component{%if hasRelations%}({
-  props: { {%for field in fields%}{%if field.isFieldRelational%}
-    {{field.fieldNameCamelCase}}: [Number, String],{%endif%}{%endfor%}
+@Component({
+  apollo: {
+    {{namePluralCamelCase}}: {
+      query: gql`
+        query {{namePluralCamelCase}}{%if hasRelations%}($filter: {{namePascalCase}}Filter){%endif%} {
+          {{namePluralCamelCase}}: {{namePluralCamelCase}}{%if hasRelations%}(filter: $filter){%endif%} {
+            id{%for field in fields%}
+            {{field.fieldNameCamelCase}}{%endfor%}
+          }
+        }
+      `,
+
+      error (error) {
+        this.error = error.message
+      }{%if hasRelations%},
+
+      variables () { {%for field in fields%}{%if field.isFieldRelational%}
+        const {{field.fieldNameCamelCase}} = this.$props.{{field.fieldNameCamelCase}}{%endif%}{%endfor%}
+        return { filter: { {%for field in fields%}{%if field.isFieldRelational%}{{field.fieldNameCamelCase}}, {%endif%}{%endfor%} } }
+      }{%endif%}
+    }
+  },
+
+  props: {
+    id: [Number, String]{%for field in fields%}{%if field.isFieldRelational%},
+    {{field.fieldNameCamelCase}}: [Number, String]{%endif%}{%endfor%}
   }
-}){%endif%}
+})
 export default class {{namePascalCase}}List extends Vue {
-  {{nameCamelCase}}EditorFormVisible = false
-  selectedId: number | null = null
+  {{namePluralCamelCase}} = null
+  error = null
 
-  get modalTitle () {
-    return this.selectedId ? 'Edit {{ namePascalCase }}' : 'New {{ namePascalCase }}'
+  async delete{{namePascalCase}} (id: number) {
+    const mutation = gql`
+      mutation delete{{namePascalCase}}($id: ID!) {
+        delete{{namePascalCase}}(id: $id)
+      }
+    `
+
+    if (confirm('Are you sure?')) {
+      await this.$apollo.mutate({
+        mutation,
+        variables: { id },
+        update: async () => {
+          await this.$apollo.getClient().resetStore()
+        }
+      })
+    }
   }
 
-  openEditor ({{nameCamelCase}}Id: number) {
-    this.{{nameCamelCase}}EditorFormVisible = true
-    this.selectedId = {{nameCamelCase}}Id
-  }
-
-  openNewEditor () {
-    this.{{nameCamelCase}}EditorFormVisible = true
-    this.selectedId = null
-  }
-
-  closeEditor () {
-    this.{{nameCamelCase}}EditorFormVisible = false
-    this.selectedId = null
+  edit{{namePascalCase}} (id: number) {
+    this.$emit('edit:{{nameCamelCase}}', id)
   }
 }
 </script>

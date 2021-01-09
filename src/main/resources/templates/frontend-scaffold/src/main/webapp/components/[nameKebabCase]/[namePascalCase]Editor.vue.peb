@@ -1,56 +1,182 @@
 <template>
-  <div>
-    <{{namePascalCase}}Details :{{nameKebabCase}}-id="$props.{{nameCamelCase}}Id" />
-
-    <NLink to="/{{namePluralKebabCase}}">
-      List of {{namePluralPascalCase}}
-    </NLink>
-    <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="edit{{namePascalCase}}Btn" @click="toggleEditor">
-      Edit {{namePascalCase}}
-    </{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
-{%if usesBootstrapComponents%}
-    <BModal
-      v-model="{{nameCamelCase}}EditorFormVisible"
-      title="Edit {{ namePascalCase }}"
-      hide-footer
-    >
-      <{{namePascalCase}}EditorForm
-        v-if="{{nameCamelCase}}EditorFormVisible"
-        :id="$props.{{nameCamelCase}}Id"{%for field in fields%}{%if field.isFieldRelational%}
-        :{{ field.fieldNameKebabCase }}="$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
-        ref="{{nameCamelCase}}EditorForm"
-        @save:{{nameCamelCase}}="toggleEditor"
-        @cancel:{{nameCamelCase}}="toggleEditor"
-      />
-    </BModal>{%else%}
-    <div v-if="{{nameCamelCase}}EditorFormVisible">
-      <h2>Edit {{namePascalCase}}</h2>
-
-      <{{namePascalCase}}EditorForm
-        ref="{{nameCamelCase}}EditorForm"
-        :id="$props.{{nameCamelCase}}Id"{%for field in fields%}{%if field.isFieldRelational%}
-        :{{ field.fieldNameKebabCase }}="$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
-        @save:{{nameCamelCase}}="toggleEditor"
-        @cancel:{{nameCamelCase}}="toggleEditor"
-      />
-    </div>{%endif%}
-  </div>
+  <VLoadingIndicator v-if="$apollo.loading" />
+  <VErrorMessage v-else-if="error" :message="error" />
+  <form v-else ref="{{nameCamelCase}}Editor" @submit.prevent="save{{namePascalCase}}">
+    <input
+      v-if="{{nameCamelCase}}.id"
+      :id="$id('id')"
+      v-model="{{nameCamelCase}}.id"
+      type="hidden"
+    />
+{%for field in fields%}
+    <{%if usesBootstrapComponents%}BFormGroup{%else%}div{%endif%}{%if field.isFieldRelational%} v-if="!this.$props.{{field.fieldNameCamelCase}}"{%endif%}>
+      <label :for="$id('{{field.fieldNameCamelCase}}')">{{field.fieldNamePascalCase}}</label>{%if field.isFieldRelational%}
+      <{%if usesBootstrapComponents%}BFormSelect{%else%}select{%endif%}
+        :id="$id('{{field.fieldNameCamelCase}}')"
+        ref="{{field.fieldNameCamelCase}}Input"
+        v-model="{{nameCamelCase}}.{{field.fieldNameCamelCase}}"
+      >
+        <{%if usesBootstrapComponents%}BFormSelectOption{%else%}option{%endif%}
+          v-for="{{ field.fieldTypeCamelCase }} in {{ field.fieldTypePluralCamelCase }}"
+          :key="{{ field.fieldTypeCamelCase }}.id"
+          :value="{{ field.fieldTypeCamelCase }}.id"
+        >{{ "{{" }}{{ field.fieldTypeCamelCase }}.id{{ "}}" }}</{%if usesBootstrapComponents%}BFormSelectOption{%else%}option{%endif%}>
+      </{%if usesBootstrapComponents%}BFormSelect{%else%}select{%endif%}>
+{%elseif not field.isFieldOfTypeText%}
+      <{%if usesBootstrapComponents%}BFormInput{%else%}input{%endif%}
+        :id="$id('{{field.fieldNameCamelCase}}')"
+        ref="{{field.fieldNameCamelCase}}Input"
+        v-model="{{nameCamelCase}}.{{field.fieldNameCamelCase}}"
+        type="{{field.fieldHtmlInputType}}"{%if not field.isFieldNullable%}{%if isString%}
+        required{%endif%}{%endif%}
+      />{%else%}
+      <{%if usesBootstrapComponents%}BFormTextarea{%else%}textarea{%endif%}
+        :id="$id('{{field.fieldNameCamelCase}}')"
+        ref="{{field.fieldNameCamelCase}}Input"
+        v-model="{{nameCamelCase}}.{{field.fieldNameCamelCase}}"{%if not field.isFieldNullable%}{%if isString%}
+        required{%endif%}{%endif%}
+      ></{%if usesBootstrapComponents%}BFormTextarea{%else%}textarea{%endif%}>{%endif%}
+    </{%if usesBootstrapComponents%}BFormGroup{%else%}div{%endif%}>{%if field.isFieldRelational%}
+{%endif%}{%endfor%}
+    <div>
+      {%if usesBootstrapComponents%}<BButton type="submit">Save</BButton>{%else%}<button>Save</button>{%endif%}
+      <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="cancelBtn" type="button" @click="cancel">Cancel</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
+    </div>
+  </form>
 </template>
 
 <script lang="ts">
-import Vue from 'vue'
+import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
+import gql from 'graphql-tag'
 
 @Component({
+  apollo: { {%for field in fields%}{% if field.isFieldRelational %}
+    {{ field.fieldTypePluralCamelCase }}: {
+      query: gql`query {{ field.fieldTypePluralCamelCase }} { {{ field.fieldTypePluralCamelCase }} { id } }`,
+
+      skip () {
+        return !!this.$props.fieldNameCamelCase
+      },
+
+      error (error) {
+        this.error = error.message
+      },
+
+      result ({ data }) {
+        this.{{ field.fieldTypePluralCamelCase }} = data.{{ field.fieldTypePluralCamelCase }}
+      }
+    },
+{%endif%}{%endfor%}
+    {{nameCamelCase}}: {
+      query: gql`
+        query {{nameCamelCase}}($id: Int) {
+          {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
+            id{%for field in fields%}
+            {{field.fieldNameCamelCase}}{%endfor%}
+          }
+        }
+      `,
+
+      error (error) {
+        this.error = error.message
+      },
+
+      variables () {
+        return {
+          id: this.$props.id
+        }
+      },
+
+      skip () {
+        return !this.$props.id
+      },
+
+      result ({ data }) {
+        this.{{nameCamelCase}} = Object.assign({}, data.{{nameCamelCase}})
+      }
+    }
+  },
+
   props: {
-    {{nameCamelCase}}Id: [Number, String]
+    id: [Number, String]{%for field in fields%}{%if field.isFieldRelational%},
+    {{field.fieldNameCamelCase}}: [Number, String]{%endif%}{%endfor%}
   }
 })
-export default class extends Vue {
-  {{nameCamelCase}}EditorFormVisible = false
+export default class {{namePascalCase}}Editor extends Vue {
+  {{nameCamelCase}} = {
+    id: null,{%for field in fields%}
+    {{field.fieldNameCamelCase}}: {%if field.isFieldNullable%}''{%else%}null{%endif%},{%endfor%}
+  }
+  error = null{%for field in fields%}{% if field.isFieldRelational %}
+  {{ field.fieldTypePluralCamelCase }} = []{%endif%}{%endfor%}
 
-  toggleEditor () {
-    this.{{nameCamelCase}}EditorFormVisible = !this.{{nameCamelCase}}EditorFormVisible
+  async save{{namePascalCase}} () {
+    if (this.{{nameCamelCase}}.id) {
+      await this.update{{namePascalCase}}()
+    } else {
+      await this.create{{namePascalCase}}()
+    }
+  }
+
+  private async update{{namePascalCase}} () {
+    const mutation = gql`
+      mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
+        update{{namePascalCase}}(id: $id, input: $input) {
+          id{%for field in fields%}
+          {{field.fieldNameCamelCase}}{%endfor%}
+        }
+      }
+    `
+
+    const {{nameCamelCase}}Input: any = Object.assign({}, this.{{nameCamelCase}})
+    delete {{nameCamelCase}}Input.__typename
+
+    const { id, ...input } = {{nameCamelCase}}Input
+{%for field in fields%}{%if field.isFieldRelational%}
+    if (this.$props.{{field.fieldNameCamelCase}}) {
+      input.{{field.fieldNameCamelCase}} = this.$props.{{field.fieldNameCamelCase}}
+    }
+{%endif%}{%endfor%}
+    await this.$apollo.mutate({
+      mutation,
+      variables: { id, input },
+      update: () => {
+        this.$apollo.getClient().resetStore()
+      }
+    })
+
+    this.$emit('save:{{nameCamelCase}}', this.{{nameCamelCase}})
+  }
+
+  private async create{{namePascalCase}} () {
+    const mutation = gql`
+      mutation create{{namePascalCase}}($input: Create{{namePascalCase}}Input!) {
+        create{{namePascalCase}}(input: $input) { id }
+      }
+    `
+
+    const input: any = Object.assign({}, this.{{nameCamelCase}})
+    delete input.id
+    delete input.__typename
+{%for field in fields%}{%if field.isFieldRelational%}
+    if (this.$props.{{field.fieldNameCamelCase}}) {
+      input.{{field.fieldNameCamelCase}} = this.$props.{{field.fieldNameCamelCase}}
+    }
+{%endif%}{%endfor%}
+    await this.$apollo.mutate({
+      mutation,
+      variables: { input },
+      update: () => {
+        this.$apollo.getClient().resetStore()
+      }
+    })
+
+    this.$emit('save:{{nameCamelCase}}', this.{{nameCamelCase}})
+  }
+
+  cancel () {
+    this.$emit('cancel:{{nameCamelCase}}')
   }
 }
 </script>

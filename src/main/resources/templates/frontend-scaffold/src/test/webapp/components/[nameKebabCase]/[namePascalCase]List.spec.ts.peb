@@ -1,7 +1,10 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
+import { shallowMount, createLocalVue, RouterLinkStub, Wrapper } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
+import { createMockClient } from 'mock-apollo-client'
 import VueApollo from 'vue-apollo'
-import {{namePascalCase}}List from '@/components/{{nameKebabCase}}/{{namePascalCase}}List.vue'{% if usesBootstrapComponents %}
+import gql from 'graphql-tag'
+import {{namePascalCase}}List from '@/components/{{nameKebabCase}}/{{namePascalCase}}List.vue'
+import { MockApolloClient } from 'mock-apollo-client/dist/mockClient'{% if usesBootstrapComponents %}
 import { BootstrapVue } from 'bootstrap-vue'{% endif %}
 
 const localVue = createLocalVue()
@@ -10,15 +13,41 @@ localVue.use(BootstrapVue){% endif %}
 
 describe('{{namePascalCase}}List', () => {
   let wrapper: Wrapper<any>
+  let mockClient: MockApolloClient
+  let apolloProvider: VueApollo
 
   const createComponent = () => {
+    mockClient = createMockClient()
+
+    mockClient.setRequestHandler(gql`
+      query {{namePluralCamelCase}}{%if hasRelations%}($filter: {{namePascalCase}}Filter){%endif%} {
+        {{namePluralCamelCase}}: {{namePluralCamelCase}}{%if hasRelations%}(filter: $filter){%endif%} {
+          id{%for field in fields%}
+          {{field.fieldNameCamelCase}}{%endfor%}
+        }
+      }
+    `, jest.fn().mockResolvedValue({
+      data: {
+        {{namePluralCamelCase}}: [
+          {
+            id: 1{%for field in fields%},
+            {{field.fieldNameCamelCase}}: {{field.fieldVueTypescriptTestValue}}{%endfor%}
+          }
+        ]
+      }
+    }))
+
+    apolloProvider = new VueApollo({
+      defaultClient: mockClient
+    })
+
     wrapper = shallowMount({{namePascalCase}}List, {
       localVue,
-      propsData: { {{nameCamelCase}}Id: 1 },
+      apolloProvider,
       stubs: {
-        {{namePascalCase}}ListTable: true,
-        {{namePascalCase}}EditorForm: true,
-        $id: true
+        NLink: RouterLinkStub,
+        VLoadingIndicator: true,
+        VErrorMessage: true,
       },
     })
   }
@@ -27,39 +56,47 @@ describe('{{namePascalCase}}List', () => {
     wrapper.destroy()
   })
 
-  it('opens {{nameCamelCase}} form when new is pressed', async () => {
+  it('contains {{nameCamelCase}} list', async () => {
     createComponent()
     await flushPromises()
-
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeFalsy()
-    await wrapper.findComponent({ ref: 'openNewEditorBtn' }).trigger('click')
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeTruthy()
+{%for field in fields%}
+    expect(wrapper.text()).toContain({{field.fieldVueTypescriptTestValue}}){%endfor%}
   })
 
-  it('opens {{nameCamelCase}} form when edit is pressed', async () => {
+  it('emits edit event when edit is clicked', async () => {
     createComponent()
     await flushPromises()
-
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeFalsy()
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}ListTable' }).vm.$emit('edit:{{nameCamelCase}}', 1)
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeTruthy()
+    await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
+    expect(wrapper.emitted()['edit:{{nameCamelCase}}']).toBeTruthy()
   })
 
-  it('closes when close is pressed', async () => {
+  it('does not run a mutation on delete with no confirmation', async () => {
     createComponent()
     await flushPromises()
+    const queryHandler = jest.fn().mockResolvedValue(false)
+    global.confirm = () => false
+    mockClient.setRequestHandler(gql`
+      mutation delete{{namePascalCase}}($id: ID!) {
+        delete{{namePascalCase}}(id: $id)
+      }
+    `, queryHandler)
 
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}ListTable' }).vm.$emit('edit:{{nameCamelCase}}', 1)
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).vm.$emit('cancel:{{nameCamelCase}}')
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeFalsy()
+    await wrapper.findComponent({ ref: 'delete{{namePascalCase}}Btn' }).trigger('click')
+    expect(queryHandler).toBeCalledTimes(0)
   })
 
-  it('closes when save is pressed', async () => {
+  it('runs a mutation on delete with confirmation', async () => {
     createComponent()
     await flushPromises()
+    const queryHandler = jest.fn().mockResolvedValue(true)
+    global.confirm = () => true
+    mockClient.setRequestHandler(gql`
+      mutation delete{{namePascalCase}}($id: ID!) {
+        delete{{namePascalCase}}(id: $id)
+      }
+    `, queryHandler)
 
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}ListTable' }).vm.$emit('edit:{{nameCamelCase}}', 1)
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).vm.$emit('save:{{nameCamelCase}}')
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}EditorForm' }).exists()).toBeFalsy()
+    await wrapper.findComponent({ ref: 'delete{{namePascalCase}}Btn' }).trigger('click')
+    expect(queryHandler).toBeCalledTimes(1)
   })
 })

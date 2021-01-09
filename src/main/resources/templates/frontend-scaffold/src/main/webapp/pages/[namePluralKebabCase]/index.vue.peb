@@ -4,6 +4,6 @@
       List of {{namePluralPascalCase}}
     </h1>
 
-    <{{namePascalCase}}List />
+    <{{namePascalCase}}Manager />
   </div>
 </template>

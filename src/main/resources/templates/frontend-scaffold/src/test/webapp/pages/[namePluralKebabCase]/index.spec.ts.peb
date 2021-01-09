@@ -13,7 +13,7 @@ describe('Page', () => {
       localVue,
       stubs: {
         Nuxt: true,
-        {{namePascalCase}}List: true,
+        {{namePascalCase}}Manager: true,
       },
     })
   }

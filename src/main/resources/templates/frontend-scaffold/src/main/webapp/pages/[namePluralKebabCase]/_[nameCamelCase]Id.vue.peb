@@ -4,6 +4,6 @@
       Show {{namePascalCase}}
     </h1>
 
-    <{{namePascalCase}}Editor :{{nameKebabCase}}-id="this.$route.params.{{nameCamelCase}}Id" />
+    <{{namePascalCase}}Viewer :{{nameKebabCase}}-id="this.$route.params.{{nameCamelCase}}Id" />
   </div>
 </template>

@@ -1,0 +1,65 @@
+import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
+import flushPromises from 'flush-promises'
+import VueApollo from 'vue-apollo'
+import {{namePascalCase}}Manager from '@/components/{{nameKebabCase}}/{{namePascalCase}}Manager.vue'{% if usesBootstrapComponents %}
+import { BootstrapVue } from 'bootstrap-vue'{% endif %}
+
+const localVue = createLocalVue()
+localVue.use(VueApollo){% if usesBootstrapComponents %}
+localVue.use(BootstrapVue){% endif %}
+
+describe('{{namePascalCase}}Manager', () => {
+  let wrapper: Wrapper<any>
+
+  const createComponent = () => {
+    wrapper = shallowMount({{namePascalCase}}Manager, {
+      localVue,
+      propsData: { {{nameCamelCase}}Id: 1 },
+      stubs: {
+        {{namePascalCase}}List: true,
+        {{namePascalCase}}Editor: true,
+        $id: true
+      },
+    })
+  }
+
+  afterEach(() => {
+    wrapper.destroy()
+  })
+
+  it('opens {{nameCamelCase}} form when new is pressed', async () => {
+    createComponent()
+    await flushPromises()
+
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
+    await wrapper.findComponent({ ref: 'openNewEditorBtn' }).trigger('click')
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeTruthy()
+  })
+
+  it('opens {{nameCamelCase}} form when edit is pressed', async () => {
+    createComponent()
+    await flushPromises()
+
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}List' }).vm.$emit('edit:{{nameCamelCase}}', 1)
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeTruthy()
+  })
+
+  it('closes when close is pressed', async () => {
+    createComponent()
+    await flushPromises()
+
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}List' }).vm.$emit('edit:{{nameCamelCase}}', 1)
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).vm.$emit('cancel:{{nameCamelCase}}')
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
+  })
+
+  it('closes when save is pressed', async () => {
+    createComponent()
+    await flushPromises()
+
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}List' }).vm.$emit('edit:{{nameCamelCase}}', 1)
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).vm.$emit('save:{{nameCamelCase}}')
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
+  })
+})
