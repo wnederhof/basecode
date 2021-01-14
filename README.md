@@ -1,7 +1,5 @@
 # CrudCodeGen
-WORK IN PROGRESS!
-
-CrudCodeGen is a full-stack scaffolding generator for Kotlin, Spring Boot, GraphQL, Vue (Nuxt.js) and PostgreSQL.
+CrudCodeGen is a full-stack scaffolding generator for Kotlin, Spring Boot, GraphQL, Vue (NuxtJS) and PostgreSQL.
 
 - **Productive**: Generate relational CRUD functionality for the frontend and backend including migrations, GraphQL schema extensions, unit tests and integration tests with a single command.
 - **Maintainable**: A package-by-feature backend structure, GraphQL communication and an event-driven backend model make for a highly decoupled and extensible architecture which is built to last.
@@ -128,7 +126,7 @@ To start the frontend, make sure your artifacts are installed using `npm install
 When both the backend and frontend are running, you can build your next best thing at: `http://localhost:3000`. (Note: as of yet, there is no index page). If you created an entity called `Post`, you will find your scaffolds at: `http://localhost:3000/posts`.
 
 ## License
-Licensed under MIT.
+Licensed under [MIT](LICENSE.md).
 
 ## Credits
 - The `new` template is based on the code generated using Spring Boot Initializr.
