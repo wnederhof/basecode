@@ -13,7 +13,7 @@ describe('Page', () => {
       localVue,
       stubs: {
         Nuxt: true,
-        {{namePascalCase}}Viewer: true,
+        {{namePascalCase}}Details: true,
       },
       mocks: {
         $route: { params: { {{ nameCamelCase }}Id: 1 } }

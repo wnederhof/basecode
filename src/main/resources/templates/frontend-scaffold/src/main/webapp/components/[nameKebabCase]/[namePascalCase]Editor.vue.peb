@@ -146,7 +146,7 @@ export default class {{namePascalCase}}Editor extends Vue {
       }
     })
 
-    this.$emit('save:{{nameCamelCase}}', this.{{nameCamelCase}})
+    this.$emit('save', this.{{nameCamelCase}})
   }
 
   private async create{{namePascalCase}} () {
@@ -172,11 +172,11 @@ export default class {{namePascalCase}}Editor extends Vue {
       }
     })
 
-    this.$emit('save:{{nameCamelCase}}', this.{{nameCamelCase}})
+    this.$emit('save', this.{{nameCamelCase}})
   }
 
   cancel () {
-    this.$emit('cancel:{{nameCamelCase}}')
+    this.$emit('cancel')
   }
 }
 </script>

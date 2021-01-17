@@ -48,6 +48,9 @@ describe('{{namePascalCase}}List', () => {
         NLink: RouterLinkStub,
         VLoadingIndicator: true,
         VErrorMessage: true,
+        {{namePascalCase}}List: true,
+        {{namePascalCase}}Editor: true,
+        $id: true
       },
     })
   }
@@ -56,18 +59,40 @@ describe('{{namePascalCase}}List', () => {
     wrapper.destroy()
   })
 
-  it('contains {{nameCamelCase}} list', async () => {
+  it('opens {{nameCamelCase}} form when new is pressed', async () => {
     createComponent()
     await flushPromises()
-{%for field in fields%}
-    expect(wrapper.text()).toContain({{field.fieldVueTypescriptTestValue}}){%endfor%}
+
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
+    await wrapper.findComponent({ ref: 'new{{namePascalCase}}Btn' }).trigger('click')
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeTruthy()
   })
 
-  it('emits edit event when edit is clicked', async () => {
+  it('opens {{nameCamelCase}} form when edit is pressed', async () => {
     createComponent()
     await flushPromises()
+
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
     await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
-    expect(wrapper.emitted()['edit:{{nameCamelCase}}']).toBeTruthy()
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeTruthy()
+  })
+
+  it('closes when close is pressed', async () => {
+    createComponent()
+    await flushPromises()
+
+    await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).vm.$emit('cancel')
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
+  })
+
+  it('closes when save is pressed', async () => {
+    createComponent()
+    await flushPromises()
+
+    await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).vm.$emit('save')
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
   })
 
   it('does not run a mutation on delete with no confirmation', async () => {

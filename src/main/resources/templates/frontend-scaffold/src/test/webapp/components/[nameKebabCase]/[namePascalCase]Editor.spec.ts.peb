@@ -79,7 +79,7 @@ describe('{{namePascalCase}}Editor', () => {
     createComponent({ id: null })
     await flushPromises()
     await wrapper.findComponent({ ref: 'cancelBtn' }).trigger('click')
-    expect(wrapper.emitted()['cancel:{{nameCamelCase}}']).toBeTruthy()
+    expect(wrapper.emitted()['cancel']).toBeTruthy()
   })
 
   it('runs a mutation on submit and emits save event', async () => {
@@ -99,6 +99,6 @@ describe('{{namePascalCase}}Editor', () => {
     expect(queryHandler).toBeCalledTimes(1)
 
     await wrapper.vm.$nextTick()
-    expect(wrapper.emitted()['save:{{nameCamelCase}}']).toBeTruthy()
+    expect(wrapper.emitted()['save']).toBeTruthy()
   })
 })

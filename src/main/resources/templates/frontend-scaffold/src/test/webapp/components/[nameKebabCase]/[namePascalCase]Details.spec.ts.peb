@@ -1,4 +1,4 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
+import { shallowMount, createLocalVue, Wrapper, RouterLinkStub, RouterLinkStub } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import { createMockClient } from 'mock-apollo-client'
 import VueApollo from 'vue-apollo'
@@ -44,8 +44,11 @@ describe('{{namePascalCase}}Details', () => {
       apolloProvider,
       propsData: { {{nameCamelCase}}Id: 1 },
       stubs: {
+        NLink: RouterLinkStub,
         VLoadingIndicator: true,
         VErrorMessage: true,
+        NLink: RouterLinkStub,
+        {{namePascalCase}}Editor: true
       },
     })
   }
@@ -59,5 +62,36 @@ describe('{{namePascalCase}}Details', () => {
     await flushPromises()
 {%for field in fields%}
     expect(wrapper.text()).toContain({{field.fieldVueTypescriptTestValue}}){%endfor%}
+  })
+
+  it('opens the {{nameCamelCase}} form when edit is pressed', async () => {
+    createComponent()
+    await flushPromises()
+
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
+
+    await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
+
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeTruthy()
+  })
+
+  it('closes the {{nameCamelCase}} when close is pressed', async () => {
+    createComponent()
+    await flushPromises()
+
+    await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).vm.$emit('cancel')
+
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
+  })
+
+  it('closes the {{nameCamelCase}} when save is pressed', async () => {
+    createComponent()
+    await flushPromises()
+
+    await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
+    await wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).vm.$emit('save')
+
+    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
   })
 })

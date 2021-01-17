@@ -1,9 +1,5 @@
 <template>
   <div>
-    <h1{%if usesBootstrapComponents%} class="mt-5 mb-3"{%endif%}>
-      Show {{namePascalCase}}
-    </h1>
-
-    <{{namePascalCase}}Viewer :{{nameKebabCase}}-id="this.$route.params.{{nameCamelCase}}Id" />
+    <{{namePascalCase}}Details :{{nameKebabCase}}-id="this.$route.params.{{nameCamelCase}}Id" />
   </div>
 </template>

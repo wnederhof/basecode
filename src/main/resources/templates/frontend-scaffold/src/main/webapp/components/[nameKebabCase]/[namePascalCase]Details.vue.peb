@@ -2,6 +2,15 @@
   <VLoadingIndicator v-if="$apollo.loading" />
   <VErrorMessage v-else-if="error" :message="error" />
   <div v-else>
+    <h1{%if usesBootstrapComponents%} class="mt-5 mb-3"{%endif%}>
+      Show {{namePascalCase}}
+    </h1>
+    <NLink to="/{{namePluralKebabCase}}">
+      List of {{namePluralPascalCase}}
+    </NLink>
+    <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="edit{{namePascalCase}}Btn" @click="toggleEditor">
+      Edit {{namePascalCase}}
+    </{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
     <{%if usesBootstrapComponents%}BTableSimple{%else%}table{%endif%}>
       <tbody>
         <tr>
@@ -13,7 +22,32 @@
           <td>{{ "{{" }} {{nameCamelCase}}.{{field.fieldNameCamelCase}} {{ "}}" }}</td>
         </tr>{%endfor%}
       </tbody>
-    </{%if usesBootstrapComponents%}BTableSimple{%else%}table{%endif%}>
+    </{%if usesBootstrapComponents%}BTableSimple{%else%}table{%endif%}>{%if usesBootstrapComponents%}
+    <BModal
+      v-model="{{nameCamelCase}}EditorVisible"
+      title="Edit {{ namePascalCase }}"
+      hide-footer
+    >
+      <{{namePascalCase}}Editor
+        v-if="{{nameCamelCase}}EditorVisible"
+        :id="$props.{{nameCamelCase}}Id"{%for field in fields%}{%if field.isFieldRelational%}
+        :{{ field.fieldNameKebabCase }}="$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
+        ref="{{nameCamelCase}}Editor"
+        @save="toggleEditor"
+        @cancel="toggleEditor"
+      />
+    </BModal>{%else%}
+    <div v-if="{{nameCamelCase}}EditorVisible">
+      <h2>Edit {{namePascalCase}}</h2>
+
+      <{{namePascalCase}}Editor
+        ref="{{nameCamelCase}}Editor"
+        :id="$props.{{nameCamelCase}}Id"{%for field in fields%}{%if field.isFieldRelational%}
+        :{{ field.fieldNameKebabCase }}="$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
+        @save="toggleEditor"
+        @cancel="toggleEditor"
+      />
+    </div>{%endif%}
   </div>
 </template>
 
@@ -53,5 +87,11 @@ import Component from 'nuxt-class-component'
 export default class {{namePascalCase}}Details extends Vue {
   {{nameCamelCase}} = null
   error = null
+
+  {{nameCamelCase}}EditorVisible = false
+
+  toggleEditor () {
+    this.{{nameCamelCase}}EditorVisible = !this.{{nameCamelCase}}EditorVisible
+  }
 }
 </script>
