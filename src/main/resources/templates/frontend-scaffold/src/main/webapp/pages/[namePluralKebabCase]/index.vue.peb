@@ -3,3 +3,11 @@
     <{{namePascalCase}}List />
   </div>
 </template>
+
+<script lang="ts">
+import {{ namePascalCase }}List from '@/components/{{ nameCamelCase }}/{{ namePascalCase }}List';
+
+export default {
+  components: { {{ namePascalCase }}List }
+}
+</script>

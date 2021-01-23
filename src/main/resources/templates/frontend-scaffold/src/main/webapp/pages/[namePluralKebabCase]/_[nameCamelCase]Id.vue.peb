@@ -3,3 +3,11 @@
     <{{namePascalCase}}Details :{{nameKebabCase}}-id="this.$route.params.{{nameCamelCase}}Id" />
   </div>
 </template>
+
+<script lang="ts">
+import {{ namePascalCase }}Details from '@/components/{{ nameCamelCase }}/{{ namePascalCase }}Details';
+
+export default {
+  components: { {{ namePascalCase }}Details }
+}
+</script>

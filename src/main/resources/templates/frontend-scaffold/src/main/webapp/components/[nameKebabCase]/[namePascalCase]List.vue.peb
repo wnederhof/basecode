@@ -59,8 +59,12 @@
 import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
 import gql from 'graphql-tag'
+import VErrorMessage from "~/components/VErrorMessage.vue";
+import VLoadingIndicator from "~/components/VLoadingIndicator.vue";
+import {{ namePascalCase }}Editor from "~/components/{{ nameCamelCase }}/{{ namePascalCase }}Editor.vue";
 
 @Component({
+  components: {  VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor }
   apollo: {
     {{namePluralCamelCase}}: {
       query: gql`
