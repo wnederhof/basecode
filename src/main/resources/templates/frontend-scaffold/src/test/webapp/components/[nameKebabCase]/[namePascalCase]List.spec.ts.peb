@@ -19,14 +19,12 @@ describe('{{namePascalCase}}List', () => {
   const createComponent = () => {
     mockClient = createMockClient()
 
-    mockClient.setRequestHandler(gql`
-      query {{namePluralCamelCase}}{%if hasRelations%}($filter: {{namePascalCase}}Filter){%endif%} {
-        {{namePluralCamelCase}}: {{namePluralCamelCase}}{%if hasRelations%}(filter: $filter){%endif%} {
-          id{%for field in fields%}
-          {{field.fieldNameCamelCase}}{%endfor%}
-        }
+    mockClient.setRequestHandler(gql`query {{namePluralCamelCase}}{%if hasRelations%}($filter: {{namePascalCase}}Filter){%endif%} {
+      {{namePluralCamelCase}}: {{namePluralCamelCase}}{%if hasRelations%}(filter: $filter){%endif%} {
+        id{%for field in fields%}
+        {{field.fieldNameCamelCase}}{%endfor%}
       }
-    `, jest.fn().mockResolvedValue({
+    }`, jest.fn().mockResolvedValue({
       data: {
         {{namePluralCamelCase}}: [
           {
@@ -100,11 +98,9 @@ describe('{{namePascalCase}}List', () => {
     await flushPromises()
     const queryHandler = jest.fn().mockResolvedValue(false)
     global.confirm = () => false
-    mockClient.setRequestHandler(gql`
-      mutation delete{{namePascalCase}}($id: ID!) {
-        delete{{namePascalCase}}(id: $id)
-      }
-    `, queryHandler)
+    mockClient.setRequestHandler(gql`mutation delete{{namePascalCase}}($id: ID!) {
+      delete{{namePascalCase}}(id: $id)
+    }`, queryHandler)
 
     await wrapper.findComponent({ ref: 'delete{{namePascalCase}}Btn' }).trigger('click')
     expect(queryHandler).toBeCalledTimes(0)
@@ -115,11 +111,9 @@ describe('{{namePascalCase}}List', () => {
     await flushPromises()
     const queryHandler = jest.fn().mockResolvedValue(true)
     global.confirm = () => true
-    mockClient.setRequestHandler(gql`
-      mutation delete{{namePascalCase}}($id: ID!) {
-        delete{{namePascalCase}}(id: $id)
-      }
-    `, queryHandler)
+    mockClient.setRequestHandler(gql`mutation delete{{namePascalCase}}($id: ID!) {
+      delete{{namePascalCase}}(id: $id)
+    }`, queryHandler)
 
     await wrapper.findComponent({ ref: 'delete{{namePascalCase}}Btn' }).trigger('click')
     expect(queryHandler).toBeCalledTimes(1)

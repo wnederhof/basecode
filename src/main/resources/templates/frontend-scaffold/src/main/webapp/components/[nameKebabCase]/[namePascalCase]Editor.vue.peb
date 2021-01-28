@@ -49,8 +49,11 @@
 import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
 import gql from 'graphql-tag'
+import VErrorMessage from '@/components/VErrorMessage.vue'
+import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
 
 @Component({
+  components: { VErrorMessage, VLoadingIndicator },
   apollo: { {%for field in fields%}{% if field.isFieldRelational %}
     {{ field.fieldTypePluralCamelCase }}: {
       query: gql`query {{ field.fieldTypePluralCamelCase }} { {{ field.fieldTypePluralCamelCase }} { id } }`,
@@ -69,14 +72,12 @@ import gql from 'graphql-tag'
     },
 {%endif%}{%endfor%}
     {{nameCamelCase}}: {
-      query: gql`
-        query {{nameCamelCase}}($id: Int) {
-          {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
-            id{%for field in fields%}
-            {{field.fieldNameCamelCase}}{%endfor%}
-          }
+      query: gql`query {{nameCamelCase}}($id: Int) {
+        {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
+          id{%for field in fields%}
+          {{field.fieldNameCamelCase}}{%endfor%}
         }
-      `,
+      }`,
 
       error (error) {
         this.error = error.message
@@ -120,14 +121,12 @@ export default class {{namePascalCase}}Editor extends Vue {
   }
 
   private async update{{namePascalCase}} () {
-    const mutation = gql`
-      mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
-        update{{namePascalCase}}(id: $id, input: $input) {
-          id{%for field in fields%}
-          {{field.fieldNameCamelCase}}{%endfor%}
-        }
+    const mutation = gql`mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
+      update{{namePascalCase}}(id: $id, input: $input) {
+        id{%for field in fields%}
+        {{field.fieldNameCamelCase}}{%endfor%}
       }
-    `
+    }`
 
     const {{nameCamelCase}}Input: any = Object.assign({}, this.{{nameCamelCase}})
     delete {{nameCamelCase}}Input.__typename
@@ -150,11 +149,9 @@ export default class {{namePascalCase}}Editor extends Vue {
   }
 
   private async create{{namePascalCase}} () {
-    const mutation = gql`
-      mutation create{{namePascalCase}}($input: Create{{namePascalCase}}Input!) {
-        create{{namePascalCase}}(input: $input) { id }
-      }
-    `
+    const mutation = gql`mutation create{{namePascalCase}}($input: Create{{namePascalCase}}Input!) {
+      create{{namePascalCase}}(input: $input) { id }
+    }`
 
     const input: any = Object.assign({}, this.{{nameCamelCase}})
     delete input.id

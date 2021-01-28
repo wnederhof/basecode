@@ -59,22 +59,20 @@
 import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
 import gql from 'graphql-tag'
-import VErrorMessage from "~/components/VErrorMessage.vue";
-import VLoadingIndicator from "~/components/VLoadingIndicator.vue";
-import {{ namePascalCase }}Editor from "~/components/{{ nameCamelCase }}/{{ namePascalCase }}Editor.vue";
+import VErrorMessage from '@/components/VErrorMessage.vue'
+import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
+import {{ namePascalCase }}Editor from '@/components/{{ nameCamelCase }}/{{ namePascalCase }}Editor.vue'
 
 @Component({
-  components: {  VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor }
+  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor },
   apollo: {
     {{namePluralCamelCase}}: {
-      query: gql`
-        query {{namePluralCamelCase}}{%if hasRelations%}($filter: {{namePascalCase}}Filter){%endif%} {
-          {{namePluralCamelCase}}: {{namePluralCamelCase}}{%if hasRelations%}(filter: $filter){%endif%} {
-            id{%for field in fields%}
-            {{field.fieldNameCamelCase}}{%endfor%}
-          }
+      query: gql`query {{namePluralCamelCase}}{%if hasRelations%}($filter: {{namePascalCase}}Filter){%endif%} {
+        {{namePluralCamelCase}}: {{namePluralCamelCase}}{%if hasRelations%}(filter: $filter){%endif%} {
+          id{%for field in fields%}
+          {{field.fieldNameCamelCase}}{%endfor%}
         }
-      `,
+      }`,
 
       error (error) {
         this.error = error.message
@@ -97,11 +95,11 @@ export default class {{namePascalCase}}List extends Vue {
   error = null
   {{nameCamelCase}}EditorVisible = false
   selectedId: number | null = null
-
+{%if usesBootstrapComponents%}
   get modalTitle () {
     return this.selectedId ? 'Edit {{ namePascalCase }}' : 'New {{ namePascalCase }}'
   }
-
+{%endif%}
   new{{namePascalCase}} () {
     this.{{nameCamelCase}}EditorVisible = true
     this.selectedId = null
@@ -118,11 +116,9 @@ export default class {{namePascalCase}}List extends Vue {
   }
 
   async delete{{namePascalCase}} (id: number) {
-    const mutation = gql`
-      mutation delete{{namePascalCase}}($id: ID!) {
-        delete{{namePascalCase}}(id: $id)
-      }
-    `
+    const mutation = gql`mutation delete{{namePascalCase}}($id: ID!) {
+      delete{{namePascalCase}}(id: $id)
+    }`
 
     if (confirm('Are you sure?')) {
       await this.$apollo.mutate({

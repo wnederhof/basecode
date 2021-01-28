@@ -24,14 +24,12 @@ describe('{{namePascalCase}}Editor', () => {
     mockClient.setRequestHandler(gql`query {{ field.fieldTypePluralCamelCase }} { {{ field.fieldTypePluralCamelCase }} { id } }`,
       jest.fn().mockResolvedValue({ data: { {{ field.fieldTypePluralCamelCase }}: [{ id: 1 }] } }))
 {%endif%}{%endfor%}
-    mockClient.setRequestHandler(gql`
-      query {{nameCamelCase}}($id: Int) {
-        {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
-          id{%for field in fields%}
-          {{field.fieldNameCamelCase}}{%endfor%}
-        }
+    mockClient.setRequestHandler(gql`query {{nameCamelCase}}($id: Int) {
+      {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
+        id{%for field in fields%}
+        {{field.fieldNameCamelCase}}{%endfor%}
       }
-    `, jest.fn().mockResolvedValue({
+    }`, jest.fn().mockResolvedValue({
       data: {
         {{nameCamelCase}}: {
           id: 1{%for field in fields%},
@@ -86,14 +84,12 @@ describe('{{namePascalCase}}Editor', () => {
     createComponent({ id: 1 })
     await flushPromises()
     const queryHandler = jest.fn().mockResolvedValue(true)
-    mockClient.setRequestHandler(gql`
-      mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
-        update{{namePascalCase}}(id: $id, input: $input) {
-          id{%for field in fields%}
-          {{field.fieldNameCamelCase}}{%endfor%}
-        }
+    mockClient.setRequestHandler(gql`mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
+      update{{namePascalCase}}(id: $id, input: $input) {
+        id{%for field in fields%}
+        {{field.fieldNameCamelCase}}{%endfor%}
       }
-    `, queryHandler)
+    }`, queryHandler)
 
     await wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).trigger('submit.prevent')
     expect(queryHandler).toBeCalledTimes(1)

@@ -54,22 +54,20 @@
 import gql from 'graphql-tag'
 import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
-import VErrorMessage from "~/components/VErrorMessage.vue";
-import VLoadingIndicator from "~/components/VLoadingIndicator.vue";
-import {{ namePascalCase }}Editor from "~/components/{{ nameCamelCase }}/{{ namePascalCase }}Editor.vue";
+import VErrorMessage from '@/components/VErrorMessage.vue'
+import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
+import {{ namePascalCase }}Editor from '@/components/{{ nameCamelCase }}/{{ namePascalCase }}Editor.vue'
 
 @Component({
-  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor }
+  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor },
   apollo: {
     {{nameCamelCase}}: {
-      query: gql`
-        query {{nameCamelCase}}($id: Int) {
-          {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
-            id{%for field in fields%}
-            {{field.fieldNameCamelCase}}{%endfor%}
-          }
+      query: gql`query {{nameCamelCase}}($id: Int) {
+        {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
+          id{%for field in fields%}
+          {{field.fieldNameCamelCase}}{%endfor%}
         }
-      `,
+      }`,
 
       error (error) {
         this.error = error.message

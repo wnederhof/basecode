@@ -19,14 +19,12 @@ describe('{{namePascalCase}}Details', () => {
   const createComponent = () => {
     mockClient = createMockClient()
 
-    mockClient.setRequestHandler(gql`
-      query {{nameCamelCase}}($id: Int) {
-        {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
-          id{%for field in fields%}
-          {{field.fieldNameCamelCase}}{%endfor%}
-        }
+    mockClient.setRequestHandler(gql`query {{nameCamelCase}}($id: Int) {
+      {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
+        id{%for field in fields%}
+        {{field.fieldNameCamelCase}}{%endfor%}
       }
-    `, jest.fn().mockResolvedValue({
+    }`, jest.fn().mockResolvedValue({
       data: {
         {{nameCamelCase}}: {
           id: 1{%for field in fields%},

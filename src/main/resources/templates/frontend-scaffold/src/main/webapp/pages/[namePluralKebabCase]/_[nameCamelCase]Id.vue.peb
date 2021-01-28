@@ -5,7 +5,7 @@
 </template>
 
 <script lang="ts">
-import {{ namePascalCase }}Details from '@/components/{{ nameCamelCase }}/{{ namePascalCase }}Details';
+import {{ namePascalCase }}Details from '@/components/{{ nameCamelCase }}/{{ namePascalCase }}Details.vue'
 
 export default {
   components: { {{ namePascalCase }}Details }
