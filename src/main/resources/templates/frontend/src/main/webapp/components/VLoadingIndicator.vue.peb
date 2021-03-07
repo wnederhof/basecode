@@ -1,9 +1,3 @@
-<template>{%if usesBootstrapComponents%}
-  <div>
-    <BSkeleton animation="wave" width="85%" />
-    <BSkeleton animation="wave" width="55%" />
-    <BSkeleton animation="wave" width="70%" />
-  </div>
-{% else %}
+<template>
   <p>Loading...</p>
-{% endif %}</template>
+</template>

@@ -1,9 +1,7 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
-import Page from '@/pages/{{namePluralKebabCase}}/index.vue'{% if usesBootstrapComponents %}
-import { BootstrapVue } from 'bootstrap-vue'{% endif %}
+import Page from '@/pages/{{namePluralKebabCase}}/index.vue'
 
-const localVue = createLocalVue(){% if usesBootstrapComponents %}
-localVue.use(BootstrapVue){% endif %}
+const localVue = createLocalVue()
 
 describe('Page', () => {
   let wrapper: Wrapper<any>

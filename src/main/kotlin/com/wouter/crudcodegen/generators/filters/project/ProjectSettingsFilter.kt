@@ -10,8 +10,7 @@ class ProjectSettingsFilter : ProjectTemplateFilter {
     override fun enrichProperties(settings: ProjectTemplateFilter.ProjectTemplateSettings): Iterable<Variable> {
         return listOf(
             Variable("groupId", settings.groupId),
-            Variable("artifactId", settings.artifactId),
-            Variable("usesBootstrapComponents", settings.components == ProjectProperties.Components.bootstrap)
+            Variable("artifactId", settings.artifactId)
         )
     }
 }

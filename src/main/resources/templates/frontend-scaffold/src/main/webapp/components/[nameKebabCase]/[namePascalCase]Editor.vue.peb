@@ -9,38 +9,38 @@
       type="hidden"
     />
 {%for field in fields%}
-    <{%if usesBootstrapComponents%}BFormGroup{%else%}div{%endif%}{%if field.isFieldRelational%} v-if="!this.$props.{{field.fieldNameCamelCase}}"{%endif%}>
+    <div{%if field.isFieldRelational%} v-if="!this.$props.{{field.fieldNameCamelCase}}"{%endif%}>
       <label :for="$id('{{field.fieldNameCamelCase}}')">{{field.fieldNamePascalCase}}</label>{%if field.isFieldRelational%}
-      <{%if usesBootstrapComponents%}BFormSelect{%else%}select{%endif%}
+      <select
         :id="$id('{{field.fieldNameCamelCase}}')"
         ref="{{field.fieldNameCamelCase}}Input"
         v-model="{{nameCamelCase}}.{{field.fieldNameCamelCase}}"
       >
-        <{%if usesBootstrapComponents%}BFormSelectOption{%else%}option{%endif%}
+        <option
           v-for="{{ field.fieldTypeCamelCase }} in {{ field.fieldTypePluralCamelCase }}"
           :key="{{ field.fieldTypeCamelCase }}.id"
           :value="{{ field.fieldTypeCamelCase }}.id"
-        >{{ "{{" }}{{ field.fieldTypeCamelCase }}.id{{ "}}" }}</{%if usesBootstrapComponents%}BFormSelectOption{%else%}option{%endif%}>
-      </{%if usesBootstrapComponents%}BFormSelect{%else%}select{%endif%}>
+        >{{ "{{" }}{{ field.fieldTypeCamelCase }}.id{{ "}}" }}</option>
+      </select>
 {%elseif not field.isFieldOfTypeText%}
-      <{%if usesBootstrapComponents%}BFormInput{%else%}input{%endif%}
+      <input
         :id="$id('{{field.fieldNameCamelCase}}')"
         ref="{{field.fieldNameCamelCase}}Input"
         v-model="{{nameCamelCase}}.{{field.fieldNameCamelCase}}"
         type="{{field.fieldHtmlInputType}}"{%if not field.isFieldNullable%}{%if isString%}
         required{%endif%}{%endif%}
       />{%else%}
-      <{%if usesBootstrapComponents%}BFormTextarea{%else%}textarea{%endif%}
+      <textarea
         :id="$id('{{field.fieldNameCamelCase}}')"
         ref="{{field.fieldNameCamelCase}}Input"
         v-model="{{nameCamelCase}}.{{field.fieldNameCamelCase}}"{%if not field.isFieldNullable%}{%if isString%}
         required{%endif%}{%endif%}
-      ></{%if usesBootstrapComponents%}BFormTextarea{%else%}textarea{%endif%}>{%endif%}
-    </{%if usesBootstrapComponents%}BFormGroup{%else%}div{%endif%}>{%if field.isFieldRelational%}
-{%endif%}{%endfor%}
+      ></textarea>{%endif%}
+    </div>
+{%endfor%}
     <div>
-      {%if usesBootstrapComponents%}<BButton type="submit">Save</BButton>{%else%}<button>Save</button>{%endif%}
-      <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="cancelBtn" type="button" @click="cancel">Cancel</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
+      <button>Save</button>
+      <button ref="cancelBtn" type="button" @click="cancel">Cancel</button>
     </div>
   </form>
 </template>

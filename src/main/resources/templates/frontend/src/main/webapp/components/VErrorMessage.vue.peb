@@ -1,12 +1,8 @@
-<template>{%if usesBootstrapComponents%}
-  <BAlert variant="danger">
-    {{ "{{" }} message {{ "}}" }}
-  </BAlert>
-{% else %}
+<template>
   <p>
     {{ "{{" }} message {{ "}}" }}
   </p>
-{% endif %}</template>
+</template>
 
 <script lang="ts">
 import { Vue } from 'vue-property-decorator'

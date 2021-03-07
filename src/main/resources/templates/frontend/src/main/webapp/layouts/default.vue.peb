@@ -1,20 +1,10 @@
-<template>{% if usesBootstrapComponents %}
-  <div>
-    <BNavbar variant="light" type="light">
-      <BNavbarBrand>{{ artifactId }}</BNavbarBrand>
-    </BNavbar>
-    <BContainer>
-      <Nuxt />
-    </BContainer>
-  </div>
-{% else %}
+<template>
   <div>
     <Nuxt />
   </div>
-{% endif %}</template>
+</template>
 
 <style lang="scss">
-{% if not usesBootstrapComponents %}
 html {
   font-family:
     'Source Sans Pro',
@@ -33,10 +23,6 @@ html {
   -webkit-font-smoothing: antialiased;
   box-sizing: border-box;
 }
-{% else %}
-@import 'node_modules/bootstrap/scss/bootstrap.scss';
-@import 'node_modules/bootstrap-vue/src/index.scss';
-{% endif %}
 /*
  * This transition delays the page transition by 100ms while the components are in fact being rendered.
  * This way, fast components that need data from the server are already fully rendered

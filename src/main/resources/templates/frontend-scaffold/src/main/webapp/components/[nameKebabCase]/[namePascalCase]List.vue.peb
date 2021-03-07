@@ -2,11 +2,11 @@
   <VLoadingIndicator v-if="$apollo.loading" />
   <VErrorMessage v-else-if="error" :message="error" />
   <div v-else>
-    <h1{%if usesBootstrapComponents%} class="mt-5 mb-3"{%endif%}>
+    <h1>
       List of {{namePluralPascalCase}}
     </h1>
     <div v-if="{{namePluralCamelCase}}.length === 0">No entries.</div>
-    <{%if usesBootstrapComponents%}BTableSimple v-else fixed{%else%}table v-else{%endif%}>
+    <table v-else>
       <thead>
         <tr>
           <th>Id</th>{%for field in fields%}
@@ -20,26 +20,13 @@
           <td{% if field.isFieldRelational %} v-if="!$props.{{field.fieldNameCamelCase}}"{% endif %}>{{ "{{" }} {{nameCamelCase}}.{{field.fieldNameCamelCase}} {{ "}}" }}</td>{%endfor%}
           <td>
             <NLink :to="'/{{namePluralKebabCase}}/' + {{nameCamelCase}}.id">Show</NLink>
-            <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="edit{{namePascalCase}}Btn" type="button" @click="edit{{namePascalCase}}({{nameCamelCase}}.id)">Edit</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
-            <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="delete{{namePascalCase}}Btn" type="button" @click="delete{{namePascalCase}}({{nameCamelCase}}.id)">Delete</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>
+            <button ref="edit{{namePascalCase}}Btn" type="button" @click="edit{{namePascalCase}}({{nameCamelCase}}.id)">Edit</button>
+            <button ref="delete{{namePascalCase}}Btn" type="button" @click="delete{{namePascalCase}}({{nameCamelCase}}.id)">Delete</button>
           </td>
         </tr>
       </tbody>
-    </{%if usesBootstrapComponents%}BTableSimple{%else%}table{%endif%}>
-    <{%if usesBootstrapComponents%}BButton{%else%}button{%endif%} ref="new{{namePascalCase}}Btn" @click="new{{namePascalCase}}">New {{namePascalCase}}</{%if usesBootstrapComponents%}BButton{%else%}button{%endif%}>{%if usesBootstrapComponents%}
-    <BModal
-      v-model="{{nameCamelCase}}EditorVisible"
-      :title="modalTitle"
-      hide-footer
-    >
-      <{{namePascalCase}}Editor
-        ref="{{nameCamelCase}}Editor"
-        :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
-        :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
-        @save="closeEditor"
-        @cancel="closeEditor"
-      />
-    </BModal>{%else%}
+    </table>
+    <button ref="new{{namePascalCase}}Btn" @click="new{{namePascalCase}}">New {{namePascalCase}}</button>
     <div v-if="{{nameCamelCase}}EditorVisible">
       <h2>{{ "{{" }} modalTitle {{ "}}" }}</h2>
       <{{namePascalCase}}Editor
@@ -49,7 +36,7 @@
         @save="closeEditor"
         @cancel="closeEditor"
       />
-    </div>{%endif%}
+    </div>
   </div>
 </template>
 

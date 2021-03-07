@@ -1,9 +1,7 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
-import VLoadingIndicator from '@/components/VLoadingIndicator.vue'{% if usesBootstrapComponents %}
-import { BootstrapVue } from 'bootstrap-vue'{% endif %}
+import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
 
-const localVue = createLocalVue(){% if usesBootstrapComponents %}
-localVue.use(BootstrapVue){% endif %}
+const localVue = createLocalVue()
 
 describe('VLoadingIndicator', () => {
   let wrapper: Wrapper<any>

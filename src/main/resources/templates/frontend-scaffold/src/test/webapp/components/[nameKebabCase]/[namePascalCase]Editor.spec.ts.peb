@@ -5,13 +5,11 @@ import VueApollo from 'vue-apollo'
 import gql from 'graphql-tag'
 import {{namePascalCase}}Editor from '@/components/{{nameKebabCase}}/{{namePascalCase}}Editor.vue'
 import UniqueId from 'vue-unique-id'
-import { MockApolloClient } from 'mock-apollo-client/dist/mockClient'{% if usesBootstrapComponents %}
-import { BootstrapVue } from 'bootstrap-vue'{% endif %}
+import { MockApolloClient } from 'mock-apollo-client/dist/mockClient'
 
 const localVue = createLocalVue()
 localVue.use(UniqueId)
-localVue.use(VueApollo){% if usesBootstrapComponents %}
-localVue.use(BootstrapVue){% endif %}
+localVue.use(VueApollo)
 
 describe('{{namePascalCase}}Editor', () => {
   let wrapper: Wrapper<any>
@@ -60,17 +58,16 @@ describe('{{namePascalCase}}Editor', () => {
   it('contains {{nameCamelCase}} form with no data if id is not set', async () => {
     createComponent({ id: null })
     await flushPromises()
-{%for field in fields%}{% if usesBootstrapComponents %}
-    expect(wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).attributes().value).toBe(undefined){% else %}
-    expect((wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).element as {% if field.isFieldRelational %}HTMLSelectElement).selectedIndex).toBe(-1){% else %}HTMLInputElement).value).toBe(''){%endif%}{%endif%}{%endfor%}
+{%for field in fields%}
+    expect((wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).element as {% if field.isFieldRelational %}HTMLSelectElement).selectedIndex).toBe(-1){% else %}HTMLInputElement).value).toBe(''){%endif%}{%endfor%}
   })
 
   it('contains {{nameCamelCase}} form with data if id is set', async () => {
     createComponent({ id: 1 })
     await flushPromises()
-{%for field in fields%}{% if usesBootstrapComponents %}
-    expect(wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).attributes().value).toBe({{field.fieldVueTypescriptTestValue}}){%else%}
-    expect((wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).element as HTMLInputElement).value).toContain({{field.fieldVueTypescriptTestValue}}){%endif%}{%endfor%}
+{%for field in fields%}
+    expect(wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).attributes().value).toBe({{field.fieldVueTypescriptTestValue}})
+    expect((wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).element as HTMLInputElement).value).toContain({{field.fieldVueTypescriptTestValue}}){%endfor%}
   })
 
   it('emits cancel event when edit is clicked', async () => {

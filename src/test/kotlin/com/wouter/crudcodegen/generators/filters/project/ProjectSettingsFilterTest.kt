@@ -26,15 +26,12 @@ class ProjectSettingsFilterTest {
 
         assertThat(actual.single { it.name == "groupId" }.value).isEqualTo("com.mycorp")
         assertThat(actual.single { it.name == "artifactId" }.value).isEqualTo("employeemanager")
-        assertThat(actual.single { it.name == "usesBootstrapComponents" }.value).isEqualTo(false)
     }
 
     @Test
     fun `enrichProperties sets useBootstrapComponents appropriately`() {
         val settings = ProjectTemplateSettings("", "", ProjectProperties.Components.bootstrap, SOME_STRING, mock())
         val actual = projectSettingsFilter.enrichProperties(settings)
-
-        assertThat(actual.single { it.name == "usesBootstrapComponents" }.value).isEqualTo(true)
     }
 
     private companion object {

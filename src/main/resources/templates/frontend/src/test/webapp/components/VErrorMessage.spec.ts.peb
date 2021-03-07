@@ -1,9 +1,7 @@
 import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
-import VErrorMessage from '@/components/VErrorMessage.vue'{% if usesBootstrapComponents %}
-import { BootstrapVue } from 'bootstrap-vue'{% endif %}
+import VErrorMessage from '@/components/VErrorMessage.vue'
 
-const localVue = createLocalVue(){% if usesBootstrapComponents %}
-localVue.use(BootstrapVue){% endif %}
+const localVue = createLocalVue()
 
 describe('VErrorMessage', () => {
   let wrapper: Wrapper<any>
