@@ -1,7 +1,5 @@
-package {{ groupId }}.{{ artifactId }}.config
+package {{ groupId }}.{{ artifactId }}.graphql
 
-import {{ groupId }}.{{ artifactId }}.config.coercing.DateCoercing
-import {{ groupId }}.{{ artifactId }}.config.coercing.DateTimeCoercing
 import graphql.schema.GraphQLScalarType
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

@@ -41,11 +41,9 @@
       />
     </BModal>{%else%}
     <div v-if="{{nameCamelCase}}EditorVisible">
-      <h2>{{ modalTitle }}</h2>
+      <h2>{{ "{{" }} modalTitle {{ "}}" }}</h2>
       <{{namePascalCase}}Editor
-        v-if="{{nameCamelCase}}EditorVisible"
         ref="{{nameCamelCase}}Editor"
-        :key="selectedId"
         :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
         :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
         @save="closeEditor"
@@ -61,7 +59,7 @@ import Component from 'nuxt-class-component'
 import gql from 'graphql-tag'
 import VErrorMessage from '@/components/VErrorMessage.vue'
 import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
-import {{ namePascalCase }}Editor from '@/components/{{ nameCamelCase }}/{{ namePascalCase }}Editor.vue'
+import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ namePascalCase }}Editor.vue'
 
 @Component({
   components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor },
@@ -95,11 +93,11 @@ export default class {{namePascalCase}}List extends Vue {
   error = null
   {{nameCamelCase}}EditorVisible = false
   selectedId: number | null = null
-{%if usesBootstrapComponents%}
+
   get modalTitle () {
     return this.selectedId ? 'Edit {{ namePascalCase }}' : 'New {{ namePascalCase }}'
   }
-{%endif%}
+
   new{{namePascalCase}} () {
     this.{{nameCamelCase}}EditorVisible = true
     this.selectedId = null

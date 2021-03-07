@@ -1,4 +1,4 @@
-package {{ groupId }}.{{ artifactId }}.config.coercing
+package {{ groupId }}.{{ artifactId }}.graphql
 
 import graphql.language.StringValue
 import graphql.schema.Coercing
@@ -6,36 +6,36 @@ import graphql.schema.CoercingParseLiteralException
 import graphql.schema.CoercingParseValueException
 import graphql.schema.CoercingSerializeException
 import org.springframework.stereotype.Component
-import java.time.LocalDateTime
+import java.time.LocalDate
 import java.time.format.DateTimeParseException
 
 @Component
-class DateTimeCoercing : Coercing<LocalDateTime, String> {
+class DateCoercing : Coercing<LocalDate, String> {
 
     override fun serialize(dataFetcherResult: Any): String {
-        if (dataFetcherResult !is LocalDateTime) {
-            throw CoercingSerializeException("Expected a LocalDateTime object.")
+        if (dataFetcherResult !is LocalDate) {
+            throw CoercingSerializeException("Expected a LocalDate object.")
         }
         return "$dataFetcherResult"
     }
 
-    override fun parseValue(input: Any): LocalDateTime {
+    override fun parseValue(input: Any): LocalDate {
         try {
             if (input !is String) {
                 throw CoercingParseValueException("Expected a String.")
             }
-            return LocalDateTime.parse(input)
+            return LocalDate.parse(input)
         } catch (e: DateTimeParseException) {
-            throw CoercingParseValueException(String.format("Not a valid datetime: '%s'.", input), e)
+            throw CoercingParseValueException(String.format("Not a valid date: '%s'.", input), e)
         }
     }
 
-    override fun parseLiteral(input: Any): LocalDateTime {
+    override fun parseLiteral(input: Any): LocalDate {
         if (input !is StringValue) {
             throw CoercingParseLiteralException("Expected a StringValue.")
         }
         try {
-            return LocalDateTime.parse(input.value)
+            return LocalDate.parse(input.value)
         } catch (e: DateTimeParseException) {
             throw CoercingParseLiteralException(e)
         }

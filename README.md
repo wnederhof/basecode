@@ -5,7 +5,7 @@ CrudCodeGen is a full-stack scaffolding generator for Kotlin, Spring Boot, Graph
 - **Maintainable**: A package-by-feature backend structure, GraphQL communication and an event-driven backend model make for a highly decoupled and extensible architecture which is built to last.
 - **Incremental**: Start with almost no code. Then, once you're ready for the next step, add a GraphQL API, a frontend and more at your own pace.
 
-CrudCodeGen introduces the concept of "relational non-intrusive scaffolding", which is designed to keep your code maintainable, even for entities with 1-N relationships.
+CrudCodeGen introduces the concept of "non-intrusive relational scaffolding", which is designed to keep your code maintainable, even for entities with 1-N relationships.
 
 - **Relational:** the user may generate generate entities with 1-N relationships.
 - **Non-intrusive:** code generated for one entity will not affect code of any another entity, nor will it *change* any other file in the project.
@@ -61,7 +61,7 @@ For example:
 ```
 ccg new com.mycorp blog --components=bootstrap
 ```
-Available componentss:
+Available components:
 
 - `plain`: A very basic components (default)
 - `bootstrap`: Vue-Bootstrap UI
