@@ -4,7 +4,6 @@ import com.wouter.crudcodegen.application.CommandLineInterface.GenerateCommand
 import com.wouter.crudcodegen.application.CommandLineInterface.NewCommand
 import com.wouter.crudcodegen.engine.FileManager
 import com.wouter.crudcodegen.engine.TemplateEngine
-import com.wouter.crudcodegen.generators.ProjectProperties
 import com.wouter.crudcodegen.generators.filters.EntityTemplateFilter
 import com.wouter.crudcodegen.generators.filters.FieldTemplateFilter
 import com.wouter.crudcodegen.generators.filters.ProjectTemplateFilter
