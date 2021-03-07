@@ -50,12 +50,11 @@ CrudCodeGen - Open Source Full Stack Code Generator
 ### New project
 You can create a new project using `ccg new`.
 ```
-ccg new [-bho] [-c=<components>] <groupId> <artifactId>
+ccg new [-bho] <groupId> <artifactId>
       <groupId>         groupId, e.g. com.petparadise
       <artifactId>      artifactId, e.g. petstore  -b, --backend-only
   -h, --help
   -o, --overwrite
-  -c, --components=<components>
 ```
 For example:
 ```
