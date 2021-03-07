@@ -11,7 +11,7 @@ CrudCodeGen introduces the concept of "non-intrusive relational scaffolding", wh
 - **Non-intrusive:** code generated for one entity will not affect code of any another entity, nor will it *change* any other file in the project.
 
 ## Installation
-### Pre-compiled
+<!--- ### Pre-compiled
 First, download the latest binary into `~/.crudcodegen.jar`.
 ```
 curl https://github.com/wnederhof/crudcodegen/releases/latest/download/crudcodegen.jar -o ~/.crudcodegen-latest.jar
@@ -24,7 +24,7 @@ Enable the alias in your terminal using:
 ```
 source ~/.bashrc      # or .zshrc
 ```
-
+--->
 ### From Source
 Clone the repository into `~/.crudcodegen` and build using Maven (you need Java 11 or higher):
 ```
@@ -59,12 +59,8 @@ ccg new [-bho] [-c=<components>] <groupId> <artifactId>
 ```
 For example:
 ```
-ccg new com.mycorp blog --components=bootstrap
+ccg new com.mycorp blog
 ```
-Available components:
-
-- `plain`: A very basic components (default)
-- `bootstrap`: Vue-Bootstrap UI
 
 ### Generate
 Using `ccg generate`, you can generate code based using one of the following generators.
@@ -103,7 +99,7 @@ For each of these types, you can add `_o` to make this type optional. For exampl
 
 When you want, for example, to generate a blog, you can do that as following:
 ```
-ccg new com.mycorp blog --components=bootstrap
+ccg new com.mycorp blog
 cd blog
 ccg generate scaffold Post title:String
 ccg generate scaffold Comment postId:Post comment:String

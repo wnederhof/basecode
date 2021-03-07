@@ -67,9 +67,6 @@ class CommandLineInterface {
         @Option(usageHelp = true, names = ["-h", "--help"])
         var usageHelp: Boolean = false
 
-        @Option(names = ["-c", "--components"])
-        var components: ProjectProperties.Components? = null
-
         @Option(names = ["-b", "--backend-only"])
         var backendOnly: Boolean = false
 
@@ -83,7 +80,7 @@ class CommandLineInterface {
             val targetPath = File(fileManager.currentDir + "/$artifactId")
             targetPath.mkdirs()
             val properties = projectPropertiesManager.readProperties(targetPath)
-                .copy(artifactId = artifactId!!, groupId = groupId!!, components = components ?: ProjectProperties.Components.plain)
+                .copy(artifactId = artifactId!!, groupId = groupId!!)
             val filters = entityTemplateFilters + projectTemplateFilters + fieldTemplateFilters
 
             val variables = variablesHelper.createVariables(targetPath, properties, artifactId!!, null, filters)

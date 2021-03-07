@@ -20,14 +20,13 @@ class VariablesHelper {
     ): List<Variable> {
         val groupId = properties.groupId ?: error("groupId required but not set.")
         val artifactId = properties.artifactId ?: error("artifactId required but not set.")
-        val components = properties.components
         val variables = mutableListOf<Variable>()
         val projectTemplateFilters = filters.filterIsInstance(ProjectTemplateFilter::class.java)
         val entityTemplateFilters = filters.filterIsInstance(EntityTemplateFilter::class.java)
         val fieldTemplateFilters = filters.filterIsInstance(FieldTemplateFilter::class.java)
 
         variables += projectTemplateFilters.flatMap {
-            it.enrichProperties(ProjectTemplateSettings(groupId, artifactId, components, name, targetPath))
+            it.enrichProperties(ProjectTemplateSettings(groupId, artifactId, name, targetPath))
         }
 
         if (fields != null) {

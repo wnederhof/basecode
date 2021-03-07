@@ -19,19 +19,13 @@ class ProjectSettingsFilterTest {
     fun `enrichProperties enriches with artifactId and groupId`() {
         val groupId = "com.mycorp"
         val artifactId = "employeemanager"
-        val settings = ProjectTemplateSettings(groupId, artifactId, ProjectProperties.Components.plain, SOME_STRING, mock())
+        val settings = ProjectTemplateSettings(groupId, artifactId, SOME_STRING, mock())
         val actual = projectSettingsFilter.enrichProperties(settings)
 
         assertThat(actual).hasSize(3)
 
         assertThat(actual.single { it.name == "groupId" }.value).isEqualTo("com.mycorp")
         assertThat(actual.single { it.name == "artifactId" }.value).isEqualTo("employeemanager")
-    }
-
-    @Test
-    fun `enrichProperties sets useBootstrapComponents appropriately`() {
-        val settings = ProjectTemplateSettings("", "", ProjectProperties.Components.bootstrap, SOME_STRING, mock())
-        val actual = projectSettingsFilter.enrichProperties(settings)
     }
 
     private companion object {
