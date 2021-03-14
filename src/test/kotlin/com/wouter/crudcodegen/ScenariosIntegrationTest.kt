@@ -88,7 +88,7 @@ class ScenariosIntegrationTest {
     }
 
     private fun executeFrontendTests(tempDir: File): Boolean {
-        return OK_RETURN_STATUS == ProcessBuilder("sh", "-c", "npm install && npm test")
+        return OK_RETURN_STATUS == ProcessBuilder("sh", "-c", "npm install --legacy-peer-deps && npm test")
             .inheritIO()
             .directory(File(tempDir.path))
             .start()
