@@ -15,28 +15,34 @@ class {{ namePascalCase }}Resolver(
     private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
 ) : GraphQLQueryResolver, GraphQLMutationResolver {
 
-    fun {{ nameCamelCase }}(id: Int) =
-        {{ nameCamelCase }}Service.findById(id)
+    fun {{ nameCamelCase }}(id: Int): {{ namePascalCase }}? {
+        return {{ nameCamelCase }}Service.findById(id)
+    }
 
-    fun {{ namePluralCamelCase }}({%if hasRelations%}filter: {{ namePascalCase }}FilterInput?{%endif%}) =
-        {{ nameCamelCase }}Service.findAll({%if hasRelations%}filter{%endif%})
+    fun {{ namePluralCamelCase }}({%if hasRelations%}filter: {{ namePascalCase }}FilterInput?{%endif%}): Iterable<{{ namePascalCase }}> {
+        return {{ nameCamelCase }}Service.findAll({%if hasRelations%}filter{%endif%})
+    }
 
-    fun create{{ namePascalCase }}(input: Create{{ namePascalCase }}Input) =
-        {{ nameCamelCase }}Service.create(input)
+    fun create{{ namePascalCase }}(input: Create{{ namePascalCase }}Input): {{ namePascalCase }} {
+        return {{ nameCamelCase }}Service.create(input)
+    }
 
-    fun update{{ namePascalCase }}(id: Int, input: Update{{ namePascalCase }}Input) =
-        {{ nameCamelCase }}Service.update(id, input)
+    fun update{{ namePascalCase }}(id: Int, input: Update{{ namePascalCase }}Input): {{ namePascalCase }}? {
+        return {{ nameCamelCase }}Service.update(id, input)
+    }
 
-    fun delete{{ namePascalCase }}(id: Int) =
-        {{ nameCamelCase }}Service.deleteById(id)
+    fun delete{{ namePascalCase }}(id: Int): Boolean {
+        return {{ nameCamelCase }}Service.deleteById(id)
+    }
 {%if hasRelations%}
     @Component
     class {{ namePascalCase }}QueryResolver({%for field in fields%}{%if field.isFieldRelational%}
         private val {{ field.fieldTypeCamelCase }}Service: {{ field.fieldTypePascalCase }}Service,{%endif%}{%endfor%}
     ) : GraphQLResolver<{{ namePascalCase }}> { {%for field in fields%}{%if field.isFieldRelational%}
 
-        fun {{ field.fieldTypeCamelCase }}({{ nameCamelCase }}: {{ namePascalCase }}) =
-            {{ field.fieldTypeCamelCase }}Service.findById({{ nameCamelCase }}.{{ field.fieldNameCamelCase }})
+        fun {{ field.fieldTypeCamelCase }}({{ nameCamelCase }}: {{ namePascalCase }}): {{ field.fieldTypePascalCase }}? {
+            return {{ field.fieldTypeCamelCase }}Service.findById({{ nameCamelCase }}.{{ field.fieldNameCamelCase }})
+        }
 {%endif%}{%endfor%}
     }
 {%for field in fields%}{%if field.isFieldRelational%}
@@ -45,8 +51,9 @@ class {{ namePascalCase }}Resolver(
         private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
     ) : GraphQLResolver<{{ field.fieldTypePascalCase }}> {
 
-        fun {{ namePluralCamelCase }}({{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}) =
-            {{ nameCamelCase }}Service.findBy{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.id!!)
+        fun {{ namePluralCamelCase }}({{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}): Iterable<{{ namePascalCase }}> {
+            return {{ nameCamelCase }}Service.findBy{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.id!!)
+        }
 
     }
 {%endif%}{%endfor%}{%endif%}
