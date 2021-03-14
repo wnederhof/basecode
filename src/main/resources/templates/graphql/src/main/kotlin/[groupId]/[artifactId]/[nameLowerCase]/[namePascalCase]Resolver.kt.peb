@@ -10,12 +10,12 @@ import graphql.kickstart.tools.GraphQLQueryResolver{%if hasRelations%}
 import graphql.kickstart.tools.GraphQLResolver{%endif%}
 import org.springframework.stereotype.Component
 
-sealed class {{ namePascalCase }}Resolver {
+class {{ namePascalCase }}Resolver {
 
     @Component
     class RootQueryResolver(
         private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
-    ) : GraphQLQueryResolver, {{ namePascalCase }}Resolver() {
+    ) : GraphQLQueryResolver {
 
         fun {{ nameCamelCase }}(id: Int) =
             {{ nameCamelCase }}Service.findById(id)
@@ -28,7 +28,7 @@ sealed class {{ namePascalCase }}Resolver {
     @Component
     class MutationResolver(
         private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
-    ) : GraphQLMutationResolver, {{ namePascalCase }}Resolver() {
+    ) : GraphQLMutationResolver {
 
         fun create{{ namePascalCase }}(input: Create{{ namePascalCase }}Input) =
             {{ nameCamelCase }}Service.create(input)
@@ -44,7 +44,7 @@ sealed class {{ namePascalCase }}Resolver {
     @Component
     class {{ namePascalCase }}QueryResolver({%for field in fields%}{%if field.isFieldRelational%}
         private val {{ field.fieldTypeCamelCase }}Service: {{ field.fieldTypePascalCase }}Service,{%endif%}{%endfor%}
-    ) : GraphQLResolver<{{ namePascalCase }}>, {{ namePascalCase }}Resolver() { {%for field in fields%}{%if field.isFieldRelational%}
+    ) : GraphQLResolver<{{ namePascalCase }}> { {%for field in fields%}{%if field.isFieldRelational%}
 
         fun {{ field.fieldTypeCamelCase }}({{ nameCamelCase }}: {{ namePascalCase }}) =
             {{ field.fieldTypeCamelCase }}Service.findById({{ nameCamelCase }}.{{ field.fieldNameCamelCase }})
@@ -54,7 +54,7 @@ sealed class {{ namePascalCase }}Resolver {
     @Component
     class {{ field.fieldTypePascalCase }}FieldResolver(
         private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
-    ) : GraphQLResolver<{{ field.fieldTypePascalCase }}>, {{ namePascalCase }}Resolver() {
+    ) : GraphQLResolver<{{ field.fieldTypePascalCase }}> {
 
         fun {{ namePluralCamelCase }}({{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}) =
             {{ nameCamelCase }}Service.findBy{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.id!!)
