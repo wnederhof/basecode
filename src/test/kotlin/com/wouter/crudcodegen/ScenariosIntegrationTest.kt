@@ -46,8 +46,14 @@ class ScenariosIntegrationTest {
         fileManager.currentDir = projectContextDir
 
         executeCommand(
-            "generate", "scaffold",
-            "Owner", "name:string", "about:text", "age:int", "dateOfBirth:date", "timeOfBirth:datetime"
+            "generate",
+            "scaffold",
+            "Owner",
+            "name:string",
+            "about:text",
+            "age:int",
+            "dateOfBirth:date",
+            "timeOfBirth:datetime"
         )
 
         executeCommand(

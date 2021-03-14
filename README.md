@@ -30,12 +30,12 @@ Clone the repository into `~/.crudcodegen` and build using Maven (you need Java 
 ```
 cd ~
 git clone https://github.com/wnederhof/crudcodegen.git .crudcodegen
-cd crudcodegen
+cd .crudcodegen
 ./mvnw clean package -DskipTests
 ```
 Set up an alias for quick access, by adding the following to your `.zshrc` or `.bashrc` file:
 ```
-alias ccg="java -jar $HOME/.crudcodegen/target/crudcodegen-<version>.jar"
+alias ccg="java -jar $HOME/.crudcodegen/target/crudcodegen.jar"
 ```
 Enable the alias in your terminal using:
 ```
@@ -44,6 +44,12 @@ source ~/.bashrc      # or .zshrc
 Verify that CrudCodeGen works, by typing: `ccg -h`, which should show the help, starting with:
 ```
 CrudCodeGen - Open Source Full Stack Code Generator
+```
+To update, run:
+```
+cd ~/.crudcodegen
+git pull
+./mvnw clean package -DskipTests
 ```
 
 ## Usage
