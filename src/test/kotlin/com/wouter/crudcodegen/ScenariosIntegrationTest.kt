@@ -69,7 +69,7 @@ class ScenariosIntegrationTest {
         )
 
         assertThat(executeBackendTests(File(projectContextDir)), equalTo(true))
-//        assertThat(executeFrontendTests(File(projectContextDir)), equalTo(true))
+        assertThat(executeFrontendTests(File(projectContextDir)), equalTo(true))
     }
 
     private fun executeCommand(vararg args: String) {
