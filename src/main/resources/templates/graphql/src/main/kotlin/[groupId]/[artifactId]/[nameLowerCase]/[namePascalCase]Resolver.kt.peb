@@ -10,36 +10,25 @@ import graphql.kickstart.tools.GraphQLQueryResolver{%if hasRelations%}
 import graphql.kickstart.tools.GraphQLResolver{%endif%}
 import org.springframework.stereotype.Component
 
-class {{ namePascalCase }}Resolver {
+@Component
+class {{ namePascalCase }}Resolver(
+    private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
+) : GraphQLQueryResolver, GraphQLMutationResolver {
 
-    @Component
-    class RootQueryResolver(
-        private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
-    ) : GraphQLQueryResolver {
+    fun {{ nameCamelCase }}(id: Int) =
+        {{ nameCamelCase }}Service.findById(id)
 
-        fun {{ nameCamelCase }}(id: Int) =
-            {{ nameCamelCase }}Service.findById(id)
+    fun {{ namePluralCamelCase }}({%if hasRelations%}filter: {{ namePascalCase }}FilterInput?{%endif%}) =
+        {{ nameCamelCase }}Service.findAll({%if hasRelations%}filter{%endif%})
 
-        fun {{ namePluralCamelCase }}({%if hasRelations%}filter: {{ namePascalCase }}FilterInput?{%endif%}) =
-            {{ nameCamelCase }}Service.findAll({%if hasRelations%}filter{%endif%})
+    fun create{{ namePascalCase }}(input: Create{{ namePascalCase }}Input) =
+        {{ nameCamelCase }}Service.create(input)
 
-    }
+    fun update{{ namePascalCase }}(id: Int, input: Update{{ namePascalCase }}Input) =
+        {{ nameCamelCase }}Service.update(id, input)
 
-    @Component
-    class MutationResolver(
-        private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
-    ) : GraphQLMutationResolver {
-
-        fun create{{ namePascalCase }}(input: Create{{ namePascalCase }}Input) =
-            {{ nameCamelCase }}Service.create(input)
-
-        fun update{{ namePascalCase }}(id: Int, input: Update{{ namePascalCase }}Input) =
-            {{ nameCamelCase }}Service.update(id, input)
-
-        fun delete{{ namePascalCase }}(id: Int) =
-            {{ nameCamelCase }}Service.deleteById(id)
-
-    }
+    fun delete{{ namePascalCase }}(id: Int) =
+        {{ nameCamelCase }}Service.deleteById(id)
 {%if hasRelations%}
     @Component
     class {{ namePascalCase }}QueryResolver({%for field in fields%}{%if field.isFieldRelational%}

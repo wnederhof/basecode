@@ -15,79 +15,61 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 
+@ExtendWith(MockitoExtension::class)
 class {{ namePascalCase }}ResolverUnitTests {
 
-    @Nested
-    @ExtendWith(MockitoExtension::class)
-    inner class RootQueryResolverUnitTests {
+    @Mock
+    private lateinit var {{ nameCamelCase }}Service: {{ namePascalCase }}Service
 
-        @Mock
-        private lateinit var {{ nameCamelCase }}Service: {{ namePascalCase }}Service
+    @InjectMocks
+    private lateinit var {{ nameCamelCase }}Resolver: {{ namePascalCase }}Resolver
 
-        @InjectMocks
-        private lateinit var rootQueryResolver: {{ namePascalCase }}Resolver.RootQueryResolver
+    @Test
+    fun `{{ nameCamelCase }} delegates the call to the {{ namePascalCase }}Service`() {
+        whenever({{ nameCamelCase }}Service.findById(1))
+            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
-        @Test
-        fun `{{ nameCamelCase }} delegates the call to the {{ namePascalCase }}Service`() {
-            whenever({{ nameCamelCase }}Service.findById(1))
-                .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-
-            assertThat(rootQueryResolver.{{ nameCamelCase }}(1))
-                .isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-        }
-
-        @Test
-        fun `{{ namePluralCamelCase }} delegates the call to the {{ namePascalCase }}Service`() {
-            {%if hasRelations%}val any{{ namePascalCase }}Filter = {{ namePascalCase }}.{{ namePascalCase }}FilterInput()
-
-            {%endif%}whenever({{ nameCamelCase }}Service.findAll({%if hasRelations%}any{{ namePascalCase }}Filter{%endif%}))
-                .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-
-            assertThat(rootQueryResolver.{{ namePluralCamelCase }}({%if hasRelations%}any{{ namePascalCase }}Filter{%endif%}))
-                .isEqualTo(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-        }
-
+        assertThat({{ nameCamelCase }}Resolver.{{ nameCamelCase }}(1))
+            .isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
     }
 
-    @Nested
-    @ExtendWith(MockitoExtension::class)
-    inner class MutationResolverUnitTests {
+    @Test
+    fun `{{ namePluralCamelCase }} delegates the call to the {{ namePascalCase }}Service`() {
+        {%if hasRelations%}val any{{ namePascalCase }}Filter = {{ namePascalCase }}.{{ namePascalCase }}FilterInput()
 
-        @Mock
-        private lateinit var {{ nameCamelCase }}Service: {{ namePascalCase }}Service
+        {%endif%}whenever({{ nameCamelCase }}Service.findAll({%if hasRelations%}any{{ namePascalCase }}Filter{%endif%}))
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
-        @InjectMocks
-        private lateinit var {{ nameCamelCase }}MutationResolver: {{ namePascalCase }}Resolver.MutationResolver
+        assertThat({{ nameCamelCase }}Resolver.{{ namePluralCamelCase }}({%if hasRelations%}any{{ namePascalCase }}Filter{%endif%}))
+            .isEqualTo(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+    }
 
-        @Test
-        fun `createBook delegates the call to the {{ namePascalCase }}Service`() {
-            whenever({{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
-                .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+    @Test
+    fun `createBook delegates the call to the {{ namePascalCase }}Service`() {
+        whenever({{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
+            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
-            assertThat({{ nameCamelCase }}MutationResolver.create{{ namePascalCase }}(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
-                .isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-        }
+        assertThat({{ nameCamelCase }}Resolver.create{{ namePascalCase }}(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
+            .isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+    }
 
-        @Test
-        fun `updateBook delegates the call to the {{ namePascalCase }}Service`() {
-            whenever({{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
-                .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+    @Test
+    fun `updateBook delegates the call to the {{ namePascalCase }}Service`() {
+        whenever({{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
+            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
-            assertThat({{ nameCamelCase }}MutationResolver.update{{ namePascalCase }}(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
-                .isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
-        }
+        assertThat({{ nameCamelCase }}Resolver.update{{ namePascalCase }}(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
+            .isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+    }
 
-        @Test
-        fun `delete{{ namePascalCase }} delegates the call to the {{ namePascalCase }}Service`() {
-            {{ nameCamelCase }}MutationResolver.delete{{ namePascalCase }}(1)
+    @Test
+    fun `delete{{ namePascalCase }} delegates the call to the {{ namePascalCase }}Service`() {
+        {{ nameCamelCase }}Resolver.delete{{ namePascalCase }}(1)
 
-            verify({{ nameCamelCase }}Service).deleteById(1)
-        }
-
+        verify({{ nameCamelCase }}Service).deleteById(1)
     }
 {%if hasRelations%}
     @Nested
-    @ExtendWith(MockitoExtension::class)
     inner class {{ namePascalCase }}ResolverUnitTests { {%for field in fields%}{%if field.isFieldRelational%}
 
         @Mock
