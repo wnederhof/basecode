@@ -29,15 +29,15 @@ class DatabaseFilterTest {
 
     @Test
     fun `enrichProperties checks which files are in the migration path, sets nextMigrationPrefix appropriately`() {
-        val migrationDir = File(tempDir.path + "/src/main/resources/db/migration")
-        val migrationFile = File(tempDir.path + "/src/main/resources/db/migration/V001__some-migration.sql")
+        val migrationDir = File(tempDir.path + "/$SOME_ARTIFACT_ID-server/src/main/resources/db/migration")
+        val migrationFile = File(tempDir.path + "/$SOME_ARTIFACT_ID-server/src/main/resources/db/migration/V001__some-migration.sql")
 
         migrationDir.mkdirs()
         migrationFile.createNewFile()
 
         val settings = ProjectTemplateSettings(
             groupId = SOME_STRING,
-            artifactId = SOME_STRING,
+            artifactId = SOME_ARTIFACT_ID,
             name = SOME_STRING,
             targetPath = tempDir
         )
@@ -48,6 +48,7 @@ class DatabaseFilterTest {
     }
 
     private companion object {
-        const val SOME_STRING = "some-irrelevant-string"
+        const val SOME_STRING = "some-string"
+        const val SOME_ARTIFACT_ID = "someartifactid"
     }
 }

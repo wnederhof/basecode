@@ -9,17 +9,17 @@ import java.io.File
 class DatabaseFilter : ProjectTemplateFilter {
     override fun enrichProperties(settings: ProjectTemplateFilter.ProjectTemplateSettings): Iterable<Variable> {
         return listOf(
-            Variable("nextMigrationPrefix", findNextMigrationPrefix(settings.targetPath))
+            Variable("nextMigrationPrefix", findNextMigrationPrefix(settings.targetPath, settings.artifactId!!))
         )
     }
 
-    private fun findNextMigrationPrefix(targetPath: File): String {
-        val i = findLastMigrationNumber(targetPath) + 1
+    private fun findNextMigrationPrefix(targetPath: File, artifactId: String): String {
+        val i = findLastMigrationNumber(targetPath, artifactId) + 1
         return "$i".padStart(3, '0')
     }
 
-    private fun findLastMigrationNumber(targetPath: File): Int {
-        val files = File("$targetPath/src/main/resources/db/migration").listFiles()
+    private fun findLastMigrationNumber(targetPath: File, artifactId: String): Int {
+        val files = File("$targetPath/$artifactId-server/src/main/resources/db/migration").listFiles()
             ?: return 0
 
         return files

@@ -68,8 +68,8 @@ class ScenariosIntegrationTest {
             "timeOfBirth:datetime_o"
         )
 
-        assertThat(executeBackendTests(File(projectContextDir)), equalTo(true))
-        assertThat(executeFrontendTests(File(projectContextDir)), equalTo(true))
+        assertThat(executeBackendTests(File(projectContextDir + "/petstore-server")), equalTo(true))
+        assertThat(executeFrontendTests(File(projectContextDir + "/petstore-web")), equalTo(true))
     }
 
     private fun executeCommand(vararg args: String) {
