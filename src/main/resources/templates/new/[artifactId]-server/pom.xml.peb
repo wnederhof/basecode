@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>{{ groupId }}</groupId>
-    <artifactId>{{ artifactId }}</artifactId>
+    <artifactId>{{ artifactId }}-server</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>{{ artifactId }}</name>
+    <name>{{ artifactId }}-server</name>
 
     <repositories>
         <repository>
