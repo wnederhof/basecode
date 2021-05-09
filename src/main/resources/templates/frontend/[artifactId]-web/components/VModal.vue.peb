@@ -1,6 +1,8 @@
 <template>
-  <h1>{{ "{{" }} modalTitle {{ "}}" }}</h1>
-  <slot v-if="visible"></slot>
+  <div>
+    <h1>{{ "{{" }} modalTitle {{ "}}" }}</h1>
+    <slot v-if="visible"></slot>
+  </div>
 </template>
 
 <script lang="ts">
