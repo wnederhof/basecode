@@ -22,7 +22,7 @@ describe('{{namePascalCase}}Editor', () => {
     mockClient.setRequestHandler(gql`query {{ field.fieldTypePluralCamelCase }} { {{ field.fieldTypePluralCamelCase }} { id } }`,
       jest.fn().mockResolvedValue({ data: { {{ field.fieldTypePluralCamelCase }}: [{ id: 1 }] } }))
 {%endif%}{%endfor%}
-    mockClient.setRequestHandler(gql`query {{nameCamelCase}}($id: Int) {
+    mockClient.setRequestHandler(gql`query {{nameCamelCase}}($id: ID!) {
       {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
         id{%for field in fields%}
         {{field.fieldNameCamelCase}}{%endfor%}

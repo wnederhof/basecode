@@ -17,7 +17,7 @@ describe('{{namePascalCase}}Details', () => {
   const createComponent = () => {
     mockClient = createMockClient()
 
-    mockClient.setRequestHandler(gql`query {{nameCamelCase}}($id: Int) {
+    mockClient.setRequestHandler(gql`query {{nameCamelCase}}($id: ID!) {
       {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
         id{%for field in fields%}
         {{field.fieldNameCamelCase}}{%endfor%}

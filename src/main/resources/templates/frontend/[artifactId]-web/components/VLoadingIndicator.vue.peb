@@ -1,3 +1,18 @@
 <template>
   <p>Loading...</p>
 </template>
+
+<script lang="ts">
+import { Vue } from 'vue-property-decorator'
+import Component from 'nuxt-class-component'
+
+@Component({
+  name: 'VLoadingIndicator',
+  props: {
+    message: [String],
+  }
+})
+export default class VLoadingIndicator extends Vue {
+
+}
+</script>

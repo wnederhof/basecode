@@ -1,5 +1,5 @@
 extend type Query {
-    {{ nameCamelCase }}(id: Int): {{ namePascalCase }}
+    {{ nameCamelCase }}(id: ID!): {{ namePascalCase }}
     {{ namePluralCamelCase }}{%if hasRelations%}(filter: {{ namePascalCase }}Filter){%endif%}: [{{ namePascalCase }}!]!
 }
 

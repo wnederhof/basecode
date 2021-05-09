@@ -9,6 +9,7 @@ import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
 
 @Component({
+  name: 'VErrorMessage',
   props: {
     message: [String],
   }
