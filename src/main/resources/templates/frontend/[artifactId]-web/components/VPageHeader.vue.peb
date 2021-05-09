@@ -1,0 +1,17 @@
+<template>
+  <h1>
+    <slot></slot>
+  </h1>
+</template>
+
+<script lang="ts">
+import { Vue } from 'vue-property-decorator'
+import Component from 'nuxt-class-component'
+
+@Component({
+  name: 'VPageHeader',
+})
+export default class VPageHeader extends Vue {
+
+}
+</script>

@@ -1,16 +1,17 @@
 <template>
   <div>
-    <h1>
+    <VPageHeader>
       {{namePluralPascalCase}}
-    </h1>
+    </VPageHeader>
     <{{namePascalCase}}Details :{{nameKebabCase}}-id="this.$route.params.{{nameCamelCase}}Id" />
   </div>
 </template>
 
 <script lang="ts">
 import {{ namePascalCase }}Details from '@/components/{{ nameKebabCase }}/{{ namePascalCase }}Details.vue'
+import VPageHeader from '@/components/VPageHeader.vue'
 
 export default {
-  components: { {{ namePascalCase }}Details }
+  components: { {{ namePascalCase }}Details, VPageHeader }
 }
 </script>

@@ -42,8 +42,8 @@ import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
 import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ namePascalCase }}Editor.vue'
 
 @Component({
-  name: '{%namePascalCase%}Details',
-  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor },
+  name: '{{namePascalCase}}Details',
+  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor, VModal },
   apollo: {
     {{nameCamelCase}}: {
       query: gql`query {{nameCamelCase}}($id: ID!) {

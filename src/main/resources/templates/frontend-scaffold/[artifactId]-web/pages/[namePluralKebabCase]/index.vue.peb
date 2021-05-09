@@ -1,16 +1,17 @@
 <template>
   <div>
-    <h1>
+    <VPageHeader>
       {{namePascalCase}} Details
-    </h1>
+    </VPageHeader>
     <{{namePascalCase}}List />
   </div>
 </template>
 
 <script lang="ts">
 import {{ namePascalCase }}List from '@/components/{{ nameKebabCase }}/{{ namePascalCase }}List.vue'
+import VPageHeader from '@/components/VPageHeader.vue'
 
 export default {
-  components: { {{ namePascalCase }}List }
+  components: { {{ namePascalCase }}List, VPageHeader }
 }
 </script>

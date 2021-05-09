@@ -53,7 +53,7 @@ import VErrorMessage from '@/components/VErrorMessage.vue'
 import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
 
 @Component({
-  name: '{%namePascalCase%}Editor',
+  name: '{{namePascalCase}}Editor',
   components: { VErrorMessage, VLoadingIndicator },
   apollo: { {%for field in fields%}{% if field.isFieldRelational %}
     {{ field.fieldTypePluralCamelCase }}: {
