@@ -20,8 +20,7 @@
         </tr>{%endfor%}
       </tbody>
     </table>
-    <div v-if="{{nameCamelCase}}EditorVisible">
-      <h2>Edit {{namePascalCase}}</h2>
+    <VModal title="Edit {{namePascalCase}}" :visible="{{namePascalCase}}EditorVisible">
       <{{namePascalCase}}Editor
         ref="{{nameCamelCase}}Editor"
         :id="$props.{{nameCamelCase}}Id"{%for field in fields%}{%if field.isFieldRelational%}
@@ -29,7 +28,7 @@
         @save="toggleEditor"
         @cancel="toggleEditor"
       />
-    </div>
+    </VModal>
   </div>
 </template>
 
@@ -38,6 +37,7 @@ import gql from 'graphql-tag'
 import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
 import VErrorMessage from '@/components/VErrorMessage.vue'
+import VModal from '@/components/VModal.vue'
 import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
 import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ namePascalCase }}Editor.vue'
 

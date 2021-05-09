@@ -24,8 +24,7 @@
       </tbody>
     </table>
     <button ref="new{{namePascalCase}}Btn" @click="new{{namePascalCase}}">New {{namePascalCase}}</button>
-    <div v-if="{{nameCamelCase}}EditorVisible">
-      <h2>{{ "{{" }} modalTitle {{ "}}" }}</h2>
+    <VModal :title="modalTitle" :visible="{{ namePascalCase }}EditorVisible">
       <{{namePascalCase}}Editor
         ref="{{nameCamelCase}}Editor"
         :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
@@ -33,7 +32,7 @@
         @save="closeEditor"
         @cancel="closeEditor"
       />
-    </div>
+    </VModal>
   </div>
 </template>
 
@@ -42,6 +41,7 @@ import { Vue } from 'vue-property-decorator'
 import Component from 'nuxt-class-component'
 import gql from 'graphql-tag'
 import VErrorMessage from '@/components/VErrorMessage.vue'
+import VModal from '@/components/VModal.vue'
 import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
 import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ namePascalCase }}Editor.vue'
 
