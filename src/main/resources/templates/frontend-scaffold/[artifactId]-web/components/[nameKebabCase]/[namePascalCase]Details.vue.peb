@@ -2,9 +2,6 @@
   <VLoadingIndicator v-if="$apollo.loading" />
   <VErrorMessage v-else-if="error" :message="error" />
   <div v-else>
-    <h1>
-      {{namePascalCase}} Details
-    </h1>
     <NLink to="/{{namePluralKebabCase}}">
       List of {{namePluralPascalCase}}
     </NLink>

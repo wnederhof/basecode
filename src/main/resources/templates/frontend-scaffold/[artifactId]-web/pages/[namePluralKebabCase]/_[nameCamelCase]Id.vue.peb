@@ -1,5 +1,8 @@
 <template>
   <div>
+    <h1>
+      {{namePluralPascalCase}}
+    </h1>
     <{{namePascalCase}}Details :{{nameKebabCase}}-id="this.$route.params.{{nameCamelCase}}Id" />
   </div>
 </template>
