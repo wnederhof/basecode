@@ -1,9 +1,6 @@
 <template>
   <div>
-    <VPageHeader>
-      {{namePascalCase}} Details
-    </VPageHeader>
-    <{{namePascalCase}}List />
+    <{{namePascalCase}}List showPageHeader />
   </div>
 </template>
 

@@ -2,24 +2,13 @@
   <VLoadingIndicator v-if="$apollo.loading" />
   <VErrorMessage v-else-if="error" :message="error" />
   <div v-else>
-    <NLink to="/{{namePluralKebabCase}}">
-      List of {{namePluralPascalCase}}
-    </NLink>
-    <button ref="edit{{namePascalCase}}Btn" @click="toggleEditor">
-      Edit {{namePascalCase}}
-    </button>
-    <table>
-      <tbody>
-        <tr>
-          <td>Id</td>
-          <td>{{ "{{" }} {{nameCamelCase}}.id {{ "}}" }}</td>
-        </tr>{%for field in fields%}
-        <tr>
-          <td>{{field.fieldNamePascalCase}}</td>
-          <td>{{ "{{" }} {{nameCamelCase}}.{{field.fieldNameCamelCase}} {{ "}}" }}</td>
-        </tr>{%endfor%}
-      </tbody>
-    </table>
+    <VPageHeader v-if="showPageHeader" backTo="/{{namePluralKebabCase}}" @edit="toggleEditor" showEdit>
+      {{namePluralPascalCase}}
+    </VPageHeader>
+    <VDataList
+      :fields="fields"
+      :data="{{nameCamelCase}}"
+    />
     <VModal title="Edit {{namePascalCase}}" :visible="{{namePascalCase}}EditorVisible">
       <{{namePascalCase}}Editor
         ref="{{nameCamelCase}}Editor"
@@ -35,15 +24,16 @@
 <script lang="ts">
 import gql from 'graphql-tag'
 import { Vue } from 'vue-property-decorator'
-import Component from 'nuxt-class-component'
+import { Component } from 'nuxt-property-decorator'
 import VErrorMessage from '@/components/VErrorMessage.vue'
 import VModal from '@/components/VModal.vue'
 import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
+import VPageHeader from '@/components/VPageHeader.vue'
 import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ namePascalCase }}Editor.vue'
 
 @Component({
   name: '{{namePascalCase}}Details',
-  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor, VModal },
+  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor, VModal, VPageHeader },
   apollo: {
     {{nameCamelCase}}: {
       query: gql`query {{nameCamelCase}}($id: ID!) {
@@ -66,14 +56,21 @@ import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ name
   },
 
   props: {
-    {{nameCamelCase}}Id: [Number, String]
+    {{nameCamelCase}}Id: [Number, String],
+    showPageHeader: [Boolean]
   }
 })
 export default class {{namePascalCase}}Details extends Vue {
   {{nameCamelCase}} = null
   error = null
-
   {{nameCamelCase}}EditorVisible = false
+  fields = [{%for field in fields%}
+    {
+      key: '{{ field.fieldNameCamelCase }}',
+      label: '{{ field.fieldNamePascalCase }}',
+      value: data => data.{{ field.fieldNameCamelCase }}
+    },{%endfor%}
+  ]
 
   toggleEditor () {
     this.{{nameCamelCase}}EditorVisible = !this.{{nameCamelCase}}EditorVisible

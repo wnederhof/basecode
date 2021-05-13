@@ -1,7 +1,7 @@
 <template>
   <VLoadingIndicator v-if="$apollo.loading" />
   <VErrorMessage v-else-if="error" :message="error" />
-  <form v-else ref="{{nameCamelCase}}Editor" @submit.prevent="save{{namePascalCase}}">
+  <VDataForm v-else @submit="save{{namePascalCase}}">
     <input
       v-if="{{nameCamelCase}}.id"
       :id="$id('id')"
@@ -42,19 +42,20 @@
       <button>Save</button>
       <button ref="cancelBtn" type="button" @click="cancel">Cancel</button>
     </div>
-  </form>
+  </VDataForm>
 </template>
 
 <script lang="ts">
 import { Vue } from 'vue-property-decorator'
-import Component from 'nuxt-class-component'
+import { Component } from 'nuxt-property-decorator'
 import gql from 'graphql-tag'
 import VErrorMessage from '@/components/VErrorMessage.vue'
 import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
+import VDataForm from '@/components/VDataForm.vue'
 
 @Component({
   name: '{{namePascalCase}}Editor',
-  components: { VErrorMessage, VLoadingIndicator },
+  components: { VErrorMessage, VLoadingIndicator, VDataForm },
   apollo: { {%for field in fields%}{% if field.isFieldRelational %}
     {{ field.fieldTypePluralCamelCase }}: {
       query: gql`query {{ field.fieldTypePluralCamelCase }} { {{ field.fieldTypePluralCamelCase }} { id } }`,

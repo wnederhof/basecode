@@ -2,29 +2,22 @@
   <VLoadingIndicator v-if="$apollo.loading" />
   <VErrorMessage v-else-if="error" :message="error" />
   <div v-else>
-    <div v-if="{{namePluralCamelCase}}.length === 0">No entries.</div>
-    <table v-else>
-      <thead>
-        <tr>
-          <th>Id</th>{%for field in fields%}
-          <th{% if field.isFieldRelational %} v-if="!$props.{{field.fieldNameCamelCase}}"{% endif %}>{{field.fieldNamePascalCase}}</th>{%endfor%}
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="{{nameCamelCase}} in {{namePluralCamelCase}}" :key="{{nameCamelCase}}.id">
-          <td>{{ "{{" }} {{nameCamelCase}}.id {{ "}}" }}</td>{%for field in fields%}
-          <td{% if field.isFieldRelational %} v-if="!$props.{{field.fieldNameCamelCase}}"{% endif %}>{{ "{{" }} {{nameCamelCase}}.{{field.fieldNameCamelCase}} {{ "}}" }}</td>{%endfor%}
-          <td>
-            <NLink :to="'/{{namePluralKebabCase}}/' + {{nameCamelCase}}.id">Show</NLink>
-            <button ref="edit{{namePascalCase}}Btn" type="button" @click="edit{{namePascalCase}}({{nameCamelCase}}.id)">Edit</button>
-            <button ref="delete{{namePascalCase}}Btn" type="button" @click="delete{{namePascalCase}}({{nameCamelCase}}.id)">Delete</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    <button ref="new{{namePascalCase}}Btn" @click="new{{namePascalCase}}">New {{namePascalCase}}</button>
-    <VModal :title="modalTitle" :visible="{{ namePascalCase }}EditorVisible">
+    <VPageHeader v-if="showPageHeader">
+      {{namePluralPascalCase}}
+    </VPageHeader>
+    <VDataList
+      primary-key="id"
+      :fields="fields"
+      :rows="{{namePluralCamelCase}}"
+      :to="row => '/{{ namePluralKebabCase }}/' + row.id"
+      @edit="row => edit{{namePascalCase}}(row.id)"
+      @delete="row => delete{{namePascalCase}}(row.id)"
+      @new="new{{namePascalCase}}"
+    />
+    <VNewButton ref="new{{namePascalCase}}Btn" @click="new{{namePascalCase}}">
+      New {{namePascalCase}}
+    </VNewButton>
+    <VModal :title="modalTitle" :visible="{{ nameCamelCase }}EditorVisible">
       <{{namePascalCase}}Editor
         ref="{{nameCamelCase}}Editor"
         :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
@@ -38,16 +31,19 @@
 
 <script lang="ts">
 import { Vue } from 'vue-property-decorator'
-import Component from 'nuxt-class-component'
+import { Component } from 'nuxt-property-decorator'
 import gql from 'graphql-tag'
 import VErrorMessage from '@/components/VErrorMessage.vue'
 import VModal from '@/components/VModal.vue'
 import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
+import VDataList from '@/components/VDataList.vue'
+import VNewButton from '@/components/VNewButton.vue'
+import VPageHeader from '@/components/VPageHeader.vue'
 import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ namePascalCase }}Editor.vue'
 
 @Component({
   name: '{{namePascalCase}}List',
-  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor, VModal },
+  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor, VModal, VDataList, VNewButton, VPageHeader },
   apollo: {
     {{namePluralCamelCase}}: {
       query: gql`query {{namePluralCamelCase}}{%if hasRelations%}($filter: {{namePascalCase}}Filter){%endif%} {
@@ -70,7 +66,8 @@ import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ name
 
   props: {
     id: [Number, String]{%for field in fields%}{%if field.isFieldRelational%},
-    {{field.fieldNameCamelCase}}: [Number, String]{%endif%}{%endfor%}
+    {{field.fieldNameCamelCase}}: [Number, String]{%endif%}{%endfor%},
+    showPageHeader: [Boolean]
   }
 })
 export default class {{namePascalCase}}List extends Vue {
@@ -82,6 +79,14 @@ export default class {{namePascalCase}}List extends Vue {
   get modalTitle () {
     return this.selectedId ? 'Edit {{ namePascalCase }}' : 'New {{ namePascalCase }}'
   }
+
+  fields = [{%for field in fields%}
+    {
+      key: '{{ field.fieldNameCamelCase }}',
+      label: '{{ field.fieldNamePascalCase }}',
+      value: (data: any) => data.{{ field.fieldNameCamelCase }}
+    },{%endfor%}
+  ]
 
   new{{namePascalCase}} () {
     this.{{nameCamelCase}}EditorVisible = true

@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { Vue } from 'vue-property-decorator'
-import Component from 'nuxt-class-component'
+import { Component } from 'nuxt-property-decorator'
 
 @Component({
   name: 'VErrorMessage',
