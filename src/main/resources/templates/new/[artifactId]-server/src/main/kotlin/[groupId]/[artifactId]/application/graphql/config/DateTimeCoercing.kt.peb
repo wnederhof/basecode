@@ -1,4 +1,4 @@
-package {{ groupId }}.{{ artifactId }}.graphql
+package {{ groupId }}.{{ artifactId }}.application.graphql.config
 
 import graphql.language.StringValue
 import graphql.schema.Coercing

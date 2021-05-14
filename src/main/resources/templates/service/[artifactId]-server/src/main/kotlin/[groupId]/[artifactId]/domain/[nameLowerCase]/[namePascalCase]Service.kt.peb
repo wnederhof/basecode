@@ -1,10 +1,10 @@
-package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
+package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
 
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.Update{{ namePascalCase }}Input
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.Create{{ namePascalCase }}Input{%if hasRelations%}
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.{{ namePascalCase }}FilterInput{%endif%}
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Event.*{%for field in fields%}{%if field.isFieldRelational%}
-import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}.Update{{ namePascalCase }}Input
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}.Create{{ namePascalCase }}Input{%if hasRelations%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}.{{ namePascalCase }}FilterInput{%endif%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Event.*{%for field in fields%}{%if field.isFieldRelational%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service

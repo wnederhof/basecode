@@ -1,12 +1,12 @@
-package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
+package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
 
 import com.nhaarman.mockitokotlin2.*{%for field in fields%}{%if field.isFieldRelational%}
-import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1{%for field in fields%}{%if field.isFieldRelational%}
-import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1{%endif%}{%endfor%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1{%for field in fields%}{%if field.isFieldRelational%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1{%endif%}{%endfor%}
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

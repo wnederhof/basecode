@@ -1,11 +1,11 @@
-package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
+package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
 
 import {{ groupId }}.{{ artifactId }}.IntegrationTestContext
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%for field in fields%}{%if field.isFieldRelational%}
-import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_1
-import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Repository
-import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%for field in fields%}{%if field.isFieldRelational%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Repository
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test{%if hasRelations%}
 import org.junit.jupiter.api.assertThrows{%endif%}

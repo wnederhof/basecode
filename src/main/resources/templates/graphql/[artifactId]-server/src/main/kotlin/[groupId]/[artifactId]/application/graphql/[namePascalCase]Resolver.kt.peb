@@ -1,10 +1,12 @@
-package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
+package {{ groupId }}.{{ artifactId }}.application.graphql
 
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.Update{{ namePascalCase }}Input
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.Create{{ namePascalCase }}Input{%if hasRelations%}
-import {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}.{{ namePascalCase }}.{{ namePascalCase }}FilterInput{%endif%}
-{%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}
-import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}.Update{{ namePascalCase }}Input
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}.Create{{ namePascalCase }}Input{%if hasRelations%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}.{{ namePascalCase }}FilterInput{%endif%}
+{%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service
 {%endif%}{%endfor%}import graphql.kickstart.tools.GraphQLMutationResolver
 import graphql.kickstart.tools.GraphQLQueryResolver{%if hasRelations%}
 import graphql.kickstart.tools.GraphQLResolver{%endif%}

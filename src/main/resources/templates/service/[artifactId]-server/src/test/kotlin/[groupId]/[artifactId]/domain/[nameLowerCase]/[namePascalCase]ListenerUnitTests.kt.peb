@@ -1,9 +1,9 @@
-{%if hasRelations%}package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
+{%if hasRelations%}package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
 
-{%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Event.{{ field.fieldTypePascalCase }}DeleteEvent
+{%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Event.{{ field.fieldTypePascalCase }}DeleteEvent
 {%endif%}{%endfor%}import com.nhaarman.mockitokotlin2.verify
 import org.junit.jupiter.api.Test
-{%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
+{%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
 {%endif%}{%endfor%}import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks{%if hasRelations%}
 import org.mockito.Mock{%endif%}

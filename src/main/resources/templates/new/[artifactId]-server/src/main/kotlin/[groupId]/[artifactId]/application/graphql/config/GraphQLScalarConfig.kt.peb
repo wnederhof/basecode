@@ -1,4 +1,4 @@
-package {{ groupId }}.{{ artifactId }}.graphql
+package {{ groupId }}.{{ artifactId }}.application.graphql.config
 
 import graphql.schema.GraphQLScalarType
 import org.springframework.context.annotation.Bean

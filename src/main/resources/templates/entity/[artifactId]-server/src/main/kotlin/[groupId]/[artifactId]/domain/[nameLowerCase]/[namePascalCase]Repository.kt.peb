@@ -1,4 +1,4 @@
-package {{ groupId }}.{{ artifactId }}.{{ nameLowerCase }}
+package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
 
 import org.springframework.data.repository.CrudRepository
 
