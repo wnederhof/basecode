@@ -1,48 +1,7 @@
 <template>
   <VLoadingIndicator v-if="$apollo.loading" />
   <VErrorMessage v-else-if="error" :message="error" />
-  <VDataForm v-else @submit="save{{namePascalCase}}">
-    <input
-      v-if="{{nameCamelCase}}.id"
-      :id="$id('id')"
-      v-model="{{nameCamelCase}}.id"
-      type="hidden"
-    />
-{%for field in fields%}
-    <div{%if field.isFieldRelational%} v-if="!this.$props.{{field.fieldNameCamelCase}}"{%endif%}>
-      <label :for="$id('{{field.fieldNameCamelCase}}')">{{field.fieldNamePascalCase}}</label>{%if field.isFieldRelational%}
-      <select
-        :id="$id('{{field.fieldNameCamelCase}}')"
-        ref="{{field.fieldNameCamelCase}}Input"
-        v-model="{{nameCamelCase}}.{{field.fieldNameCamelCase}}"
-      >
-        <option
-          v-for="{{ field.fieldTypeCamelCase }} in {{ field.fieldTypePluralCamelCase }}"
-          :key="{{ field.fieldTypeCamelCase }}.id"
-          :value="{{ field.fieldTypeCamelCase }}.id"
-        >{{ "{{" }}{{ field.fieldTypeCamelCase }}.id{{ "}}" }}</option>
-      </select>
-{%elseif not field.isFieldOfTypeText%}
-      <input
-        :id="$id('{{field.fieldNameCamelCase}}')"
-        ref="{{field.fieldNameCamelCase}}Input"
-        v-model="{{nameCamelCase}}.{{field.fieldNameCamelCase}}"
-        type="{{field.fieldHtmlInputType}}"{%if not field.isFieldNullable%}{%if isString%}
-        required{%endif%}{%endif%}
-      />{%else%}
-      <textarea
-        :id="$id('{{field.fieldNameCamelCase}}')"
-        ref="{{field.fieldNameCamelCase}}Input"
-        v-model="{{nameCamelCase}}.{{field.fieldNameCamelCase}}"{%if not field.isFieldNullable%}{%if isString%}
-        required{%endif%}{%endif%}
-      ></textarea>{%endif%}
-    </div>
-{%endfor%}
-    <div>
-      <button>Save</button>
-      <button ref="cancelBtn" type="button" @click="cancel">Cancel</button>
-    </div>
-  </VDataForm>
+  <VDataForm v-else @submit="save{{namePascalCase}}" />
 </template>
 
 <script lang="ts">

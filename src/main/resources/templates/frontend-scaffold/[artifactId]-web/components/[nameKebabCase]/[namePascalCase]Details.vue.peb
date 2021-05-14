@@ -5,7 +5,7 @@
     <VPageHeader v-if="showPageHeader" backTo="/{{namePluralKebabCase}}" @edit="toggleEditor" showEdit>
       {{namePluralPascalCase}}
     </VPageHeader>
-    <VDataList
+    <VDataDetails
       :fields="fields"
       :data="{{nameCamelCase}}"
     />
@@ -29,11 +29,12 @@ import VErrorMessage from '@/components/VErrorMessage.vue'
 import VModal from '@/components/VModal.vue'
 import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
 import VPageHeader from '@/components/VPageHeader.vue'
+import VDataDetails from '@/components/VDataDetails.vue'
 import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ namePascalCase }}Editor.vue'
 
 @Component({
   name: '{{namePascalCase}}Details',
-  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor, VModal, VPageHeader },
+  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor, VModal, VPageHeader, VDataDetails },
   apollo: {
     {{nameCamelCase}}: {
       query: gql`query {{nameCamelCase}}($id: ID!) {
