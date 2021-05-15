@@ -1,7 +1,7 @@
 <template>
   <VLoadingIndicator v-if="$apollo.loading" />
   <VErrorMessage v-else-if="error" :message="error" />
-  <VDataForm v-else @submit="save{{namePascalCase}}" />
+  <VDataForm v-else :fields="fields" :data="{{nameCamelCase}}" @submit="save{{namePascalCase}}" @cancel="cancel" />
 </template>
 
 <script lang="ts">
@@ -72,6 +72,17 @@ export default class {{namePascalCase}}Editor extends Vue {
   }
   error = null{%for field in fields%}{% if field.isFieldRelational %}
   {{ field.fieldTypePluralCamelCase }} = []{%endif%}{%endfor%}
+  fields = [
+    {
+      name: 'id',
+      type: 'id',
+    },{%for field in fields%}
+    {
+      name: '{{ field.fieldNameCamelCase }}',
+      label: '{{ field.fieldNamePascalCase }}',
+      type: 'text'
+    },{%endfor%}
+  ]
 
   async save{{namePascalCase}} () {
     if (this.{{nameCamelCase}}.id) {

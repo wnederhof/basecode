@@ -37,7 +37,8 @@ import { Component } from 'nuxt-property-decorator'
     primaryKey: [String],
     newLabel: [String],
     fields: [Array],
-    rows: [Array]
+    rows: [Array],
+    to: [Function]
   }
 })
 export default class VErrorMessage extends Vue {

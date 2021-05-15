@@ -8,8 +8,10 @@
     <VDataDetails
       :fields="fields"
       :data="{{nameCamelCase}}"
+      @edit="toggleEditor"
+      isEditable
     />
-    <VModal title="Edit {{namePascalCase}}" :visible="{{namePascalCase}}EditorVisible">
+    <VModal title="Edit {{namePascalCase}}" :visible="{{nameCamelCase}}EditorVisible">
       <{{namePascalCase}}Editor
         ref="{{nameCamelCase}}Editor"
         :id="$props.{{nameCamelCase}}Id"{%for field in fields%}{%if field.isFieldRelational%}
@@ -69,7 +71,7 @@ export default class {{namePascalCase}}Details extends Vue {
     {
       key: '{{ field.fieldNameCamelCase }}',
       label: '{{ field.fieldNamePascalCase }}',
-      value: data => data.{{ field.fieldNameCamelCase }}
+      value: (data: any) => data.{{ field.fieldNameCamelCase }}
     },{%endfor%}
   ]
 

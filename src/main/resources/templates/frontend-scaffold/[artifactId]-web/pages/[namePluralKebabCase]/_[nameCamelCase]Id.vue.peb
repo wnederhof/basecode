@@ -1,6 +1,6 @@
 <template>
   <div>
-    <{{namePascalCase}}Details :{{nameKebabCase}}-id="this.$route.params.{{nameCamelCase}}Id" />
+    <{{namePascalCase}}Details :{{nameKebabCase}}-id="this.$route.params.{{nameCamelCase}}Id" showPageHeader />
   </div>
 </template>
 

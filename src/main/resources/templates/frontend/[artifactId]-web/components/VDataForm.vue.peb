@@ -1,3 +1,35 @@
 <template>
-  <div>Form Placeholder</div>
+  <form @submit="$emit('submit')" @submit.prevent="$emit('saveTeamMember')">
+    <table>
+      <tbody v-for="field in fields" :key="field.name">
+      <tr v-if="field.type !== 'id'">
+        <td>{{ "{{" }}field.label{{ "}}" }}</td>
+        <td><input :name="field.name" v-model="data[field.name]"></td>
+      </tr>
+      </tbody>
+      <tr>
+        <td></td>
+        <td>
+          <button type="submit">Submit</button>
+          <button type="button" @click="$emit('cancel')">Cancel</button>
+        </td>
+      </tr>
+    </table>
+  </form>
 </template>
+
+<script lang="ts">
+import { Vue } from 'vue-property-decorator'
+import { Component } from 'nuxt-property-decorator'
+
+@Component({
+  name: 'VDataForm',
+  props: {
+    fields: [Array],
+    data: [Object]
+  }
+})
+export default class VDataForm extends Vue {
+
+}
+</script>
