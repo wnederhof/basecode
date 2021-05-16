@@ -9,7 +9,7 @@
       :fields="fields"
       :data="{{nameCamelCase}}"
       @edit="toggleEditor"
-      isEditable
+      showEditAction
     />
     <VModal title="Edit {{namePascalCase}}" :visible="{{nameCamelCase}}EditorVisible">
       <{{namePascalCase}}Editor

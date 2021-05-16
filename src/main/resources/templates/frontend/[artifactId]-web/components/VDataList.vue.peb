@@ -1,44 +1,53 @@
 <template>
   <div>
     <div v-if="!fields || fields.length === 0">No entries.</div>
-    <table v-else>
-      <thead>
-      <tr>
-        <th v-for="field in fields" :key="field.key">{{ "{{" }} field.label {{ "}}" }}</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr v-for="row in rows" :key="row[primaryKey]">
-        <td v-for="field in fields" :key="field.key">{{ "{{" }} field.value(row) {{ "}}" }}</td>
-        <td>
-          <NLink :to="to(row)">
-            Show
-          </NLink>
-          <button ref="editBtn" type="button" @click="$emit('edit', row)">
-            Edit
-          </button>
-          <button ref="deleteBtn" type="button" @click="$emit('delete', row)">
-            Delete
-          </button>
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <div v-else>
+      <VNewButton ref="newButton" @click="$emit('new')">
+        {{ "{{" }} newButtonText ? newButtonText : 'New' {{ "}}" }}
+      </VNewButton>
+      <table>
+        <thead>
+        <tr>
+          <th v-for="field in fields" :key="field.key">{{ "{{" }} field.label {{ "}}" }}</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr v-for="row in rows" :key="row[primaryKey]">
+          <td v-for="field in fields" :key="field.key">{{ "{{" }} field.value(row) {{ "}}" }}</td>
+          <td>
+            <NLink :to="to(row)">
+              Show
+            </NLink>
+            <button ref="editBtn" type="button" @click="$emit('edit', row)">
+              Edit
+            </button>
+            <button ref="deleteBtn" type="button" @click="$emit('delete', row)">
+              Delete
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { Vue } from 'vue-property-decorator'
 import { Component } from 'nuxt-property-decorator'
+import VNewButton from '@/components/VNewButton.vue'
 
 @Component({
   name: 'VDataList',
+  components: { VNewButton },
   props: {
     primaryKey: [String],
     newLabel: [String],
     fields: [Array],
     rows: [Array],
-    to: [Function]
+    to: [Function],
+    showNewAction: [Boolean],
+    newButtonText: [String]
   }
 })
 export default class VErrorMessage extends Vue {

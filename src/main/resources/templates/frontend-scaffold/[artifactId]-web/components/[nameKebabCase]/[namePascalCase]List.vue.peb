@@ -10,13 +10,12 @@
       :fields="fields"
       :rows="{{namePluralCamelCase}}"
       :to="row => '/{{ namePluralKebabCase }}/' + row.id"
+      newButtonText="New {{namePascalCase}}"
       @edit="row => edit{{namePascalCase}}(row.id)"
       @delete="row => delete{{namePascalCase}}(row.id)"
       @new="new{{namePascalCase}}"
+      showNewAction
     />
-    <VNewButton ref="new{{namePascalCase}}Btn" @click="new{{namePascalCase}}">
-      New {{namePascalCase}}
-    </VNewButton>
     <VModal :title="modalTitle" :visible="{{ nameCamelCase }}EditorVisible">
       <{{namePascalCase}}Editor
         ref="{{nameCamelCase}}Editor"
@@ -37,13 +36,12 @@ import VErrorMessage from '@/components/VErrorMessage.vue'
 import VModal from '@/components/VModal.vue'
 import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
 import VDataList from '@/components/VDataList.vue'
-import VNewButton from '@/components/VNewButton.vue'
 import VPageHeader from '@/components/VPageHeader.vue'
 import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ namePascalCase }}Editor.vue'
 
 @Component({
   name: '{{namePascalCase}}List',
-  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor, VModal, VDataList, VNewButton, VPageHeader },
+  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor, VModal, VDataList, VPageHeader },
   apollo: {
     {{namePluralCamelCase}}: {
       query: gql`query {{namePluralCamelCase}}{%if hasRelations%}($filter: {{namePascalCase}}Filter){%endif%} {

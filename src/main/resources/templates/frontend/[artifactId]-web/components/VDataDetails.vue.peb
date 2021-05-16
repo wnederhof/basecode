@@ -1,5 +1,6 @@
 <template>
   <div>
+    <a href="javascript:history.back()">Go back</a>
     <table>
       <tr v-for="field in fields" :key="field.key">
         <td>{{ "{{" }}field.label{{ "}}" }}</td>
@@ -7,7 +8,7 @@
       </tr>
     </table>
 
-    <button type="button" @click="$emit('edit')" v-if="isEditable">Edit</button>
+    <button type="button" @click="$emit('edit')" v-if="showEditAction">Edit</button>
   </div>
 </template>
 
@@ -20,7 +21,7 @@ import { Component } from 'nuxt-property-decorator'
   props: {
     fields: [Array],
     data: [Object],
-    isEditable: [Boolean]
+    showEditAction: [Boolean]
   }
 })
 export default class VDataDetails extends Vue {
