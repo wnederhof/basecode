@@ -1,20 +1,20 @@
 <template>
   <VLoadingIndicator v-if="$apollo.loading" />
   <VErrorMessage v-else-if="error" :message="error" />
-  <div v-else>
-    <VPageHeader v-if="showPageHeader">
-      {{namePluralPascalCase}}
-    </VPageHeader>
+  <VSectionLayout
+    v-else
+    header="{{namePluralPascalCase}}"
+    :showHeader="showHeader"
+    @new="new{{namePascalCase}}"
+    showNew
+  >
     <VDataList
-      primary-key="id"
+      primaryKey="id"
       :fields="fields"
       :rows="{{namePluralCamelCase}}"
       :to="row => '/{{ namePluralKebabCase }}/' + row.id"
-      newButtonText="New {{namePascalCase}}"
       @edit="row => edit{{namePascalCase}}(row.id)"
       @delete="row => delete{{namePascalCase}}(row.id)"
-      @new="new{{namePascalCase}}"
-      showNewAction
     />
     <VModal :title="modalTitle" :visible="{{ nameCamelCase }}EditorVisible">
       <{{namePascalCase}}Editor
@@ -25,7 +25,7 @@
         @cancel="closeEditor"
       />
     </VModal>
-  </div>
+  </VSectionLayout>
 </template>
 
 <script lang="ts">
@@ -36,12 +36,12 @@ import VErrorMessage from '@/components/VErrorMessage.vue'
 import VModal from '@/components/VModal.vue'
 import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
 import VDataList from '@/components/VDataList.vue'
-import VPageHeader from '@/components/VPageHeader.vue'
+import VSectionLayout from '@/components/VSectionLayout.vue'
 import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ namePascalCase }}Editor.vue'
 
 @Component({
   name: '{{namePascalCase}}List',
-  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor, VModal, VDataList, VPageHeader },
+  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor, VModal, VDataList, VSectionLayout },
   apollo: {
     {{namePluralCamelCase}}: {
       query: gql`query {{namePluralCamelCase}}{%if hasRelations%}($filter: {{namePascalCase}}Filter){%endif%} {
@@ -65,7 +65,7 @@ import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ name
   props: {
     id: [Number, String]{%for field in fields%}{%if field.isFieldRelational%},
     {{field.fieldNameCamelCase}}: [Number, String]{%endif%}{%endfor%},
-    showPageHeader: [Boolean]
+    showHeader: [Boolean]
   }
 })
 export default class {{namePascalCase}}List extends Vue {

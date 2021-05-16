@@ -2,9 +2,6 @@
   <div>
     <div v-if="!fields || fields.length === 0">No entries.</div>
     <div v-else>
-      <VNewButton ref="newButton" @click="$emit('new')">
-        {{ "{{" }} newButtonText ? newButtonText : 'New' {{ "}}" }}
-      </VNewButton>
       <table>
         <thead>
         <tr>
@@ -35,18 +32,16 @@
 <script lang="ts">
 import { Vue } from 'vue-property-decorator'
 import { Component } from 'nuxt-property-decorator'
-import VNewButton from '@/components/VNewButton.vue'
 
 @Component({
   name: 'VDataList',
-  components: { VNewButton },
   props: {
     primaryKey: [String],
     newLabel: [String],
     fields: [Array],
     rows: [Array],
     to: [Function],
-    showNewAction: [Boolean],
+    showNew: [Boolean],
     newButtonText: [String]
   }
 })

@@ -1,0 +1,31 @@
+<template>
+  <div>
+    <h1 v-if="showHeader">
+      {{ "{{" }}header{{ "}}" }}
+    </h1>
+    <button v-if="showEdit" @click="$emit('edit')">Edit</button>
+    <button v-if="showNew" @click="$emit('new')">New</button>
+    <a href="javascript:history.back()" v-if="showBack">Back</a>
+    <slot />
+  </div>
+</template>
+
+<script lang="ts">
+import { Vue } from 'vue-property-decorator'
+import { Component } from 'nuxt-property-decorator'
+
+@Component({
+  name: 'VSectionLayout',
+  props: {
+    showEdit: [Boolean],
+    showBack: [Boolean],
+    showNew: [Boolean],
+    showHeader: [Boolean],
+    header: [String],
+    backTo: [String],
+  }
+})
+export default class VSectionLayout extends Vue {
+
+}
+</script>

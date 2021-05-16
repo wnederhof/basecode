@@ -1,14 +1,14 @@
 <template>
   <div>
-    <{{namePascalCase}}List showPageHeader />
+    <{{namePascalCase}}List showHeader />
   </div>
 </template>
 
 <script lang="ts">
 import {{ namePascalCase }}List from '@/components/{{ nameKebabCase }}/{{ namePascalCase }}List.vue'
-import VPageHeader from '@/components/VPageHeader.vue'
+import VSectionLayout from '@/components/VSectionLayout.vue'
 
 export default {
-  components: { {{ namePascalCase }}List, VPageHeader }
+  components: { {{ namePascalCase }}List, VSectionLayout }
 }
 </script>

@@ -1,7 +1,17 @@
 <template>
   <VLoadingIndicator v-if="$apollo.loading" />
   <VErrorMessage v-else-if="error" :message="error" />
-  <VDataForm v-else :fields="fields" :data="{{nameCamelCase}}" @submit="save{{namePascalCase}}" @cancel="cancel" />
+  <VSectionLayout
+    v-else
+    header="Edit {{namePluralPascalCase}}"
+    :showHeader="showHeader"
+  >
+    <VDataForm
+      :fields="fields"
+      :data="{{nameCamelCase}}"
+      @submit="save{{namePascalCase}}"
+      @cancel="cancel" />
+  </VSectionLayout>
 </template>
 
 <script lang="ts">

@@ -1,15 +1,16 @@
 <template>
   <VLoadingIndicator v-if="$apollo.loading" />
   <VErrorMessage v-else-if="error" :message="error" />
-  <div v-else>
-    <VPageHeader v-if="showPageHeader" backTo="/{{namePluralKebabCase}}" @edit="toggleEditor" showEdit>
-      {{namePluralPascalCase}}
-    </VPageHeader>
+  <VSectionLayout
+    v-else
+    header="{{namePluralPascalCase}}"
+    :showHeader="showHeader"
+    @edit="toggleEditor"
+    showEdit
+  >
     <VDataDetails
       :fields="fields"
       :data="{{nameCamelCase}}"
-      @edit="toggleEditor"
-      showEditAction
     />
     <VModal title="Edit {{namePascalCase}}" :visible="{{nameCamelCase}}EditorVisible">
       <{{namePascalCase}}Editor
@@ -20,7 +21,7 @@
         @cancel="toggleEditor"
       />
     </VModal>
-  </div>
+  </VSectionLayout>
 </template>
 
 <script lang="ts">
@@ -30,13 +31,13 @@ import { Component } from 'nuxt-property-decorator'
 import VErrorMessage from '@/components/VErrorMessage.vue'
 import VModal from '@/components/VModal.vue'
 import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
-import VPageHeader from '@/components/VPageHeader.vue'
+import VSectionLayout from '@/components/VSectionLayout.vue'
 import VDataDetails from '@/components/VDataDetails.vue'
 import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ namePascalCase }}Editor.vue'
 
 @Component({
   name: '{{namePascalCase}}Details',
-  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor, VModal, VPageHeader, VDataDetails },
+  components: { VErrorMessage, VLoadingIndicator, {{ namePascalCase }}Editor, VModal, VSectionLayout, VDataDetails },
   apollo: {
     {{nameCamelCase}}: {
       query: gql`query {{nameCamelCase}}($id: ID!) {
@@ -60,7 +61,7 @@ import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ name
 
   props: {
     {{nameCamelCase}}Id: [Number, String],
-    showPageHeader: [Boolean]
+    showHeader: [Boolean]
   }
 })
 export default class {{namePascalCase}}Details extends Vue {
