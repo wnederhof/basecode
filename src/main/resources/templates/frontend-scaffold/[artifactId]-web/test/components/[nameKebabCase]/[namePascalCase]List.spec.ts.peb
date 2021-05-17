@@ -9,11 +9,12 @@ describe('{{namePascalCase}}List', () => {
   let wrapper: Wrapper<any>
   let mutate: jest.Mock
 
-  const createComponent = () => {
+  const createComponent = (props: any) => {
     mutate = jest.fn()
 
     wrapper = shallowMount({{namePascalCase}}List, {
       localVue,
+      propsData: props,
       stubs: {
         NLink: RouterLinkStub,
         VLoadingIndicator: true,
@@ -38,18 +39,18 @@ describe('{{namePascalCase}}List', () => {
   })
 
   it('is a Vue instance', () => {
-    createComponent()
+    createComponent({})
     expect(wrapper.vm).toBeTruthy()
   })
 
   it('has no modal when instantiated', () => {
-    createComponent()
+    createComponent({})
 
     expect(wrapper.vm.{{ nameCamelCase }}EditorVisible).toBe(false)
   })
 
   it('has modalTitle "Edit {{ namePascalCase }}" and visible modal when edit{{ namePascalCase }} is called', () => {
-    createComponent()
+    createComponent({})
     wrapper.vm.edit{{ namePascalCase }}(1)
 
     expect(wrapper.vm.modalTitle).toBe("Edit {{ namePascalCase }}")
@@ -57,7 +58,7 @@ describe('{{namePascalCase}}List', () => {
   })
 
   it('has modalTitle "New {{ namePascalCase }}" and visible modal when new{{ namePascalCase }} is called', () => {
-    createComponent()
+    createComponent({})
 
     wrapper.vm.new{{ namePascalCase }}()
     expect(wrapper.vm.modalTitle).toBe("New {{ namePascalCase }}")
@@ -66,7 +67,7 @@ describe('{{namePascalCase}}List', () => {
 
 
   it('closes the modal when closeEditor is called', () => {
-    createComponent()
+    createComponent({})
     wrapper.vm.edit{{ namePascalCase }}(1)
     wrapper.vm.closeEditor()
 
@@ -74,7 +75,7 @@ describe('{{namePascalCase}}List', () => {
   })
 
   it('mutates when delete{{ namePascalCase }} is called and confirmed', async () => {
-    createComponent()
+    createComponent({})
     const queryHandler = jest.fn().mockResolvedValue(true)
     global.confirm = () => true
 
@@ -92,7 +93,7 @@ describe('{{namePascalCase}}List', () => {
   })
 
   it('doesnt mutate when delete{{ namePascalCase }} is called and not confirmed', async () => {
-    createComponent()
+    createComponent({})
     const queryHandler = jest.fn().mockResolvedValue(true)
     global.confirm = () => false
 
@@ -100,4 +101,15 @@ describe('{{namePascalCase}}List', () => {
 
     expect(mutate).toBeCalledTimes(0)
   })
+{%for field in fields%}{%if field.isFieldRelational%}
+  it('shows {{ field.fieldNameCamelCase }} if this is not passed as a prop', async () => {
+    createComponent({})
+    expect(wrapper.vm.fields.filter((el: any) => el.key === '{{ field.fieldNameCamelCase }}')).toHaveLength(2)
+  })
+
+  it('doesnt show {{ field.fieldNameCamelCase }} if this is passed as a prop', async () => {
+    createComponent({ {{ field.fieldNameCamelCase }}: 1 })
+    expect(wrapper.vm.fields.filter((el: any) => el.key === '{{ field.fieldNameCamelCase }}')).toHaveLength(0)
+  })
+{%endif%}{%endfor%}
 })

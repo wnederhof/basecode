@@ -84,7 +84,7 @@ export default class {{namePascalCase}}List extends Vue {
       label: '{{ field.fieldNamePascalCase }}',
       value: (data: any) => data.{{ field.fieldNameCamelCase }}
     },{%endfor%}
-  ]
+  ].filter((el) => !this.$props[el.key])
 
   new{{namePascalCase}} () {
     this.{{nameCamelCase}}EditorVisible = true

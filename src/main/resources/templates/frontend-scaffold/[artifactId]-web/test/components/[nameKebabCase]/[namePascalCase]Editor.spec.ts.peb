@@ -13,7 +13,7 @@ describe('{{namePascalCase}}Editor', () => {
     mutate = jest.fn()
 
     const {{nameCamelCase}} = {
-      id: props.id,{%for field in fields%},
+      id: props.id{%for field in fields%},
       {{field.fieldNameCamelCase}}: {{field.fieldVueTypescriptTestValue}}{%endfor%}
     }
 
@@ -54,9 +54,8 @@ describe('{{namePascalCase}}Editor', () => {
     expect(mutate).toBeCalledWith({
       mutation: gql`mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
         update{{namePascalCase}}(id: $id, input: $input) {
-          id
-          description
-          amount
+          id{%for field in fields%},
+          {{field.fieldNameCamelCase}}{%endfor%}
         }
       }`,
       variables: anything(),
