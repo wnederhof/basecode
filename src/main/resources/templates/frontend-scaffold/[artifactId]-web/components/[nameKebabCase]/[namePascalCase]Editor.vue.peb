@@ -21,6 +21,7 @@ import gql from 'graphql-tag'
 import VErrorMessage from '@/components/VErrorMessage.vue'
 import VLoadingIndicator from '@/components/VLoadingIndicator.vue'
 import VDataForm from '@/components/VDataForm.vue'
+import VSectionLayout from '@/components/VSectionLayout.vue'
 
 @Component({
   name: '{{namePascalCase}}Editor',
@@ -72,7 +73,8 @@ import VDataForm from '@/components/VDataForm.vue'
 
   props: {
     id: [Number, String]{%for field in fields%}{%if field.isFieldRelational%},
-    {{field.fieldNameCamelCase}}: [Number, String]{%endif%}{%endfor%}
+    {{field.fieldNameCamelCase}}: [Number, String]{%endif%}{%endfor%},
+    showHeader: [Boolean]
   }
 })
 export default class {{namePascalCase}}Editor extends Vue {
