@@ -1,44 +1,21 @@
-import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
-import { createMockClient } from 'mock-apollo-client'
-import VueApollo from 'vue-apollo'
-import gql from 'graphql-tag'
-import {{namePascalCase}}Editor from '@/components/{{nameKebabCase}}/{{namePascalCase}}Editor.vue'
-import UniqueId from 'vue-unique-id'
-import { MockApolloClient } from 'mock-apollo-client/dist/mockClient'
+import {createLocalVue, shallowMount, Wrapper} from '@vue/test-utils'
+import {{namePascalCase}}Editor from '@/components/{{nameCamelCase}}/{{namePascalCase}}Editor.vue'
+import gql from 'graphql-tag';
+import anything = jasmine.anything;
 
 const localVue = createLocalVue()
-localVue.use(UniqueId)
-localVue.use(VueApollo)
 
 describe('{{namePascalCase}}Editor', () => {
   let wrapper: Wrapper<any>
-  let mockClient: MockApolloClient
-  let apolloProvider: VueApollo
+  let mutate: jest.Mock
 
   const createComponent = (props: any) => {
-    mockClient = createMockClient()
-{%for field in fields%}{% if field.isFieldRelational %}
-    mockClient.setRequestHandler(gql`query {{ field.fieldTypePluralCamelCase }} { {{ field.fieldTypePluralCamelCase }} { id } }`,
-      jest.fn().mockResolvedValue({ data: { {{ field.fieldTypePluralCamelCase }}: [{ id: 1 }] } }))
-{%endif%}{%endfor%}
-    mockClient.setRequestHandler(gql`query {{nameCamelCase}}($id: ID!) {
-      {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
-        id{%for field in fields%}
-        {{field.fieldNameCamelCase}}{%endfor%}
-      }
-    }`, jest.fn().mockResolvedValue({
-      data: {
-        {{nameCamelCase}}: {
-          id: 1{%for field in fields%},
-          {{field.fieldNameCamelCase}}: {{field.fieldVueTypescriptTestValue}}{%endfor%}
-        }
-      }
-    }))
+    mutate = jest.fn()
 
-    apolloProvider = new VueApollo({
-      defaultClient: mockClient
-    })
+    const {{nameCamelCase}} = {
+      id: props.id,{%for field in fields%}
+      {{field.fieldNameCamelCase}}: {{field.fieldVueTypescriptTestValue}}{%endfor%}
+    }
 
     wrapper = shallowMount({{namePascalCase}}Editor, {
       localVue,
@@ -48,49 +25,65 @@ describe('{{namePascalCase}}Editor', () => {
         VLoadingIndicator: true,
         VErrorMessage: true,
       },
+      mocks: {
+        $apollo: {
+          mutate,
+        }
+      }
     })
+
+    if (props.id) {
+      wrapper.setData({ {{nameCamelCase}} })
+    }
   }
 
   afterEach(() => {
     wrapper.destroy()
   })
 
-  it('contains {{nameCamelCase}} form with no data if id is not set', async () => {
-    createComponent({ id: null })
-    await flushPromises()
-{%for field in fields%}
-    expect((wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).element as {% if field.isFieldRelational %}HTMLSelectElement).selectedIndex).toBe(-1){% else %}HTMLInputElement).value).toBe(''){%endif%}{%endfor%}
+  it('is a Vue instance', () => {
+    createComponent({})
+    expect(wrapper.vm).toBeTruthy()
   })
 
-  it('contains {{nameCamelCase}} form with data if id is set', async () => {
-    createComponent({ id: 1 })
-    await flushPromises()
-{%for field in fields%}
-    expect((wrapper.findComponent({ ref: '{{field.fieldNameCamelCase}}Input' }).element as HTMLInputElement).value).toContain({{field.fieldVueTypescriptTestValue}}){%endfor%}
+  it('updates {{nameCamelCase}} if id is set', async () => {
+    createComponent({id: 1})
+    await wrapper.vm.save{{namePascalCase}}()
+
+    expect(mutate).toBeCalledTimes(1)
+
+    expect(mutate).toBeCalledWith({
+      mutation: gql`mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
+        update{{namePascalCase}}(id: $id, input: $input) {
+          id
+          description
+          amount
+        }
+      }`,
+      variables: anything(),
+      update: anything()
+    })
   })
 
-  it('emits cancel event when edit is clicked', async () => {
-    createComponent({ id: null })
-    await flushPromises()
-    await wrapper.findComponent({ ref: 'cancelBtn' }).trigger('click')
-    expect(wrapper.emitted()['cancel']).toBeTruthy()
+  it('saves new {{nameCamelCase}} if id is not set', async () => {
+    createComponent({})
+    await wrapper.vm.save{{namePascalCase}}()
+
+    expect(mutate).toBeCalledTimes(1)
+
+    expect(mutate).toBeCalledWith({
+      mutation: gql`mutation creat{{namePascalCase}}($input: Create{{namePascalCase}}Input!) {
+        create{{namePascalCase}}(input: $input) { id }
+      }`,
+      variables: anything(),
+      update: anything()
+    })
   })
 
-  it('runs a mutation on submit and emits save event', async () => {
-    createComponent({ id: 1 })
-    await flushPromises()
-    const queryHandler = jest.fn().mockResolvedValue(true)
-    mockClient.setRequestHandler(gql`mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
-      update{{namePascalCase}}(id: $id, input: $input) {
-        id{%for field in fields%}
-        {{field.fieldNameCamelCase}}{%endfor%}
-      }
-    }`, queryHandler)
+  it('emits a cancel event when cancel is called', () => {
+    createComponent({})
+    wrapper.vm.cancel()
 
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).trigger('submit.prevent')
-    expect(queryHandler).toBeCalledTimes(1)
-
-    await wrapper.vm.$nextTick()
-    expect(wrapper.emitted()['save']).toBeTruthy()
+    expect(wrapper.emitted()).toEqual({'cancel': [[]]})
   })
 })

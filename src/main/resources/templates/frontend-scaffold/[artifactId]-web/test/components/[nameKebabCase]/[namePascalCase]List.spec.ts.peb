@@ -1,45 +1,19 @@
 import { shallowMount, createLocalVue, RouterLinkStub, Wrapper } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
-import { createMockClient } from 'mock-apollo-client'
-import VueApollo from 'vue-apollo'
-import gql from 'graphql-tag'
 import {{namePascalCase}}List from '@/components/{{nameKebabCase}}/{{namePascalCase}}List.vue'
-import { MockApolloClient } from 'mock-apollo-client/dist/mockClient'
+import gql from 'graphql-tag'
+import anything = jasmine.anything;
 
 const localVue = createLocalVue()
-localVue.use(VueApollo)
 
 describe('{{namePascalCase}}List', () => {
   let wrapper: Wrapper<any>
-  let mockClient: MockApolloClient
-  let apolloProvider: VueApollo
+  let mutate: jest.Mock
 
   const createComponent = () => {
-    mockClient = createMockClient()
-
-    mockClient.setRequestHandler(gql`query {{namePluralCamelCase}}{%if hasRelations%}($filter: {{namePascalCase}}Filter){%endif%} {
-      {{namePluralCamelCase}}: {{namePluralCamelCase}}{%if hasRelations%}(filter: $filter){%endif%} {
-        id{%for field in fields%}
-        {{field.fieldNameCamelCase}}{%endfor%}
-      }
-    }`, jest.fn().mockResolvedValue({
-      data: {
-        {{namePluralCamelCase}}: [
-          {
-            id: 1{%for field in fields%},
-            {{field.fieldNameCamelCase}}: {{field.fieldVueTypescriptTestValue}}{%endfor%}
-          }
-        ]
-      }
-    }))
-
-    apolloProvider = new VueApollo({
-      defaultClient: mockClient
-    })
+    mutate = jest.fn()
 
     wrapper = shallowMount({{namePascalCase}}List, {
       localVue,
-      apolloProvider,
       stubs: {
         NLink: RouterLinkStub,
         VLoadingIndicator: true,
@@ -48,6 +22,14 @@ describe('{{namePascalCase}}List', () => {
         {{namePascalCase}}Editor: true,
         $id: true
       },
+      mocks: {
+        $apollo: {
+          mutate,
+          queries: {
+            loading: false,
+          }
+        }
+      }
     })
   }
 
@@ -55,65 +37,67 @@ describe('{{namePascalCase}}List', () => {
     wrapper.destroy()
   })
 
-  it('opens {{nameCamelCase}} form when new is pressed', async () => {
+  it('is a Vue instance', () => {
     createComponent()
-    await flushPromises()
-
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
-    await wrapper.findComponent({ ref: 'new{{namePascalCase}}Btn' }).trigger('click')
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeTruthy()
+    expect(wrapper.vm).toBeTruthy()
   })
 
-  it('opens {{nameCamelCase}} form when edit is pressed', async () => {
+  it('has no modal when instantiated', () => {
     createComponent()
-    await flushPromises()
 
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
-    await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeTruthy()
+    expect(wrapper.vm.{{ nameCamelCase }}EditorVisible).toBe(false)
   })
 
-  it('closes when close is pressed', async () => {
+  it('has modalTitle "Edit {{ namePascalCase }}" and visible modal when edit{{ namePascalCase }} is called', () => {
     createComponent()
-    await flushPromises()
+    wrapper.vm.edit{{ namePascalCase }}(1)
 
-    await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).vm.$emit('cancel')
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
+    expect(wrapper.vm.modalTitle).toBe("Edit {{ namePascalCase }}")
+    expect(wrapper.vm.{{ nameCamelCase }}EditorVisible).toBe(true)
   })
 
-  it('closes when save is pressed', async () => {
+  it('has modalTitle "New {{ namePascalCase }}" and visible modal when new{{ namePascalCase }} is called', () => {
     createComponent()
-    await flushPromises()
 
-    await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).vm.$emit('save')
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
+    wrapper.vm.new{{ namePascalCase }}()
+    expect(wrapper.vm.modalTitle).toBe("New {{ namePascalCase }}")
+    expect(wrapper.vm.{{ nameCamelCase }}EditorVisible).toBe(true)
   })
 
-  it('does not run a mutation on delete with no confirmation', async () => {
-    createComponent()
-    await flushPromises()
-    const queryHandler = jest.fn().mockResolvedValue(false)
-    global.confirm = () => false
-    mockClient.setRequestHandler(gql`mutation delete{{namePascalCase}}($id: ID!) {
-      delete{{namePascalCase}}(id: $id)
-    }`, queryHandler)
 
-    await wrapper.findComponent({ ref: 'delete{{namePascalCase}}Btn' }).trigger('click')
-    expect(queryHandler).toBeCalledTimes(0)
+  it('closes the modal when closeEditor is called', () => {
+    createComponent()
+    wrapper.vm.edit{{ namePascalCase }}(1)
+    wrapper.vm.closeEditor()
+
+    expect(wrapper.vm.{{ nameCamelCase }}EditorVisible).toBe(false)
   })
 
-  it('runs a mutation on delete with confirmation', async () => {
+  it('mutates when delete{{ namePascalCase }} is called and confirmed', async () => {
     createComponent()
-    await flushPromises()
     const queryHandler = jest.fn().mockResolvedValue(true)
     global.confirm = () => true
-    mockClient.setRequestHandler(gql`mutation delete{{namePascalCase}}($id: ID!) {
-      delete{{namePascalCase}}(id: $id)
-    }`, queryHandler)
 
-    await wrapper.findComponent({ ref: 'delete{{namePascalCase}}Btn' }).trigger('click')
-    expect(queryHandler).toBeCalledTimes(1)
+    await wrapper.vm.delete{{ namePascalCase }}(1)
+
+    expect(mutate).toBeCalledTimes(1)
+
+    expect(mutate).toBeCalledWith({
+      mutation: gql`mutation delete{{ namePascalCase }}($id: ID!) {
+        delete{{ namePascalCase }}(id: $id)
+      }`,
+      variables: { id: 1 },
+      update: anything()
+    })
+  })
+
+  it('doesnt mutate when delete{{ namePascalCase }} is called and not confirmed', async () => {
+    createComponent()
+    const queryHandler = jest.fn().mockResolvedValue(true)
+    global.confirm = () => false
+
+    await wrapper.vm.delete{{ namePascalCase }}(1)
+
+    expect(mutate).toBeCalledTimes(0)
   })
 })

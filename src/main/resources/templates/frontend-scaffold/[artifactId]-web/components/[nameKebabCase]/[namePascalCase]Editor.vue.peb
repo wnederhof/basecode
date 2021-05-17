@@ -25,7 +25,7 @@ import VSectionLayout from '@/components/VSectionLayout.vue'
 
 @Component({
   name: '{{namePascalCase}}Editor',
-  components: { VErrorMessage, VLoadingIndicator, VDataForm },
+  components: { VErrorMessage, VLoadingIndicator, VDataForm, VSectionLayout },
   apollo: { {%for field in fields%}{% if field.isFieldRelational %}
     {{ field.fieldTypePluralCamelCase }}: {
       query: gql`query {{ field.fieldTypePluralCamelCase }} { {{ field.fieldTypePluralCamelCase }} { id } }`,

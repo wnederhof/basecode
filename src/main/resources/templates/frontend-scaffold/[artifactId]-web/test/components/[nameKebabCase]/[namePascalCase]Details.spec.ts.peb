@@ -1,50 +1,30 @@
-import { shallowMount, createLocalVue, Wrapper, RouterLinkStub } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
-import { createMockClient } from 'mock-apollo-client'
-import VueApollo from 'vue-apollo'
-import gql from 'graphql-tag'
+import { shallowMount, createLocalVue, Wrapper } from '@vue/test-utils'
 import {{namePascalCase}}Details from '@/components/{{nameKebabCase}}/{{namePascalCase}}Details.vue'
-import { MockApolloClient } from 'mock-apollo-client/dist/mockClient'
 
 const localVue = createLocalVue()
-localVue.use(VueApollo)
 
 describe('{{namePascalCase}}Details', () => {
   let wrapper: Wrapper<any>
-  let mockClient: MockApolloClient
-  let apolloProvider: VueApollo
 
   const createComponent = () => {
-    mockClient = createMockClient()
-
-    mockClient.setRequestHandler(gql`query {{nameCamelCase}}($id: ID!) {
-      {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
-        id{%for field in fields%}
-        {{field.fieldNameCamelCase}}{%endfor%}
-      }
-    }`, jest.fn().mockResolvedValue({
-      data: {
-        {{nameCamelCase}}: {
-          id: 1{%for field in fields%},
-          {{field.fieldNameCamelCase}}: {{field.fieldVueTypescriptTestValue}}{%endfor%}
-        }
-      }
-    }))
-
-    apolloProvider = new VueApollo({
-      defaultClient: mockClient
-    })
-
     wrapper = shallowMount({{namePascalCase}}Details, {
       localVue,
       apolloProvider,
-      propsData: { {{nameCamelCase}}Id: 1 },
+      propsData: { id: 1 },
       stubs: {
+        VSectionLayout: true,
         VLoadingIndicator: true,
         VErrorMessage: true,
-        NLink: RouterLinkStub,
+        VDataDetails: true,
         {{namePascalCase}}Editor: true
       },
+      mocks: {
+        $apollo: {
+          queries: {
+            loading: false,
+          }
+        }
+      }
     })
   }
 
@@ -52,41 +32,27 @@ describe('{{namePascalCase}}Details', () => {
     wrapper.destroy()
   })
 
-  it('contains {{nameCamelCase}} details', async () => {
+  it('is a Vue instance', () => {
     createComponent()
-    await flushPromises()
-{%for field in fields%}
-    expect(wrapper.text()).toContain({{field.fieldVueTypescriptTestValue}}){%endfor%}
+    expect(wrapper.vm).toBeTruthy()
   })
 
-  it('opens the {{nameCamelCase}} form when edit is pressed', async () => {
+  it('should not show editor by default', () => {
     createComponent()
-    await flushPromises()
-
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
-
-    await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
-
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeTruthy()
+    expect(wrapper.vm.{{ nameCamelCase }}EditorVisible).toEqual(false)
+    wrapper.vm.toggleEditor()
   })
 
-  it('closes the {{nameCamelCase}} when close is pressed', async () => {
+  it('should show editor when toggleEditor is called', () => {
     createComponent()
-    await flushPromises()
-
-    await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).vm.$emit('cancel')
-
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
+    wrapper.vm.toggleEditor()
+    expect(wrapper.vm.{{ nameCamelCase }}EditorVisible).toEqual(true)
   })
 
-  it('closes the {{nameCamelCase}} when save is pressed', async () => {
+  it('should hide editor when toggleEditor is called twice', () => {
     createComponent()
-    await flushPromises()
-
-    await wrapper.findComponent({ ref: 'edit{{namePascalCase}}Btn' }).trigger('click')
-    await wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).vm.$emit('save')
-
-    expect(wrapper.findComponent({ ref: '{{nameCamelCase}}Editor' }).exists()).toBeFalsy()
+    wrapper.vm.toggleEditor()
+    wrapper.vm.toggleEditor()
+    expect(wrapper.vm.{{ nameCamelCase }}EditorVisible).toEqual(false)
   })
 })
