@@ -9,7 +9,6 @@ describe('{{namePascalCase}}Details', () => {
   const createComponent = () => {
     wrapper = shallowMount({{namePascalCase}}Details, {
       localVue,
-      apolloProvider,
       propsData: { id: 1 },
       stubs: {
         VSectionLayout: true,
