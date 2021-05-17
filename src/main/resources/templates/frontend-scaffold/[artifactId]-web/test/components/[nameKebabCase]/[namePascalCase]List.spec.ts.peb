@@ -76,7 +76,6 @@ describe('{{namePascalCase}}List', () => {
 
   it('mutates when delete{{ namePascalCase }} is called and confirmed', async () => {
     createComponent({})
-    const queryHandler = jest.fn().mockResolvedValue(true)
     global.confirm = () => true
 
     await wrapper.vm.delete{{ namePascalCase }}(1)
@@ -94,7 +93,6 @@ describe('{{namePascalCase}}List', () => {
 
   it('doesnt mutate when delete{{ namePascalCase }} is called and not confirmed', async () => {
     createComponent({})
-    const queryHandler = jest.fn().mockResolvedValue(true)
     global.confirm = () => false
 
     await wrapper.vm.delete{{ namePascalCase }}(1)
@@ -102,12 +100,12 @@ describe('{{namePascalCase}}List', () => {
     expect(mutate).toBeCalledTimes(0)
   })
 {%for field in fields%}{%if field.isFieldRelational%}
-  it('shows {{ field.fieldNameCamelCase }} if this is not passed as a prop', async () => {
+  it('shows {{ field.fieldNameCamelCase }} if this is not passed as a prop', () => {
     createComponent({})
     expect(wrapper.vm.fields.filter((el: any) => el.key === '{{ field.fieldNameCamelCase }}')).toHaveLength(1)
   })
 
-  it('doesnt show {{ field.fieldNameCamelCase }} if this is passed as a prop', async () => {
+  it('doesnt show {{ field.fieldNameCamelCase }} if this is passed as a prop', () => {
     createComponent({ {{ field.fieldNameCamelCase }}: 1 })
     expect(wrapper.vm.fields.filter((el: any) => el.key === '{{ field.fieldNameCamelCase }}')).toHaveLength(0)
   })

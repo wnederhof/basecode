@@ -10,7 +10,8 @@
       :fields="fields"
       :data="{{nameCamelCase}}"
       @submit="save{{namePascalCase}}"
-      @cancel="cancel" />
+      @cancel="cancel"
+    />
   </VSectionLayout>
 </template>
 
