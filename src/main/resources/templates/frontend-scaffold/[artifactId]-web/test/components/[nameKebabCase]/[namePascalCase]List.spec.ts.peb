@@ -104,7 +104,7 @@ describe('{{namePascalCase}}List', () => {
 {%for field in fields%}{%if field.isFieldRelational%}
   it('shows {{ field.fieldNameCamelCase }} if this is not passed as a prop', async () => {
     createComponent({})
-    expect(wrapper.vm.fields.filter((el: any) => el.key === '{{ field.fieldNameCamelCase }}')).toHaveLength(2)
+    expect(wrapper.vm.fields.filter((el: any) => el.key === '{{ field.fieldNameCamelCase }}')).toHaveLength(1)
   })
 
   it('doesnt show {{ field.fieldNameCamelCase }} if this is passed as a prop', async () => {
