@@ -17,39 +17,35 @@ class VueFieldFilterTest {
     private lateinit var vueFieldFilter: VueFieldFilter
 
     @Test
-    fun `enrichProperties yields the fieldHtmlInputType number for any relation`() {
+    fun `enrichProperties yields the fieldInputType number for any relation`() {
         val fields = listOf(EntityField.RelationalEntityField("userId", "User"))
         val settings = FieldTemplateFilter.FieldTemplateSettings(fields)
 
         val singleActualVariable = vueFieldFilter.enrichProperties(0, settings).single()
 
-        assertThat(singleActualVariable.name).isEqualTo("fieldHtmlInputType")
-        assertThat(singleActualVariable.value).isEqualTo("number")
+        assertThat(singleActualVariable.name).isEqualTo("fieldInputType")
+        assertThat(singleActualVariable.value).isEqualTo("Relationship")
     }
 
     @Test
-    fun `enrichProperties may yield a different fieldHtmlInputType for a primitive than for a relation`() {
+    fun `enrichProperties may yield a different fieldInputType for a primitive than for a relation`() {
         val fields = listOf(EntityField.PrimitiveEntityField("name", EntityType.STRING))
         val settings = FieldTemplateFilter.FieldTemplateSettings(fields)
 
         val singleActualVariable = vueFieldFilter.enrichProperties(0, settings).single()
 
-        assertThat(singleActualVariable.name).isEqualTo("fieldHtmlInputType")
-        assertThat(singleActualVariable.value).isEqualTo("text")
+        assertThat(singleActualVariable.name).isEqualTo("fieldInputType")
+        assertThat(singleActualVariable.value).isEqualTo("String")
     }
 
     @ParameterizedTest
     @EnumSource(EntityType::class)
-    fun `enrichProperties yields a fieldHtmlInputType for every primitive`(entityType: EntityType) {
+    fun `enrichProperties yields a fieldInputType for every primitive`(entityType: EntityType) {
         val fields = listOf(EntityField.PrimitiveEntityField("userId", entityType))
         val settings = FieldTemplateFilter.FieldTemplateSettings(fields)
 
         val singleActualVariable = vueFieldFilter.enrichProperties(0, settings).single()
 
-        assertThat(singleActualVariable.name).isEqualTo("fieldHtmlInputType")
-    }
-
-    private companion object {
-        const val SOME_STRING = "some-irrelevant-string"
+        assertThat(singleActualVariable.name).isEqualTo("fieldInputType")
     }
 }

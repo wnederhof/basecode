@@ -19,6 +19,7 @@
     <VModal :title="modalTitle" :visible="{{ nameCamelCase }}EditorVisible">
       <{{namePascalCase}}Editor
         ref="{{nameCamelCase}}Editor"
+        :key="selectedId"
         :id="selectedId"{%for field in fields%}{%if field.isFieldRelational%}
         :{{ field.fieldNameKebabCase }}="this.$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
         @save="closeEditor"
@@ -82,7 +83,8 @@ export default class {{namePascalCase}}List extends Vue {
     {
       key: '{{ field.fieldNameCamelCase }}',
       label: '{{ field.fieldNamePascalCase }}',
-      value: (data: any) => data.{{ field.fieldNameCamelCase }}
+      value: (data: any) => data.{{ field.fieldNameCamelCase }},
+      type: '{{ field.fieldInputType }}'
     },{%endfor%}
   ].filter((el) => !this.$props[el.key])
 

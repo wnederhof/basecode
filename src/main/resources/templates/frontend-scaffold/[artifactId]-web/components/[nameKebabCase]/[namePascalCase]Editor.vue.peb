@@ -84,17 +84,23 @@ export default class {{namePascalCase}}Editor extends Vue {
   }
   error = null{%for field in fields%}{% if field.isFieldRelational %}
   {{ field.fieldTypePluralCamelCase }} = []{%endif%}{%endfor%}
-  fields = [
-    {
-      name: 'id',
-      type: 'id',
-    },{%for field in fields%}
-    {
-      name: '{{ field.fieldNameCamelCase }}',
-      label: '{{ field.fieldNamePascalCase }}',
-      type: 'text'
-    },{%endfor%}
-  ]
+
+  get fields() {
+    return [
+      {
+        name: 'id',
+        type: 'Id',
+      },{%for field in fields%}
+      {
+        name: '{{ field.fieldNameCamelCase }}',
+        label: '{{ field.fieldNamePascalCase }}',
+        type: '{{ field.fieldInputType }}'{% if field.isFieldRelational %},
+        options: this.{{ field.fieldTypePluralCamelCase }}.map({{ field.fieldTypeCamelCase }} => {
+          return {label: {{ field.fieldTypeCamelCase }}.id, value: {{ field.fieldTypeCamelCase }}.id}
+        }){%endif%}
+      },{%endfor%}
+    ]
+  }
 
   async save{{namePascalCase}} () {
     if (this.{{nameCamelCase}}.id) {

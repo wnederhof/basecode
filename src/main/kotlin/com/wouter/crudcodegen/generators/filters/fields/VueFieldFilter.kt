@@ -15,27 +15,27 @@ class VueFieldFilter : FieldTemplateFilter {
     ): Iterable<Variable> {
         return when (val field = settings.fields[fieldIndex]) {
             is EntityField.RelationalEntityField ->
-                listOf(Variable("fieldHtmlInputType", "number"))
+                listOf(Variable("fieldInputType", "Relationship"))
             is EntityField.PrimitiveEntityField ->
-                listOf(Variable("fieldHtmlInputType", determineFieldInputType(field.entityType)))
+                listOf(Variable("fieldInputType", determineFieldInputType(field.entityType)))
         }
     }
 
     private fun determineFieldInputType(type: EntityType): String {
         return when (type) {
-            STRING -> "text"
-            INT -> "number"
-            DATE -> "date"
-            DATETIME -> "datetime-local"
-            BOOLEAN -> "checkbox"
-            TEXT -> "text"
+            STRING -> "String"
+            INT -> "Int"
+            DATE -> "Date"
+            DATETIME -> "DateTime"
+            BOOLEAN -> "Boolean"
+            TEXT -> "Text"
 
-            NULL_STRING -> "text"
-            NULL_INT -> "number"
-            NULL_DATE -> "date"
-            NULL_DATETIME -> "datetime-local"
-            NULL_BOOLEAN -> "checkbox"
-            NULL_TEXT -> "text"
+            NULL_STRING -> "String?"
+            NULL_INT -> "Int?"
+            NULL_DATE -> "Date?"
+            NULL_DATETIME -> "DateTime?"
+            NULL_BOOLEAN -> "Boolean?"
+            NULL_TEXT -> "Text?"
         }
     }
 }

@@ -2,9 +2,26 @@
   <form @submit="$emit('submit')" @submit.prevent="$emit('saveTeamMember')">
     <table>
       <tbody v-for="field in fields" :key="field.name">
-      <tr v-if="field.type !== 'id'">
+      <tr v-if="field.type !== 'Id'">
         <td>{{ "{{" }}field.label{{ "}}" }}</td>
-        <td><input :name="field.name" v-model="data[field.name]"></td>
+        <td v-if="field.type === 'Relationship'">
+          <select :name="field.name" v-model="data[field.name]">
+            <option v-for="option in field.options" :key="option.value" :value="option.value">{{ "{{" }}option.label{{ "}}" }}</option>
+          </select>
+        </td>
+        <td v-else-if="field.type.startsWith('Text')">
+          <textarea
+            :name="field.name"
+            v-model="data[field.name]"
+            :required="!field.type.endsWith('?')"></textarea>
+        </td>
+        <td v-else>
+          <input
+            :name="field.name"
+            v-model="data[field.name]"
+            :type="field.type.startsWith('Int') ? 'number' : ''"
+            :required="!field.type.endsWith('?')">
+        </td>
       </tr>
       </tbody>
       <tr>
