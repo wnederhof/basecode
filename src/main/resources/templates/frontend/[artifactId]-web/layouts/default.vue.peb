@@ -4,6 +4,22 @@
   </div>
 </template>
 
+<script lang="ts">
+import { Vue } from 'vue-property-decorator'
+import { Component } from 'nuxt-property-decorator'
+
+@Component({
+  name: 'DefaultLayout',
+
+  provide() {
+    return { layoutLevel: 0 }
+  }
+})
+export default class DefaultLayout extends Vue {
+
+}
+</script>
+
 <style lang="scss">
 html {
   font-family:

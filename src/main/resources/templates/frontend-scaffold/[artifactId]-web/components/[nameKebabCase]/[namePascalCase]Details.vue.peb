@@ -12,10 +12,12 @@
       :fields="fields"
       :data="{{nameCamelCase}}"
     />
+
+    <slot />
+
     <VModal title="Edit {{namePascalCase}}" :visible="{{nameCamelCase}}EditorVisible">
       <{{namePascalCase}}Editor
         ref="{{nameCamelCase}}Editor"
-        :key="selectedId"
         :id="$props.{{nameCamelCase}}Id"{%for field in fields%}{%if field.isFieldRelational%}
         :{{ field.fieldNameKebabCase }}="$props.{{ field.fieldNameCamelCase }}"{%endif%}{%endfor%}
         @save="toggleEditor"

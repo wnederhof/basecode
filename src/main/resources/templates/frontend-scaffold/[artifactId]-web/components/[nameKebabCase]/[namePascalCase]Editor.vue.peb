@@ -96,7 +96,7 @@ export default class {{namePascalCase}}Editor extends Vue {
         name: '{{ field.fieldNameCamelCase }}',
         label: '{{ field.fieldNamePascalCase }}',
         type: '{{ field.fieldInputType }}'{% if field.isFieldRelational %},
-        options: this.{{ field.fieldTypePluralCamelCase }}.map({{ field.fieldTypeCamelCase }} => {
+        options: this.{{ field.fieldTypePluralCamelCase }}.map(({{ field.fieldTypeCamelCase }}: any) => {
           return {label: {{ field.fieldTypeCamelCase }}.id, value: {{ field.fieldTypeCamelCase }}.id}
         }){%endif%}
       },{%endfor%}

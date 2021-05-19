@@ -1,6 +1,5 @@
 <template>
   <div>
-    <a href="javascript:history.back()">Go back</a>
     <table>
       <tr v-for="field in fields" :key="field.key">
         <td>{{ "{{" }}field.label{{ "}}" }}</td>

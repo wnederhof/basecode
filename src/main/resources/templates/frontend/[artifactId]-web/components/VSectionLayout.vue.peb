@@ -3,6 +3,7 @@
     <h1 v-if="showHeader">
       {{ "{{" }}header{{ "}}" }}
     </h1>
+    <a v-if="layoutLevel === 0" href="javascript:history.back()">Go back</a>
     <button v-if="showEdit" @click="$emit('edit')">Edit</button>
     <button v-if="showNew" @click="$emit('new')">New</button>
     <a href="javascript:history.back()" v-if="showBack">Back</a>
@@ -23,6 +24,12 @@ import { Component } from 'nuxt-property-decorator'
     showHeader: [Boolean],
     header: [String],
     backTo: [String],
+  },
+
+  inject: [ 'layoutLevel' ],
+
+  provide() {
+    return { layoutLevel: this.layoutLevel + 1 }
   }
 })
 export default class VSectionLayout extends Vue {
