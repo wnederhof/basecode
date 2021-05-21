@@ -4,9 +4,9 @@
   <VSectionLayout
     v-else
     header="{{namePluralPascalCase}}"
-    :showHeader="showHeader"
+    :show-header="showHeader"
     @edit="toggleEditor"
-    showEdit
+    show-edit
   >
     <VDataDetails
       :fields="fields"
@@ -63,7 +63,8 @@ import {{ namePascalCase }}Editor from '@/components/{{ nameKebabCase }}/{{ name
   },
 
   props: {
-    {{nameCamelCase}}Id: [Number, String],
+    {{nameCamelCase}}Id: [Number, String]{%for field in fields%}{%if field.isFieldRelational%},
+    {{field.fieldNameCamelCase}}: [Number, String]{%endif%}{%endfor%},
     showHeader: [Boolean]
   }
 })

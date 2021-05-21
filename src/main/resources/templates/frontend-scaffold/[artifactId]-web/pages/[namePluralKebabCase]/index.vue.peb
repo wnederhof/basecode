@@ -1,6 +1,6 @@
 <template>
   <div>
-    <{{namePascalCase}}List showHeader />
+    <{{namePascalCase}}List show-header />
   </div>
 </template>
 

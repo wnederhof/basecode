@@ -21,8 +21,7 @@ type {{ namePascalCase }} {
     updatedAt: Date
 }
 {%if hasRelations%}
-input {{ namePascalCase }}Filter {
-    id: ID{%for field in fields%}{%if field.isFieldRelational%}
+input {{ namePascalCase }}Filter { {%for field in fields%}{%if field.isFieldRelational%}
     {{ field.fieldNameCamelCase }}: Int{%endif%}{%endfor%}
 }
 {%endif%}

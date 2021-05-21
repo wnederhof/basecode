@@ -4,7 +4,7 @@
   <VSectionLayout
     v-else
     header="Edit {{namePluralPascalCase}}"
-    :showHeader="showHeader"
+    :show-header="showHeader"
   >
     <VDataForm
       :fields="fields"
@@ -81,7 +81,7 @@ import VSectionLayout from '@/components/VSectionLayout.vue'
 export default class {{namePascalCase}}Editor extends Vue {
   {{nameCamelCase}} = {
     id: null,{%for field in fields%}
-    {{field.fieldNameCamelCase}}: {%if field.isFieldNullable%}''{%else%}null{%endif%},{%endfor%}
+    {{field.fieldNameCamelCase}}: {%if field.isFieldNullable%}null{%else%}''{%endif%},{%endfor%}
   }
   error = null{%for field in fields%}{% if field.isFieldRelational %}
   {{ field.fieldTypePluralCamelCase }} = []{%endif%}{%endfor%}

@@ -4,12 +4,12 @@
   <VSectionLayout
     v-else
     header="{{namePluralPascalCase}}"
-    :showHeader="showHeader"
+    :show-header="showHeader"
     @new="new{{namePascalCase}}"
-    showNew
+    show-new
   >
     <VDataList
-      primaryKey="id"
+      primary-key="id"
       :fields="fields"
       :rows="{{namePluralCamelCase}}"
       :to="row => '/{{ namePluralKebabCase }}/' + row.id"
