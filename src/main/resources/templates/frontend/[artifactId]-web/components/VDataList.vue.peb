@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!fields || fields.length === 0">No entries.</div>
+    <div v-if="!rows || rows.length === 0">No entries.</div>
     <div v-else>
       <table>
         <thead>

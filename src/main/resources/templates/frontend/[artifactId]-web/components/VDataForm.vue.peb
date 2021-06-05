@@ -1,5 +1,5 @@
 <template>
-  <form @submit="$emit('submit')" @submit.prevent="$emit('saveTeamMember')">
+  <form @submit.prevent="$emit('submit')">
     <table>
       <tbody v-for="field in fields" :key="field.name">
       <tr v-if="field.type !== 'Id'">

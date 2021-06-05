@@ -7,7 +7,7 @@
       </tr>
     </table>
 
-    <button type="button" @click="$emit('edit')" v-if="show-edit">Edit</button>
+    <button type="button" @click="$emit('edit')" v-if="showEdit">Edit</button>
   </div>
 </template>
 
