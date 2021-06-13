@@ -1,0 +1,12 @@
+name: native-image-compile
+on: [push]
+jobs:
+  native-image-compile-on-host:
+    runs-on: ubuntu-latest
+
+  native-image-compile-in-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Compile Native Image using Docker
+        run: docker build . --tag=registry.heroku.com/spring-boot-graal/web
