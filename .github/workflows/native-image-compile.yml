@@ -5,8 +5,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-java@v2
+      - uses: DeLaGuardo/setup-graalvm@4.0
         with:
-          distribution: 'adopt' # See 'Supported distributions' for available options
-          java-version: '11'
-      - run: ./mvnw spring-boot:build-image
+          # GraalVM version, no pattern syntax available atm
+          graalvm: '21.0.0.2'
+          # Java version, optional, defaults to 'java8'. Available options are 'java8' and 'java11'.
+          java: 'java11'
+          # Architecture flag, optional, defaults to 'amd64'. Available options are 'amd64' and 'aarch64'. Later is available only for linux runners.
+          arch: 'amd64'
+      - run: ./mvnw -Pnative package -DskipTests
+      - name: Create release
+        uses: Roang-zero1/github-create-release-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: ls target
+      - name: Create GitHub release
+        uses: Roang-zero1/github-upload-release-artifacts-action@master
+        with:
+          args:
+          - target/crudcodegen
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
