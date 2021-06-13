@@ -38,13 +38,7 @@ jobs:
           release_branch: master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create release
-        uses: Roang-zero1/github-create-release-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Create GitHub release
-        uses: Roang-zero1/github-upload-release-artifacts-action@master
+      - uses: actions/upload-artifact@v2
         with:
-          args: target/crudcodegen
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: my-artifact
+          path: target/crudcodegen
