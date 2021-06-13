@@ -26,7 +26,7 @@ class DatabaseFilter : ProjectTemplateFilter {
             .filter { it.name.endsWith(".sql") }
             .map { it.name }
             .map { findNumberPrefix(it) }
-            .maxBy { it } ?: 0
+            .maxByOrNull { it } ?: 0
     }
 
     private fun findNumberPrefix(s: String): Int {
