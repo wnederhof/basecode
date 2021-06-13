@@ -5,8 +5,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest]
-#        os: [ubuntu-latest, macos-latest, windows-latest]
+#        os: [ubuntu-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         gu-binary: [gu, gu.cmd]
         exclude:
           - os: ubuntu-latest
@@ -30,11 +30,18 @@ jobs:
         run: |
           ${{ matrix.gu-binary }} install native-image
       - run: ./mvnw -Pnative package -DskipTests
+      - run: ls target
+      - name: Tag and prepare release
+        id: tag_and_prepare_release
+        uses: K-Phoen/semver-release-action@master
+        with:
+          release_branch: master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create release
         uses: Roang-zero1/github-create-release-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: ls target
       - name: Create GitHub release
         uses: Roang-zero1/github-upload-release-artifacts-action@master
         with:
