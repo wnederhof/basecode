@@ -1,7 +1,8 @@
 package main
 
 import (
-	"crudcodegen/internal/generators/impl"
+	"crudcodegen/internal/generator"
+	"errors"
 	"github.com/urfave/cli/v2"
 	"log"
 	"os"
@@ -17,8 +18,10 @@ func main() {
 				Aliases: []string{"n"},
 				Usage:   "Create a new application",
 				Action: func(c *cli.Context) error {
-					impl.GenerateNewProject()
-					return nil
+					if c.Args().Len() != 2 {
+						return errors.New("required two arguments for: new groupId and artifactId")
+					}
+					return generator.GenerateNewProject(c.Args().Get(0), c.Args().Get(1))
 				},
 			},
 			{
