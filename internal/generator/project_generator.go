@@ -3,14 +3,36 @@ package generator
 import (
 	"crudcodegen"
 	"crudcodegen/internal/templating"
+	"gopkg.in/yaml.v3"
 	"os"
 )
 
+type Properties struct {
+	ArtifactId string `yaml:",omitempty"`
+	GroupId    string `yaml:",omitempty"`
+}
+
 func GenerateNewProject(groupId string, artifactId string) error {
+	projectName := artifactId
 	context := make(map[string]interface{})
-	context["groupId"] = groupId
-	context["artifactId"] = artifactId
-	return writeFiles("assets/templates/new", artifactId, context)
+	properties := Properties{
+		GroupId: groupId,
+		ArtifactId: artifactId,
+	}
+	err := writeProperties(properties, projectName)
+	if err != nil {
+		return err
+	}
+	provideProjectContextAttributes(context, properties)
+	return writeFiles("assets/templates/new", projectName, context)
+}
+
+func writeProperties(properties Properties, projectName string) error {
+	d, err := yaml.Marshal(&properties)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(projectName+"/crudcodegen.yml", d, os.FileMode.Perm(0644))
 }
 
 func writeFiles(sourceDirectory string, targetDirectoryTemplate string, context map[string]interface{}) error {
@@ -39,6 +61,7 @@ func writeFiles(sourceDirectory string, targetDirectoryTemplate string, context 
 
 func createDirectoryForContext(targetDirectoryTemplate string, context map[string]interface{}) error {
 	targetDirectory := templating.SubstitutePathParamsAndRemovePeb(targetDirectoryTemplate, context)
+	println("[D] " + targetDirectory)
 	return os.MkdirAll(targetDirectory, os.ModePerm)
 }
 
@@ -52,5 +75,6 @@ func writeFileForContext(sourceFile string, targetFileTemplate string, context m
 	if err != nil {
 		return err
 	}
+	println("[F] " + targetFile)
 	return os.WriteFile(targetFile, []byte(contents), os.FileMode.Perm(0644))
 }
