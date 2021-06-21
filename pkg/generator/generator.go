@@ -23,7 +23,11 @@ func GenerateNewProject(groupId string, artifactId string) error {
 		GroupId:    groupId,
 		ArtifactId: artifactId,
 	}
-	err := writeProperties(properties, projectName)
+	err := os.MkdirAll(projectName, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	err = writeProperties(properties, projectName)
 	if err != nil {
 		return err
 	}
