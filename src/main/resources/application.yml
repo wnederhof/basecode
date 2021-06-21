@@ -1,5 +1,0 @@
-# Disable all Spring logging since this is a CLI application.
-spring.main.banner-mode: off
-spring.main.log-startup-info: false
-spring.main.web-environment: false
-logging.level.root: OFF

@@ -1,4 +1,4 @@
-package templating
+package generator
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ var (
 	regexPebFileExtension = regexp.MustCompile(`\.peb$`)
 )
 
-func SubstitutePathParamsAndRemovePeb(path string, context map[string]interface{}) string {
+func substitutePathParamsAndRemovePeb(path string, context map[string]interface{}) string {
 	pathWithPathParamsFilledIn := regexPathParams.ReplaceAllStringFunc(path, func(original string) string {
 		found := original[1:(len(original) - 1)]
 		return fmt.Sprintf("%v", context[found])
@@ -20,6 +20,6 @@ func SubstitutePathParamsAndRemovePeb(path string, context map[string]interface{
 	return regexPebFileExtension.ReplaceAllString(pathWithPathParamsFilledIn, "")
 }
 
-func SubstituteFile(template string, context map[string]interface{}) (string, error) {
+func substituteFile(template string, context map[string]interface{}) (string, error) {
 	return pongo2.RenderTemplateString(template, context)
 }

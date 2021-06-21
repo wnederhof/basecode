@@ -1,10 +1,14 @@
 package generator
 
 import (
-	"crudcodegen"
-	"crudcodegen/internal/templating"
+	"embed"
 	"gopkg.in/yaml.v3"
 	"os"
+)
+
+var (
+	//go:embed templates
+	assets embed.FS
 )
 
 type Properties struct {
@@ -16,7 +20,7 @@ func GenerateNewProject(groupId string, artifactId string) error {
 	projectName := artifactId
 	context := make(map[string]interface{})
 	properties := Properties{
-		GroupId: groupId,
+		GroupId:    groupId,
 		ArtifactId: artifactId,
 	}
 	err := writeProperties(properties, projectName)
@@ -24,7 +28,17 @@ func GenerateNewProject(groupId string, artifactId string) error {
 		return err
 	}
 	provideProjectContextAttributes(context, properties)
-	return writeFiles("assets/templates/new", projectName, context)
+	return writeFiles("templates/new", projectName, context)
+}
+
+func GenerateFrontend() error {
+	properties, err := readProperties()
+	if err != nil {
+		return err
+	}
+	context := make(map[string]interface{})
+	provideProjectContextAttributes(context, properties)
+	return writeFiles("templates/new", "", context)
 }
 
 func writeProperties(properties Properties, projectName string) error {
@@ -35,12 +49,25 @@ func writeProperties(properties Properties, projectName string) error {
 	return os.WriteFile(projectName+"/crudcodegen.yml", d, os.FileMode.Perm(0644))
 }
 
+func readProperties() (Properties, error) {
+	file, err := os.ReadFile("/crudcodegen.yml")
+	if err != nil {
+		return Properties{}, err
+	}
+	properties := Properties{}
+	err = yaml.Unmarshal(file, &properties)
+	if err != nil {
+		return Properties{}, err
+	}
+	return properties, nil
+}
+
 func writeFiles(sourceDirectory string, targetDirectoryTemplate string, context map[string]interface{}) error {
 	err := createDirectoryForContext(targetDirectoryTemplate, context)
 	if err != nil {
 		return err
 	}
-	dirEntry, _ := crudcodegen.Assets.ReadDir(sourceDirectory)
+	dirEntry, _ := assets.ReadDir(sourceDirectory)
 	for _, e := range dirEntry {
 		sourceFile := sourceDirectory + "/" + e.Name()
 		targetFileTemplate := targetDirectoryTemplate + "/" + e.Name()
@@ -60,18 +87,18 @@ func writeFiles(sourceDirectory string, targetDirectoryTemplate string, context 
 }
 
 func createDirectoryForContext(targetDirectoryTemplate string, context map[string]interface{}) error {
-	targetDirectory := templating.SubstitutePathParamsAndRemovePeb(targetDirectoryTemplate, context)
+	targetDirectory := substitutePathParamsAndRemovePeb(targetDirectoryTemplate, context)
 	println("[D] " + targetDirectory)
 	return os.MkdirAll(targetDirectory, os.ModePerm)
 }
 
 func writeFileForContext(sourceFile string, targetFileTemplate string, context map[string]interface{}) error {
-	targetFile := templating.SubstitutePathParamsAndRemovePeb(targetFileTemplate, context)
-	templateContents, err := crudcodegen.Assets.ReadFile(sourceFile)
+	targetFile := substitutePathParamsAndRemovePeb(targetFileTemplate, context)
+	templateContents, err := assets.ReadFile(sourceFile)
 	if err != nil {
 		return err
 	}
-	contents, err := templating.SubstituteFile(string(templateContents), context)
+	contents, err := substituteFile(string(templateContents), context)
 	if err != nil {
 		return err
 	}
