@@ -17,7 +17,7 @@ jobs:
       - name: Build
         env:
           GOPROXY: "https://proxy.golang.org"
-        run: go build crudcodegen/cmd/crudcodegen
+        run: go build -ldflags "-s -w" crudcodegen/cmd/crudcodegen
       - name: Test
         env:
           GOPROXY: "https://proxy.golang.org"
