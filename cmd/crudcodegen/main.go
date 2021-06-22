@@ -1,7 +1,10 @@
 package main
 
-import "crudcodegen/internal/cli"
+import (
+	"crudcodegen/internal/cli"
+	"os"
+)
 
 func main() {
-	cli.Run()
+	cli.Run(os.Args)
 }

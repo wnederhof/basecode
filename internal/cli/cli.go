@@ -4,11 +4,9 @@ import (
 	"crudcodegen/pkg/generator"
 	"errors"
 	"github.com/urfave/cli/v2"
-	"log"
-	"os"
 )
 
-func Run() {
+func Run(args []string) error {
 	app := &cli.App{
 		Name:  "crudcodegen",
 		Usage: "CrudCodeGen is a full-stack scaffolding generator for Kotlin, Spring Boot, GraphQL, Vue (NuxtJS) and PostgreSQL.",
@@ -117,8 +115,10 @@ func Run() {
 		},
 	}
 
-	err := app.Run(os.Args)
+	err := app.Run(args)
 	if err != nil {
-		log.Fatal(err)
+		println(err.Error())
+		return err
 	}
+	return nil
 }
