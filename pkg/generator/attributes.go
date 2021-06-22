@@ -2,6 +2,8 @@ package generator
 
 import (
 	"github.com/iancoleman/strcase"
+	"os"
+	"strconv"
 	"strings"
 )
 
@@ -32,8 +34,6 @@ type ModelAttribute struct {
 	Relation string
 }
 
-// TODO nextMigrationPrefix
-
 func provideProjectContextAttributes(context map[string]interface{}, properties Properties) {
 	context["groupId"] = properties.GroupId
 	context["artifactId"] = properties.ArtifactId
@@ -41,6 +41,16 @@ func provideProjectContextAttributes(context map[string]interface{}, properties 
 
 func provideModelContextAttributes(context map[string]interface{}, name string) {
 	provideVariableWithDifferentCases(context, "name", name)
+}
+
+func provideFileContextAttributes(context map[string]interface{}, projectName string, rootPath string) {
+	res, err := os.ReadDir(rootPath + "/" + projectName + "-server/src/main/resources/db/migration")
+	if err != nil {
+		println(err.Error())
+		return
+	}
+	suffix := strconv.Itoa(len(res))
+	context["nextMigrationPrefix"] = strings.Repeat("0", 3 - len(suffix)) + suffix
 }
 
 func provideRelationContextAttributes(context map[string]interface{}, attributes []ModelAttribute) {

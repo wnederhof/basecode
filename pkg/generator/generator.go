@@ -94,6 +94,7 @@ func GenerateModelTemplate(templateDirectory string, model Model) error {
 	context := make(map[string]interface{})
 	provideProjectContextAttributes(context, properties)
 	provideModelContextAttributes(context, model.Name)
+	provideFileContextAttributes(context, properties.ArtifactId, ".")
 	provideRelationContextAttributes(context, model.Attributes)
 	provideFieldContextAttributes(context, model.Attributes)
 	return writeFiles(templateDirectory, ".", context)
