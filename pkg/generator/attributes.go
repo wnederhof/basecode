@@ -39,6 +39,11 @@ func provideProjectContextAttributes(context map[string]interface{}, properties 
 	context["artifactId"] = properties.ArtifactId
 }
 
+func provideHelperContextAttributes(context map[string]interface{}) {
+	context["dot"] = "."
+	context["underscore"] = "_"
+}
+
 func provideModelContextAttributes(context map[string]interface{}, name string) {
 	provideVariableWithDifferentCases(context, "name", name)
 }

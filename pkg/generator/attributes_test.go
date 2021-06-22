@@ -11,6 +11,7 @@ func TestProvideProjectContextAttributes(t *testing.T) {
 		ArtifactId: "artifact-id",
 		GroupId:    "group-id",
 	})
+	provideHelperContextAttributes(context)
 	assert.Equal(t, "artifact-id", context["artifactId"])
 	assert.Equal(t, "group-id", context["groupId"])
 }

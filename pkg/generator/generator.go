@@ -33,6 +33,7 @@ func GenerateNewProject(groupId string, artifactId string) error {
 		return err
 	}
 	provideProjectContextAttributes(context, properties)
+	provideHelperContextAttributes(context)
 	return writeFiles("templates/new", projectName, context)
 }
 
@@ -79,6 +80,7 @@ func GenerateFrontend() error {
 	}
 	context := make(map[string]interface{})
 	provideProjectContextAttributes(context, properties)
+	provideHelperContextAttributes(context)
 	return writeFiles("templates/new", ".", context)
 }
 
@@ -93,6 +95,7 @@ func GenerateModelTemplate(templateDirectory string, model Model) error {
 	}
 	context := make(map[string]interface{})
 	provideProjectContextAttributes(context, properties)
+	provideHelperContextAttributes(context)
 	provideModelContextAttributes(context, model.Name)
 	provideFileContextAttributes(context, properties.ArtifactId, ".")
 	provideRelationContextAttributes(context, model.Attributes)
