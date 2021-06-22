@@ -21,18 +21,25 @@ const (
 	RELATIONAL
 )
 
+type Model struct {
+	Name       string
+	Attributes []ModelAttribute
+}
+
 type ModelAttribute struct {
 	Name     string
 	Type     uint8
 	Relation string
 }
 
+// TODO nextMigrationPrefix
+
 func provideProjectContextAttributes(context map[string]interface{}, properties Properties) {
 	context["groupId"] = properties.GroupId
 	context["artifactId"] = properties.ArtifactId
 }
 
-func provideEntityContextAttributes(context map[string]interface{}, name string) {
+func provideModelContextAttributes(context map[string]interface{}, name string) {
 	provideVariableWithDifferentCases(context, "name", name)
 }
 
@@ -307,13 +314,13 @@ func provideVueTemplateContextAttributes(context map[string]interface{}, attribu
 	}
 }
 
-
 func provideVariableWithDifferentCases(context map[string]interface{}, name string, valueInCamelCase string) {
 	context[name+"CamelCase"] = strcase.ToLowerCamel(valueInCamelCase)
 	context[name+"PascalCase"] = strcase.ToCamel(valueInCamelCase)
 	context[name+"PluralCamelCase"] = strcase.ToLowerCamel(valueInCamelCase) + "s"
 	context[name+"LowerCase"] = strings.ToLower(valueInCamelCase)
 	context[name+"PluralPascalCase"] = strcase.ToCamel(valueInCamelCase) + "s"
+	context[name+"SnakeCase"] = strcase.ToSnake(valueInCamelCase)
 	context[name+"PluralSnakeCase"] = strcase.ToSnake(valueInCamelCase) + "s"
 	context[name+"KebabCase"] = strcase.ToKebab(valueInCamelCase)
 	context[name+"PluralKebabCase"] = strcase.ToKebab(valueInCamelCase) + "s"

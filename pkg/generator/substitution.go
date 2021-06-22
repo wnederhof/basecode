@@ -16,10 +16,9 @@ func substitutePathParamsAndRemovePeb(path string, context map[string]interface{
 		found := original[1:(len(original) - 1)]
 		return fmt.Sprintf("%v", context[found])
 	})
-
 	return regexPebFileExtension.ReplaceAllString(pathWithPathParamsFilledIn, "")
 }
 
 func substituteFile(template string, context map[string]interface{}) (string, error) {
-	return pongo2.RenderTemplateString(template, context)
+	return pongo2.RenderTemplateString("{% autoescape off %}"+template+"{% endautoescape %}", context)
 }

@@ -30,61 +30,86 @@ func Run() {
 				Usage:   "Generate parts of the application",
 				Subcommands: []*cli.Command{
 					{
-						Name:    "scaffold",
-						Aliases: []string{"s"},
-						Usage:   "Scaffold",
-						Action: func(c *cli.Context) error {
-							return nil
-						},
-					},
-					{
-						Name:    "be-scaffold",
+						Name:    "backend:scaffold",
 						Aliases: []string{"bes"},
 						Usage:   "Backend Scaffold",
 						Action: func(c *cli.Context) error {
-							return nil
+							model, err := parseArgs(c.Args())
+							if err != nil {
+								return err
+							}
+							return generator.GenerateBackendScaffold(model)
 						},
 					},
 					{
-						Name:    "fe-scaffold",
-						Aliases: []string{"fes"},
-						Usage:   "Backend Scaffold",
+						Name:    "backend:model",
+						Aliases: []string{"bem"},
+						Usage:   "Model files, including migration script, entity and repository",
 						Action: func(c *cli.Context) error {
-							return nil
-						},
-					}, {
-						Name:    "entity",
-						Aliases: []string{"e"},
-						Usage:   "Entity",
-						Action: func(c *cli.Context) error {
-							return nil
+							model, err := parseArgs(c.Args())
+							if err != nil {
+								return err
+							}
+							return generator.GenerateBackendModel(model)
 						},
 					},
 					{
-						Name:    "graphql",
-						Aliases: []string{"g"},
-						Usage:   "GraphQL",
+						Name:    "backend:api",
+						Aliases: []string{"bea"},
+						Usage:   "GraphQL API (schema and resolvers)",
 						Action: func(c *cli.Context) error {
-							return nil
+							model, err := parseArgs(c.Args())
+							if err != nil {
+								return err
+							}
+							return generator.GenerateBackendApi(model)
 						},
 					},
 					{
-						Name:    "service",
-						Aliases: []string{"s"},
-						Usage:   "Service",
+						Name:    "backend:service",
+						Aliases: []string{"bsv"},
+						Usage:   "Service between API and repository",
 						Action: func(c *cli.Context) error {
-							return nil
+							model, err := parseArgs(c.Args())
+							if err != nil {
+								return err
+							}
+							return generator.GenerateBackendService(model)
 						},
 					},
 					{
 						Name:    "frontend",
 						Aliases: []string{"fe"},
-						Usage:   "Frontend",
+						Usage:   "Frontend Support",
 						Action: func(c *cli.Context) error {
 							if c.Args().Len() != 0 {
 								return errors.New("required zero arguments")
 							}
 							return generator.GenerateFrontend()
+						},
+					},
+					{
+						Name:    "frontend:scaffold",
+						Aliases: []string{"fes"},
+						Usage:   "Frontend Scaffold (Generate frontend support first)",
+						Action: func(c *cli.Context) error {
+							model, err := parseArgs(c.Args())
+							if err != nil {
+								return err
+							}
+							return generator.GenerateFrontendScaffold(model)
+						},
+					},
+					{
+						Name:    "scaffold",
+						Aliases: []string{"s"},
+						Usage:   "Backend and Frontend Scaffold (Generate frontend support first)",
+						Action: func(c *cli.Context) error {
+							model, err := parseArgs(c.Args())
+							if err != nil {
+								return err
+							}
+							return generator.GenerateScaffold(model)
 						},
 					},
 				},

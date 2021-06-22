@@ -19,13 +19,14 @@ func TestProvideEntityContextAttributes(t *testing.T) {
 	context := make(map[string]interface{})
 
 	// Only test a few cases, as it basically just calls the more generic TestProvideVariableWithDifferentCases.
-	provideEntityContextAttributes(context, "projectManager")
+	provideModelContextAttributes(context, "projectManager")
 
 	assert.Equal(t, "projectManager", context["nameCamelCase"])
 	assert.Equal(t, "ProjectManager", context["namePascalCase"])
 	assert.Equal(t, "projectManagers", context["namePluralCamelCase"])
 	assert.Equal(t, "projectmanager", context["nameLowerCase"])
 	assert.Equal(t, "ProjectManagers", context["namePluralPascalCase"])
+	assert.Equal(t, "project_manager", context["nameSnakeCase"])
 	assert.Equal(t, "project_managers", context["namePluralSnakeCase"])
 	assert.Equal(t, "project-manager", context["nameKebabCase"])
 	assert.Equal(t, "project-managers", context["namePluralKebabCase"])
