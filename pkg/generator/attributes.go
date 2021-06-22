@@ -51,11 +51,12 @@ func provideModelContextAttributes(context map[string]interface{}, name string) 
 func provideFileContextAttributes(context map[string]interface{}, projectName string, rootPath string) {
 	res, err := os.ReadDir(rootPath + "/" + projectName + "-server/src/main/resources/db/migration")
 	if err != nil {
-		println(err.Error())
+		context["nextMigrationPrefix"] = "001"
 		return
 	}
-	suffix := strconv.Itoa(len(res))
+	suffix := strconv.Itoa(len(res) + 1)
 	context["nextMigrationPrefix"] = strings.Repeat("0", 3 - len(suffix)) + suffix
+	println(strings.Repeat("0", 3 - len(suffix)) + suffix)
 }
 
 func provideRelationContextAttributes(context map[string]interface{}, attributes []ModelAttribute) {
