@@ -21,7 +21,7 @@ jobs:
       - name: Test
         env:
           GOPROXY: "https://proxy.golang.org"
-        run: go test -v .
+        run: go test ./...
       - uses: actions/upload-artifact@v2
         with:
           name: CrudCodeGen ${{ matrix.os }}
