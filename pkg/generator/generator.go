@@ -156,17 +156,26 @@ func createDirectoryUsingTemplate(targetDirectoryTemplate string, context map[st
 
 func writeFileFromTemplate(sourceFile string, targetFileTemplate string, context map[string]interface{}) error {
 	targetFile := substitutePathParamsAndRemovePeb(targetFileTemplate, context)
-	templateContents, err := assets.ReadFile(sourceFile)
-	if err != nil {
-		return err
+	if !strings.HasSuffix(sourceFile, ".peb") {
+		contents, err := assets.ReadFile(sourceFile)
+		if err != nil {
+			return err
+		}
+		println("[F] " + targetFile)
+		return os.WriteFile(targetFile, contents, os.FileMode.Perm(0644))
+	} else {
+		templateContents, err := assets.ReadFile(sourceFile)
+		if err != nil {
+			return err
+		}
+		contents, err := substituteFile(string(templateContents), context)
+		if err != nil {
+			return err
+		}
+		if strings.TrimSpace(contents) == "" {
+			return nil
+		}
+		println("[G] " + targetFile)
+		return os.WriteFile(targetFile, []byte(contents), os.FileMode.Perm(0644))
 	}
-	contents, err := substituteFile(string(templateContents), context)
-	if err != nil {
-		return err
-	}
-	if strings.TrimSpace(contents) == "" {
-		return nil
-	}
-	println("[F] " + targetFile)
-	return os.WriteFile(targetFile, []byte(contents), os.FileMode.Perm(0644))
 }
