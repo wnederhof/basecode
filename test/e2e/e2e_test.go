@@ -2,6 +2,7 @@ package e2e
 
 import (
 	"crudcodegen/internal/cli"
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"os"
@@ -21,6 +22,7 @@ func TestGeneratedCodeBuilds(t *testing.T) {
 		_ = os.RemoveAll(testDir)
 		return
 	}
+	println("Created test dir: " + testDir)
 
 	err = os.Chdir(testDir)
 	if err != nil {
@@ -30,11 +32,23 @@ func TestGeneratedCodeBuilds(t *testing.T) {
 		return
 	}
 
-	_ = cli.Run([]string { "new", "com.wouter", "testapp" })
+	_ = cli.Run([]string { "crudcodegen", "new", "com.wouter", "testapp" })
 
-	_ = os.Chdir(testDir + "/testApp")
+	_ = os.Chdir(testDir + "/testapp")
+	_ = cli.Run([]string { "crudcodegen", "generate", "scaffold", "Employee", "name:string" })
+	_ = os.Chdir(testDir + "/testapp/testapp-server")
 
-	_ = exec.Command("mvn clean install").Run()
+	cmd := exec.Command("mvn", "clean", "verify")
+	stdout, err := cmd.Output()
+
+	fmt.Println(string(stdout))
+	if err != nil {
+		assert.Fail(t, "Could not execute maven clean verify.", err.Error());
+		_ = os.RemoveAll(testDir)
+		_ = os.Chdir(oldDir)
+		return
+	}
 
 	_ = os.Chdir(oldDir)
+	_ = os.RemoveAll(testDir)
 }
