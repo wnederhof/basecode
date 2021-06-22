@@ -81,7 +81,7 @@ func GenerateFrontend() error {
 	context := make(map[string]interface{})
 	provideProjectContextAttributes(context, properties)
 	provideHelperContextAttributes(context)
-	return writeFiles("templates/new", ".", context)
+	return writeFiles("templates/frontend", ".", context)
 }
 
 func GenerateFrontendScaffold(model Model) error {
