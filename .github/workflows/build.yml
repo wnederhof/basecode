@@ -22,16 +22,13 @@ jobs:
           GOPROXY: "https://proxy.golang.org"
         run: go build -ldflags "-s -w" crudcodegen/cmd/crudcodegen
       - name: Set env
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      - name: Set output
-        id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+        run: echo "${{matrix.os}}" >> PLATFORM
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           draft: true
-          title: "${{ steps.vars.outputs.tag }}-${{ matrix.os }}"
           files: |
             LICENSE.md
+            PLATFORM
             crudcodegen*
