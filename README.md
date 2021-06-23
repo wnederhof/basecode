@@ -11,57 +11,12 @@ CrudCodeGen introduces the concept of "non-intrusive relational scaffolding", wh
 - **Non-intrusive:** code generated for one entity will not affect code of any another entity, nor will it *change* any other file in the project.
 
 ## Installation
-<!--- ### Pre-compiled
-First, download the latest binary into `~/.crudcodegen.jar`.
-```
-curl https://github.com/wnederhof/crudcodegen/releases/latest/download/crudcodegen.jar -o ~/.crudcodegen-latest.jar
-```
-Then, set up an alias for quick access, by adding the following to your `.zshrc` or `.bashrc` file:
-```
-alias ccg="java -jar ~/.crudcodegen-latest.jar"
-```
-Enable the alias in your terminal using:
-```
-source ~/.bashrc      # or .zshrc
-```
---->
-### From Source
-Clone the repository into `~/.crudcodegen` and build using Maven (you need Java 11 or higher):
-```
-cd ~
-git clone https://github.com/wnederhof/crudcodegen.git .crudcodegen
-cd .crudcodegen
-./mvnw clean package -DskipTests
-```
-Set up an alias for quick access, by adding the following to your `.zshrc` or `.bashrc` file:
-```
-alias ccg="java -jar $HOME/.crudcodegen/target/crudcodegen.jar"
-```
-Enable the alias in your terminal using:
-```
-source ~/.bashrc      # or .zshrc
-```
-Verify that CrudCodeGen works, by typing: `ccg -h`, which should show the help, starting with:
-```
-CrudCodeGen - Open Source Full Stack Code Generator
-```
-To update, run:
-```
-cd ~/.crudcodegen
-git pull
-./mvnw clean package -DskipTests
-```
+Pull the latest crudcodegen from the associated Github releases.
 
 ## Usage
 ### New project
 You can create a new project using `ccg new`.
-```
-ccg new [-bho] <groupId> <artifactId>
-      <groupId>         groupId, e.g. com.petparadise
-      <artifactId>      artifactId, e.g. petstore  -b, --backend-only
-  -h, --help
-  -o, --overwrite
-```
+
 For example:
 ```
 ccg new com.mycorp blog
@@ -70,19 +25,13 @@ ccg new com.mycorp blog
 ### Generate
 Using `ccg generate`, you can generate code based using one of the following generators.
 ```
-  scaffold, s            Generates front and backend scaffold according to the
-                           specified entity.
-  be-scaffold, sbe       Generates backend scaffold according to the specified
-                           entity.
-  fe-scaffold, sfe       Generates frontend scaffold according to the specified
-                           entity.
-  entity, e              Generates a new Entity and Migration script according
-                           to the specified entity.
-  graphql, g             Generates GraphQL definitions and resolvers according
-                           to the specified entity.
-  service, srv           Generates a Service, Events and Event Listeners
-                           according to the specified entity.
-  frontend-support, fes  Generates all required files for running the frontend.
+   backend:scaffold, bes   Backend Scaffold
+   backend:model, bem      Model files, including migration script, entity and repository
+   backend:api, bea        GraphQL API (schema and resolvers)
+   backend:service, bsv    Service between API and repository
+   frontend, fe            Frontend Support
+   frontend:scaffold, fes  Frontend Scaffold (Generate frontend support first)
+   scaffold, s             Backend and Frontend Scaffold (Generate frontend support first)
 ```
 For more information about the generators, use `-h`:
 ```
@@ -100,8 +49,9 @@ Available types:
 - datetime
 - boolean
 
-For each of these types, you can add `_o` to make this type optional. For example: `title:string_o`.
+For each of these types, you can add `?` to make this type optional. For example: `title:string?`.
 
+# Example
 When you want, for example, to generate a blog, you can do that as following:
 ```
 ccg new com.mycorp blog

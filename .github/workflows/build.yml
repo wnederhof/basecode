@@ -1,0 +1,26 @@
+name: Build
+on:
+  push:
+    branches: [ main ]
+jobs:
+  build:
+    name: Build
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - name: Set up Go 1.16
+        uses: actions/setup-go@v1
+        with:
+          go-version: 1.16
+      - name: Check out source code
+        uses: actions/checkout@v1
+      - name: Build
+        env:
+          GOPROXY: "https://proxy.golang.org"
+        run: go build -ldflags "-s -w" crudcodegen/cmd/crudcodegen
+      - uses: actions/upload-artifact@v2
+        with:
+          name: CrudCodeGen ${{ matrix.os }}
+          path: crudcodegen*
