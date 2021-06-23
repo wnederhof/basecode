@@ -16,10 +16,16 @@ func parseArgs(cliArgs cli.Args) (generator.Model, error) {
 }
 
 func parseArgsFromStrings(args []string) (generator.Model, error) {
+	if len(args) < 2 {
+		return generator.Model{}, errors.New("usage: <name> (<fieldName>:<fieldType>)+")
+	}
 	attributeCount := len(args) - 1
 	attributes := make([]generator.ModelAttribute, attributeCount)
 	for i := 1; i <= attributeCount; i++ {
 		parts := strings.Split(args[i], ":")
+		if len(parts) != 2 {
+			return generator.Model{}, errors.New("usage: <name> (<fieldName>:<fieldType>)+")
+		}
 		parseTypeResult, err := parseType(parts[1])
 		if err != nil {
 			return generator.Model{}, err
@@ -66,5 +72,5 @@ func parseType(s string) (uint8, error) {
 			return uint8(i), nil
 		}
 	}
-	return 0, errors.New("Unknown type " + s)
+	return 0, errors.New("unknown type " + s)
 }

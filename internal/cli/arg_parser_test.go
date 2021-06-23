@@ -2,6 +2,7 @@ package cli
 
 import (
 	"crudcodegen/pkg/generator"
+	"errors"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -39,4 +40,21 @@ func TestParseArgs(t *testing.T) {
 		"someField:Employer",
 	})
 	assert.Equal(t, expected, actual)
+}
+
+func TestParseArgsInvalidInput(t *testing.T) {
+	_, err := parseArgsFromStrings([]string{ })
+	assert.Equal(t, err, errors.New("usage: <name> (<fieldName>:<fieldType>)+"))
+
+	_, err = parseArgsFromStrings([]string{ "test" })
+	assert.Equal(t, err, errors.New("usage: <name> (<fieldName>:<fieldType>)+"))
+
+	_, err = parseArgsFromStrings([]string{ "test", "fieldName" })
+	assert.Equal(t, err, errors.New("usage: <name> (<fieldName>:<fieldType>)+"))
+
+	_, err = parseArgsFromStrings([]string{ "test", "fieldName:something:else" })
+	assert.Equal(t, err, errors.New("usage: <name> (<fieldName>:<fieldType>)+"))
+
+	_, err = parseArgsFromStrings([]string{ "test", "fieldName:float" })
+	assert.Equal(t, err, errors.New("unknown type float"))
 }

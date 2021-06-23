@@ -237,4 +237,3 @@ func deleteFileFromTemplate(targetFileTemplate string, context map[string]interf
 	}
 	return nil
 }
-
