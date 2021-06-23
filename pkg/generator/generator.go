@@ -34,46 +34,53 @@ func GenerateNewProject(groupId string, artifactId string) error {
 	}
 	provideProjectContextAttributes(context, properties)
 	provideHelperContextAttributes(context)
-	return writeFiles("templates/new", projectName, context)
+	return writeFiles("templates/new", projectName, context, false)
 }
 
-func GenerateScaffold(model Model) error {
-	err := GenerateBackendScaffold(model)
+func GenerateScaffold(model Model, overwrite bool, delete bool) error {
+	err := GenerateBackendScaffold(model, overwrite, delete)
 	if err != nil {
 		return err
 	}
-	return GenerateFrontendScaffold(model)
+	return GenerateFrontendScaffold(model, overwrite, delete)
 }
 
-func GenerateBackendScaffold(model Model) error {
-	err := GenerateBackendModel(model)
+func GenerateBackendScaffold(model Model, overwrite bool, delete bool) error {
+	err := GenerateBackendModel(model, overwrite, delete)
 	if err != nil {
 		return err
 	}
-	err = GenerateBackendApi(model)
+	err = GenerateBackendApi(model, overwrite, delete)
 	if err != nil {
 		return err
 	}
-	err = GenerateBackendService(model)
+	err = GenerateBackendService(model, overwrite, delete)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func GenerateBackendModel(model Model) error {
-	return GenerateModelTemplate("templates/entity", model)
+func GenerateBackendModel(model Model, overwrite bool, delete bool) error {
+	if delete {
+		err := GenerateModelTemplate("templates/entity", model, overwrite, true)
+		if err != nil {
+			return err
+		}
+		return GenerateModelTemplate("templates/entity-removal", model, overwrite, false)
+	}
+	return GenerateModelTemplate("templates/entity", model, overwrite, false)
 }
 
-func GenerateBackendApi(model Model) error {
-	return GenerateModelTemplate("templates/graphql", model)
+func GenerateBackendApi(model Model, overwrite bool, delete bool) error {
+	return GenerateModelTemplate("templates/graphql", model, overwrite, delete)
 }
 
-func GenerateBackendService(model Model) error {
-	return GenerateModelTemplate("templates/service", model)
+func GenerateBackendService(model Model, overwrite bool, delete bool) error {
+	return GenerateModelTemplate("templates/service", model, overwrite, delete)
 }
 
-func GenerateFrontend() error {
+func GenerateFrontend(overwrite bool, delete bool) error {
 	properties, err := readProperties()
 	if err != nil {
 		return err
@@ -81,14 +88,17 @@ func GenerateFrontend() error {
 	context := make(map[string]interface{})
 	provideProjectContextAttributes(context, properties)
 	provideHelperContextAttributes(context)
-	return writeFiles("templates/frontend", ".", context)
+	if delete {
+		return deleteFiles("templates/frontend", ".", context)
+	}
+	return writeFiles("templates/frontend", ".", context, overwrite)
 }
 
-func GenerateFrontendScaffold(model Model) error {
-	return GenerateModelTemplate("templates/frontend-scaffold", model)
+func GenerateFrontendScaffold(model Model, overwrite bool, delete bool) error {
+	return GenerateModelTemplate("templates/frontend-scaffold", model, overwrite, delete)
 }
 
-func GenerateModelTemplate(templateDirectory string, model Model) error {
+func GenerateModelTemplate(templateDirectory string, model Model, overwrite bool, delete bool) error {
 	properties, err := readProperties()
 	if err != nil {
 		return err
@@ -100,7 +110,28 @@ func GenerateModelTemplate(templateDirectory string, model Model) error {
 	provideFileContextAttributes(context, properties.ArtifactId, ".")
 	provideRelationContextAttributes(context, model.Attributes)
 	provideFieldContextAttributes(context, model.Attributes)
-	return writeFiles(templateDirectory, ".", context)
+	if delete {
+		return deleteFiles(templateDirectory, ".", context)
+	}
+	return writeFiles(templateDirectory, ".", context, overwrite)
+}
+
+func deleteFiles(sourceDirectory string, targetDirectoryTemplate string, context map[string]interface{}) error {
+	err := createDirectoryUsingTemplate(targetDirectoryTemplate, context)
+	if err != nil {
+		return err
+	}
+	dirEntry, _ := assets.ReadDir(sourceDirectory)
+	for _, e := range dirEntry {
+		targetFileTemplate := targetDirectoryTemplate + "/" + e.Name()
+		if !e.IsDir() {
+			err := deleteFileFromTemplate(targetFileTemplate, context)
+			if err != nil {
+				return err
+			}
+		}
+	}
+	return nil
 }
 
 func readProperties() (Properties, error) {
@@ -124,7 +155,7 @@ func writeProperties(properties Properties, projectName string) error {
 	return os.WriteFile(projectName+"/crudcodegen.yml", d, os.FileMode.Perm(0644))
 }
 
-func writeFiles(sourceDirectory string, targetDirectoryTemplate string, context map[string]interface{}) error {
+func writeFiles(sourceDirectory string, targetDirectoryTemplate string, context map[string]interface{}, overwrite bool) error {
 	err := createDirectoryUsingTemplate(targetDirectoryTemplate, context)
 	if err != nil {
 		return err
@@ -134,12 +165,12 @@ func writeFiles(sourceDirectory string, targetDirectoryTemplate string, context 
 		sourceFile := sourceDirectory + "/" + e.Name()
 		targetFileTemplate := targetDirectoryTemplate + "/" + e.Name()
 		if e.IsDir() {
-			err := writeFiles(sourceFile, targetFileTemplate, context)
+			err := writeFiles(sourceFile, targetFileTemplate, context, overwrite)
 			if err != nil {
 				return err
 			}
 		} else {
-			err := writeFileFromTemplate(sourceFile, targetFileTemplate, context)
+			err := writeFileFromTemplate(sourceFile, targetFileTemplate, context, overwrite)
 			if err != nil {
 				return err
 			}
@@ -148,34 +179,60 @@ func writeFiles(sourceDirectory string, targetDirectoryTemplate string, context 
 	return nil
 }
 
+func Exists(name string) bool {
+	if _, err := os.Stat(name); err != nil {
+		if os.IsNotExist(err) {
+			return false
+		}
+	}
+	return true
+}
+
 func createDirectoryUsingTemplate(targetDirectoryTemplate string, context map[string]interface{}) error {
 	targetDirectory := substitutePathParamsAndRemovePeb(targetDirectoryTemplate, context)
 	println("[D] " + targetDirectory)
 	return os.MkdirAll(targetDirectory, os.ModePerm)
 }
 
-func writeFileFromTemplate(sourceFile string, targetFileTemplate string, context map[string]interface{}) error {
+func writeFileFromTemplate(sourceFile string, targetFileTemplate string, context map[string]interface{}, overwrite bool) error {
 	targetFile := substitutePathParamsAndRemovePeb(targetFileTemplate, context)
-	if !strings.HasSuffix(sourceFile, ".peb") {
-		contents, err := assets.ReadFile(sourceFile)
-		if err != nil {
-			return err
-		}
-		println("[F] " + targetFile)
-		return os.WriteFile(targetFile, contents, os.FileMode.Perm(0644))
+
+	if Exists(targetFileTemplate) && overwrite {
+		println("[x] " + targetFile + " - already exists.")
+		return nil
 	} else {
-		templateContents, err := assets.ReadFile(sourceFile)
-		if err != nil {
-			return err
+		if !strings.HasSuffix(sourceFile, ".peb") {
+			contents, err := assets.ReadFile(sourceFile)
+			if err != nil {
+				return err
+			}
+			println("[F] " + targetFile)
+			return os.WriteFile(targetFile, contents, os.FileMode.Perm(0644))
+		} else {
+			templateContents, err := assets.ReadFile(sourceFile)
+			if err != nil {
+				return err
+			}
+			contents, err := substituteFile(string(templateContents), context)
+			if err != nil {
+				return err
+			}
+			if strings.TrimSpace(contents) == "" {
+				return nil
+			}
+			println("[G] " + targetFile)
+			return os.WriteFile(targetFile, []byte(contents), os.FileMode.Perm(0644))
 		}
-		contents, err := substituteFile(string(templateContents), context)
-		if err != nil {
-			return err
-		}
-		if strings.TrimSpace(contents) == "" {
-			return nil
-		}
-		println("[G] " + targetFile)
-		return os.WriteFile(targetFile, []byte(contents), os.FileMode.Perm(0644))
 	}
 }
+
+func deleteFileFromTemplate(targetFileTemplate string, context map[string]interface{}) error {
+	targetFile := substitutePathParamsAndRemovePeb(targetFileTemplate, context)
+
+	if Exists(targetFileTemplate) {
+		println("[D] " + targetFile)
+		return os.Remove(targetFile)
+	}
+	return nil
+}
+

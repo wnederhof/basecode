@@ -7,6 +7,16 @@ import (
 )
 
 func Run(args []string) error {
+	generatorFlags := []cli.Flag{
+		&cli.BoolFlag{
+			Name:    "overwrite",
+			Aliases: []string{"o"},
+		},
+		&cli.BoolFlag{
+			Name:    "delete",
+			Aliases: []string{"d"},
+		},
+	}
 	app := &cli.App{
 		Name:  "crudcodegen",
 		Usage: "CrudCodeGen is a full-stack scaffolding generator for Kotlin, Spring Boot, GraphQL, Vue (NuxtJS) and PostgreSQL.",
@@ -24,6 +34,7 @@ func Run(args []string) error {
 			},
 			{
 				Name:    "generate",
+				Flags:   generatorFlags,
 				Aliases: []string{"g"},
 				Usage:   "Generate parts of the application",
 				Subcommands: []*cli.Command{
@@ -36,7 +47,7 @@ func Run(args []string) error {
 							if err != nil {
 								return err
 							}
-							return generator.GenerateBackendScaffold(model)
+							return generator.GenerateBackendScaffold(model, c.Bool("overwrite"), c.Bool("delete"))
 						},
 					},
 					{
@@ -48,7 +59,7 @@ func Run(args []string) error {
 							if err != nil {
 								return err
 							}
-							return generator.GenerateBackendModel(model)
+							return generator.GenerateBackendModel(model, c.Bool("overwrite"), c.Bool("delete"))
 						},
 					},
 					{
@@ -60,7 +71,7 @@ func Run(args []string) error {
 							if err != nil {
 								return err
 							}
-							return generator.GenerateBackendApi(model)
+							return generator.GenerateBackendApi(model, c.Bool("overwrite"), c.Bool("delete"))
 						},
 					},
 					{
@@ -72,7 +83,7 @@ func Run(args []string) error {
 							if err != nil {
 								return err
 							}
-							return generator.GenerateBackendService(model)
+							return generator.GenerateBackendService(model, c.Bool("overwrite"), c.Bool("delete"))
 						},
 					},
 					{
@@ -83,7 +94,7 @@ func Run(args []string) error {
 							if c.Args().Len() != 0 {
 								return errors.New("required zero arguments")
 							}
-							return generator.GenerateFrontend()
+							return generator.GenerateFrontend(c.Bool("overwrite"), c.Bool("delete"))
 						},
 					},
 					{
@@ -95,7 +106,7 @@ func Run(args []string) error {
 							if err != nil {
 								return err
 							}
-							return generator.GenerateFrontendScaffold(model)
+							return generator.GenerateFrontendScaffold(model, c.Bool("overwrite"), c.Bool("delete"))
 						},
 					},
 					{
@@ -107,7 +118,7 @@ func Run(args []string) error {
 							if err != nil {
 								return err
 							}
-							return generator.GenerateScaffold(model)
+							return generator.GenerateScaffold(model, c.Bool("overwrite"), c.Bool("delete"))
 						},
 					},
 				},
