@@ -1,4 +1,4 @@
-name: Build, test and Release Go
+name: Build
 on:
   push:
     branches: [ main ]
