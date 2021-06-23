@@ -56,7 +56,6 @@ func provideFileContextAttributes(context map[string]interface{}, projectName st
 	}
 	suffix := strconv.Itoa(len(res) + 1)
 	context["nextMigrationPrefix"] = strings.Repeat("0", 3 - len(suffix)) + suffix
-	println(strings.Repeat("0", 3 - len(suffix)) + suffix)
 }
 
 func provideRelationContextAttributes(context map[string]interface{}, attributes []ModelAttribute) {

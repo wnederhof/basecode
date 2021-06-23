@@ -117,14 +117,17 @@ func GenerateModelTemplate(templateDirectory string, model Model, overwrite bool
 }
 
 func deleteFiles(sourceDirectory string, targetDirectoryTemplate string, context map[string]interface{}) error {
-	err := createDirectoryUsingTemplate(targetDirectoryTemplate, context)
-	if err != nil {
-		return err
-	}
 	dirEntry, _ := assets.ReadDir(sourceDirectory)
 	for _, e := range dirEntry {
 		targetFileTemplate := targetDirectoryTemplate + "/" + e.Name()
-		if !e.IsDir() {
+		sourceFile := sourceDirectory + "/" + e.Name()
+
+		if e.IsDir() {
+			err := deleteFiles(sourceFile, targetFileTemplate, context)
+			if err != nil {
+				return err
+			}
+		} else {
 			err := deleteFileFromTemplate(targetFileTemplate, context)
 			if err != nil {
 				return err
@@ -179,7 +182,7 @@ func writeFiles(sourceDirectory string, targetDirectoryTemplate string, context 
 	return nil
 }
 
-func Exists(name string) bool {
+func exists(name string) bool {
 	if _, err := os.Stat(name); err != nil {
 		if os.IsNotExist(err) {
 			return false
@@ -190,15 +193,14 @@ func Exists(name string) bool {
 
 func createDirectoryUsingTemplate(targetDirectoryTemplate string, context map[string]interface{}) error {
 	targetDirectory := substitutePathParamsAndRemovePeb(targetDirectoryTemplate, context)
-	println("[D] " + targetDirectory)
 	return os.MkdirAll(targetDirectory, os.ModePerm)
 }
 
 func writeFileFromTemplate(sourceFile string, targetFileTemplate string, context map[string]interface{}, overwrite bool) error {
 	targetFile := substitutePathParamsAndRemovePeb(targetFileTemplate, context)
 
-	if Exists(targetFileTemplate) && overwrite {
-		println("[x] " + targetFile + " - already exists.")
+	if exists(targetFile) && !overwrite {
+		println("[-] " + targetFile + " (already exists)")
 		return nil
 	} else {
 		if !strings.HasSuffix(sourceFile, ".peb") {
@@ -229,7 +231,7 @@ func writeFileFromTemplate(sourceFile string, targetFileTemplate string, context
 func deleteFileFromTemplate(targetFileTemplate string, context map[string]interface{}) error {
 	targetFile := substitutePathParamsAndRemovePeb(targetFileTemplate, context)
 
-	if Exists(targetFileTemplate) {
+	if exists(targetFile) {
 		println("[D] " + targetFile)
 		return os.Remove(targetFile)
 	}
