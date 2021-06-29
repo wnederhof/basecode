@@ -76,6 +76,9 @@ func provideFieldContextAttributes(context map[string]interface{}, attributes []
 		context["fields"].([]map[string]interface{})[i] = make(map[string]interface{}, len(attributes))
 		fieldContext := context["fields"].([]map[string]interface{})[i]
 		provideVariableWithDifferentCases(fieldContext, "fieldName", attribute.Name)
+		if attribute.Type == RELATIONAL {
+			provideVariableWithDifferentCases(fieldContext, "fieldType", attribute.Relation)
+		}
 		provideDatabaseDefinitionTypeContextAttributes(fieldContext, attribute)
 		provideIsFieldNullableContextAttributes(fieldContext, attribute)
 		provideIsFieldRelationalContextAttributes(fieldContext, attribute)
@@ -290,7 +293,7 @@ func provideInputFieldContextAttributes(context map[string]interface{}, attribut
 	case NULL_BOOLEAN:
 		context["fieldInputType"] = "Boolean?"
 	case RELATIONAL:
-		context["fieldInputType"] = "Relationship"
+		context["fieldInputType"] = "Select"
 	default:
 		panic("Undetermined attribute type.")
 	}

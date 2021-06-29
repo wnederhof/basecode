@@ -100,7 +100,7 @@ export default class {{namePascalCase}}Editor extends Vue {
           return {label: {{ field.fieldTypeCamelCase }}.id, value: {{ field.fieldTypeCamelCase }}.id}
         }){%endif%}
       },{%endfor%}
-    ]
+    ].filter((el) => !this.$props[el.name])
   }
 
   async save{{namePascalCase}} () {

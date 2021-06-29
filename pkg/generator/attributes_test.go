@@ -83,6 +83,17 @@ func TestProvideFieldNameContextAttributes(t *testing.T) {
 	fields := context["fields"].([]map[string]interface{})
 
 	// fieldName
+	assert.Equal(t, "streetName", fields[0]["fieldTypeCamelCase"])
+	assert.Equal(t, "StreetName", fields[0]["fieldTypePascalCase"])
+	assert.Equal(t, "streetNames", fields[0]["fieldTypePluralCamelCase"])
+	assert.Equal(t, "streetname", fields[0]["fieldTypeLowerCase"])
+	assert.Equal(t, "StreetNames", fields[0]["fieldTypePluralPascalCase"])
+	assert.Equal(t, "street_names", fields[0]["fieldTypePluralSnakeCase"])
+	assert.Equal(t, "street-name", fields[0]["fieldTypeKebabCase"])
+	assert.Equal(t, "street-names", fields[0]["fieldTypePluralKebabCase"])
+	assert.Equal(t, "STREET_NAME", fields[0]["fieldTypeScreamingSnakeCase"])
+
+	// fieldName
 	assert.Equal(t, "streetName", fields[0]["fieldNameCamelCase"])
 	assert.Equal(t, "StreetName", fields[0]["fieldNamePascalCase"])
 	assert.Equal(t, "streetNames", fields[0]["fieldNamePluralCamelCase"])
@@ -241,7 +252,7 @@ func TestProvideFieldNameContextAttributes(t *testing.T) {
 	assert.Equal(t, "Date?", fields[9]["fieldInputType"])
 	assert.Equal(t, "DateTime?", fields[10]["fieldInputType"])
 	assert.Equal(t, "Boolean?", fields[11]["fieldInputType"])
-	assert.Equal(t, "Relationship", fields[12]["fieldInputType"])
+	assert.Equal(t, "Select", fields[12]["fieldInputType"])
 
 	// fieldVueTypescriptTestValue
 	assert.Equal(t, "'Some streetName'", fields[0]["fieldVueTypescriptTestValue"])

@@ -4,7 +4,7 @@
       <tbody v-for="field in fields" :key="field.name">
       <tr v-if="field.type !== 'Id'">
         <td>{{ "{{" }}field.label{{ "}}" }}</td>
-        <td v-if="field.type === 'Relationship'">
+        <td v-if="field.type === 'Select'">
           <select :name="field.name" v-model="data[field.name]">
             <option v-for="option in field.options" :key="option.value" :value="option.value">{{ "{{" }}option.label{{ "}}" }}</option>
           </select>

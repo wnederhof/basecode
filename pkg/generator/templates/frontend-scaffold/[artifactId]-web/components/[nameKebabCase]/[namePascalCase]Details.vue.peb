@@ -3,7 +3,7 @@
   <VErrorMessage v-else-if="error" :message="error" />
   <VSectionLayout
     v-else
-    header="{{namePluralPascalCase}}"
+    header="{{namePascalCase}} Details"
     :show-header="showHeader"
     @edit="toggleEditor"
     show-edit
