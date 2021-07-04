@@ -44,8 +44,8 @@ class {{ namePascalCase }}IntegrationTests : IntegrationTestContext() {
         assertThat({{ nameCamelCase }}Service.findAll()).isNotEmpty
         assertThat({{ nameCamelCase }}Service.findById({{ nameCamelCase }}.id!!)).isNotNull
 {%for field in fields%}{%if field.isFieldRelational%}
-        assertThat({{ nameCamelCase }}Service.findAll({{ namePascalCase }}.{{ namePascalCase }}FilterInput({{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!))).isNotNull
-        assertThat({{ nameCamelCase }}Service.findBy{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.id!!)).isNotNull
+        assertThat({{ nameCamelCase }}Service.findAll({{ namePascalCase }}.{{ namePascalCase }}FilterInput({{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!))).isNotEmpty
+        assertThat({{ nameCamelCase }}Service.findBy{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.id!!)).isNotEmpty
 {%endif%}{%endfor%}
         {{ nameCamelCase }}Service.deleteById({{ nameCamelCase }}.id!!)
 
