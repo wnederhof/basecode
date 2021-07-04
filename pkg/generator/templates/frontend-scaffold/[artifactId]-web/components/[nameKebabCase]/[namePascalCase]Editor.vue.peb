@@ -32,7 +32,7 @@ import VSectionLayout from '@/components/VSectionLayout.vue'
       query: gql`query {{ field.fieldTypePluralCamelCase }} { {{ field.fieldTypePluralCamelCase }} { id } }`,
 
       skip () {
-        return !!this.$props.fieldNameCamelCase
+        return !!this.$props.{{ fieldNameCamelCase }}
       },
 
       error (error) {
