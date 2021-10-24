@@ -86,15 +86,15 @@ func TestProvideFieldNameContextAttributes(t *testing.T) {
 	fields := context["fields"].([]map[string]interface{})
 
 	// fieldName
-	assert.Equal(t, "streetName", fields[0]["fieldTypeCamelCase"])
-	assert.Equal(t, "StreetName", fields[0]["fieldTypePascalCase"])
-	assert.Equal(t, "streetNames", fields[0]["fieldTypePluralCamelCase"])
-	assert.Equal(t, "streetname", fields[0]["fieldTypeLowerCase"])
-	assert.Equal(t, "StreetNames", fields[0]["fieldTypePluralPascalCase"])
-	assert.Equal(t, "street_names", fields[0]["fieldTypePluralSnakeCase"])
-	assert.Equal(t, "street-name", fields[0]["fieldTypeKebabCase"])
-	assert.Equal(t, "street-names", fields[0]["fieldTypePluralKebabCase"])
-	assert.Equal(t, "STREET_NAME", fields[0]["fieldTypeScreamingSnakeCase"])
+	assert.Equal(t, "streetName", fields[0]["fieldNameCamelCase"])
+	assert.Equal(t, "StreetName", fields[0]["fieldNamePascalCase"])
+	assert.Equal(t, "streetNames", fields[0]["fieldNamePluralCamelCase"])
+	assert.Equal(t, "streetname", fields[0]["fieldNameLowerCase"])
+	assert.Equal(t, "StreetNames", fields[0]["fieldNamePluralPascalCase"])
+	assert.Equal(t, "street_names", fields[0]["fieldNamePluralSnakeCase"])
+	assert.Equal(t, "street-name", fields[0]["fieldNameKebabCase"])
+	assert.Equal(t, "street-names", fields[0]["fieldNamePluralKebabCase"])
+	assert.Equal(t, "STREET_NAME", fields[0]["fieldNameScreamingSnakeCase"])
 
 	// fieldName
 	assert.Equal(t, "streetName", fields[0]["fieldNameCamelCase"])
