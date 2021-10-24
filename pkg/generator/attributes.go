@@ -3,6 +3,7 @@ package generator
 import (
 	"github.com/iancoleman/strcase"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -34,9 +35,16 @@ type ModelAttribute struct {
 	Relation string
 }
 
+var (
+	regexDot = regexp.MustCompile(`\.`)
+)
+
 func provideProjectContextAttributes(context map[string]interface{}, properties Properties) {
 	context["groupId"] = properties.GroupId
 	context["artifactId"] = properties.ArtifactId
+
+	context["groupIdSlashes"] = regexDot.ReplaceAllString(properties.GroupId, "/")
+	context["artifactIdSlashes"] = regexDot.ReplaceAllString(properties.ArtifactId, "/")
 }
 
 func provideHelperContextAttributes(context map[string]interface{}) {

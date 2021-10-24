@@ -8,12 +8,15 @@ import (
 func TestProvideProjectContextAttributes(t *testing.T) {
 	context := make(map[string]interface{})
 	provideProjectContextAttributes(context, Properties{
-		ArtifactId: "artifact-id",
-		GroupId:    "group-id",
+		ArtifactId: "artifact.id",
+		GroupId:    "group.id",
 	})
 	provideHelperContextAttributes(context)
-	assert.Equal(t, "artifact-id", context["artifactId"])
-	assert.Equal(t, "group-id", context["groupId"])
+	assert.Equal(t, "artifact.id", context["artifactId"])
+	assert.Equal(t, "group.id", context["groupId"])
+
+	assert.Equal(t, "artifact/id", context["artifactIdSlashes"])
+	assert.Equal(t, "group/id", context["groupIdSlashes"])
 }
 
 func TestProvideEntityContextAttributes(t *testing.T) {
