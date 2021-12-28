@@ -16,28 +16,4 @@ data class {{ namePascalCase }}(
 
     @LastModifiedDate
     val updatedAt: LocalDateTime? = null
-) {
-
-    fun update(input: Update{{ namePascalCase }}Input) = copy({%for field in fields%}
-        {{field.fieldNameCamelCase}} = input.{{field.fieldNameCamelCase}} ?: {{field.fieldNameCamelCase}},{%endfor%}
-    )
-
-    companion object {
-        fun create(input: Create{{ namePascalCase }}Input) = {{ namePascalCase }}({%for field in fields%}
-            {{field.fieldNameCamelCase}} = input.{{field.fieldNameCamelCase}},{%endfor%}
-        )
-    }
-
-    data class Create{{ namePascalCase }}Input({%for field in fields%}
-        val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinType }},{%endfor%}
-    )
-
-    data class Update{{ namePascalCase }}Input({%for field in fields%}
-        val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinTypeNotNullable }}?,{%endfor%}
-    )
-{%if hasRelations%}
-    data class {{ namePascalCase }}FilterInput({%for field in fields%}{%if field.isFieldRelational%}
-        val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinTypeNotNullable }}? = null,{%endif%}{%endfor%}
-    )
-{%endif%}
-}
+)

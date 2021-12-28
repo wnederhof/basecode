@@ -10,11 +10,11 @@ object {{ namePascalCase }}Fixtures {
         {{ field.fieldNameCamelCase }} = {{ field.fieldKotlinTestDummyValue }}{%endfor%}
     )
 
-    val CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1 = {{ namePascalCase }}.Create{{ namePascalCase }}Input({%for field in fields%}
+    val CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1 = {{ namePascalCase }}Service.Create{{ namePascalCase }}Input({%for field in fields%}
         {{ field.fieldNameCamelCase }} = {{ field.fieldKotlinTestDummyValue }},{%endfor%}
     )
 
-    val UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1 = {{ namePascalCase }}.Update{{ namePascalCase }}Input({%for field in fields%}
+    val UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1 = {{ namePascalCase }}Service.Update{{ namePascalCase }}Input({%for field in fields%}
         {{ field.fieldNameCamelCase }} = {{ field.fieldKotlinTestDummyValue }},{%endfor%}
     )
 

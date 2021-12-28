@@ -1,17 +1,17 @@
-package {{ groupId }}.{{ artifactId }}.application.graphql
+package {{ groupId }}.{{ artifactId }}.application.graphql.{{ nameLowerCase }}
 
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service
-import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}.Update{{ namePascalCase }}Input
-import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}.Create{{ namePascalCase }}Input{%if hasRelations%}
-import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}.{{ namePascalCase }}FilterInput{%endif%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service.Update{{ namePascalCase }}Input
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service.Create{{ namePascalCase }}Input{%if hasRelations%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service.{{ namePascalCase }}FilterInput{%endif%}
 {%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}
-import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service
-{%endif%}{%endfor%}
-import com.netflix.graphql.dgs.DgsComponent{%if hasRelations%}
+{%endif%}{%endfor%}import com.netflix.graphql.dgs.DgsComponent{%if hasRelations%}
 import com.netflix.graphql.dgs.DgsData{%endif%}
 import com.netflix.graphql.dgs.DgsQuery
-import com.netflix.graphql.dgs.DgsMutation
+import com.netflix.graphql.dgs.DgsMutation{%if hasRelations%}
+import java.util.concurrent.CompletableFuture
+import com.netflix.graphql.dgs.DgsDataFetchingEnvironment{%endif%}
 
 @DgsComponent
 class {{ namePascalCase }}Resolver(
@@ -44,13 +44,13 @@ class {{ namePascalCase }}Resolver(
     }
 {%if hasRelations%}
     @DgsComponent
-    class {{ namePascalCase }}QueryResolver({%for field in fields%}{%if field.isFieldRelational%}
-        private val {{ field.fieldTypeCamelCase }}Service: {{ field.fieldTypePascalCase }}Service,{%endif%}{%endfor%}
-    ) { {%for field in fields%}{%if field.isFieldRelational%}
+    class {{ namePascalCase }}QueryResolver { {%for field in fields%}{%if field.isFieldRelational%}
 
         @DgsQuery
-        fun {{ field.fieldTypeCamelCase }}({{ nameCamelCase }}: {{ namePascalCase }}): {{ field.fieldTypePascalCase }}? {
-            return {{ field.fieldTypeCamelCase }}Service.findById({{ nameCamelCase }}.{{ field.fieldNameCamelCase }})
+        fun {{ field.fieldTypeCamelCase }}(dfe: DgsDataFetchingEnvironment): CompletableFuture<{{ field.fieldTypePascalCase }}?> {
+            val {{ nameCamelCase }} = dfe.getArgument<{{ namePascalCase }}>("{{ nameCamelCase }}")
+            return dfe.getDataLoader<Int, {{ field.fieldTypePascalCase }}?>("{{ field.fieldTypeCamelCase }}ById")
+                .load({{ nameCamelCase }}.{{ field.fieldNameCamelCase }})
         }
 {%endif%}{%endfor%}
     }

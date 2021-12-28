@@ -1,8 +1,5 @@
 package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
 
-import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}.Update{{ namePascalCase }}Input
-import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}.Create{{ namePascalCase }}Input{%if hasRelations%}
-import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}.{{ namePascalCase }}FilterInput{%endif%}
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Event.*{%for field in fields%}{%if field.isFieldRelational%}
 import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
 import org.springframework.context.ApplicationEventPublisher
@@ -21,8 +18,12 @@ class {{ namePascalCase }}Service(
     fun findById(id: Int): {{ namePascalCase }}? {
         return {{ nameCamelCase }}Repository.findByIdOrNull(id)
     }
+
+    fun findByIds(ids: Iterable<Int>): Iterable<{{ namePascalCase }}> {
+        return {{ nameCamelCase }}Repository.findByIds(ids)
+    }
 {%for field in fields%}{%if field.isFieldRelational%}
-    fun findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }}: Int): List<{{ namePascalCase }}> {
+    fun findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }}: Int): Iterable<{{ namePascalCase }}> {
         return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }})
     }
 {%endif%}{%endfor%}
@@ -37,7 +38,9 @@ class {{ namePascalCase }}Service(
     fun create(input: Create{{ namePascalCase }}Input): {{ namePascalCase }} { {%for field in fields%}{%if field.isFieldRelational%}
         requireNotNull({{ field.fieldTypeCamelCase }}Service.findById(input.{{ field.fieldNameCamelCase }}))
 {%endif%}{%endfor%}
-        var {{ nameCamelCase }} = {{ namePascalCase }}.create(input)
+        var {{ nameCamelCase }} = {{ namePascalCase }}({%for field in fields%}
+            {{field.fieldNameCamelCase}} = input.{{field.fieldNameCamelCase}},{%endfor%}
+        )
         {{ nameCamelCase }} = {{ nameCamelCase }}Repository.save({{ nameCamelCase }})
         publisher.publishEvent({{ namePascalCase }}CreateEvent(this, {{ nameCamelCase }}))
         return {{ nameCamelCase }}
@@ -49,7 +52,9 @@ class {{ namePascalCase }}Service(
         }
 {%endif%}{%endfor%}
         var {{ nameCamelCase }} = {{ nameCamelCase }}Repository.findByIdOrNull(id) ?: return null
-        {{ nameCamelCase }} = {{ nameCamelCase }}.update(input)
+        {{ nameCamelCase }} = {{ nameCamelCase }}.copy({%for field in fields%}
+            {{field.fieldNameCamelCase}} = input.{{field.fieldNameCamelCase}} ?: {{ nameCamelCase }}.{{field.fieldNameCamelCase}},{%endfor%}
+        )
         {{ nameCamelCase }} = {{ nameCamelCase }}Repository.save({{ nameCamelCase }})
         publisher.publishEvent({{ namePascalCase }}UpdateEvent(this, {{ nameCamelCase }}))
         return {{ nameCamelCase }}
@@ -72,4 +77,16 @@ class {{ namePascalCase }}Service(
         return true
     }
 {%endif%}{%endfor%}
+    data class Create{{ namePascalCase }}Input({%for field in fields%}
+        val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinType }},{%endfor%}
+    )
+
+    data class Update{{ namePascalCase }}Input({%for field in fields%}
+        val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinTypeNotNullable }}?,{%endfor%}
+    )
+{%if hasRelations%}
+    data class {{ namePascalCase }}FilterInput({%for field in fields%}{%if field.isFieldRelational%}
+        val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinTypeNotNullable }}? = null,{%endif%}{%endfor%}
+    )
+{%endif%}
 }

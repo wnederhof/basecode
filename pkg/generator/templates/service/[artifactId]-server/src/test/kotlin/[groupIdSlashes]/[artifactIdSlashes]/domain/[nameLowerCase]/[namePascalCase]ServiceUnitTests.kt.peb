@@ -52,6 +52,16 @@ internal class {{ namePascalCase }}ServiceUnitTests {
 
         assertThat(actual).isNull()
     }
+
+    @Test
+    fun `findByIds returns the contained values of findByIds in {{ namePascalCase }}Repository`() {
+        whenever({{ nameCamelCase }}Repository.findByIds(listOf(1)))
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+
+        val actual = {{ nameCamelCase }}Service.findByIds(listOf(1))
+
+        assertThat(actual).isEqualTo(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+    }
 {%for field in fields%}{%if field.isFieldRelational%}
     @Test
     fun `findBy{{field.fieldNamePascalCase}} returns the contents of the corresponding repository call`() {
@@ -78,7 +88,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         whenever({{ nameCamelCase }}Repository.findAll())
             .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
-        val actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}.{{ namePascalCase }}FilterInput())
+        val actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}Service.{{ namePascalCase }}FilterInput())
 
         assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
     }
@@ -88,7 +98,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         whenever({{ nameCamelCase }}Repository.findBy{{field.fieldNamePascalCase}}(1))
             .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_1))
 
-        val actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}.{{ namePascalCase }}FilterInput({{field.fieldNameCamelCase}} = 1))
+        val actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}Service.{{ namePascalCase }}FilterInput({{field.fieldNameCamelCase}} = 1))
 
         assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_1)
     }

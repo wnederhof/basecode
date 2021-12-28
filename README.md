@@ -78,6 +78,7 @@ When both the backend and frontend are running, you can build your next best thi
 
 ## TODO
 - Use DGS
+- Id as LONG
 - Use NextJS and/or Angular instead of NuxtJS?
 
 ## License

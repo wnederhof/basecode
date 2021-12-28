@@ -1,7 +1,6 @@
-package {{ groupId }}.{{ artifactId }}.application.graphql
+package {{ groupId }}.{{ artifactId }}.application.graphql.{{ nameLowerCase }}
 
-{%if hasRelations%}import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}
-{%endif%}import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1
@@ -37,7 +36,7 @@ class {{ namePascalCase }}ResolverUnitTests {
 
     @Test
     fun `{{ namePluralCamelCase }} delegates the call to the {{ namePascalCase }}Service`() {
-        {%if hasRelations%}val any{{ namePascalCase }}Filter = {{ namePascalCase }}.{{ namePascalCase }}FilterInput()
+        {%if hasRelations%}val any{{ namePascalCase }}Filter = {{ namePascalCase }}Service.{{ namePascalCase }}FilterInput()
 
         {%endif%}whenever({{ nameCamelCase }}Service.findAll({%if hasRelations%}any{{ namePascalCase }}Filter{%endif%}))
             .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
@@ -47,7 +46,7 @@ class {{ namePascalCase }}ResolverUnitTests {
     }
 
     @Test
-    fun `createBook delegates the call to the {{ namePascalCase }}Service`() {
+    fun `create{{ namePascalCase }} delegates the call to the {{ namePascalCase }}Service`() {
         whenever({{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
             .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
@@ -56,7 +55,7 @@ class {{ namePascalCase }}ResolverUnitTests {
     }
 
     @Test
-    fun `updateBook delegates the call to the {{ namePascalCase }}Service`() {
+    fun `update{{ namePascalCase }} delegates the call to the {{ namePascalCase }}Service`() {
         whenever({{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1))
             .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 

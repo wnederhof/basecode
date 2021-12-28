@@ -1,0 +1,21 @@
+package {{ groupId }}.{{ artifactId }}.application.graphql.{{ nameLowerCase }}
+
+import com.netflix.graphql.dgs.DgsComponent
+import com.netflix.graphql.dgs.DgsDataLoader
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service
+import org.dataloader.MappedBatchLoader
+import java.util.concurrent.CompletableFuture.supplyAsync
+
+@DgsComponent
+class {{ namePascalCase }}DataLoader(
+    private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
+) {
+
+    @DgsDataLoader(name = "{{ nameCamelCase }}ById")
+    var {{ nameCamelCase }}ById = MappedBatchLoader<Int, {{ namePascalCase }}> {
+        supplyAsync {
+            {{ nameCamelCase }}Service.findByIds(it).associateBy { it.id }
+        }
+    }
+}
