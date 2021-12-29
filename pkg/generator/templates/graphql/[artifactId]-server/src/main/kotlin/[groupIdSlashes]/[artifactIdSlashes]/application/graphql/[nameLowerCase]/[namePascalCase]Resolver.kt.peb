@@ -46,9 +46,9 @@ class {{ namePascalCase }}Resolver(
     @DgsComponent
     class {{ namePascalCase }}QueryResolver { {%for field in fields%}{%if field.isFieldRelational%}
 
-        @DgsQuery
+        @DgsData(parentType = "{{ namePascalCase }}")
         fun {{ field.fieldTypeCamelCase }}(dfe: DgsDataFetchingEnvironment): CompletableFuture<{{ field.fieldTypePascalCase }}?> {
-            val {{ nameCamelCase }} = dfe.getArgument<{{ namePascalCase }}>("{{ nameCamelCase }}")
+            val {{ nameCamelCase }} = dfe.getSource<{{ namePascalCase }}>()
             return dfe.getDataLoader<Int, {{ field.fieldTypePascalCase }}?>("{{ field.fieldTypeCamelCase }}ById")
                 .load({{ nameCamelCase }}.{{ field.fieldNameCamelCase }})
         }
@@ -60,7 +60,7 @@ class {{ namePascalCase }}Resolver(
 
         @DgsData(parentType = "{{ field.fieldTypePascalCase }}")
         fun {{ namePluralCamelCase }}(dfe: DgsDataFetchingEnvironment): CompletableFuture<Iterable<{{ namePascalCase }}>> {
-            val {{ field.fieldTypeCamelCase }} = dfe.getArgument<{{ field.fieldTypePascalCase }}>("{{ field.fieldTypeCamelCase }}")
+            val {{ field.fieldTypeCamelCase }} = dfe.getSource<{{ field.fieldTypePascalCase }}>()
             val {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id ?: error("Expected id to be provided.")
             return dfe.getDataLoader<Int, Iterable<{{ namePascalCase }}>>("{{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }}")
                 .load({{ field.fieldNameCamelCase }})

@@ -86,7 +86,7 @@ class {{ namePascalCase }}ResolverUnitTests {
             val dfe = mock<DgsDataFetchingEnvironment>()
             val dataLoader = mock<DataLoader<Int, {{ field.fieldTypePascalCase }}?>>()
 
-            whenever(dfe.getArgument<{{ namePascalCase }}>("{{ nameCamelCase }}"))
+            whenever(dfe.getSource<{{ namePascalCase }}>())
                 .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
             whenever(dfe.getDataLoader<Int, {{ field.fieldTypePascalCase }}?>("{{ field.fieldTypeCamelCase }}ById"))
@@ -115,7 +115,7 @@ class {{ namePascalCase }}ResolverUnitTests {
             val {{ field.fieldTypeCamelCase }} = {{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
                 .copy(id = {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})
 
-            whenever(dfe.getArgument<{{ field.fieldTypePascalCase }}>("{{ field.fieldTypeCamelCase }}"))
+            whenever(dfe.getSource<{{ field.fieldTypePascalCase }}>())
                 .thenReturn({{ field.fieldTypeCamelCase }})
 
             whenever(dfe.getDataLoader<Int, List<{{ namePascalCase }}>>("{{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }}"))
