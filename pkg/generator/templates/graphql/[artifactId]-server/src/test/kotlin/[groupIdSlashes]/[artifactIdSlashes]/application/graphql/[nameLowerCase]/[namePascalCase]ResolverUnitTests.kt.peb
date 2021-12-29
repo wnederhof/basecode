@@ -1,11 +1,16 @@
 package {{ groupId }}.{{ artifactId }}.application.graphql.{{ nameLowerCase }}
 
-import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service
+{%if hasRelations%}import com.netflix.graphql.dgs.DgsDataFetchingEnvironment
+import com.nhaarman.mockitokotlin2.mock
+import org.dataloader.DataLoader
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}
+import java.util.concurrent.CompletableFuture.completedFuture
+{%endif%}import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1
 {%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
-import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}
 {%endif%}{%endfor%}import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
@@ -71,41 +76,56 @@ class {{ namePascalCase }}ResolverUnitTests {
     }
 {%if hasRelations%}
     @Nested
-    inner class {{ namePascalCase }}ResolverUnitTests { {%for field in fields%}{%if field.isFieldRelational%}
-
-        @Mock
-        private lateinit var {{ field.fieldTypeCamelCase }}Service: {{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
+    inner class {{ namePascalCase }}QueryResolverUnitTests {
 
         @InjectMocks
         private lateinit var {{ nameCamelCase }}QueryResolver: {{ namePascalCase }}Resolver.{{ namePascalCase }}QueryResolver
 {%for field in fields%}{%if field.isFieldRelational%}
         @Test
-        fun `{{ field.fieldTypeCamelCase }} delegates the call to the {{ field.fieldTypePascalCase }}Service`() {
-            whenever({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
-                .thenReturn({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+        fun `{{ field.fieldTypeCamelCase }} delegates the call to the {{ field.fieldTypeCamelCase }}ById dataloader`() {
+            val dfe = mock<DgsDataFetchingEnvironment>()
+            val dataLoader = mock<DataLoader<Int, {{ field.fieldTypePascalCase }}?>>()
 
-            assertThat({{ nameCamelCase }}QueryResolver.{{ field.fieldTypeCamelCase }}({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            whenever(dfe.getArgument<{{ namePascalCase }}>("{{ nameCamelCase }}"))
+                .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+
+            whenever(dfe.getDataLoader<Int, {{ field.fieldTypePascalCase }}?>("{{ field.fieldTypeCamelCase }}ById"))
+                .thenReturn(dataLoader)
+
+            whenever(dataLoader.load({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
+                .thenReturn(completedFuture({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+
+            assertThat({{ nameCamelCase }}QueryResolver.{{ field.fieldTypeCamelCase }}(dfe).get())
                 .isEqualTo({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
         }{%endif%}{%endfor%}
     }
 {%endif%}{%for field in fields%}{%if field.isFieldRelational%}
     @Nested
     @ExtendWith(MockitoExtension::class)
-    inner class {{ field.fieldTypePascalCase }}ResolverUnitTests {
-
-        @Mock
-        private lateinit var {{ nameCamelCase }}Service: {{ namePascalCase }}Service
+    inner class {{ field.fieldTypePascalCase }}FieldResolverUnitTests {
 
         @InjectMocks
         private lateinit var {{ field.fieldTypeCamelCase }}FieldResolver: {{ namePascalCase }}Resolver.{{ field.fieldTypePascalCase }}FieldResolver
 
         @Test
         fun `{{ nameCamelCase }} delegates the call to the {{ nameCamelCase }}Service`() {
-            whenever({{ nameCamelCase }}Service.findBy{{ field.fieldNamePascalCase }}({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.id!!))
-                .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            val dfe = mock<DgsDataFetchingEnvironment>()
+            val dataLoader = mock<DataLoader<Int, List<{{ namePascalCase }}>>>()
 
-            assertThat({{ field.fieldTypeCamelCase }}FieldResolver.{{ namePluralCamelCase }}({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-                .isEqualTo(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            val {{ field.fieldTypeCamelCase }} = {{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
+                .copy(id = {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})
+
+            whenever(dfe.getArgument<{{ field.fieldTypePascalCase }}>("{{ field.fieldTypeCamelCase }}"))
+                .thenReturn({{ field.fieldTypeCamelCase }})
+
+            whenever(dfe.getDataLoader<Int, List<{{ namePascalCase }}>>("{{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }}"))
+                .thenReturn(dataLoader)
+
+            whenever(dataLoader.load({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
+                .thenReturn(completedFuture(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
+
+            assertThat({{ field.fieldTypeCamelCase }}FieldResolver.{{ namePluralCamelCase }}(dfe).get())
+                .isEqualTo(listOf({{ field.fieldTypeScreamingSnakeCase }}_ITEM_FIXTURE_WITH_ID_1))
         }
 
     }

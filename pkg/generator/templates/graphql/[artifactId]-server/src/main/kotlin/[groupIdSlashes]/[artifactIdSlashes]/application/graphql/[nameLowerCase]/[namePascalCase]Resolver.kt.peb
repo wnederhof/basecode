@@ -56,13 +56,14 @@ class {{ namePascalCase }}Resolver(
     }
 {%for field in fields%}{%if field.isFieldRelational%}
     @DgsComponent
-    class {{ field.fieldTypePascalCase }}FieldResolver(
-        private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
-    ) {
+    class {{ field.fieldTypePascalCase }}FieldResolver {
 
         @DgsData(parentType = "{{ field.fieldTypePascalCase }}")
-        fun {{ namePluralCamelCase }}({{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}): Iterable<{{ namePascalCase }}> {
-            return {{ nameCamelCase }}Service.findBy{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.id!!)
+        fun {{ namePluralCamelCase }}(dfe: DgsDataFetchingEnvironment): CompletableFuture<Iterable<{{ namePascalCase }}>> {
+            val {{ field.fieldTypeCamelCase }} = dfe.getArgument<{{ field.fieldTypePascalCase }}>("{{ field.fieldTypeCamelCase }}")
+            val {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id ?: error("Expected id to be provided.")
+            return dfe.getDataLoader<Int, Iterable<{{ namePascalCase }}>>("{{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }}")
+                .load({{ field.fieldNameCamelCase }})
         }
 
     }

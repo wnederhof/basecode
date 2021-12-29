@@ -64,11 +64,11 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     }
 {%for field in fields%}{%if field.isFieldRelational%}
     @Test
-    fun `findBy{{field.fieldNamePascalCase}} returns the contents of the corresponding repository call`() {
-        whenever({{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}(1))
+    fun `findBy{{field.fieldNamePluralPascalCase}} returns the contents of the corresponding repository call`() {
+        whenever({{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}(listOf(1)))
             .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
-        val actual = {{ nameCamelCase }}Service.findBy{{ field.fieldNamePascalCase }}(1)
+        val actual = {{ nameCamelCase }}Service.findBy{{ field.fieldNamePluralPascalCase }}(listOf(1))
 
         assertThat(actual).isEqualTo(actual)
     }

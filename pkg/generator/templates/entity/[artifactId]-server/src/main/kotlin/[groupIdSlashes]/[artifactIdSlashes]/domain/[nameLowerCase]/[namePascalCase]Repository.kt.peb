@@ -8,7 +8,10 @@ interface {{ namePascalCase }}Repository : CrudRepository<{{ namePascalCase }}, 
 {%for field in fields%}{%if field.isFieldRelational%}
     fun findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }}: Int): List<{{ namePascalCase }}>
 {%endif%}{%endfor%}
-    @Query("SELECT * FROM {{ namePluralSnakeCase }} WHERE id IN (:{{ namePluralCamelCase }})")
-    fun findByIds(@Param("{{ namePluralCamelCase }}") ids: Iterable<Int>): List<{{ namePascalCase }}>
-
+    @Query("SELECT * FROM {{ namePluralSnakeCase }} WHERE id IN (:ids)")
+    fun findByIds(@Param("ids") ids: Iterable<Int>): List<{{ namePascalCase }}>
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Query("SELECT * FROM {{ namePluralSnakeCase }} WHERE {{ field.fieldNameSnakeCase }} IN (:{{ field.fieldNamePluralCamelCase }})")
+    fun findBy{{ field.fieldNamePluralPascalCase }}(@Param("{{ field.fieldNamePluralCamelCase }}") {{ field.fieldNamePluralCamelCase }}: Iterable<Int>): List<{{ namePascalCase }}>
+{%endif%}{%endfor%}
 }

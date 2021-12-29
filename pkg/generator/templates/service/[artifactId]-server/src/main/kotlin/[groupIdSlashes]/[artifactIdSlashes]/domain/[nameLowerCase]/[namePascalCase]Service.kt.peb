@@ -19,20 +19,20 @@ class {{ namePascalCase }}Service(
         return {{ nameCamelCase }}Repository.findByIdOrNull(id)
     }
 
-    fun findByIds(ids: Iterable<Int>): Iterable<{{ namePascalCase }}> {
+    fun findByIds(ids: Iterable<Int>): List<{{ namePascalCase }}> {
         return {{ nameCamelCase }}Repository.findByIds(ids)
     }
 {%for field in fields%}{%if field.isFieldRelational%}
-    fun findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }}: Int): Iterable<{{ namePascalCase }}> {
-        return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }})
+    fun findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: Iterable<Int>): List<{{ namePascalCase }}> {
+        return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }})
     }
 {%endif%}{%endfor%}
-    fun findAll({%if hasRelations%}filterInput: {{ namePascalCase }}FilterInput? = null{%endif%}): Iterable<{{ namePascalCase }}> { {%for field in fields%}{%if field.isFieldRelational%}
+    fun findAll({%if hasRelations%}filterInput: {{ namePascalCase }}FilterInput? = null{%endif%}): List<{{ namePascalCase }}> { {%for field in fields%}{%if field.isFieldRelational%}
         if (filterInput?.{{ field.fieldNameCamelCase }} != null) {
             return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}(filterInput.{{ field.fieldNameCamelCase }})
         }
 {%endif%}{%endfor%}
-        return {{ nameCamelCase }}Repository.findAll()
+        return {{ nameCamelCase }}Repository.findAll().toList()
     }
 
     fun create(input: Create{{ namePascalCase }}Input): {{ namePascalCase }} { {%for field in fields%}{%if field.isFieldRelational%}

@@ -11,7 +11,8 @@ class {{ namePascalCase }}Listener{%if hasRelations%}(
 {%for field in fields%}{%if field.isFieldRelational%}
     @EventListener
     fun onEvent(event: {{ field.fieldTypePascalCase }}DeleteEvent) {
-        {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePascalCase }}(event.entity.id!!)
+        val entityId = event.entity.id ?: error("Expected id to be set.")
+        {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePascalCase }}(entityId)
     }
 {%endif%}{%endfor%}
 }{%endif%}{%endif%}
