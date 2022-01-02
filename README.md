@@ -87,3 +87,4 @@ Licensed under [MIT](LICENSE.md).
 ## Credits
 - The `new` template is based on the code generated using Spring Boot Initializr.
 - The `frontend` template is mostly based on the code generated using NuxtJS.
+- The `react-frontend` template is mostly based on https://github.com/sanjaytwisk/nextjs-ts.
