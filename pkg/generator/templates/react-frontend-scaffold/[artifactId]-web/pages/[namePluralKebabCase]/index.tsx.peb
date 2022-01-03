@@ -1,0 +1,5 @@
+import { {{namePascalCase}}List } from '@components/{{nameKebabCase}}/{{namePascalCase}}List'
+
+export default function {{namePluralPascalCase}}() {
+  return <{{namePascalCase}}List />
+}
