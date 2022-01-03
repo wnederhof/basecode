@@ -1,0 +1,61 @@
+import { Modal } from '@components/common/Modal'
+import { DataForm, DataFormFieldType } from '@components/common/DataForm'
+import { ErrorMessage } from '@components/common/ErrorMessage'
+import { gql, useQuery } from 'urql'
+import { ActionSection } from "@components/common/ActionSection";
+
+const fields = [{%for field in fields%}
+  {
+    key: '{{ field.fieldNameCamelCase }}',
+    label: '{{ field.fieldNamePascalCase }}',
+    value: (data: any) => data.{{ field.fieldNameCamelCase }},
+    type: '{{ field.fieldInputType }}'
+  },{%endfor%}
+]
+
+export function {{ namePascalCase }}Details(props: any) {
+  const [showEditor, setShowEditor] = useState(false)
+
+  const [{ data, error }] = useQuery({
+    query: gql`query {{nameCamelCase}}($id: ID!) {
+      {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
+        id{%for field in fields%}
+        {{field.fieldNameCamelCase}}{%endfor%}
+      }
+    }`,
+    context: {
+      additionalTypeNames: ['{{namePascalCase}}'],
+    },
+  })
+  if (error) {
+    return (
+      <ErrorMessage message={`Unable to load todos. Cause: ${error.message}`} />
+    )
+  }
+  return (
+    <ActionSection
+      header="{{namePascalCase}} Details"
+      showHeader={props.showHeader}
+      onEdit={() => setShowEditor(true)}
+    >
+      <DataDetails
+        fields={fields}
+        data={data}
+      />
+
+      {props.children}
+
+      <Modal
+        title="Edit {{namePascalCase}}"
+        visible={{ "{" }}showEditor{{ "}" }}
+      >
+        <{{namePascalCase}}Editor
+          id={props.{{nameCamelCase}}Id}{%for field in fields%}{%if field.isFieldRelational%}
+          {{ field.fieldNameKebabCase }}={props.{{ field.fieldNameCamelCase }}{{ "}" }}{%endif%}{%endfor%}
+          onSave={() => setShowEditor(false)}
+          onCancel={() => setShowEditor(false)}
+        />
+      </Modal>
+    </ActionSection>
+  )
+}

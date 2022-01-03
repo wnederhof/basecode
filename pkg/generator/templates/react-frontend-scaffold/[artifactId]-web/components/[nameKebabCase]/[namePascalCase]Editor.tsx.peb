@@ -1,0 +1,57 @@
+import { DataForm, DataFormFieldType } from '@components/common/DataForm'
+import { ErrorMessage } from '@components/common/ErrorMessage'
+import { gql, useQuery } from 'urql'
+import { ActionSection } from "@components/common/ActionSection";
+
+function doSave() {
+  // TODO
+}
+
+export function {{ namePascalCase }}Editor(props: any) {
+  const [{ data, error }] = useQuery({
+    query: gql`query {{nameCamelCase}}($id: ID!) {
+      {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
+        id{%for field in fields%}
+        {{field.fieldNameCamelCase}}{%endfor%}
+      }
+    }`,
+    context: {
+      additionalTypeNames: ['{{namePascalCase}}'],
+    },
+  })
+  if (error) {
+    return (
+      <ErrorMessage message={`Unable to load todos. Cause: ${error.message}`} />
+    )
+  }
+
+  const fields = [
+    {
+      name: 'id',
+      type: 'Id',
+    },{%for field in fields%}
+    {
+      name: '{{ field.fieldNameCamelCase }}',
+      label: '{{ field.fieldNamePascalCase }}',
+      type: '{{ field.fieldInputType }}'{% if field.isFieldRelational %},
+      options: this.{{ field.fieldTypePluralCamelCase }}.map(({{ field.fieldTypeCamelCase }}: any) => {
+        return {label: {{ field.fieldTypeCamelCase }}.id, value: {{ field.fieldTypeCamelCase }}.id}
+      }){%endif%}
+    },{%endfor%}
+  ].filter((elem) => !this.props[elem.name])
+
+  return (
+    <ActionSection
+      header="{{namePascalCase}} Details"
+      showHeader={props.showHeader}
+      onEdit={() => setShowEditor(true)}
+    >
+      <DataForm
+        fields={fields}
+        data={data}
+        onSubmit={doSubmit}
+        onCancel={props.onCancel}
+      />
+    </ActionSection>
+  )
+}
