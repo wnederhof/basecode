@@ -21,7 +21,7 @@ export function {{ namePascalCase }}Editor(props: any) {
   })
   if (error) {
     return (
-      <ErrorMessage message={`Unable to load todos. Cause: ${error.message}`} />
+      <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
     )
   }
 
@@ -38,7 +38,7 @@ export function {{ namePascalCase }}Editor(props: any) {
         return {label: {{ field.fieldTypeCamelCase }}.id, value: {{ field.fieldTypeCamelCase }}.id}
       }){%endif%}
     },{%endfor%}
-  ].filter((elem) => !this.props[elem.name])
+  ].filter((elem) => !props[elem.name])
 
   return (
     <ActionSection

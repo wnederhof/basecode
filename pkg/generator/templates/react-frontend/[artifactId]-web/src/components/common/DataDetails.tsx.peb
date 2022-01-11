@@ -1,14 +1,14 @@
-export interface DataFormField {
+export interface DataDetailsField {
   name: string
   label: string
 }
 
-export interface DataFormProps {
+export interface DataDetailsProps {
   fields: DataFormField[]
   value: any
 }
 
-export function DataDetails(props: DataFormProps) {
+export function DataDetails(props: DataDetailsProps) {
   return (
     <table>
       <tbody>

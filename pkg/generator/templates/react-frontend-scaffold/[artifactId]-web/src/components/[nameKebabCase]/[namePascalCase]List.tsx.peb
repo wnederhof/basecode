@@ -1,9 +1,12 @@
 import { DataList, DataListField } from '@components/common/DataList'
 import { ErrorMessage } from '@components/common/ErrorMessage'
 import { gql, useQuery } from 'urql'
-import { ActionSection } from "@components/common/ActionSection";
+import { ActionSection } from "@components/common/ActionSection"
+import { Modal } from '@components/common/Modal'
+import { useState } from 'react'
 
-export function {{ namePascalCase }}Editor(props: any) {
+export function {{ namePascalCase }}List(props: any) {
+  const [showEditor, setShowEditor] = useState(props.value)
   const [{ data, error }] = useQuery({
     query: gql`query {{nameCamelCase}}($id: ID!) {
       {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
@@ -27,21 +30,19 @@ export function {{ namePascalCase }}Editor(props: any) {
       value: (data: any) => data.{{ field.fieldNameCamelCase }},
       type: '{{ field.fieldInputType }}'
     },{%endfor%}
-  ].filter((elem) => !this.$props[elem.key])
+  ].filter((elem) => !props[elem.key])
     return (
     <ActionSection
-      header="{{namePascalCase}} Details"
-      showHeader={props.showHeader}
+      header={props.showHeader && '{{namePascalCase}} Details'}
       onEdit={() => setShowEditor(true)}
     >
       <DataList
         primaryKey="id"
         fields={fields}
-        rows="data.{{namePluralCamelCase}}"
+        rows={data.{{namePluralCamelCase}}{{ "}" }}
         to={(row) => '/{{ namePluralKebabCase }}/' + row.id}
         onEdit={(row) => edit{{namePascalCase}}(row.id)}
         onDelete={(row) => delete{{namePascalCase}}(row.id)}
-        fields={fields}
         data={data}
       />
 

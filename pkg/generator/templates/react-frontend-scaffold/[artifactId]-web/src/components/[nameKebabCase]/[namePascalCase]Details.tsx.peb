@@ -1,8 +1,10 @@
 import { Modal } from '@components/common/Modal'
-import { DataForm, DataFormFieldType } from '@components/common/DataForm'
+import { DataDetails } from '@components/common/DataDetails'
 import { ErrorMessage } from '@components/common/ErrorMessage'
 import { gql, useQuery } from 'urql'
 import { ActionSection } from "@components/common/ActionSection";
+import { useState } from 'react'
+import { TodoEditor } from '@components/todo/TodoEditor'
 
 const fields = [{%for field in fields%}
   {
@@ -34,8 +36,7 @@ export function {{ namePascalCase }}Details(props: any) {
   }
   return (
     <ActionSection
-      header="{{namePascalCase}} Details"
-      showHeader={props.showHeader}
+      header={props.showHeader && "{{namePascalCase}} Details"}
       onEdit={() => setShowEditor(true)}
     >
       <DataDetails

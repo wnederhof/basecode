@@ -10,10 +10,13 @@ import {{ groupId }}.{{ artifactId }}.application.graphql.{{ field.fieldTypeLowe
 import {{ groupId }}.{{ artifactId }}.application.graphql.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Resolver
 import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -28,7 +31,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
         {{ namePascalCase }}DataLoader::class,
     ]
 )
-class {{ namePascalCase }}ResolverIntegrationTests {
+class {{ namePascalCase }}ResolverTests {
 
     @Autowired
     private lateinit var dgsQueryExecutor: DgsQueryExecutor

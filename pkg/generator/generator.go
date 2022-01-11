@@ -89,13 +89,13 @@ func GenerateFrontend(overwrite bool, delete bool) error {
 	provideProjectContextAttributes(context, properties)
 	provideHelperContextAttributes(context)
 	if delete {
-		return deleteFiles("templates/frontend", ".", context)
+		return deleteFiles("templates/react-frontend", ".", context)
 	}
-	return writeFiles("templates/frontend", ".", context, overwrite)
+	return writeFiles("templates/react-frontend", ".", context, overwrite)
 }
 
 func GenerateFrontendScaffold(model Model, overwrite bool, delete bool) error {
-	return GenerateModelTemplate("templates/frontend-scaffold", model, overwrite, delete)
+	return GenerateModelTemplate("templates/react-frontend-scaffold", model, overwrite, delete)
 }
 
 func GenerateModelTemplate(templateDirectory string, model Model, overwrite bool, delete bool) error {
