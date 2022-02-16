@@ -1,10 +1,17 @@
 import { useState } from 'react'
 
 export enum DataFormFieldType {
+  ID = 'ID',
   RELATIONAL = 'RELATIONAL',
   RELATIONAL_OPTIONAL = 'RELATIONAL_OPTIONAL',
+  STRING = 'RELATIONAL',
+  STRING_OPTIONAL = 'RELATIONAL_OPTIONAL',
   TEXT = 'TEXT',
   TEXT_OPTIONAL = 'TEXT_OPTIONAL',
+  DATE = 'DATE',
+  DATE_OPTIONAL = 'DATE_OPTIONAL',
+  DATETIME = 'DATETIME',
+  DATETIME_OPTIONAL = 'DATETIME_OPTIONAL',
   INT = 'INT',
   INT_OPTIONAL = 'INT_OPTIONAL',
 }
@@ -16,7 +23,7 @@ export interface DataFormFieldOption {
 
 export interface DataFormField {
   name: string
-  label: string
+  label?: string
   options?: DataFormFieldOption[]
   type: DataFormFieldType
 }
@@ -29,7 +36,14 @@ export interface DataFormProps {
 }
 
 const formElements = {
-  RELATIONAL: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.ID]: (field: DataFormField, value: any, _onUpdate?: any) => (
+    <input
+      type="hidden"
+      name={field.name}
+      value={value}
+    />
+  ),
+  [DataFormFieldType.RELATIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
     <select required>
       {field.options?.map((option) => (
         <option
@@ -43,7 +57,7 @@ const formElements = {
       ))}
     </select>
   ),
-  RELATIONAL_OPTIONAL: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.RELATIONAL_OPTIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
     <select>
       {field.options?.map((option) => (
         <option
@@ -57,38 +71,77 @@ const formElements = {
       ))}
     </select>
   ),
-  STRING: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.STRING]: (field: DataFormField, value: any, onUpdate: any) => (
     <input
+      required
       name={field.name}
       defaultValue={value}
       onChange={(e) => onUpdate(e.target.value)}
       required
     />
   ),
-  STRING_OPTIONAL: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.STRING_OPTIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
     <input
       name={field.name}
       defaultValue={value}
       onChange={(e) => onUpdate(e.target.value)}
     />
   ),
-  TEXT: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.TEXT]: (field: DataFormField, value: any, onUpdate: any) => (
     <textarea
+      required
       name={field.name}
       defaultValue={value}
       onChange={(e) => onUpdate(e.target.value)}
       required
     />
   ),
-  TEXT_OPTIONAL: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.TEXT_OPTIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
     <textarea
       name={field.name}
       defaultValue={value}
       onChange={(e) => onUpdate(e.target.value)}
     />
   ),
-  INT: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.DATE]: (field: DataFormField, value: any, onUpdate: any) => (
     <input
+      required
+      type="date"
+      name={field.name}
+      defaultValue={value}
+      onChange={(e) => onUpdate(e.target.value)}
+      required
+    />
+  ),
+  [DataFormFieldType.DATE_OPTIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
+    <input
+      type="date"
+      name={field.name}
+      defaultValue={value}
+      onChange={(e) => onUpdate(e.target.value)}
+    />
+  ),
+  [DataFormFieldType.DATETIME]: (field: DataFormField, value: any, onUpdate: any) => (
+    <input
+      required
+      type="datetime"
+      name={field.name}
+      defaultValue={value}
+      onChange={(e) => onUpdate(e.target.value)}
+      required
+    />
+  ),
+  [DataFormFieldType.DATETIME_OPTIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
+    <input
+      type="datetime"
+      name={field.name}
+      defaultValue={value}
+      onChange={(e) => onUpdate(e.target.value)}
+    />
+  ),
+  [DataFormFieldType.INT]: (field: DataFormField, value: any, onUpdate: any) => (
+    <input
+      required
       type="number"
       name={field.name}
       defaultValue={value}
@@ -96,7 +149,7 @@ const formElements = {
       required
     />
   ),
-  INT_OPTIONAL: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.INT_OPTIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
     <input
       type="number"
       name={field.name}
@@ -117,7 +170,7 @@ export function DataForm(props: DataFormProps) {
     >
       <table>
         <tbody>
-          {props.fields.map((field) => (
+          {props.fields.filter(f => f.type !== DataFormFieldType.ID).map((field) => (
             <tr key={field.name}>
               <td>{field.label}</td>
               <td>

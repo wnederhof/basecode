@@ -277,31 +277,31 @@ func provideKotlinFieldContextAttributes(context map[string]interface{}, attribu
 func provideInputFieldContextAttributes(context map[string]interface{}, attribute ModelAttribute) {
 	switch attribute.Type {
 	case STRING:
-		context["fieldInputType"] = "String"
+		context["fieldInputType"] = "STRING"
 	case INT:
-		context["fieldInputType"] = "Int"
+		context["fieldInputType"] = "INT"
 	case TEXT:
-		context["fieldInputType"] = "Text"
+		context["fieldInputType"] = "TEXT"
 	case DATE:
-		context["fieldInputType"] = "Date"
+		context["fieldInputType"] = "DATE"
 	case DATETIME:
-		context["fieldInputType"] = "DateTime"
+		context["fieldInputType"] = "DATETIME"
 	case BOOLEAN:
-		context["fieldInputType"] = "Boolean"
+		context["fieldInputType"] = "BOOLEAN"
 	case NULL_STRING:
-		context["fieldInputType"] = "String?"
+		context["fieldInputType"] = "STRING_OPTIONAL"
 	case NULL_INT:
-		context["fieldInputType"] = "Int?"
+		context["fieldInputType"] = "INT_OPTIONAL"
 	case NULL_TEXT:
-		context["fieldInputType"] = "Text?"
+		context["fieldInputType"] = "TEXT_OPTIONAL"
 	case NULL_DATE:
-		context["fieldInputType"] = "Date?"
+		context["fieldInputType"] = "DATE_OPTIONAL"
 	case NULL_DATETIME:
-		context["fieldInputType"] = "DateTime?"
+		context["fieldInputType"] = "DATETIME_OPTIONAL"
 	case NULL_BOOLEAN:
-		context["fieldInputType"] = "Boolean?"
+		context["fieldInputType"] = "BOOLEAN_OPTIONAL"
 	case RELATIONAL:
-		context["fieldInputType"] = "Select"
+		context["fieldInputType"] = "RELATIONAL"
 	default:
 		panic("Undetermined attribute type.")
 	}

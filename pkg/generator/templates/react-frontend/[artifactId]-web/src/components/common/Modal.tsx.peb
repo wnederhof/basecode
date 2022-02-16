@@ -9,9 +9,7 @@ interface Props {
 export function Modal(props: Props) {
   return (
     <>
-      {!props.visible ? (
-        <></>
-      ) : (
+      {props.visible && (
         <>
           <h1>{props.title}</h1>
           {props.children}

@@ -1,13 +1,14 @@
-import { DataForm, DataFormFieldType } from '@components/common/DataForm'
+import { DataForm } from '@components/common/DataForm'
 import { ErrorMessage } from '@components/common/ErrorMessage'
-import { gql, useQuery } from 'urql'
+import { gql, useQuery, useMemo } from 'urql'
 import { ActionSection } from "@components/common/ActionSection";
 
-function doSave() {
+function doSubmit() {
   // TODO
 }
 
 export function {{ namePascalCase }}Editor(props: any) {
+  const [showEditor, setShowEditor] = useState(false)
   const [{ data, error }] = useQuery({
     query: gql`query {{nameCamelCase}}($id: ID!) {
       {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
@@ -15,9 +16,10 @@ export function {{ namePascalCase }}Editor(props: any) {
         {{field.fieldNameCamelCase}}{%endfor%}
       }
     }`,
-    context: {
+    pause: !props.id,
+    context: useMemo(() => ({
       additionalTypeNames: ['{{namePascalCase}}'],
-    },
+    }), []),
   })
   if (error) {
     return (
@@ -28,12 +30,12 @@ export function {{ namePascalCase }}Editor(props: any) {
   const fields = [
     {
       name: 'id',
-      type: 'Id',
+      type: DataFormFieldType.ID,
     },{%for field in fields%}
     {
       name: '{{ field.fieldNameCamelCase }}',
       label: '{{ field.fieldNamePascalCase }}',
-      type: '{{ field.fieldInputType }}'{% if field.isFieldRelational %},
+      type: DataFormFieldType.{{ field.fieldInputType }}{% if field.isFieldRelational %},
       options: this.{{ field.fieldTypePluralCamelCase }}.map(({{ field.fieldTypeCamelCase }}: any) => {
         return {label: {{ field.fieldTypeCamelCase }}.id, value: {{ field.fieldTypeCamelCase }}.id}
       }){%endif%}
@@ -42,16 +44,26 @@ export function {{ namePascalCase }}Editor(props: any) {
 
   return (
     <ActionSection
-      header="{{namePascalCase}} Details"
-      showHeader={props.showHeader}
+      header={props.showHeader ? "{{namePascalCase}} Details" : undefined}
       onEdit={() => setShowEditor(true)}
     >
       <DataForm
         fields={fields}
-        data={data}
+        value={data}
         onSubmit={doSubmit}
         onCancel={props.onCancel}
       />
+
+      <Modal
+        title="Edit {{namePascalCase}}"
+        visible={showEditor}
+      >
+        <{{ namePascalCase }}Editor
+          id={props.id}
+          onSave={() => setShowEditor(false)}
+          onCancel={() => setShowEditor(false)}
+        />
+      </Modal>
     </ActionSection>
   )
 }

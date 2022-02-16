@@ -1,17 +1,16 @@
 import { Modal } from '@components/common/Modal'
-import { DataDetails } from '@components/common/DataDetails'
+import { DataDetails, DataDetailsField } from '@components/common/DataDetails'
 import { ErrorMessage } from '@components/common/ErrorMessage'
 import { gql, useQuery } from 'urql'
 import { ActionSection } from "@components/common/ActionSection";
-import { useState } from 'react'
-import { TodoEditor } from '@components/todo/TodoEditor'
+import { useState, useMemo } from 'react'
+import { {{ namePascalCase }}Editor } from '@components/{{ nameCamelCase }}/{{ namePascalCase }}Editor'
 
-const fields = [{%for field in fields%}
+const fields: DataDetailsField[] = [{%for field in fields%}
   {
     key: '{{ field.fieldNameCamelCase }}',
     label: '{{ field.fieldNamePascalCase }}',
-    value: (data: any) => data.{{ field.fieldNameCamelCase }},
-    type: '{{ field.fieldInputType }}'
+    value: (data: any) => data.{{ field.fieldNameCamelCase }}
   },{%endfor%}
 ]
 
@@ -25,14 +24,17 @@ export function {{ namePascalCase }}Details(props: any) {
         {{field.fieldNameCamelCase}}{%endfor%}
       }
     }`,
-    context: {
+    context: useMemo(() => ({
       additionalTypeNames: ['{{namePascalCase}}'],
-    },
+    }), []),
   })
   if (error) {
     return (
-      <ErrorMessage message={`Unable to load todos. Cause: ${error.message}`} />
+      <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
     )
+  }
+  if (!data) {
+    return <></>
   }
   return (
     <ActionSection
@@ -41,7 +43,7 @@ export function {{ namePascalCase }}Details(props: any) {
     >
       <DataDetails
         fields={fields}
-        data={data}
+        value={data}
       />
 
       {props.children}

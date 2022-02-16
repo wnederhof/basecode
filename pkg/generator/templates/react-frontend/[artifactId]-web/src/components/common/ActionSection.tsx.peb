@@ -2,9 +2,9 @@ import { createContext, ReactNode, useContext } from 'react'
 
 export interface ActionSectionProps {
   header?: string
-  showBack: () => void
-  onNew: () => void
-  onEdit: () => void
+  onBack?: () => void
+  onNew?: () => void
+  onEdit?: () => void
   children: ReactNode
 }
 
@@ -26,20 +26,16 @@ export function ActionSection(props: ActionSectionProps) {
   }
   return (
     <>
-      {props.header ? header : <></>}
-      {props.onNew ? (
+      {props.header && header}
+      {props.onNew && (
         <button type="button" onClick={props.onNew}>
           New
         </button>
-      ) : (
-        <></>
       )}
-      {props.onEdit ? (
+      {props.onEdit && (
         <button type="button" onClick={props.onEdit}>
           Edit
         </button>
-      ) : (
-        <></>
       )}
       <LevelContext.Provider value={{ "{{" }} layoutLevel: layoutLevel + 1 {{ "}}" }}>
         {props.children}

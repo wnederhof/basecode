@@ -1,10 +1,11 @@
 export interface DataDetailsField {
-  name: string
+  key: string
   label: string
+  value?: (data: any) => string
 }
 
 export interface DataDetailsProps {
-  fields: DataFormField[]
+  fields: DataDetailsField[]
   value: any
 }
 
@@ -13,9 +14,9 @@ export function DataDetails(props: DataDetailsProps) {
     <table>
       <tbody>
         {props.fields.map((field) => (
-          <tr key={field.name}>
+          <tr key={field.key}>
             <td>{field.label}</td>
-            <td>{(props.value as any)[field.name]}</td>
+            <td>{(props.value as any)[field.key]}</td>
           </tr>
         ))}
       </tbody>

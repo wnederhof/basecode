@@ -37,10 +37,8 @@ export function DataList<T>(props: DataListProps<T>) {
               <td key={field.key}>{(row as any)[field.key]}</td>
             ))}
             <td>
-              {!props.canShow || props.canShow(row) ? (
+              {props.canShow && props.canShow(row) && (
                 <Link href={props.showUrl(row)}>Show</Link>
-              ) : (
-                <></>
               )}
               <button
                 disabled={props.canEdit && !props.canEdit(row)}

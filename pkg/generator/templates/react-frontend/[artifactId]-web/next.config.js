@@ -24,6 +24,14 @@ const getBuildConfig = () => {
 
   const nextConfig = {
     ...cssOptions,
+    async rewrites() {
+      return [
+        {
+          source: '/graphql',
+          destination: 'http://localhost:8080/graphql'
+        }
+      ]
+    },
     webpack(config) {
       config.module.rules.push({
         test: /\.svg$/,

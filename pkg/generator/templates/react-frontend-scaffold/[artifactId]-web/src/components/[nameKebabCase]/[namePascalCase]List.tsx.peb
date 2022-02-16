@@ -1,62 +1,78 @@
-import { DataList, DataListField } from '@components/common/DataList'
+import { DataList } from '@components/common/DataList'
 import { ErrorMessage } from '@components/common/ErrorMessage'
 import { gql, useQuery } from 'urql'
-import { ActionSection } from "@components/common/ActionSection"
+import { ActionSection } from '@components/common/ActionSection'
 import { Modal } from '@components/common/Modal'
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
+import { {{namePascalCase}}Editor } from '@components/{{ nameCamelCase }}/{{namePascalCase}}Editor'
 
-export function {{ namePascalCase }}List(props: any) {
-  const [showEditor, setShowEditor] = useState(props.value)
+const delete{{namePascalCase}} = () => {
+  // TODO
+}
+
+export interface {{ namePascalCase }}EditorState {
+  show: boolean
+  id?: string
+}
+
+export interface {{ namePascalCase }}ListProps {
+  showHeader?: boolean
+  children?: ReactNode
+}
+
+export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
+  const [editorState, setEditorState] = useState<{{ namePascalCase }}EditorState>({ show: false })
   const [{ data, error }] = useQuery({
-    query: gql`query {{nameCamelCase}}($id: ID!) {
-      {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
+    query: gql`{
+      {{namePluralCamelCase}} {
         id{%for field in fields%}
         {{field.fieldNameCamelCase}}{%endfor%}
       }
     }`,
-    context: {
+    context: useMemo(() => ({
       additionalTypeNames: ['{{namePascalCase}}'],
-    },
+    }), []),
   })
   if (error) {
     return (
-      <ErrorMessage message={`Unable to load todos. Cause: ${error.message}`} />
+      <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
     )
+  }
+  if (!data) {
+    return null
   }
   const fields = [{%for field in fields%}
     {
       key: '{{ field.fieldNameCamelCase }}',
       label: '{{ field.fieldNamePascalCase }}',
-      value: (data: any) => data.{{ field.fieldNameCamelCase }},
-      type: '{{ field.fieldInputType }}'
+      value: (data: any) => data.{{ field.fieldNameCamelCase }}
     },{%endfor%}
-  ].filter((elem) => !props[elem.key])
-    return (
+  ].filter((elem) => !(props as any)[elem.key])
+  return (
     <ActionSection
-      header={props.showHeader && '{{namePascalCase}} Details'}
-      onEdit={() => setShowEditor(true)}
+      header={props.showHeader ? '{{namePascalCase}} Details' : undefined}
+      onNew={() => setEditorState({ show: true })}
     >
       <DataList
         primaryKey="id"
         fields={fields}
         rows={data.{{namePluralCamelCase}}{{ "}" }}
-        to={(row) => '/{{ namePluralKebabCase }}/' + row.id}
-        onEdit={(row) => edit{{namePascalCase}}(row.id)}
-        onDelete={(row) => delete{{namePascalCase}}(row.id)}
-        data={data}
+        showUrl={(row: any) => '/{{ namePluralKebabCase }}/' + row.id}
+        onEdit={(row: any) => setEditorState({ show: true, id: row.id })}
+        onDelete={(row: any) => delete{{namePascalCase}}(row.id)}
       />
 
       {props.children}
 
       <Modal
         title="Edit {{namePascalCase}}"
-        visible={{ "{" }}showEditor{{ "}" }}
+        visible={{ "{" }}editorState.show{{ "}" }}
       >
         <{{namePascalCase}}Editor
-          id={props.{{nameCamelCase}}Id}{%for field in fields%}{%if field.isFieldRelational%}
+          id={editorState.id}{%for field in fields%}{%if field.isFieldRelational%}
           {{ field.fieldNameKebabCase }}={props.{{ field.fieldNameCamelCase }}{{ "}" }}{%endif%}{%endfor%}
-          onSave={() => setShowEditor(false)}
-          onCancel={() => setShowEditor(false)}
+          onSave={() => setEditorState({ show: false })}
+          onCancel={() => setEditorState({ show: false })}
         />
       </Modal>
     </ActionSection>
