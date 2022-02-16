@@ -1,14 +1,21 @@
-import { DataForm } from '@components/common/DataForm'
+import { DataForm, DataFormField, DataFormFieldType } from '@components/common/DataForm'
 import { ErrorMessage } from '@components/common/ErrorMessage'
 import { gql, useQuery, useMemo } from 'urql'
+import { useMemo } from "react";
 import { ActionSection } from "@components/common/ActionSection";
 
-function doSubmit() {
-  // TODO
+export interface {{ namePascalCase }}EditorProps {
+  id?: string
+  showHeader?: boolean
+  onSave: () => void
+  onCancel: () => void
 }
 
-export function {{ namePascalCase }}Editor(props: any) {
-  const [showEditor, setShowEditor] = useState(false)
+export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProps) {
+  const doSubmit = () => {
+    // TODO
+    props.onSave()
+  }
   const [{ data, error }] = useQuery({
     query: gql`query {{nameCamelCase}}($id: ID!) {
       {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
@@ -26,8 +33,7 @@ export function {{ namePascalCase }}Editor(props: any) {
       <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
     )
   }
-
-  const fields = [
+  const field: DataFormField[]s = [
     {
       name: 'id',
       type: DataFormFieldType.ID,
@@ -41,11 +47,9 @@ export function {{ namePascalCase }}Editor(props: any) {
       }){%endif%}
     },{%endfor%}
   ].filter((elem) => !props[elem.name])
-
   return (
     <ActionSection
       header={props.showHeader ? "{{namePascalCase}} Details" : undefined}
-      onEdit={() => setShowEditor(true)}
     >
       <DataForm
         fields={fields}
@@ -53,17 +57,6 @@ export function {{ namePascalCase }}Editor(props: any) {
         onSubmit={doSubmit}
         onCancel={props.onCancel}
       />
-
-      <Modal
-        title="Edit {{namePascalCase}}"
-        visible={showEditor}
-      >
-        <{{ namePascalCase }}Editor
-          id={props.id}
-          onSave={() => setShowEditor(false)}
-          onCancel={() => setShowEditor(false)}
-        />
-      </Modal>
     </ActionSection>
   )
 }

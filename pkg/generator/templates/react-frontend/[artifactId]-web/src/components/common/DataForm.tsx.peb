@@ -185,16 +185,16 @@ export function DataForm(props: DataFormProps) {
               </td>
             </tr>
           ))}
+          <tr>
+            <td />
+            <td>
+              <button>Submit</button>
+              <button type="button" onClick={() => props.onCancel()}>
+                Cancel
+              </button>
+            </td>
+          </tr>
         </tbody>
-        <tr>
-          <td />
-          <td>
-            <button>Submit</button>
-            <button type="button" onClick={() => props.onCancel()}>
-              Cancel
-            </button>
-          </td>
-        </tr>
       </table>
     </form>
   )

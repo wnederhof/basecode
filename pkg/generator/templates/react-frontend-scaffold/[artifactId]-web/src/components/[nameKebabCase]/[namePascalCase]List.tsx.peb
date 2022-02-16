@@ -6,10 +6,6 @@ import { Modal } from '@components/common/Modal'
 import { useState, useMemo } from 'react'
 import { {{namePascalCase}}Editor } from '@components/{{ nameCamelCase }}/{{namePascalCase}}Editor'
 
-const delete{{namePascalCase}} = () => {
-  // TODO
-}
-
 export interface {{ namePascalCase }}EditorState {
   show: boolean
   id?: string
@@ -21,6 +17,9 @@ export interface {{ namePascalCase }}ListProps {
 }
 
 export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
+  const delete{{namePascalCase}} = () => {
+    // TODO
+  }
   const [editorState, setEditorState] = useState<{{ namePascalCase }}EditorState>({ show: false })
   const [{ data, error }] = useQuery({
     query: gql`{
@@ -61,9 +60,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
         onEdit={(row: any) => setEditorState({ show: true, id: row.id })}
         onDelete={(row: any) => delete{{namePascalCase}}(row.id)}
       />
-
       {props.children}
-
       <Modal
         title="Edit {{namePascalCase}}"
         visible={{ "{" }}editorState.show{{ "}" }}
