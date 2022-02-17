@@ -1,9 +1,8 @@
 import { {{namePascalCase}}Details } from '@components/{{nameKebabCase}}/{{namePascalCase}}Details'
-
-interface Props {
-  id: number
-}
+import { useRouter } from 'next/router'
 
 export default function {{namePascalCase}}Id({ id }: Props) {
-  return <{{namePascalCase}}Details id={id} />
+  const router = useRouter()
+  const { employeeId } = router.query
+  return <EmployeeDetails id={employeeId} />
 }
