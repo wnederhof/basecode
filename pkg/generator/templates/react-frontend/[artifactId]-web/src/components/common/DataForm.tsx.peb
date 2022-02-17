@@ -1,7 +1,6 @@
 import { useState } from 'react'
 
 export enum DataFormFieldType {
-  ID = 'ID',
   RELATIONAL = 'RELATIONAL',
   RELATIONAL_OPTIONAL = 'RELATIONAL_OPTIONAL',
   STRING = 'RELATIONAL',
@@ -36,13 +35,6 @@ export interface DataFormProps {
 }
 
 const formElements = {
-  [DataFormFieldType.ID]: (field: DataFormField, value: any, _onUpdate?: any) => (
-    <input
-      type="hidden"
-      name={field.name}
-      value={value}
-    />
-  ),
   [DataFormFieldType.RELATIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
     <select required>
       {field.options?.map((option) => (
@@ -160,7 +152,14 @@ const formElements = {
 }
 
 export function DataForm(props: DataFormProps) {
-  const [formData, setFormData] = useState(props.value)
+  let initialFormData = useMemo(() => {
+    let result = {}
+    props.fields.forEach(field => {
+      result = ({...result, [field.name]: (props.value || {})[field.name]})
+    })
+    return result
+  }, [props.value])
+  const [formData, setFormData] = useState(initialFormData)
   return (
     <form
       onSubmit={(e) => {
@@ -170,13 +169,13 @@ export function DataForm(props: DataFormProps) {
     >
       <table>
         <tbody>
-          {props.fields.filter(f => f.type !== DataFormFieldType.ID).map((field) => (
+          {props.fields.map((field) => (
             <tr key={field.name}>
               <td>{field.label}</td>
               <td>
                 {formElements[field.type](
                   field,
-                  formData[field.name],
+                  formData && (formData as any)[field.name],
                   (v: any) => {
                     const newValue = { ...formData, [field.name]: v }
                     setFormData(newValue)

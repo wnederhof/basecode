@@ -12,9 +12,30 @@ export interface {{ namePascalCase }}EditorProps {
 }
 
 export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProps) {
-  const doSubmit = () => {
-    // TODO
-    props.onSave()
+  const [, executeCreateMutation] = useMutation(gql`
+    mutation: gql`mutation create{{namePascalCase}}($input: Create{{namePascalCase}}Input!) {
+      create{{namePascalCase}}(input: $input) {
+        id
+      }
+    }`,
+  )
+  const [, executeUpdateMutation] = useMutation(gql`
+    mutation: gql`mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
+      update{{namePascalCase}}(id: $id, input: $input) {
+        id
+      }
+    }`
+  )
+  const doSubmit = (formData: any) => {
+    if (props.id) {
+      executeUpdateMutation({id: props.id, input: formData})
+        .then(() => props.onSave())
+        .catch(_reason => alert('Update failed.'))
+    } else {
+      executeCreateMutation({input: formData})
+        .then(() => props.onSave())
+        .catch(_reason => alert('Create failed.'))
+    }
   }
   const [{ data, error }] = useQuery({
     query: gql`query {{nameCamelCase}}($id: ID!) {
@@ -24,8 +45,9 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
       }
     }`,
     pause: !props.id,
+    variables: { id: props.id },
     context: useMemo(() => ({
-      additionalTypeNames: ['{{namePascalCase}}'],
+      additionalTypenames: ['{{namePascalCase}}'],
     }), []),
   })
   if (error) {
@@ -33,11 +55,7 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
       <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
     )
   }
-  const field: DataFormField[]s = [
-    {
-      name: 'id',
-      type: DataFormFieldType.ID,
-    },{%for field in fields%}
+  const field: DataFormField[] = [{%for field in fields%}
     {
       name: '{{ field.fieldNameCamelCase }}',
       label: '{{ field.fieldNamePascalCase }}',
@@ -47,6 +65,7 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
       }){%endif%}
     },{%endfor%}
   ].filter((elem) => !props[elem.name])
+  if (props.id && !data) return <></>
   return (
     <ActionSection
       header={props.showHeader ? "{{namePascalCase}} Details" : undefined}

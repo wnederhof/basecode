@@ -25,7 +25,7 @@ export function {{ namePascalCase }}Details(props: any) {
       }
     }`,
     context: useMemo(() => ({
-      additionalTypeNames: ['{{namePascalCase}}'],
+      additionalTypenames: ['{{namePascalCase}}'],
     }), []),
   })
   if (error) {

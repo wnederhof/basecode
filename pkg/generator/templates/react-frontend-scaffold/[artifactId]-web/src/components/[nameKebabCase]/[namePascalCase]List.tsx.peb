@@ -17,8 +17,14 @@ export interface {{ namePascalCase }}ListProps {
 }
 
 export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
-  const delete{{namePascalCase}} = () => {
-    // TODO
+  const [, executeDeleteMutation] = useMutation(gql`
+    mutation delete{{ namePascalCase }}($id: ID!) {
+      delete{{ namePascalCase }}(id: $id)
+    }`
+  )
+  const delete{{ namePascalCase }} = (id: string) => {
+    executeDeleteMutation({id}, {additionalTypenames: ['{{ namePascalCase }}']})
+      .catch(_reason => alert('Update failed.'))
   }
   const [editorState, setEditorState] = useState<{{ namePascalCase }}EditorState>({ show: false })
   const [{ data, error }] = useQuery({
@@ -29,7 +35,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
       }
     }`,
     context: useMemo(() => ({
-      additionalTypeNames: ['{{namePascalCase}}'],
+      additionalTypenames: ['{{namePascalCase}}'],
     }), []),
   })
   if (error) {
@@ -66,6 +72,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
         visible={{ "{" }}editorState.show{{ "}" }}
       >
         <{{namePascalCase}}Editor
+          key={editorState.id}
           id={editorState.id}{%for field in fields%}{%if field.isFieldRelational%}
           {{ field.fieldNameKebabCase }}={props.{{ field.fieldNameCamelCase }}{{ "}" }}{%endif%}{%endfor%}
           onSave={() => setEditorState({ show: false })}

@@ -48,7 +48,7 @@ export function DataList<T>(props: DataListProps<T>) {
               </button>
               <button
                 disabled={props.canDelete && !props.canDelete(row)}
-                onClick={() => props.onDelete(row)}
+                onClick={() => confirm('Are you sure?') && props.onDelete(row)}
               >
                 Delete
               </button>
