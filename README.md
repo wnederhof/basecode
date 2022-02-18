@@ -77,9 +77,13 @@ To start the frontend, make sure your artifacts are installed using `npm install
 When both the backend and frontend are running, you can build your next best thing at: `http://localhost:3000`. (Note: as of yet, there is no index page). If you created an entity called `Post`, you will find your scaffolds at: `http://localhost:3000/posts`.
 
 ## TODO
-- Use DGS
+- X Use DGS
+- X Use NextJS and/or Angular instead of NuxtJS?
 - Id as LONG
-- Use NextJS and/or Angular instead of NuxtJS?
+- Fix SSR using Next-URQL
+- Add tests
+- Default Tailwind?
+- Fix relationships
 
 ## License
 Licensed under [MIT](LICENSE.md).

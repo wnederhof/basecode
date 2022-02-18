@@ -1,12 +1,13 @@
-import { DataForm, DataFormField, DataFormFieldType } from '@components/common/DataForm'
-import { ErrorMessage } from '@components/common/ErrorMessage'
+import { DataForm, DataFormField, DataFormFieldType } from '@components/shared/DataForm'
+import { ErrorMessage } from '@components/shared/ErrorMessage'
 import { gql, useQuery, useMutation } from 'urql'
 import { useMemo } from "react";
-import { ActionSection } from '@components/common/ActionSection'
-import { LoadingIndicator } from '@components/common/LoadingIndicator'
+import { ActionSection } from '@components/shared/ActionSection'
+import { LoadingIndicator } from '@components/shared/LoadingIndicator'
 
 export interface {{ namePascalCase }}EditorProps {
-  id?: string
+  id?: string{%for field in fields%}{%if field.isFieldRelational%}
+  {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
   showHeader?: boolean
   onSave: () => void
   onCancel: () => void
@@ -40,7 +41,7 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
   }
   const [{ data, error, fetching }] = useQuery({
     query: gql`query {{nameCamelCase}}($id: ID!) {
-      {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
+      {{nameCamelCase}}(id: $id) {
         id{%for field in fields%}
         {{field.fieldNameCamelCase}}{%endfor%}
       }
@@ -58,13 +59,31 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
   }
   if (fetching) {
     return <LoadingIndicator />
+  }{%for field in fields%}{%if field.isFieldRelational%}
+  const [{{ field.fieldTypePluralCamelCase }}QueryResult] = useQuery({
+    query: gql`query {{field.fieldTypePluralCamelCase}} {
+      {{field.fieldTypePluralCamelCase}} {
+        id
+      }
+    }`,
+    context: useMemo(() => ({
+      additionalTypenames: ['{{field.fieldTypePascalCase}}'],
+    }), []),
+  })
+  if ({{ field.fieldTypePluralCamelCase }}QueryResult.error) {
+    return (
+      <ErrorMessage message={`Unable to load {{ field.fieldTypePluralCamelCase }}. Cause: ${{{ field.fieldTypePluralCamelCase }}QueryResult.error.message}`} />
+    )
   }
+  if ({{ field.fieldTypePluralCamelCase }}QueryResult.fetching) {
+    return <LoadingIndicator />
+  }{%endif%}{%endfor%}
   const fields: DataFormField[] = [{%for field in fields%}
     {
       name: '{{ field.fieldNameCamelCase }}',
       label: '{{ field.fieldNamePascalCase }}',
       type: DataFormFieldType.{{ field.fieldInputType }}{% if field.isFieldRelational %},
-      options: this.{{ field.fieldTypePluralCamelCase }}.map(({{ field.fieldTypeCamelCase }}: any) => {
+      options: {{ field.fieldTypePluralCamelCase }}QueryResult.data.{{ field.fieldTypePluralCamelCase }}.map(({{ field.fieldTypeCamelCase }}: any) => {
         return {label: {{ field.fieldTypeCamelCase }}.id, value: {{ field.fieldTypeCamelCase }}.id}
       }){%endif%}
     },{%endfor%}

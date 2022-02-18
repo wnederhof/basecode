@@ -3,8 +3,8 @@ import { useMemo, useState } from 'react'
 export enum DataFormFieldType {
   RELATIONAL = 'RELATIONAL',
   RELATIONAL_OPTIONAL = 'RELATIONAL_OPTIONAL',
-  STRING = 'RELATIONAL',
-  STRING_OPTIONAL = 'RELATIONAL_OPTIONAL',
+  STRING = 'STRING',
+  STRING_OPTIONAL = 'STRING_OPTIONAL',
   TEXT = 'TEXT',
   TEXT_OPTIONAL = 'TEXT_OPTIONAL',
   DATE = 'DATE',
@@ -36,13 +36,12 @@ export interface DataFormProps {
 
 const formElements = {
   [DataFormFieldType.RELATIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
-    <select required>
+    <select required defaultValue={value} onChange={event => onUpdate(event.target.value)}>
+      <option value=""/>
       {field.options?.map((option) => (
         <option
           key={option.value}
           value={option.value}
-          selected={option.value === value}
-          onSelect={() => onUpdate(option.value)}
         >
           {option.label}
         </option>
@@ -50,13 +49,12 @@ const formElements = {
     </select>
   ),
   [DataFormFieldType.RELATIONAL_OPTIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
-    <select>
+    <select defaultValue={value} onChange={event => onUpdate(event.target.value)}>
+      <option value=""/>
       {field.options?.map((option) => (
         <option
           key={option.value}
           value={option.value}
-          selected={option.value === value}
-          onSelect={() => onUpdate(option.value)}
         >
           {option.label}
         </option>

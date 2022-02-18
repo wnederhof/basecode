@@ -1,4 +1,4 @@
-import { {{namePascalCase}}List } from '@components/{{nameKebabCase}}/{{namePascalCase}}List'
+import { {{namePascalCase}}List } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}List'
 
 export default function {{namePluralPascalCase}}() {
   return <{{namePascalCase}}List showHeader={true} />

@@ -1,11 +1,11 @@
-import { Modal } from '@components/common/Modal'
-import { DataDetails, DataDetailsField } from '@components/common/DataDetails'
-import { ErrorMessage } from '@components/common/ErrorMessage'
+import { Modal } from '@components/shared/Modal'
+import { DataDetails, DataDetailsField } from '@components/shared/DataDetails'
+import { ErrorMessage } from '@components/shared/ErrorMessage'
 import { gql, useQuery } from 'urql'
-import { ActionSection } from "@components/common/ActionSection";
+import { ActionSection } from "@components/shared/ActionSection";
 import { useState, useMemo, ReactNode } from 'react'
-import { {{ namePascalCase }}Editor } from '@components/{{ nameCamelCase }}/{{ namePascalCase }}Editor'
-import { LoadingIndicator } from '@components/common/LoadingIndicator'
+import { {{ namePascalCase }}Editor } from '@components/app/{{ nameCamelCase }}/{{ namePascalCase }}Editor'
+import { LoadingIndicator } from '@components/shared/LoadingIndicator'
 
 const fields: DataDetailsField[] = [{%for field in fields%}
   {
@@ -16,7 +16,8 @@ const fields: DataDetailsField[] = [{%for field in fields%}
 ]
 
 export interface {{ namePascalCase }}DetailsProps {
-  id: string
+  id: string{%for field in fields%}{%if field.isFieldRelational%}
+  {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
   showHeader?: boolean
   showEdit?: boolean
   showBack?: boolean
@@ -27,7 +28,7 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
   const [showEditor, setShowEditor] = useState(false)
   const [{ data, error, fetching }] = useQuery({
     query: gql`query {{nameCamelCase}}($id: ID!) {
-      {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
+      {{nameCamelCase}}(id: $id) {
         id{%for field in fields%}
         {{field.fieldNameCamelCase}}{%endfor%}
       }
@@ -48,8 +49,8 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
   return (
     <ActionSection
       header={props.showHeader ? "{{namePascalCase}} Details" : undefined}
-      onEdit={props.showEdit && () => setShowEditor(true)}
-      onBack={props.showBack && () => history.back()}
+      onEdit={props.showEdit ? () => setShowEditor(true) : undefined}
+      onBack={props.showBack ? () => history.back() : undefined}
     >
       <DataDetails
         fields={fields}
@@ -62,7 +63,7 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
       >
         <{{namePascalCase}}Editor
           id={props.id}{%for field in fields%}{%if field.isFieldRelational%}
-          {{ field.fieldNameKebabCase }}={props.{{ field.fieldNameCamelCase }}{{ "}" }}{%endif%}{%endfor%}
+          {{ field.fieldNameCamelCase }}={props.{{ field.fieldNameCamelCase }}{{ "}" }}{%endif%}{%endfor%}
           onSave={() => setShowEditor(false)}
           onCancel={() => setShowEditor(false)}
         />

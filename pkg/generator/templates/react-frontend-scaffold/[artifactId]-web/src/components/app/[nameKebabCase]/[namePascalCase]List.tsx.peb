@@ -1,11 +1,11 @@
-import { DataList } from '@components/common/DataList'
-import { ErrorMessage } from '@components/common/ErrorMessage'
+import { DataList } from '@components/shared/DataList'
+import { ErrorMessage } from '@components/shared/ErrorMessage'
 import { gql, useQuery, useMutation } from 'urql'
-import { ActionSection } from '@components/common/ActionSection'
-import { Modal } from '@components/common/Modal'
+import { ActionSection } from '@components/shared/ActionSection'
+import { Modal } from '@components/shared/Modal'
 import { useState, useMemo, ReactNode } from 'react'
-import { {{namePascalCase}}Editor } from '@components/{{ nameCamelCase }}/{{namePascalCase}}Editor'
-import { LoadingIndicator } from '@components/common/LoadingIndicator'
+import { {{namePascalCase}}Editor } from '@components/app/{{ nameCamelCase }}/{{namePascalCase}}Editor'
+import { LoadingIndicator } from '@components/shared/LoadingIndicator'
 
 export interface {{ namePascalCase }}EditorState {
   show: boolean
@@ -13,7 +13,8 @@ export interface {{ namePascalCase }}EditorState {
 }
 
 export interface {{ namePascalCase }}ListProps {
-  showHeader?: boolean
+  showHeader?: boolean{%for field in fields%}{%if field.isFieldRelational%}
+{{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
   children?: ReactNode
 }
 
@@ -75,7 +76,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
         <{{namePascalCase}}Editor
           key={editorState.id}
           id={editorState.id}{%for field in fields%}{%if field.isFieldRelational%}
-          {{ field.fieldNameKebabCase }}={props.{{ field.fieldNameCamelCase }}{{ "}" }}{%endif%}{%endfor%}
+          {{ field.fieldNameCamelCase }}={props.{{ field.fieldNameCamelCase }}{{ "}" }}{%endif%}{%endfor%}
           onSave={() => setEditorState({ show: false })}
           onCancel={() => setEditorState({ show: false })}
         />

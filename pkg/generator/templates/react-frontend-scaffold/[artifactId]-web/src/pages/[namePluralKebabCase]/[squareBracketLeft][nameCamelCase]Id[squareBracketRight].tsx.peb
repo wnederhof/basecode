@@ -1,8 +1,8 @@
-import { {{namePascalCase}}Details } from '@components/{{nameKebabCase}}/{{namePascalCase}}Details'
+import { {{namePascalCase}}Details } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}Details'
 import { useRouter } from 'next/router'
 
 export default function {{namePascalCase}}Id() {
   const router = useRouter()
   const { {{nameCamelCase}}Id } = router.query
-  return <{{ namePascalCase }}Details id={{ "{" }}{{ nameCamelCase }}Id{{ "}" }} />
+  return <{{ namePascalCase }}Details id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }} />
 }
