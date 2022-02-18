@@ -5,6 +5,7 @@ import { gql, useQuery } from 'urql'
 import { ActionSection } from "@components/common/ActionSection";
 import { useState, useMemo, ReactNode } from 'react'
 import { {{ namePascalCase }}Editor } from '@components/{{ nameCamelCase }}/{{ namePascalCase }}Editor'
+import { LoadingIndicator } from '@components/common/LoadingIndicator'
 
 const fields: DataDetailsField[] = [{%for field in fields%}
   {
@@ -24,7 +25,7 @@ export interface {{ namePascalCase }}DetailsProps {
 
 export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsProps) {
   const [showEditor, setShowEditor] = useState(false)
-  const [{ data, error }] = useQuery({
+  const [{ data, error, fetching }] = useQuery({
     query: gql`query {{nameCamelCase}}($id: ID!) {
       {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
         id{%for field in fields%}
@@ -41,8 +42,8 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
       <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
     )
   }
-  if (!data || !data.employee) {
-    return <></>
+  if (fetching) {
+    return <LoadingIndicator />
   }
   return (
     <ActionSection

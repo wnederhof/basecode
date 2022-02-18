@@ -2,7 +2,8 @@ import { DataForm, DataFormField, DataFormFieldType } from '@components/common/D
 import { ErrorMessage } from '@components/common/ErrorMessage'
 import { gql, useQuery, useMutation } from 'urql'
 import { useMemo } from "react";
-import { ActionSection } from "@components/common/ActionSection";
+import { ActionSection } from '@components/common/ActionSection'
+import { LoadingIndicator } from '@components/common/LoadingIndicator'
 
 export interface {{ namePascalCase }}EditorProps {
   id?: string
@@ -37,7 +38,7 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
         .catch(_reason => alert('Create failed.'))
     }
   }
-  const [{ data, error }] = useQuery({
+  const [{ data, error, fetching }] = useQuery({
     query: gql`query {{nameCamelCase}}($id: ID!) {
       {{nameCamelCase}}: {{nameCamelCase}}(id: $id) {
         id{%for field in fields%}
@@ -54,6 +55,9 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
     return (
       <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
     )
+  }
+  if (fetching) {
+    return <LoadingIndicator />
   }
   const fields: DataFormField[] = [{%for field in fields%}
     {

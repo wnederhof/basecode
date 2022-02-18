@@ -5,6 +5,7 @@ import { ActionSection } from '@components/common/ActionSection'
 import { Modal } from '@components/common/Modal'
 import { useState, useMemo, ReactNode } from 'react'
 import { {{namePascalCase}}Editor } from '@components/{{ nameCamelCase }}/{{namePascalCase}}Editor'
+import { LoadingIndicator } from '@components/common/LoadingIndicator'
 
 export interface {{ namePascalCase }}EditorState {
   show: boolean
@@ -27,7 +28,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
       .catch(_reason => alert('Update failed.'))
   }
   const [editorState, setEditorState] = useState<{{ namePascalCase }}EditorState>({ show: false })
-  const [{ data, error }] = useQuery({
+  const [{ data, error, fetching }] = useQuery({
     query: gql`{
       {{namePluralCamelCase}} {
         id{%for field in fields%}
@@ -43,8 +44,8 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
       <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
     )
   }
-  if (!data) {
-    return null
+  if (fetching) {
+    return <LoadingIndicator />
   }
   const fields = [{%for field in fields%}
     {
