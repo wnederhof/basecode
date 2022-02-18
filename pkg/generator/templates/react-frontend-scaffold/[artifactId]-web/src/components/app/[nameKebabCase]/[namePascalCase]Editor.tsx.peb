@@ -51,15 +51,7 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
     context: useMemo(() => ({
       additionalTypenames: ['{{namePascalCase}}'],
     }), []),
-  })
-  if (error) {
-    return (
-      <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
-    )
-  }
-  if (fetching) {
-    return <LoadingIndicator />
-  }{%for field in fields%}{%if field.isFieldRelational%}
+  }){%for field in fields%}{%if field.isFieldRelational%}
   const [{{ field.fieldTypePluralCamelCase }}QueryResult] = useQuery({
     query: gql`query {{field.fieldTypePluralCamelCase}} {
       {{field.fieldTypePluralCamelCase}} {
@@ -69,10 +61,18 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
     context: useMemo(() => ({
       additionalTypenames: ['{{field.fieldTypePascalCase}}'],
     }), []),
-  })
+  }){%endif%}{%endfor%}
+  if (error) {
+    return (
+      <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
+    )
+  }
+  if (fetching) {
+    return <LoadingIndicator />
+  }{%for field in fields%}{%if field.isFieldRelational%}
   if ({{ field.fieldTypePluralCamelCase }}QueryResult.error) {
     return (
-      <ErrorMessage message={`Unable to load {{ field.fieldTypePluralCamelCase }}. Cause: ${{{ field.fieldTypePluralCamelCase }}QueryResult.error.message}`} />
+      <ErrorMessage message={`Unable to load {{ field.fieldTypePluralCamelCase }}. Cause: ${{ "{" }}{{ field.fieldTypePluralCamelCase }}QueryResult.error.message{{ "}" }}`} />
     )
   }
   if ({{ field.fieldTypePluralCamelCase }}QueryResult.fetching) {

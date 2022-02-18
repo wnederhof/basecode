@@ -14,7 +14,7 @@ export interface {{ namePascalCase }}EditorState {
 
 export interface {{ namePascalCase }}ListProps {
   showHeader?: boolean{%for field in fields%}{%if field.isFieldRelational%}
-{{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
+  {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
   children?: ReactNode
 }
 
@@ -30,12 +30,17 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
   }
   const [editorState, setEditorState] = useState<{{ namePascalCase }}EditorState>({ show: false })
   const [{ data, error, fetching }] = useQuery({
-    query: gql`{
-      {{namePluralCamelCase}} {
+    query: gql`{%if hasRelations%}query {{namePluralCamelCase}}($filter: {{namePascalCase}}Filter{%endif%}) {
+      {{namePluralCamelCase}}{%if hasRelations%}(filter: $filter){%endif%} {
         id{%for field in fields%}
         {{field.fieldNameCamelCase}}{%endfor%}
       }
-    }`,
+    }`,{%if hasRelations%}
+    variables: {
+      filter: {{ "{" }}{%for field in fields%}
+        {{field.fieldNameCamelCase}}: props.{{field.fieldNameCamelCase}}{%endfor%}
+      }
+    },{%endif%}
     context: useMemo(() => ({
       additionalTypenames: ['{{namePascalCase}}'],
     }), []),
