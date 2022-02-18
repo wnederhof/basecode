@@ -50,6 +50,8 @@ func provideProjectContextAttributes(context map[string]interface{}, properties 
 func provideHelperContextAttributes(context map[string]interface{}) {
 	context["dot"] = "."
 	context["underscore"] = "_"
+	context["squareBracketLeft"] = "["
+	context["squareBracketRight"] = "]"
 }
 
 func provideModelContextAttributes(context map[string]interface{}, name string) {
