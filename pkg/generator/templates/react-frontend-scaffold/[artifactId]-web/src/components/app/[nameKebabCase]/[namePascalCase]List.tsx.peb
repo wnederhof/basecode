@@ -75,7 +75,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
       />
       {props.children}
       <Modal
-        title="Edit {{namePascalCase}}"
+        title={editorState.id ? "Edit {{namePascalCase}}" : "New {{namePascalCase}}"}
         visible={{ "{" }}editorState.show{{ "}" }}
       >
         <{{namePascalCase}}Editor
