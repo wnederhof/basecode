@@ -37,6 +37,11 @@ export function ActionSection(props: ActionSectionProps) {
           Edit
         </button>
       )}
+      {props.onBack && (
+        <button type="button" onClick={props.onBack}>
+          Back
+        </button>
+      )}
       <LevelContext.Provider value={{ "{{" }} layoutLevel: layoutLevel + 1 {{ "}}" }}>
         {props.children}
       </LevelContext.Provider>

@@ -10,13 +10,16 @@ export interface DataDetailsProps {
 }
 
 export function DataDetails(props: DataDetailsProps) {
+  if (!props.value) {
+    return <div>No record found.</div>
+  }
   return (
     <table>
       <tbody>
         {props.fields.map((field) => (
           <tr key={field.key}>
             <td>{field.label}</td>
-            <td>{(props.value as any)[field.key]}</td>
+            <td>{props.value && (props.value as any)[field.key]}</td>
           </tr>
         ))}
       </tbody>

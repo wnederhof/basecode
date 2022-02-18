@@ -1,9 +1,9 @@
 import { DataList } from '@components/common/DataList'
 import { ErrorMessage } from '@components/common/ErrorMessage'
-import { gql, useQuery } from 'urql'
+import { gql, useQuery, useMutation } from 'urql'
 import { ActionSection } from '@components/common/ActionSection'
 import { Modal } from '@components/common/Modal'
-import { useState, useMemo } from 'react'
+import { useState, useMemo, ReactNode } from 'react'
 import { {{namePascalCase}}Editor } from '@components/{{ nameCamelCase }}/{{namePascalCase}}Editor'
 
 export interface {{ namePascalCase }}EditorState {

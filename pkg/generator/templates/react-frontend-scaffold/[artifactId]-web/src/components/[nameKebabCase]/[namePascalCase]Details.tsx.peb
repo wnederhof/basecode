@@ -3,7 +3,7 @@ import { DataDetails, DataDetailsField } from '@components/common/DataDetails'
 import { ErrorMessage } from '@components/common/ErrorMessage'
 import { gql, useQuery } from 'urql'
 import { ActionSection } from "@components/common/ActionSection";
-import { useState, useMemo } from 'react'
+import { useState, useMemo, ReactNode } from 'react'
 import { {{ namePascalCase }}Editor } from '@components/{{ nameCamelCase }}/{{ namePascalCase }}Editor'
 
 const fields: DataDetailsField[] = [{%for field in fields%}
@@ -14,7 +14,15 @@ const fields: DataDetailsField[] = [{%for field in fields%}
   },{%endfor%}
 ]
 
-export function {{ namePascalCase }}Details(props: any) {
+export interface {{ namePascalCase }}DetailsProps {
+  id: string
+  showHeader?: boolean
+  showEdit?: boolean
+  showBack?: boolean
+  children?: ReactNode
+}
+
+export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsProps) {
   const [showEditor, setShowEditor] = useState(false)
   const [{ data, error }] = useQuery({
     query: gql`query {{nameCamelCase}}($id: ID!) {
@@ -33,13 +41,14 @@ export function {{ namePascalCase }}Details(props: any) {
       <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
     )
   }
-  if (!data) {
+  if (!data || !data.employee) {
     return <></>
   }
   return (
     <ActionSection
-      header={props.showHeader && "{{namePascalCase}} Details"}
-      onEdit={() => setShowEditor(true)}
+      header={props.showHeader ? "{{namePascalCase}} Details" : undefined}
+      onEdit={props.showEdit && () => setShowEditor(true)}
+      onBack={props.showBack && () => history.back()}
     >
       <DataDetails
         fields={fields}

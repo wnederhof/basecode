@@ -1,6 +1,6 @@
 import { DataForm, DataFormField, DataFormFieldType } from '@components/common/DataForm'
 import { ErrorMessage } from '@components/common/ErrorMessage'
-import { gql, useQuery, useMemo } from 'urql'
+import { gql, useQuery, useMutation } from 'urql'
 import { useMemo } from "react";
 import { ActionSection } from "@components/common/ActionSection";
 
@@ -13,14 +13,14 @@ export interface {{ namePascalCase }}EditorProps {
 
 export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProps) {
   const [, executeCreateMutation] = useMutation(gql`
-    mutation: gql`mutation create{{namePascalCase}}($input: Create{{namePascalCase}}Input!) {
+    mutation create{{namePascalCase}}($input: Create{{namePascalCase}}Input!) {
       create{{namePascalCase}}(input: $input) {
         id
       }
-    }`,
+    }`
   )
   const [, executeUpdateMutation] = useMutation(gql`
-    mutation: gql`mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
+    mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
       update{{namePascalCase}}(id: $id, input: $input) {
         id
       }
@@ -55,7 +55,7 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
       <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
     )
   }
-  const field: DataFormField[] = [{%for field in fields%}
+  const fields: DataFormField[] = [{%for field in fields%}
     {
       name: '{{ field.fieldNameCamelCase }}',
       label: '{{ field.fieldNamePascalCase }}',
@@ -64,7 +64,7 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
         return {label: {{ field.fieldTypeCamelCase }}.id, value: {{ field.fieldTypeCamelCase }}.id}
       }){%endif%}
     },{%endfor%}
-  ].filter((elem) => !props[elem.name])
+  ].filter(elem => !(props as any)[elem.name])
   if (props.id && !data) return <></>
   return (
     <ActionSection
