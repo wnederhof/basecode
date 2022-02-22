@@ -1,0 +1,102 @@
+import { fireEvent, render, screen } from '@testing-library/react'
+import { ActionSection } from '../../../src/components/shared/ActionSection'
+
+describe('ActionSection', () => {
+  it('renders the header', () => {
+    render(
+      <ActionSection header="Header">
+        <div />
+      </ActionSection>
+    )
+    expect(screen.queryByText('Header').nodeName).toBe('H1')
+  })
+
+  it('renders children', () => {
+    render(
+      <ActionSection header="Header">
+        <p>Child</p>
+      </ActionSection>
+    )
+    expect(screen.queryByText('Child').nodeName).toBe('P')
+  })
+
+  it('renders nested headers at least three levels deep', () => {
+    render(
+      <ActionSection header="Header 1">
+        <ActionSection header="Header 2">
+          <ActionSection header="Header 3">
+            <div />
+          </ActionSection>
+        </ActionSection>
+      </ActionSection>
+    )
+    expect(screen.queryByText('Header 1').nodeName).toBe('H1')
+    expect(screen.queryByText('Header 2').nodeName).toBe('H2')
+    expect(screen.queryByText('Header 3').nodeName).toBe('H3')
+  })
+
+  it('does not render Back, New, Edit when they are not set', () => {
+    render(
+      <ActionSection header="Header">
+        <div />
+      </ActionSection>
+    )
+    expect(screen.queryByText('Back')).toBeNull()
+    expect(screen.queryByText('New')).toBeNull()
+    expect(screen.queryByText('Edit')).toBeNull()
+  })
+
+  it('shows a Back button which is clickable when onBack is set', () => {
+    const backFn = jest.fn()
+    render(
+      <ActionSection header="Header" onBack={backFn}>
+        <div />
+      </ActionSection>
+    )
+    expect(screen.queryByText('Back')).not.toBeNull()
+    fireEvent(
+      screen.queryByText('Back'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
+    )
+    expect(backFn).toBeCalled()
+  })
+
+  it('shows a New button which is clickable when onBack is set', () => {
+    const newFn = jest.fn()
+    render(
+      <ActionSection header="Header" onNew={newFn}>
+        <div />
+      </ActionSection>
+    )
+    expect(screen.queryByText('New')).not.toBeNull()
+    fireEvent(
+      screen.queryByText('New'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
+    )
+    expect(newFn).toBeCalled()
+  })
+
+  it('shows an Edit button which is clickable when onBack is set', () => {
+    const editFn = jest.fn()
+    render(
+      <ActionSection header="Header" onEdit={editFn}>
+        <div />
+      </ActionSection>
+    )
+    expect(screen.queryByText('Edit')).not.toBeNull()
+    fireEvent(
+      screen.queryByText('Edit'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
+    )
+    expect(editFn).toBeCalled()
+  })
+})

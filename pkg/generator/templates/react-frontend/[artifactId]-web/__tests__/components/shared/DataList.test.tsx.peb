@@ -1,0 +1,333 @@
+import { fireEvent, render, screen } from '@testing-library/react'
+import { DataList } from '../../../src/components/shared/DataList'
+
+describe('DataList', () => {
+  it('renders', () => {
+    expect(() =>
+      render(
+        <DataList
+          primaryKey="id"
+          fields={[]}
+          rows={[]}
+          showUrl={jest.fn()}
+          onEdit={jest.fn()}
+          onDelete={jest.fn()}
+        />
+      )
+    ).not.toThrow()
+  })
+
+  it('shows loading indicator if fetching is true', () => {
+    render(
+      <DataList
+        primaryKey="id"
+        fetching={true}
+        fields={[
+          {
+            key: 'name',
+            label: 'Name',
+          },
+        ]}
+        rows={[]}
+        showUrl={jest.fn()}
+        onEdit={jest.fn()}
+        onDelete={jest.fn()}
+        canDelete={() => false}
+        canEdit={() => false}
+        canShow={() => false}
+      />
+    )
+    expect(screen.getByTestId('loadingIndicator')).not.toBeNull()
+  })
+
+  it('shows error message if errorMessage is provided', () => {
+    render(
+      <DataList
+        primaryKey="id"
+        fields={[
+          {
+            key: 'name',
+            label: 'Name',
+          },
+        ]}
+        rows={[]}
+        errorMessage="Some Error Message"
+        showUrl={jest.fn()}
+        onEdit={jest.fn()}
+        onDelete={jest.fn()}
+        canDelete={() => false}
+        canEdit={() => false}
+        canShow={() => false}
+      />
+    )
+    expect(screen.getByText('Some Error Message')).not.toBeNull()
+  })
+
+  it('renders No entries when rows is empty', () => {
+    render(
+      <DataList
+        primaryKey="id"
+        fields={[
+          {
+            key: 'name',
+            label: 'Name',
+          },
+        ]}
+        rows={[]}
+        showUrl={jest.fn()}
+        onEdit={jest.fn()}
+        onDelete={jest.fn()}
+        canDelete={() => false}
+        canEdit={() => false}
+        canShow={() => false}
+      />
+    )
+    expect(screen.queryByText('No entries.')).not.toBeNull()
+  })
+
+  it('renders rows and columns', () => {
+    render(
+      <DataList
+        primaryKey="id"
+        fields={[
+          {
+            key: 'name',
+            label: 'Name',
+          },
+        ]}
+        rows={[
+          {
+            id: 1,
+            name: 'John Doe',
+          },
+        ]}
+        showUrl={jest.fn()}
+        onEdit={jest.fn()}
+        onDelete={jest.fn()}
+        canDelete={() => false}
+        canEdit={() => false}
+        canShow={() => false}
+      />
+    )
+    expect(screen.queryByText('Name')).not.toBeNull()
+    expect(screen.queryByText('John Doe')).not.toBeNull()
+    expect(screen.queryByText('No entries.')).toBeNull()
+  })
+
+  it('does not render delete, show or edit if canDelete, canEdit and canShow return false', () => {
+    render(
+      <DataList
+        primaryKey="id"
+        fields={[
+          {
+            key: 'name',
+            label: 'Name',
+          },
+        ]}
+        rows={[
+          {
+            id: 1,
+            name: 'John Doe',
+          },
+        ]}
+        showUrl={jest.fn()}
+        onEdit={jest.fn()}
+        onDelete={jest.fn()}
+        canDelete={() => false}
+        canEdit={() => false}
+        canShow={() => false}
+      />
+    )
+    expect(screen.queryByText('Delete')).toBeNull()
+    expect(screen.queryByText('Edit')).toBeNull()
+    expect(screen.queryByText('Show')).toBeNull()
+  })
+
+  it('renders delete, show or edit if canDelete, canEdit and canShow are not set', () => {
+    render(
+      <DataList
+        primaryKey="id"
+        fields={[
+          {
+            key: 'name',
+            label: 'Name',
+          },
+        ]}
+        rows={[
+          {
+            id: 1,
+            name: 'John Doe',
+          },
+        ]}
+        showUrl={() => ''}
+        onEdit={jest.fn()}
+        onDelete={jest.fn()}
+      />
+    )
+    expect(screen.queryByText('Delete')).not.toBeNull()
+    expect(screen.queryByText('Edit')).not.toBeNull()
+    expect(screen.queryByText('Show')).not.toBeNull()
+  })
+
+  it('renders delete, show or edit if canDelete, canEdit and canShow return true', () => {
+    render(
+      <DataList
+        primaryKey="id"
+        fields={[
+          {
+            key: 'name',
+            label: 'Name',
+          },
+        ]}
+        rows={[
+          {
+            id: 1,
+            name: 'John Doe',
+          },
+        ]}
+        showUrl={() => ''}
+        onEdit={jest.fn()}
+        onDelete={jest.fn()}
+        canDelete={() => true}
+        canEdit={() => true}
+        canShow={() => true}
+      />
+    )
+    expect(screen.queryByText('Delete')).not.toBeNull()
+    expect(screen.queryByText('Edit')).not.toBeNull()
+    expect(screen.queryByText('Show')).not.toBeNull()
+  })
+
+  it('renders Delete and handles click, does not call onDelete for confirm false', () => {
+    jest.spyOn(global, 'confirm' as any).mockReturnValueOnce(false)
+
+    const deleteFn = jest.fn()
+    render(
+      <DataList
+        primaryKey="id"
+        fields={[
+          {
+            key: 'name',
+            label: 'Name',
+          },
+        ]}
+        rows={[
+          {
+            id: 1,
+            name: 'John Doe',
+          },
+        ]}
+        showUrl={() => ''}
+        onEdit={jest.fn()}
+        onDelete={deleteFn}
+        canEdit={() => false}
+        canShow={() => false}
+      />
+    )
+    fireEvent(
+      screen.queryByText('Delete'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
+    )
+    expect(deleteFn).not.toBeCalled()
+  })
+
+  it('renders Delete and handles click, calls onDelete for confirm true', () => {
+    jest.spyOn(global, 'confirm' as any).mockReturnValueOnce(true)
+
+    const deleteFn = jest.fn()
+    render(
+      <DataList
+        primaryKey="id"
+        fields={[
+          {
+            key: 'name',
+            label: 'Name',
+          },
+        ]}
+        rows={[
+          {
+            id: 1,
+            name: 'John Doe',
+          },
+        ]}
+        showUrl={() => ''}
+        onEdit={jest.fn()}
+        onDelete={deleteFn}
+        canEdit={() => false}
+        canShow={() => false}
+      />
+    )
+    fireEvent(
+      screen.queryByText('Delete'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
+    )
+    expect(deleteFn).toBeCalled()
+  })
+
+  it('renders Edit and handles click', () => {
+    const editFn = jest.fn()
+    render(
+      <DataList
+        primaryKey="id"
+        fields={[
+          {
+            key: 'name',
+            label: 'Name',
+          },
+        ]}
+        rows={[
+          {
+            id: 1,
+            name: 'John Doe',
+          },
+        ]}
+        showUrl={() => ''}
+        onEdit={editFn}
+        onDelete={jest.fn()}
+        canDelete={() => false}
+        canShow={() => false}
+      />
+    )
+    fireEvent(
+      screen.queryByText('Edit'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
+    )
+    expect(editFn).toBeCalled()
+  })
+
+  it('renders Show and handles click', () => {
+    render(
+      <DataList
+        primaryKey="id"
+        fields={[
+          {
+            key: 'name',
+            label: 'Name',
+          },
+        ]}
+        rows={[
+          {
+            id: 1,
+            name: 'John Doe',
+          },
+        ]}
+        showUrl={() => 'https:///'}
+        onEdit={jest.fn()}
+        onDelete={jest.fn()}
+        canDelete={() => false}
+        canEdit={() => false}
+        canShow={() => true}
+      />
+    )
+    expect(screen.queryByText('Show')['href']).toBe('https:///')
+  })
+})

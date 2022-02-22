@@ -6,15 +6,13 @@ interface Props {
   children: ReactNode
 }
 
-export function Modal(props: Props) {
-  return (
-    <>
-      {props.visible && (
-        <>
-          <h1>{props.title}</h1>
-          {props.children}
-        </>
-      )}
-    </>
-  )
-}
+export const Modal = (props: Props) => (
+  <>
+    {props.visible && (
+      <>
+        <h1>{props.title}</h1>
+        {props.children}
+      </>
+    )}
+  </>
+)

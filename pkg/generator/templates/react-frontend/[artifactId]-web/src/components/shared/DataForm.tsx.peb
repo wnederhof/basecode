@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react'
+import { LoadingIndicator } from '@components/shared/LoadingIndicator'
+import { ErrorMessage } from '@components/shared/ErrorMessage'
 
 export enum DataFormFieldType {
   RELATIONAL = 'RELATIONAL',
@@ -29,39 +31,61 @@ export interface DataFormField {
 
 export interface DataFormProps {
   fields: DataFormField[]
+  errorMessage?: string
+  fetching?: boolean
   value: any
   onSubmit: (result: any) => void
   onCancel: () => void
 }
 
 const formElements = {
-  [DataFormFieldType.RELATIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
-    <select required defaultValue={value} onChange={event => onUpdate(event.target.value)}>
-      <option value=""/>
+  [DataFormFieldType.RELATIONAL]: (
+    field: DataFormField,
+    value: any,
+    onUpdate: any
+  ) => (
+    <select
+      required
+      defaultValue={value}
+      onChange={(event) => onUpdate(event.target.value)}
+    >
+      <option value="" />
       {field.options?.map((option) => (
         <option
           key={option.value}
           value={option.value}
+          onSelect={() => onUpdate(option.value)}
         >
           {option.label}
         </option>
       ))}
     </select>
   ),
-  [DataFormFieldType.RELATIONAL_OPTIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
-    <select defaultValue={value} onChange={event => onUpdate(event.target.value)}>
-      <option value=""/>
+  [DataFormFieldType.RELATIONAL_OPTIONAL]: (
+    field: DataFormField,
+    value: any,
+    onUpdate: any
+  ) => (
+    <select
+      defaultValue={value}
+      onChange={(event) => onUpdate(event.target.value)}
+    >
       {field.options?.map((option) => (
         <option
           key={option.value}
           value={option.value}
+          onSelect={() => onUpdate(option.value)}
         >
           {option.label}
         </option>
       ))}
     </select>
   ),
-  [DataFormFieldType.STRING]: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.STRING]: (
+    field: DataFormField,
+    value: any,
+    onUpdate: any
+  ) => (
     <input
       name={field.name}
       defaultValue={value}
@@ -69,14 +93,22 @@ const formElements = {
       required
     />
   ),
-  [DataFormFieldType.STRING_OPTIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.STRING_OPTIONAL]: (
+    field: DataFormField,
+    value: any,
+    onUpdate: any
+  ) => (
     <input
       name={field.name}
       defaultValue={value}
       onChange={(e) => onUpdate(e.target.value)}
     />
   ),
-  [DataFormFieldType.TEXT]: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.TEXT]: (
+    field: DataFormField,
+    value: any,
+    onUpdate: any
+  ) => (
     <textarea
       name={field.name}
       defaultValue={value}
@@ -84,14 +116,22 @@ const formElements = {
       required
     />
   ),
-  [DataFormFieldType.TEXT_OPTIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.TEXT_OPTIONAL]: (
+    field: DataFormField,
+    value: any,
+    onUpdate: any
+  ) => (
     <textarea
       name={field.name}
       defaultValue={value}
       onChange={(e) => onUpdate(e.target.value)}
     />
   ),
-  [DataFormFieldType.DATE]: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.DATE]: (
+    field: DataFormField,
+    value: any,
+    onUpdate: any
+  ) => (
     <input
       type="date"
       name={field.name}
@@ -100,7 +140,11 @@ const formElements = {
       required
     />
   ),
-  [DataFormFieldType.DATE_OPTIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.DATE_OPTIONAL]: (
+    field: DataFormField,
+    value: any,
+    onUpdate: any
+  ) => (
     <input
       type="date"
       name={field.name}
@@ -108,7 +152,11 @@ const formElements = {
       onChange={(e) => onUpdate(e.target.value)}
     />
   ),
-  [DataFormFieldType.DATETIME]: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.DATETIME]: (
+    field: DataFormField,
+    value: any,
+    onUpdate: any
+  ) => (
     <input
       type="datetime"
       name={field.name}
@@ -117,7 +165,11 @@ const formElements = {
       required
     />
   ),
-  [DataFormFieldType.DATETIME_OPTIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.DATETIME_OPTIONAL]: (
+    field: DataFormField,
+    value: any,
+    onUpdate: any
+  ) => (
     <input
       type="datetime"
       name={field.name}
@@ -125,7 +177,11 @@ const formElements = {
       onChange={(e) => onUpdate(e.target.value)}
     />
   ),
-  [DataFormFieldType.INT]: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.INT]: (
+    field: DataFormField,
+    value: any,
+    onUpdate: any
+  ) => (
     <input
       type="number"
       name={field.name}
@@ -134,7 +190,11 @@ const formElements = {
       required
     />
   ),
-  [DataFormFieldType.INT_OPTIONAL]: (field: DataFormField, value: any, onUpdate: any) => (
+  [DataFormFieldType.INT_OPTIONAL]: (
+    field: DataFormField,
+    value: any,
+    onUpdate: any
+  ) => (
     <input
       type="number"
       name={field.name}
@@ -144,12 +204,14 @@ const formElements = {
   ),
 }
 
-export function DataForm(props: DataFormProps) {
-  let initialFormData = useMemo(() => {
-    let result = {}
-    props.fields.forEach(field => {
-      result = ({...result, [field.name]: (props.value || {})[field.name]})
-    })
+function LoadedDataForm(props: DataFormProps) {
+  const initialFormData = useMemo(() => {
+    const result: any = {}
+    if (props.value) {
+      props.fields.forEach((field) => {
+        result[field.name] = props.value[field.name]
+      })
+    }
     return result
   }, [props.value])
   const [formData, setFormData] = useState(initialFormData)
@@ -180,8 +242,8 @@ export function DataForm(props: DataFormProps) {
           <tr>
             <td />
             <td>
-              <button>Submit</button>
-              <button type="button" onClick={() => props.onCancel()}>
+              <button>Save</button>
+              <button type="button" onClick={props.onCancel}>
                 Cancel
               </button>
             </td>
@@ -190,4 +252,14 @@ export function DataForm(props: DataFormProps) {
       </table>
     </form>
   )
+}
+
+export function DataForm(props: DataFormProps) {
+  if (props.fetching) {
+    return <LoadingIndicator />
+  }
+  if (props.errorMessage) {
+    return <ErrorMessage message={props.errorMessage} />
+  }
+  return <LoadedDataForm {...props} />
 }

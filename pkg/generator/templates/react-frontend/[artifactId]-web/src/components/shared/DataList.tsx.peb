@@ -1,13 +1,18 @@
 import Link from 'next/link'
+import { LoadingIndicator } from '@components/shared/LoadingIndicator'
+import { ErrorMessage } from '@components/shared/ErrorMessage'
 
 export interface DataListField {
   key: string
   label: string
+  value?: (data: any) => any
 }
 
 export interface DataListProps<FieldType> {
   primaryKey: string
   fields: DataListField[]
+  errorMessage?: string
+  fetching?: boolean
   rows: FieldType[]
   canShow?: (row: FieldType) => boolean
   canEdit?: (row: FieldType) => boolean
@@ -17,7 +22,17 @@ export interface DataListProps<FieldType> {
   onDelete: (row: FieldType) => void
 }
 
+function extractValue(field: DataListField, value: any) {
+  return value && (field.value ? field.value(value) : value[field.key])
+}
+
 export function DataList<T>(props: DataListProps<T>) {
+  if (props.fetching) {
+    return <LoadingIndicator />
+  }
+  if (props.errorMessage) {
+    return <ErrorMessage message={props.errorMessage} />
+  }
   return props.rows.length === 0 ? (
     <div>No entries.</div>
   ) : (
@@ -34,24 +49,25 @@ export function DataList<T>(props: DataListProps<T>) {
         {props.rows.map((row: T) => (
           <tr key={(row as any)[props.primaryKey]}>
             {props.fields.map((field) => (
-              <td key={field.key}>{(row as any)[field.key]}</td>
+              <td key={field.key}>{extractValue(field, row)}</td>
             ))}
             <td>
               {(!props.canShow || props.canShow(row)) && (
                 <Link href={props.showUrl(row)}>Show</Link>
               )}
-              <button
-                disabled={props.canEdit && !props.canEdit(row)}
-                onClick={() => props.onEdit(row)}
-              >
-                Edit
-              </button>
-              <button
-                disabled={props.canDelete && !props.canDelete(row)}
-                onClick={() => confirm('Are you sure?') && props.onDelete(row)}
-              >
-                Delete
-              </button>
+              {(!props.canEdit || props.canEdit(row)) && (
+                <button onClick={() => props.onEdit(row)}>Edit</button>
+              )}
+              {(!props.canDelete || props.canDelete(row)) && (
+                <button
+                  disabled={props.canDelete && !props.canDelete(row)}
+                  onClick={() =>
+                    confirm('Are you sure?') && props.onDelete(row)
+                  }
+                >
+                  Delete
+                </button>
+              )}
             </td>
           </tr>
         ))}

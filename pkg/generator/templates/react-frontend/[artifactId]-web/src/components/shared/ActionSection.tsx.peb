@@ -42,7 +42,7 @@ export function ActionSection(props: ActionSectionProps) {
           Back
         </button>
       )}
-      <LevelContext.Provider value={{ "{{" }} layoutLevel: layoutLevel + 1 {{ "}}" }}>
+      <LevelContext.Provider value={{ layoutLevel: layoutLevel + 1 }}>
         {props.children}
       </LevelContext.Provider>
     </>

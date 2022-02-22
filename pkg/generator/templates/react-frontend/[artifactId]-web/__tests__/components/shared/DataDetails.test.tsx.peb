@@ -1,0 +1,72 @@
+import { render, screen } from '@testing-library/react'
+import {
+  DataDetails,
+  DataDetailsField,
+} from '../../../src/components/shared/DataDetails'
+
+describe('DataDetails', () => {
+  it('shows loading indicator if fetching is true', () => {
+    const employee = {
+      name: 'John Doe',
+    }
+    const fields: DataDetailsField[] = [
+      {
+        key: 'name',
+        label: 'Name',
+      },
+    ]
+    render(<DataDetails fields={fields} value={employee} fetching={true} />)
+    expect(screen.getByTestId('loadingIndicator')).not.toBeNull()
+  })
+
+  it('shows error message if errorMessage is provided', () => {
+    const employee = {
+      name: 'John Doe',
+    }
+    const fields: DataDetailsField[] = [
+      {
+        key: 'name',
+        label: 'Name',
+      },
+    ]
+    render(
+      <DataDetails
+        fields={fields}
+        value={employee}
+        errorMessage={'Some Error Message'}
+      />
+    )
+    expect(screen.getByText('Some Error Message')).not.toBeNull()
+  })
+
+  it('renders fields', () => {
+    const employee = {
+      name: 'John Doe',
+    }
+    const fields: DataDetailsField[] = [
+      {
+        key: 'name',
+        label: 'Name',
+      },
+    ]
+    render(<DataDetails fields={fields} value={employee} />)
+    expect(screen.queryByText('Name')).not.toBeNull()
+    expect(screen.queryByText('John Doe')).not.toBeNull()
+  })
+
+  it('utilizes the value transformation function', () => {
+    const employee = {
+      name: 'John Doe',
+    }
+    const fields: DataDetailsField[] = [
+      {
+        key: 'name',
+        label: 'Name',
+        value: (value) => 'Someone named ' + value.name,
+      },
+    ]
+    render(<DataDetails fields={fields} value={employee} />)
+    expect(screen.queryByText('Name')).not.toBeNull()
+    expect(screen.queryByText('Someone named John Doe')).not.toBeNull()
+  })
+})

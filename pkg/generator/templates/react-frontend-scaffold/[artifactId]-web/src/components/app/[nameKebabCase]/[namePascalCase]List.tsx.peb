@@ -1,11 +1,9 @@
 import { DataList } from '@components/shared/DataList'
-import { ErrorMessage } from '@components/shared/ErrorMessage'
-import { gql, useQuery, useMutation } from 'urql'
+import { gql, useMutation, useQuery } from 'urql'
 import { ActionSection } from '@components/shared/ActionSection'
 import { Modal } from '@components/shared/Modal'
-import { useState, useMemo, ReactNode } from 'react'
+import { ReactNode, useMemo, useState } from 'react'
 import { {{namePascalCase}}Editor } from '@components/app/{{ nameCamelCase }}/{{namePascalCase}}Editor'
-import { LoadingIndicator } from '@components/shared/LoadingIndicator'
 
 export interface {{ namePascalCase }}EditorState {
   show: boolean
@@ -22,44 +20,38 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
   const [, executeDeleteMutation] = useMutation(gql`
     mutation delete{{ namePascalCase }}($id: ID!) {
       delete{{ namePascalCase }}(id: $id)
-    }`
-  )
+    }
+  `)
   const delete{{ namePascalCase }} = (id: string) => {
-    executeDeleteMutation({id}, {additionalTypenames: ['{{ namePascalCase }}']})
-      .catch(_reason => alert('Update failed.'))
+    executeDeleteMutation(
+      { id },
+      { additionalTypenames: ['{{ namePascalCase }}'] }
+    ).catch((reason) => alert('Deleting {{ namePascalCase }} failed. Reason: ${reason}'))
   }
-  const [editorState, setEditorState] = useState<{{ namePascalCase }}EditorState>({ show: false })
+  const [editorState, setEditorState] = useState<{{ namePascalCase }}EditorState>({
+    show: false
+  })
   const [{ data, error, fetching }] = useQuery({
-    query: gql`{%if hasRelations%}query {{namePluralCamelCase}}($filter: {{namePascalCase}}Filter{%endif%}) {
-      {{namePluralCamelCase}}{%if hasRelations%}(filter: $filter){%endif%} {
-        id{%for field in fields%}
-        {{field.fieldNameCamelCase}}{%endfor%}
+    query: gql`
+      {%if hasRelations%}query {{namePluralCamelCase}}($filter: {{namePascalCase}}Filter) {%endif%}{
+        {{namePluralCamelCase}}{%if hasRelations%}(filter: $filter){%endif%} {
+          id{%for field in fields%}
+          {{field.fieldNameCamelCase}}{%endfor%}
+        }
       }
-    }`,{%if hasRelations%}
+    `,{%if hasRelations%}
     variables: {
       filter: {{ "{" }}{%for field in fields%}
         {{field.fieldNameCamelCase}}: props.{{field.fieldNameCamelCase}}{%endfor%}
       }
     },{%endif%}
-    context: useMemo(() => ({
-      additionalTypenames: ['{{namePascalCase}}'],
-    }), []),
+    context: useMemo(
+      () => ({
+        additionalTypenames: ['{{namePascalCase}}'],
+      }),
+      []
+    ),
   })
-  if (error) {
-    return (
-      <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
-    )
-  }
-  if (fetching) {
-    return <LoadingIndicator />
-  }
-  const fields = [{%for field in fields%}
-    {
-      key: '{{ field.fieldNameCamelCase }}',
-      label: '{{ field.fieldNamePascalCase }}',
-      value: (data: any) => data.{{ field.fieldNameCamelCase }}
-    },{%endfor%}
-  ].filter((elem) => !(props as any)[elem.key])
   return (
     <ActionSection
       header={props.showHeader ? '{{namePascalCase}} Details' : undefined}
@@ -67,9 +59,17 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
     >
       <DataList
         primaryKey="id"
-        fields={fields}
-        rows={data.{{namePluralCamelCase}}{{ "}" }}
-        showUrl={(row: any) => '/{{ namePluralKebabCase }}/' + row.id}
+        fields={[{%for field in fields%}
+          {
+            key: '{{ field.fieldNameCamelCase }}',
+            label: '{{ field.fieldNamePascalCase }}',
+            value: (data: any) => data.{{ field.fieldNameCamelCase }}
+          },{%endfor%}
+        ].filter((field) => !(props as any)[field.key])}
+        errorMessage={error?.message}
+        fetching={fetching}
+        rows={data?.{{namePluralCamelCase}}{{ "}" }}
+        showUrl={(row: any) => `/{{ namePluralKebabCase }}/${row.id}`}
         onEdit={(row: any) => setEditorState({ show: true, id: row.id })}
         onDelete={(row: any) => delete{{namePascalCase}}(row.id)}
       />

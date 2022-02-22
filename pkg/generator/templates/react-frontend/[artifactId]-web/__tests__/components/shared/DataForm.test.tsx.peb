@@ -1,0 +1,170 @@
+import { fireEvent, render, screen } from '@testing-library/react'
+import {
+  DataForm,
+  DataFormField,
+  DataFormFieldType,
+} from '../../../src/components/shared/DataForm'
+
+const allTypes = [
+  DataFormFieldType.RELATIONAL,
+  DataFormFieldType.RELATIONAL_OPTIONAL,
+  DataFormFieldType.STRING,
+  DataFormFieldType.STRING_OPTIONAL,
+  DataFormFieldType.TEXT,
+  DataFormFieldType.TEXT_OPTIONAL,
+  DataFormFieldType.DATE,
+  DataFormFieldType.DATE_OPTIONAL,
+  DataFormFieldType.DATETIME,
+  DataFormFieldType.DATETIME_OPTIONAL,
+  DataFormFieldType.INT,
+  DataFormFieldType.INT_OPTIONAL,
+]
+
+describe('DataForm', () => {
+  it('shows loading indicator if fetching is true', () => {
+    const employee = {
+      name: 'John Doe',
+    }
+    const fields: DataFormField[] = [
+      {
+        name: 'name',
+        type: DataFormFieldType.STRING,
+        label: 'Name',
+      },
+    ]
+    render(
+      <DataForm
+        fields={fields}
+        value={employee}
+        fetching={true}
+        onSubmit={null}
+        onCancel={null}
+      />
+    )
+    expect(screen.getByTestId('loadingIndicator')).not.toBeNull()
+  })
+
+  it('shows error message if errorMessage is provided', () => {
+    const employee = {
+      name: 'John Doe',
+    }
+    const fields: DataFormField[] = [
+      {
+        name: 'name',
+        type: DataFormFieldType.STRING,
+        label: 'Name',
+      },
+    ]
+    render(
+      <DataForm
+        fields={fields}
+        value={employee}
+        errorMessage={'Some Error Message'}
+        onSubmit={null}
+        onCancel={null}
+      />
+    )
+    expect(screen.getByText('Some Error Message')).not.toBeNull()
+  })
+
+  it('renders fields with values', () => {
+    const employee = {
+      name: 'John Doe',
+    }
+    const fields: DataFormField[] = [
+      {
+        name: 'name',
+        type: DataFormFieldType.STRING,
+        label: 'Name',
+      },
+    ]
+    render(
+      <DataForm
+        fields={fields}
+        value={employee}
+        onSubmit={null}
+        onCancel={null}
+      />
+    )
+    expect(screen.queryByText('Name')).not.toBeNull()
+    expect(screen.queryByRole('textbox')).toContainHTML('John Doe')
+  })
+
+  allTypes.forEach((type) => {
+    it('renders for this type of field', () => {
+      const fields: DataFormField[] = [
+        {
+          name: 'field',
+          type,
+          label: 'Field',
+        },
+      ]
+      expect(() =>
+        render(
+          <DataForm
+            fields={fields}
+            value={null}
+            onSubmit={null}
+            onCancel={null}
+          />
+        )
+      ).not.toThrow()
+    })
+  })
+
+  it('submits when Submit is clicked', () => {
+    const employee = {
+      name: 'John Doe',
+    }
+    const fields: DataFormField[] = [
+      {
+        name: 'name',
+        type: DataFormFieldType.STRING,
+        label: 'Name',
+      },
+    ]
+    const submitFn = jest.fn()
+    render(
+      <DataForm
+        fields={fields}
+        value={employee}
+        onSubmit={submitFn}
+        onCancel={null}
+      />
+    )
+    fireEvent(screen.queryByText('Save'), new MouseEvent('click'))
+    expect(submitFn).toBeCalledWith({
+      name: 'John Doe',
+    })
+  })
+
+  it('cancels when Cancel is clicked', () => {
+    const employee = {
+      name: 'John Doe',
+    }
+    const fields: DataFormField[] = [
+      {
+        name: 'name',
+        type: DataFormFieldType.STRING,
+        label: 'Name',
+      },
+    ]
+    const cancelFn = jest.fn()
+    render(
+      <DataForm
+        fields={fields}
+        value={employee}
+        onSubmit={null}
+        onCancel={cancelFn}
+      />
+    )
+    fireEvent(
+      screen.queryByText('Cancel'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
+    )
+    expect(cancelFn).toBeCalled()
+  })
+})

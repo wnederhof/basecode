@@ -1,0 +1,78 @@
+import { fireEvent, render, screen } from '@testing-library/react'
+import { {{ namePascalCase }}Details } from '../../../src/components/app/{{ nameCamelCase }}/{{ namePascalCase }}Details'
+import { Provider } from 'urql'
+import { fromValue, never } from 'wonka'
+
+describe('{{ namePascalCase }}Details', () => {
+  const {{ nameCamelCase }} = {
+    id: '1'{%for field in fields%},
+    {{field.fieldNameCamelCase}}: {{field.fieldVueTypescriptTestValue}}{%endfor%}
+  }
+
+  it('renders details when data is fetched', () => {
+    const mockClient: any = {
+      executeQuery: () =>
+        fromValue({
+          data: { {{ nameCamelCase }} },
+        }),
+      executeMutation: jest.fn(),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}Details id="1" />
+      </Provider>
+    ){%for field in fields%}
+    expect(screen.getByText('' + {{ nameCamelCase }}.{{ field.fieldNameCamelCase }})).not.toBeNull(){%endfor%}
+  })
+
+  it('calls history.back when Back is pressed', () => {
+    const mockClient: any = {
+      executeQuery: () =>
+        fromValue({
+          data: { {{ nameCamelCase }} },
+        }),
+      executeMutation: jest.fn(),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}Details id="1" />
+      </Provider>
+    )
+    const backFn = jest.spyOn(history, 'back' as any).mockReturnValue(undefined)
+    fireEvent(
+      screen.queryByText('Back'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
+    )
+    expect(backFn).toBeCalled()
+  })
+
+  it('opens the edit modal when edit is clicked', () => {
+    const mockClient: any = {
+      executeQuery: () =>
+        fromValue({
+          data: { {{ nameCamelCase }} },
+        }),
+      executeMutation: jest.fn(),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}Details id="1" />
+      </Provider>
+    )
+    expect(screen.queryByText('Edit {{ namePascalCase }}')).toBeNull()
+    fireEvent(
+      screen.queryByText('Edit'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
+    )
+    expect(screen.queryByText('Edit {{ namePascalCase }}')).not.toBeNull()
+  })
+})

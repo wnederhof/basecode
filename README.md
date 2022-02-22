@@ -79,11 +79,11 @@ When both the backend and frontend are running, you can build your next best thi
 ## TODO
 - X Use DGS
 - X Use NextJS and/or Angular instead of NuxtJS?
-- Id as LONG
-- Fix SSR using Next-URQL
+- X Fix relationships
 - Add tests
 - Default Tailwind?
-- Fix relationships
+- Fix SSR using Next-URQL
+- Id as LONG
 
 ## License
 Licensed under [MIT](LICENSE.md).

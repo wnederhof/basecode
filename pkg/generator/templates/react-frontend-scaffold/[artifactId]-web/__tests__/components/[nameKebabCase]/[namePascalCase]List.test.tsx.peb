@@ -1,0 +1,184 @@
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { {{ namePascalCase }}List } from '../../../src/components/app/{{ nameCamelCase }}/{{ namePascalCase }}List'
+import { CombinedError, Provider } from 'urql'
+import { fromValue, never } from 'wonka'
+
+describe('{{ namePascalCase }}List', () => {
+  const {{ nameCamelCase }} = {
+    id: '1'{%for field in fields%},
+    {{field.fieldNameCamelCase}}: {{field.fieldVueTypescriptTestValue}}{%endfor%}
+  }
+
+  it('forwards to {{ nameCamelCase }} page on Show', () => {
+    const mockClient: any = {
+      executeQuery: () =>
+        fromValue({
+          data: {
+            {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
+          },
+        }),
+      executeMutation: jest.fn(),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}List />
+      </Provider>
+    )
+    expect(screen.getByText('Show')).toHaveAttribute('href', '/{{ namePluralCamelCase }}/1')
+  })
+
+  it('renders entries when data is fetched', () => {
+    const mockClient: any = {
+      executeQuery: () =>
+        fromValue({
+          data: {
+            {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
+          },
+        }),
+      executeMutation: jest.fn(),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}List />
+      </Provider>
+    ){%for field in fields%}
+    expect(screen.getByRole('form')).toHaveFormValues({{ nameCamelCase }}){%endfor%}
+  })
+
+  it('opens modal when edit is clicked', () => {
+    const mockClient: any = {
+      executeQuery: () =>
+        fromValue({
+          data: {
+            {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
+          },
+        }),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}List />
+      </Provider>
+    )
+    expect(screen.queryByText('Edit {{ namePascalCase }}')).toBeNull()
+    fireEvent(
+      screen.queryByText('Edit'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
+    )
+    expect(screen.queryByText('Edit {{ namePascalCase }}')).not.toBeNull()
+  })
+
+  it('closes modal when Save is clicked', async () => {
+    const mockClient: any = {
+      executeQuery: () =>
+        fromValue({
+          data: {
+            {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
+          },
+        }),
+      executeMutation: () =>
+        fromValue({
+          data: {},
+        }),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}List />
+      </Provider>
+    )
+    fireEvent(
+      screen.getByText('Edit'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
+    )
+    await waitFor(() => {
+      fireEvent(
+        screen.getByText('Save'),
+        new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+        })
+      )
+    })
+    expect(screen.queryByText('Edit {{ namePascalCase }}')).toBeNull()
+  })
+
+  it('closes modal when Save is clicked', async () => {
+    const mockClient: any = {
+      executeQuery: () =>
+        fromValue({
+          data: {
+            {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
+          },
+        }),
+      executeMutation: () =>
+        fromValue({
+          data: {},
+        }),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}List />
+      </Provider>
+    )
+    fireEvent(
+      screen.getByText('Edit'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
+    )
+    await waitFor(() => {
+      fireEvent(
+        screen.getByText('Cancel'),
+        new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+        })
+      )
+    })
+    expect(screen.queryByText('Edit {{ namePascalCase }}')).toBeNull()
+  })
+
+  it('calls mutation when Delete is clicked and confirmed', async () => {
+    jest.spyOn(global, 'confirm' as any).mockReturnValueOnce(true)
+    const mockClient: any = {
+      executeQuery: () =>
+        fromValue({
+          data: {
+            {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
+          },
+        }),
+      executeMutation: jest.fn(() =>
+        fromValue({
+          data: {},
+        })
+      ),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}List />
+      </Provider>
+    )
+    await waitFor(() => {
+      fireEvent(
+        screen.getByText('Delete'),
+        new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+        })
+      )
+    })
+    expect(mockClient.executeMutation).toBeCalled()
+  })
+})

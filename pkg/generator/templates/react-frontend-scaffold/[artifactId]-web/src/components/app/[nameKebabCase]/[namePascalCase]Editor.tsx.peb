@@ -1,9 +1,7 @@
-import { DataForm, DataFormField, DataFormFieldType } from '@components/shared/DataForm'
-import { ErrorMessage } from '@components/shared/ErrorMessage'
-import { gql, useQuery, useMutation } from 'urql'
-import { useMemo } from "react";
+import { DataForm, DataFormFieldType } from '@components/shared/DataForm'
+import { gql, useMutation, useQuery } from 'urql'
+import { useMemo } from 'react'
 import { ActionSection } from '@components/shared/ActionSection'
-import { LoadingIndicator } from '@components/shared/LoadingIndicator'
 
 export interface {{ namePascalCase }}EditorProps {
   id?: string{%for field in fields%}{%if field.isFieldRelational%}
@@ -19,82 +17,74 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
       create{{namePascalCase}}(input: $input) {
         id
       }
-    }`
-  )
+    }
+  `)
   const [, executeUpdateMutation] = useMutation(gql`
     mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
       update{{namePascalCase}}(id: $id, input: $input) {
         id
       }
-    }`
-  )
+    }
+  `)
   const doSubmit = (formData: any) => {
     if (props.id) {
-      executeUpdateMutation({id: props.id, input: formData})
+      executeUpdateMutation({ id: props.id, input: formData })
         .then(() => props.onSave())
-        .catch(_reason => alert('Update failed.'))
+        .catch((reason) => alert(`Updating {{ nameCamelCase }} failed. Reason: ${reason}`))
     } else {
-      executeCreateMutation({input: formData})
+      executeCreateMutation({ input: formData })
         .then(() => props.onSave())
-        .catch(_reason => alert('Create failed.'))
+        .catch((reason) => alert(`Creating {{ nameCamelCase }} failed. Reason: ${reason}`))
     }
   }
   const [{ data, error, fetching }] = useQuery({
-    query: gql`query {{nameCamelCase}}($id: ID!) {
-      {{nameCamelCase}}(id: $id) {
-        id{%for field in fields%}
-        {{field.fieldNameCamelCase}}{%endfor%}
+    query: gql`
+      query {{nameCamelCase}}($id: ID!) {
+        {{nameCamelCase}}(id: $id) {
+          id{%for field in fields%}
+          {{field.fieldNameCamelCase}}{%endfor%}
+        }
       }
-    }`,
+    `,
     pause: !props.id,
     variables: { id: props.id },
-    context: useMemo(() => ({
-      additionalTypenames: ['{{namePascalCase}}'],
-    }), []),
+    context: useMemo(
+      () => ({
+        additionalTypenames: ['{{namePascalCase}}'],
+      }),
+      []
+    ),
   }){%for field in fields%}{%if field.isFieldRelational%}
   const [{{ field.fieldTypePluralCamelCase }}QueryResult] = useQuery({
-    query: gql`query {{field.fieldTypePluralCamelCase}} {
-      {{field.fieldTypePluralCamelCase}} {
-        id
+    query: gql`
+      query {{field.fieldTypePluralCamelCase}} {
+        {{field.fieldTypePluralCamelCase}} {
+          id
+        }
       }
-    }`,
-    context: useMemo(() => ({
-      additionalTypenames: ['{{field.fieldTypePascalCase}}'],
-    }), []),
+    `,
+    context: useMemo(
+      () => ({
+        additionalTypenames: ['{{field.fieldTypePascalCase}}'],
+      }),
+      []
+    ),
   }){%endif%}{%endfor%}
-  if (error) {
-    return (
-      <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
-    )
-  }
-  if (fetching) {
-    return <LoadingIndicator />
-  }{%for field in fields%}{%if field.isFieldRelational%}
-  if ({{ field.fieldTypePluralCamelCase }}QueryResult.error) {
-    return (
-      <ErrorMessage message={`Unable to load {{ field.fieldTypePluralCamelCase }}. Cause: ${{ "{" }}{{ field.fieldTypePluralCamelCase }}QueryResult.error.message{{ "}" }}`} />
-    )
-  }
-  if ({{ field.fieldTypePluralCamelCase }}QueryResult.fetching) {
-    return <LoadingIndicator />
-  }{%endif%}{%endfor%}
-  const fields: DataFormField[] = [{%for field in fields%}
-    {
-      name: '{{ field.fieldNameCamelCase }}',
-      label: '{{ field.fieldNamePascalCase }}',
-      type: DataFormFieldType.{{ field.fieldInputType }}{% if field.isFieldRelational %},
-      options: {{ field.fieldTypePluralCamelCase }}QueryResult.data.{{ field.fieldTypePluralCamelCase }}.map(({{ field.fieldTypeCamelCase }}: any) => {
-        return {label: {{ field.fieldTypeCamelCase }}.id, value: {{ field.fieldTypeCamelCase }}.id}
-      }){%endif%}
-    },{%endfor%}
-  ].filter(elem => !(props as any)[elem.name])
-  if (props.id && !data) return <></>
   return (
-    <ActionSection
-      header={props.showHeader ? "{{namePascalCase}} Details" : undefined}
-    >
+    <ActionSection header={props.showHeader ? "{{namePascalCase}} Details" : undefined}>
       <DataForm
-        fields={fields}
+        errorMessage={error?.message{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.error?.message{%endif%}{%endfor%}}
+        fetching={fetching{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.fetching{%endif%}{%endfor%}}
+        fields={[{%for field in fields%}
+          {
+            name: '{{ field.fieldNameCamelCase }}',
+            label: '{{ field.fieldNamePascalCase }}',
+            type: DataFormFieldType.{{ field.fieldInputType }}{% if field.isFieldRelational %},
+            options: {{ field.fieldTypePluralCamelCase }}QueryResult.data.{{ field.fieldTypePluralCamelCase }}.map(({{ field.fieldTypeCamelCase }}: any) => {
+              return {label: {{ field.fieldTypeCamelCase }}.id, value: {{ field.fieldTypeCamelCase }}.id}
+            }){%endif%}
+          },{%endfor%}
+        ].filter(field => !(props as any)[field.name])}
         value={data?.{{ nameCamelCase }}{{ "}" }}
         onSubmit={doSubmit}
         onCancel={props.onCancel}

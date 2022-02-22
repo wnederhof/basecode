@@ -1,0 +1,128 @@
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { {{ namePascalCase }}Editor } from '../../../src/components/app/{{ nameCamelCase }}/{{ namePascalCase }}Editor'
+import { Provider } from 'urql'
+import { fromValue } from 'wonka'
+
+describe('{{ namePascalCase }}Editor', () => {
+  const {{ nameCamelCase }} = {
+    id: '1'{%for field in fields%},
+    {{field.fieldNameCamelCase}}: {{field.fieldVueTypescriptTestValue}}{%endfor%}
+  }
+
+  it('renders form containing the necessary fields', () => {
+    const mockClient: any = {
+      executeQuery: jest.fn(),
+      executeMutation: jest.fn(),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}Editor onSave={jest.fn()} onCancel={jest.fn()} />
+      </Provider>
+    ){%for field in fields%}
+    expect(screen.queryByText('{{ field.fieldNamePascalCase }}')).not.toBeNull(){%endfor%}
+    expect(mockClient.executeQuery).not.toBeCalled()
+  })
+
+  it('renders form containing existing data if id is passed', () => {
+    const mockClient: any = {
+      executeQuery: () =>
+        fromValue({
+          data: { {{ nameCamelCase }} },
+        }),
+      executeMutation: jest.fn(),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}Editor id="1" onSave={jest.fn()} onCancel={jest.fn()} />
+      </Provider>
+    )
+    expect(screen.getByRole('form')).toHaveFormValues({{ nameCamelCase }}){%endfor%}
+  })
+
+  it('calls a mutation if Save is clicked if there is an id', async () => {
+    const mockClient: any = {
+      executeQuery: () =>
+        fromValue({
+          data: { {{ nameCamelCase }} },
+        }),
+      executeMutation: jest.fn(() =>
+        fromValue({
+          data: {},
+        })
+      ),
+      executeSubscription: jest.fn(),
+    }
+    const saveFn = jest.fn()
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}Editor id="1" onSave={saveFn} onCancel={jest.fn()} />
+      </Provider>
+    )
+    await waitFor(() => {
+      fireEvent(
+        screen.queryByText('Save'),
+        new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+        })
+      )
+    })
+    expect(mockClient.executeMutation).toBeCalled()
+    expect(saveFn).toBeCalled()
+  })
+
+  it('calls a mutation if Save is clicked if there is no id', async () => {
+    const mockClient: any = {
+      executeQuery: jest.fn(),
+      executeMutation: jest.fn(() =>
+        fromValue({
+          data: {},
+        })
+      ),
+      executeSubscription: jest.fn(),
+    }
+    const saveFn = jest.fn()
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}Editor onSave={saveFn} onCancel={jest.fn()} />
+      </Provider>
+    )
+    await waitFor(() => {
+      fireEvent(
+        screen.queryByText('Save'),
+        new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+        })
+      )
+    })
+    expect(mockClient.executeMutation).toBeCalled()
+    expect(saveFn).toBeCalled()
+  })
+
+  it('triggers onCancel when Cancel is pressed', async () => {
+    const mockClient: any = {
+      executeQuery: () => jest.fn(),
+      executeMutation: jest.fn(),
+      executeSubscription: jest.fn(),
+    }
+    const cancelFn = jest.fn()
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}Editor onSave={jest.fn()} onCancel={cancelFn} />
+      </Provider>
+    )
+    await waitFor(() => {
+      fireEvent(
+        screen.queryByText('Cancel'),
+        new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+        })
+      )
+    })
+    expect(cancelFn).toBeCalled()
+  })
+})

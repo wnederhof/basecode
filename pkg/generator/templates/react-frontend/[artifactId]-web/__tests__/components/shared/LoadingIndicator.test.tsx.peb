@@ -1,0 +1,10 @@
+import { render, screen } from '@testing-library/react'
+import { LoadingIndicator } from '../../../src/components/shared/LoadingIndicator'
+
+describe('LoadingIndicator', () => {
+  it('renders loading text', () => {
+    render(<LoadingIndicator />)
+
+    expect(screen.getByText('Loading...')).not.toBeNull()
+  })
+})

@@ -1,3 +1,6 @@
+import { LoadingIndicator } from '@components/shared/LoadingIndicator'
+import { ErrorMessage } from '@components/shared/ErrorMessage'
+
 export interface DataDetailsField {
   key: string
   label: string
@@ -6,10 +9,22 @@ export interface DataDetailsField {
 
 export interface DataDetailsProps {
   fields: DataDetailsField[]
+  errorMessage?: string
+  fetching?: boolean
   value: any
 }
 
+function extractValue(field: DataDetailsField, value: any) {
+  return value && (field.value ? field.value(value) : value[field.key])
+}
+
 export function DataDetails(props: DataDetailsProps) {
+  if (props.fetching) {
+    return <LoadingIndicator />
+  }
+  if (props.errorMessage) {
+    return <ErrorMessage message={props.errorMessage} />
+  }
   if (!props.value) {
     return <div>No record found.</div>
   }
@@ -19,7 +34,7 @@ export function DataDetails(props: DataDetailsProps) {
         {props.fields.map((field) => (
           <tr key={field.key}>
             <td>{field.label}</td>
-            <td>{props.value && (props.value as any)[field.key]}</td>
+            <td>{extractValue(field, props.value)}</td>
           </tr>
         ))}
       </tbody>

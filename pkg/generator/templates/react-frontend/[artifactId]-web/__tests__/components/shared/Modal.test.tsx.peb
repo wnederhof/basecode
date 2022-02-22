@@ -1,0 +1,23 @@
+import { render, screen } from '@testing-library/react'
+import { Modal } from '../../../src/components/shared/Modal'
+
+describe('Modal', () => {
+  it('renders nothing if visible is false', () => {
+    render(
+      <Modal visible={false} title="Some Title">
+        <p>Some Text</p>
+      </Modal>
+    )
+    expect(screen.queryByText('Some Title')).toBeNull()
+  })
+
+  it('renders title and children if visible is true', () => {
+    render(
+      <Modal visible={true} title="Some Title">
+        <p>Some Text</p>
+      </Modal>
+    )
+    expect(screen.queryByText('Some Title')).not.toBeNull()
+    expect(screen.queryByText('Some Text')).not.toBeNull()
+  })
+})

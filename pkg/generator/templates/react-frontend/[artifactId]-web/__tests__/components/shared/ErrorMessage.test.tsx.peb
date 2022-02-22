@@ -1,0 +1,10 @@
+import { render, screen } from '@testing-library/react'
+import { ErrorMessage } from '../../../src/components/shared/ErrorMessage'
+
+describe('ErrorMessage', () => {
+  it('renders error message', () => {
+    render(<ErrorMessage message="some-error" />)
+
+    expect(screen.getByText('some-error')).not.toBeNull()
+  })
+})

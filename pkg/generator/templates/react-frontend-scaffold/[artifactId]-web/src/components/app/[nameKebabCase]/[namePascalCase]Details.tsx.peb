@@ -1,19 +1,9 @@
 import { Modal } from '@components/shared/Modal'
-import { DataDetails, DataDetailsField } from '@components/shared/DataDetails'
-import { ErrorMessage } from '@components/shared/ErrorMessage'
+import { DataDetails } from '@components/shared/DataDetails'
 import { gql, useQuery } from 'urql'
-import { ActionSection } from "@components/shared/ActionSection";
-import { useState, useMemo, ReactNode } from 'react'
+import { ActionSection } from '@components/shared/ActionSection'
+import { ReactNode, useMemo, useState } from 'react'
 import { {{ namePascalCase }}Editor } from '@components/app/{{ nameCamelCase }}/{{ namePascalCase }}Editor'
-import { LoadingIndicator } from '@components/shared/LoadingIndicator'
-
-const fields: DataDetailsField[] = [{%for field in fields%}
-  {
-    key: '{{ field.fieldNameCamelCase }}',
-    label: '{{ field.fieldNamePascalCase }}',
-    value: (data: any) => data.{{ field.fieldNameCamelCase }}
-  },{%endfor%}
-]
 
 export interface {{ namePascalCase }}DetailsProps {
   id: string{%for field in fields%}{%if field.isFieldRelational%}
@@ -34,18 +24,13 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
       }
     }`,
     variables: { id: props.id },
-    context: useMemo(() => ({
-      additionalTypenames: ['{{namePascalCase}}'],
-    }), []),
+    context: useMemo(
+      () => ({
+        additionalTypenames: ['{{namePascalCase}}'],
+      }),
+      []
+    ),
   })
-  if (error) {
-    return (
-      <ErrorMessage message={`Unable to load {{ namePluralCamelCase }}. Cause: ${error.message}`} />
-    )
-  }
-  if (fetching) {
-    return <LoadingIndicator />
-  }
   return (
     <ActionSection
       header={props.showHeader ? "{{namePascalCase}} Details" : undefined}
@@ -53,14 +38,19 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
       onBack={props.showBack ? () => history.back() : undefined}
     >
       <DataDetails
-        fields={fields}
+        fetching={fetching}
+        errorMessage={error?.message}
+        fields={[{%for field in fields%}
+          {
+            key: '{{ field.fieldNameCamelCase }}',
+            label: '{{ field.fieldNamePascalCase }}',
+            value: (data: any) => data.{{ field.fieldNameCamelCase }}
+          },{%endfor%}
+        ].filter((field) => !(props as any)[field.name])}
         value={data.{{ nameCamelCase }}{{ "}" }}
       />
       {props.children}
-      <Modal
-        title="Edit {{namePascalCase}}"
-        visible={{ "{" }}showEditor{{ "}" }}
-      >
+      <Modal title="Edit {{namePascalCase}}" visible={{ "{" }}showEditor{{ "}" }}>
         <{{namePascalCase}}Editor
           id={props.id}{%for field in fields%}{%if field.isFieldRelational%}
           {{ field.fieldNameCamelCase }}={props.{{ field.fieldNameCamelCase }}{{ "}" }}{%endif%}{%endfor%}
