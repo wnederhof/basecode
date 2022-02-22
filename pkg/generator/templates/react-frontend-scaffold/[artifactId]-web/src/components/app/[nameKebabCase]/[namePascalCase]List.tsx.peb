@@ -26,7 +26,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
     executeDeleteMutation(
       { id },
       { additionalTypenames: ['{{ namePascalCase }}'] }
-    ).catch((reason) => alert('Deleting {{ namePascalCase }} failed. Reason: ${reason}'))
+    ).catch((reason) => alert(`Deleting {{ namePascalCase }} failed. Reason: ${reason}`))
   }
   const [editorState, setEditorState] = useState<{{ namePascalCase }}EditorState>({
     show: false
@@ -41,8 +41,8 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
       }
     `,{%if hasRelations%}
     variables: {
-      filter: {{ "{" }}{%for field in fields%}
-        {{field.fieldNameCamelCase}}: props.{{field.fieldNameCamelCase}}{%endfor%}
+      filter: {{ "{" }}{%for field in fields%}{%if field.isFieldRelational%}
+        {{field.fieldNameCamelCase}}: props.{{field.fieldNameCamelCase}},{%endif%}{%endfor%}
       }
     },{%endif%}
     context: useMemo(

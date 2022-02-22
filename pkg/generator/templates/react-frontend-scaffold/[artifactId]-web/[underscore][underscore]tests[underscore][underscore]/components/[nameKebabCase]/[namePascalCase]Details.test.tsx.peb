@@ -23,7 +23,7 @@ describe('{{ namePascalCase }}Details', () => {
         <{{ namePascalCase }}Details id="1" />
       </Provider>
     ){%for field in fields%}
-    expect(screen.getByText('' + {{ nameCamelCase }}.{{ field.fieldNameCamelCase }})).not.toBeNull(){%endfor%}
+    expect(screen.getAllByText('' + {{ nameCamelCase }}.{{ field.fieldNameCamelCase }}).length).not.toBe(0){%endfor%}
   })
 
   it('calls history.back when Back is pressed', () => {
@@ -37,7 +37,7 @@ describe('{{ namePascalCase }}Details', () => {
     }
     render(
       <Provider value={mockClient}>
-        <{{ namePascalCase }}Details id="1" />
+        <{{ namePascalCase }}Details id="1" showBack />
       </Provider>
     )
     const backFn = jest.spyOn(history, 'back' as any).mockReturnValue(undefined)
@@ -62,7 +62,7 @@ describe('{{ namePascalCase }}Details', () => {
     }
     render(
       <Provider value={mockClient}>
-        <{{ namePascalCase }}Details id="1" />
+        <{{ namePascalCase }}Details id="1" showEdit />
       </Provider>
     )
     expect(screen.queryByText('Edit {{ namePascalCase }}')).toBeNull()

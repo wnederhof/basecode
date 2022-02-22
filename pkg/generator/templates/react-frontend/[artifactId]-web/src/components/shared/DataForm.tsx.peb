@@ -45,6 +45,7 @@ const formElements = {
     onUpdate: any
   ) => (
     <select
+      name={field.name}
       required
       defaultValue={value}
       onChange={(event) => onUpdate(event.target.value)}
@@ -67,6 +68,7 @@ const formElements = {
     onUpdate: any
   ) => (
     <select
+      name={field.name}
       defaultValue={value}
       onChange={(event) => onUpdate(event.target.value)}
     >
@@ -217,6 +219,7 @@ function LoadedDataForm(props: DataFormProps) {
   const [formData, setFormData] = useState(initialFormData)
   return (
     <form
+      role="form"
       onSubmit={(e) => {
         e.preventDefault()
         props.onSubmit(formData)

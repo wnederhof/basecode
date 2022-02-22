@@ -25,7 +25,7 @@ describe('{{ namePascalCase }}List', () => {
         <{{ namePascalCase }}List />
       </Provider>
     )
-    expect(screen.getByText('Show')).toHaveAttribute('href', '/{{ namePluralCamelCase }}/1')
+    expect(screen.getByText('Show')).toHaveAttribute('href', '/{{ namePluralKebabCase }}/1')
   })
 
   it('renders entries when data is fetched', () => {
@@ -44,7 +44,7 @@ describe('{{ namePascalCase }}List', () => {
         <{{ namePascalCase }}List />
       </Provider>
     ){%for field in fields%}
-    expect(screen.getByRole('form')).toHaveFormValues({{ nameCamelCase }}){%endfor%}
+    expect(screen.getAllByText('' + {{ nameCamelCase }}.{{ field.fieldNameCamelCase }}).length).not.toBe(0){%endfor%}
   })
 
   it('opens modal when edit is clicked', () => {

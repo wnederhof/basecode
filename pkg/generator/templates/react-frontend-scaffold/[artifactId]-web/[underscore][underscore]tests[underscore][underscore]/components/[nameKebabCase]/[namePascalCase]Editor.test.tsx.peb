@@ -21,14 +21,16 @@ describe('{{ namePascalCase }}Editor', () => {
       </Provider>
     ){%for field in fields%}
     expect(screen.queryByText('{{ field.fieldNamePascalCase }}')).not.toBeNull(){%endfor%}
-    expect(mockClient.executeQuery).not.toBeCalled()
   })
 
   it('renders form containing existing data if id is passed', () => {
     const mockClient: any = {
       executeQuery: () =>
         fromValue({
-          data: { {{ nameCamelCase }} },
+          data: {
+            {{ nameCamelCase }}{%for field in fields%}{%if field.isFieldRelational%},
+            {{field.fieldTypePluralCamelCase}}: [{ id: 1 }]{%endif%}{%endfor%}
+          }
         }),
       executeMutation: jest.fn(),
       executeSubscription: jest.fn(),
@@ -37,8 +39,14 @@ describe('{{ namePascalCase }}Editor', () => {
       <Provider value={mockClient}>
         <{{ namePascalCase }}Editor id="1" onSave={jest.fn()} onCancel={jest.fn()} />
       </Provider>
-    ){%for field in fields%}
-    expect(screen.getByRole('form')).toHaveFormValues({{ nameCamelCase }}){%endfor%}
+    )
+    const expectedFormValues = {
+      ...{{ nameCamelCase }},
+      id: undefined{%for field in fields%}{%if field.isFieldRelational%},
+      {{field.fieldNameCamelCase}}: '1'{%endif%}{%endfor%}
+    }
+    delete expectedFormValues.id
+    expect(screen.getByRole('form')).toHaveFormValues(expectedFormValues)
   })
 
   it('calls a mutation if Save is clicked if there is an id', async () => {
@@ -104,7 +112,7 @@ describe('{{ namePascalCase }}Editor', () => {
 
   it('triggers onCancel when Cancel is pressed', async () => {
     const mockClient: any = {
-      executeQuery: () => jest.fn(),
+      executeQuery: () => fromValue({ data: {} }),
       executeMutation: jest.fn(),
       executeSubscription: jest.fn(),
     }

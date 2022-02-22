@@ -4,5 +4,10 @@ import { useRouter } from 'next/router'
 export default function {{namePascalCase}}Id() {
   const router = useRouter()
   const { {{nameCamelCase}}Id } = router.query
-  return <{{ namePascalCase }}Details showHeader id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }} showBack />
+  return <{{ namePascalCase }}Details
+    id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }}
+    showHeader
+    showEdit
+    showBack
+  />
 }
