@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { {{ namePascalCase }}Editor } from '../../../src/components/app/{{ nameCamelCase }}/{{ namePascalCase }}Editor'
+import { {{ namePascalCase }}Editor } from '../../../src/components/app/{{ nameKebabCase }}/{{ namePascalCase }}Editor'
 import { Provider } from 'urql'
 import { fromValue } from 'wonka'
 
@@ -37,7 +37,7 @@ describe('{{ namePascalCase }}Editor', () => {
       <Provider value={mockClient}>
         <{{ namePascalCase }}Editor id="1" onSave={jest.fn()} onCancel={jest.fn()} />
       </Provider>
-    )
+    ){%for field in fields%}
     expect(screen.getByRole('form')).toHaveFormValues({{ nameCamelCase }}){%endfor%}
   })
 

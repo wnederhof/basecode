@@ -3,7 +3,7 @@ import { gql, useMutation, useQuery } from 'urql'
 import { ActionSection } from '@components/shared/ActionSection'
 import { Modal } from '@components/shared/Modal'
 import { ReactNode, useMemo, useState } from 'react'
-import { {{namePascalCase}}Editor } from '@components/app/{{ nameCamelCase }}/{{namePascalCase}}Editor'
+import { {{namePascalCase}}Editor } from '@components/app/{{ nameKebabCase }}/{{namePascalCase}}Editor'
 
 export interface {{ namePascalCase }}EditorState {
   show: boolean

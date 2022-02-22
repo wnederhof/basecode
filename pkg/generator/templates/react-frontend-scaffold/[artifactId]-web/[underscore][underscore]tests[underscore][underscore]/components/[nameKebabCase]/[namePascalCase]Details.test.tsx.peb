@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { {{ namePascalCase }}Details } from '../../../src/components/app/{{ nameCamelCase }}/{{ namePascalCase }}Details'
+import { {{ namePascalCase }}Details } from '../../../src/components/app/{{ nameKebabCase }}/{{ namePascalCase }}Details'
 import { Provider } from 'urql'
 import { fromValue, never } from 'wonka'
 
