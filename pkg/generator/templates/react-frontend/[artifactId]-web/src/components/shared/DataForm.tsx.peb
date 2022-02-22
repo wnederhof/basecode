@@ -220,7 +220,7 @@ function LoadedDataForm(props: DataFormProps) {
       onSubmit={(e) => {
         e.preventDefault()
         props.onSubmit(formData)
-      }}
+      {{ "}}" }}
     >
       <table>
         <tbody>
