@@ -90,6 +90,7 @@ const formElements = {
   ) => (
     <input
       name={field.name}
+      type="text"
       defaultValue={value}
       onChange={(e) => onUpdate(e.target.value)}
       required
@@ -102,6 +103,7 @@ const formElements = {
   ) => (
     <input
       name={field.name}
+      type="text"
       defaultValue={value}
       onChange={(e) => onUpdate(e.target.value)}
     />

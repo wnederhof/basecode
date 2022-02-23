@@ -32,7 +32,11 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
         .then(() => props.onSave())
         .catch((reason) => alert(`Updating {{ nameCamelCase }} failed. Reason: ${reason}`))
     } else {
-      executeCreateMutation({ input: formData })
+      {%if hasRelations%}const formDataWithRelations = {
+        {%for field in fields%}{%if field.isFieldRelational%}{{ field.fieldNameCamelCase }}: props.{{ field.fieldNameCamelCase }},
+        {%endif%}{%endfor%}...formData
+      }
+      {%endif%}executeCreateMutation({ input: formData{%if hasRelations%}WithRelations{%endif%} })
         .then(() => props.onSave())
         .catch((reason) => alert(`Creating {{ nameCamelCase }} failed. Reason: ${reason}`))
     }

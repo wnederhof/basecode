@@ -47,7 +47,7 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
             value: (data: any) => data.{{ field.fieldNameCamelCase }}
           },{%endfor%}
         ].filter((field) => !(props as any)[field.key])}
-        value={data.{{ nameCamelCase }}{{ "}" }}
+        value={data?.{{ nameCamelCase }}{{ "}" }}
       />
       {props.children}
       <Modal title="Edit {{namePascalCase}}" visible={{ "{" }}showEditor{{ "}" }}>

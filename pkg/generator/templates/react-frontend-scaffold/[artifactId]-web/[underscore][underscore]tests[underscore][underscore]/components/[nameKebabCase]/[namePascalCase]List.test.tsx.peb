@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { {{ namePascalCase }}List } from '../../../src/components/app/{{ nameKebabCase }}/{{ namePascalCase }}List'
-import { CombinedError, Provider } from 'urql'
-import { fromValue, never } from 'wonka'
+import { Provider } from 'urql'
+import { fromValue } from 'wonka'
 
 describe('{{ namePascalCase }}List', () => {
   const {{ nameCamelCase }} = {

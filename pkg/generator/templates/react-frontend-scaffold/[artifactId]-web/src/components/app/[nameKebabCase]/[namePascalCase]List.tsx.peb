@@ -54,7 +54,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
   })
   return (
     <ActionSection
-      header={props.showHeader ? '{{namePascalCase}} Details' : undefined}
+      header={props.showHeader ? '{{namePascalCase}} Overview' : undefined}
       onNew={() => setEditorState({ show: true })}
     >
       <DataList
