@@ -6,6 +6,7 @@ export interface DataListField {
   key: string
   label: string
   value?: (data: any) => any
+  hidden?: boolean
 }
 
 export interface DataListProps<FieldType> {
@@ -39,7 +40,7 @@ export function DataList<T>(props: DataListProps<T>) {
     <table>
       <thead>
         <tr>
-          {props.fields.map((field) => (
+          {props.fields.filter((field) => !field.hidden).map((field) => (
             <th key={field.key}>{field.label}</th>
           ))}
           <th />
@@ -48,7 +49,7 @@ export function DataList<T>(props: DataListProps<T>) {
       <tbody>
         {props.rows.map((row: T) => (
           <tr key={(row as any)[props.primaryKey]}>
-            {props.fields.map((field) => (
+            {props.fields.filter((field) => !field.hidden).map((field) => (
               <td key={field.key}>{extractValue(field, row)}</td>
             ))}
             <td>

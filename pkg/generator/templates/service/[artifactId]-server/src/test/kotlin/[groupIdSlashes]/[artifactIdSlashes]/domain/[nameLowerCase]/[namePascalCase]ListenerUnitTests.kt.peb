@@ -1,6 +1,6 @@
 {%if hasRelations%}package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
 
-{%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Event.{{ field.fieldTypePascalCase }}DeleteEvent
+{%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Event.{{ field.fieldTypePascalCase }}DeletedEvent
 {%endif%}{%endfor%}import com.nhaarman.mockitokotlin2.verify
 import org.junit.jupiter.api.Test
 {%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
@@ -19,8 +19,8 @@ internal class {{ namePascalCase }}ListenerUnitTests{%if hasRelations%}{
     private lateinit var {{ nameCamelCase }}Listener: {{ namePascalCase }}Listener
 {%for field in fields%}{%if field.isFieldRelational%}
     @Test
-    fun `When {{ field.fieldTypePascalCase }}DeleteEvent is triggered, related {{ namePluralPascalCase }} are deleted`() {
-        {{ nameCamelCase }}Listener.onEvent({{ field.fieldTypePascalCase }}DeleteEvent(this, {{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+    fun `When {{ field.fieldTypePascalCase }}DeletedEvent is triggered, related {{ namePluralPascalCase }} are deleted`() {
+        {{ nameCamelCase }}Listener.onEvent({{ field.fieldTypePascalCase }}DeletedEvent(this, {{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
         verify({{ nameCamelCase }}Service).deleteBy{{ field.fieldNamePascalCase }}({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.id!!)
     }

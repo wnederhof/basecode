@@ -5,6 +5,7 @@ export interface DataDetailsField {
   key: string
   label: string
   value?: (data: any) => string
+  hidden?: boolean
 }
 
 export interface DataDetailsProps {
@@ -31,7 +32,7 @@ export function DataDetails(props: DataDetailsProps) {
   return (
     <table>
       <tbody>
-        {props.fields.map((field) => (
+        {props.fields.filter((field) => !field.hidden).map((field) => (
           <tr key={field.key}>
             <td>{field.label}</td>
             <td>{extractValue(field, props.value)}</td>

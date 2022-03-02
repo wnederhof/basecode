@@ -86,6 +86,7 @@ When both the backend and frontend are running, you can build your next best thi
 - Fix typing issues in React
 - Default Tailwind?
 - Id as LONG
+- Fix possibility of authentication and broader events
 
 ## License
 Licensed under [MIT](LICENSE.md).

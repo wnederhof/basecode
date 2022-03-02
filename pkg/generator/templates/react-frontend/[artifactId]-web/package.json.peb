@@ -3,16 +3,17 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "test": "NODE_ENV=test jest --passWithNoTests",
-    "test:dev": "NODE_ENV=test jest --watchAll",
+    "test": "npm run generate:schema && NODE_ENV=test jest --passWithNoTests",
+    "test:dev": "npm run generate:schema && NODE_ENV=test jest --watchAll",
     "start": "NODE_ENV=production PORT=$PORT next start",
-    "build": "rm -rf .next && next build",
-    "dev": "next dev",
+    "build": "npm run generate:schema && rm -rf .next && next build",
+    "dev": "npm run generate:schema && next dev",
     "export": "npm run build && next export",
-    "prettier": "prettier  --write **/*.{ts,tsx,js}",
+    "prettier": "prettier --write **/*.{ts,tsx,js}",
     "lint:ts": "npm run prettier && eslint --fix 'src/**/*.{ts,tsx}' '__tests__/**/*.{ts,tsx}'",
     "lint:scss": "stylelint --fix 'src/**/*.scss'",
-    "lint:types": "tsc -p . --noEmit"
+    "lint:types": "tsc -p . --noEmit",
+    "generate:schema": "graphql-codegen --config codegen.yml"
   },
   "lint-staged": {
     "*.{ts,tsx}": [
@@ -23,6 +24,8 @@
     ]
   },
   "dependencies": {
+    "@graphql-codegen/cli": "^2.6.2",
+    "@graphql-codegen/typescript": "^2.4.5",
     "graphql": "^16.2.0",
     "next": "12.0.7",
     "next-urql": "^3.3.2",
@@ -68,6 +71,10 @@
     "stylelint-scss": "4.0.1",
     "svgo": "1.3.2",
     "svgo-loader": "2.2.1",
-    "typescript": "4.3.4"
+    "typescript": "4.3.4",
+    "@graphql-codegen/typescript": "2.4.5",
+    "@graphql-codegen/typescript-document-nodes": "2.2.5",
+    "@graphql-codegen/introspection": "2.1.1",
+    "@graphql-codegen/cli": "2.6.2"
   }
 }

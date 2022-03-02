@@ -4,10 +4,12 @@ import org.springframework.context.ApplicationEvent
 
 sealed class {{ namePascalCase }}Event(source: Any) : ApplicationEvent(source) {
 
-    data class {{ namePascalCase }}CreateEvent(private val _source: Any, val entity: {{ namePascalCase }}) : {{ namePascalCase }}Event(_source)
+    data class {{ namePluralPascalCase }}SelectedEvent(private val _source: Any, val entities: List<{{ namePascalCase }}>) : {{ namePascalCase }}Event(_source)
 
-    data class {{ namePascalCase }}UpdateEvent(private val _source: Any, val entity: {{ namePascalCase }}) : {{ namePascalCase }}Event(_source)
+    data class {{ namePluralPascalCase }}CreatedEvent(private val _source: Any, val entities: List<{{ namePascalCase }}>) : {{ namePascalCase }}Event(_source)
 
-    data class {{ namePascalCase }}DeleteEvent(private val _source: Any, val entity: {{ namePascalCase }}) : {{ namePascalCase }}Event(_source)
+    data class {{ namePluralPascalCase }}UpdatedEvent(private val _source: Any, val entities: List<{{ namePascalCase }}>) : {{ namePascalCase }}Event(_source)
+
+    data class {{ namePluralPascalCase }}DeletedEvent(private val _source: Any, val entities: List<{{ namePascalCase }}>) : {{ namePascalCase }}Event(_source)
 
 }

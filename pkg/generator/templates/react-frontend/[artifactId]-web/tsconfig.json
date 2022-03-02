@@ -28,6 +28,9 @@
       "@components/*": [
         "./src/components/*"
       ],
+      "@generated/*": [
+        "./src/generated/*"
+      ],
       "@containers/*": [
         "./src/containers/*"
       ],

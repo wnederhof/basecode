@@ -116,7 +116,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
         verify(publisher)
-            .publishEvent({{ namePascalCase }}Event.{{ namePascalCase }}CreateEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}CreatedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
     }
 {%if hasRelations%}
     @Test
@@ -145,7 +145,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
         verify(publisher)
-            .publishEvent({{ namePascalCase }}Event.{{ namePascalCase }}UpdateEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}UpdatedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
     }
 {%if hasRelations%}
     @Test
@@ -168,7 +168,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         verify({{ nameCamelCase }}Repository).deleteById(1)
 
         verify(publisher)
-            .publishEvent({{ namePascalCase }}Event.{{ namePascalCase }}DeleteEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}DeletedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
     }
 
     @Test
@@ -191,7 +191,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         assertThat(actual).isEqualTo(true)
 
         verify({{ nameCamelCase }}Repository).deleteAll(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-        verify(publisher).publishEvent({{ namePascalCase }}Event.{{ namePascalCase }}DeleteEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+        verify(publisher).publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}DeletedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
     }
 
     @Test

@@ -2,6 +2,7 @@ import { DataForm, DataFormFieldType } from '@components/shared/DataForm'
 import { gql, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { ActionSection } from '@components/shared/ActionSection'
+import { Mutation, Query } from '@generated/graphql'
 
 export interface {{ namePascalCase }}EditorProps {
   id?: string{%for field in fields%}{%if field.isFieldRelational%}
@@ -12,14 +13,14 @@ export interface {{ namePascalCase }}EditorProps {
 }
 
 export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProps) {
-  const [, executeCreateMutation] = useMutation(gql`
+  const [, executeCreateMutation] = useMutation<Mutation>(gql`
     mutation create{{namePascalCase}}($input: Create{{namePascalCase}}Input!) {
       create{{namePascalCase}}(input: $input) {
         id
       }
     }
   `)
-  const [, executeUpdateMutation] = useMutation(gql`
+  const [, executeUpdateMutation] = useMutation<Mutation>(gql`
     mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
       update{{namePascalCase}}(id: $id, input: $input) {
         id
@@ -41,7 +42,7 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
         .catch((reason) => alert(`Creating {{ nameCamelCase }} failed. Reason: ${reason}`))
     }
   }
-  const [{ data, error, fetching }] = useQuery({
+  const [{ data, error, fetching }] = useQuery<Query>({
     query: gql`
       query {{nameCamelCase}}($id: ID!) {
         {{nameCamelCase}}(id: $id) {
@@ -59,9 +60,9 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
       []
     ),
   }){%for field in fields%}{%if field.isFieldRelational%}
-  const [{{ field.fieldTypePluralCamelCase }}QueryResult] = useQuery({
+  const [{{ field.fieldTypePluralCamelCase }}QueryResult] = useQuery<Query>({
     query: gql`
-      query {{field.fieldTypePluralCamelCase}} {
+      query {{field.fieldTypePluralCamelCase}}For{{ namePascalCase }}Options {
         {{field.fieldTypePluralCamelCase}} {
           id
         }

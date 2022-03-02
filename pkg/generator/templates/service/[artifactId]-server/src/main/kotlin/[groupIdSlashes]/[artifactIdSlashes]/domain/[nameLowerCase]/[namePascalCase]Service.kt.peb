@@ -32,7 +32,9 @@ class {{ namePascalCase }}Service(
             return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}(filterInput.{{ field.fieldNameCamelCase }})
         }
 {%endif%}{%endfor%}
-        return {{ nameCamelCase }}Repository.findAll().toList()
+        return {{ nameCamelCase }}Repository.findAll()
+            .toList()
+            .also { publisher.publishEvent({{ namePluralPascalCase }}SelectedEvent(this, it)) }
     }
 
     fun create(input: Create{{ namePascalCase }}Input): {{ namePascalCase }} { {%for field in fields%}{%if field.isFieldRelational%}
@@ -42,7 +44,7 @@ class {{ namePascalCase }}Service(
             {{field.fieldNameCamelCase}} = input.{{field.fieldNameCamelCase}},{%endfor%}
         )
         {{ nameCamelCase }} = {{ nameCamelCase }}Repository.save({{ nameCamelCase }})
-        publisher.publishEvent({{ namePascalCase }}CreateEvent(this, {{ nameCamelCase }}))
+        publisher.publishEvent({{ namePluralPascalCase }}CreatedEvent(this, {{ nameCamelCase }}))
         return {{ nameCamelCase }}
     }
 
@@ -56,24 +58,24 @@ class {{ namePascalCase }}Service(
             {{field.fieldNameCamelCase}} = input.{{field.fieldNameCamelCase}} ?: {{ nameCamelCase }}.{{field.fieldNameCamelCase}},{%endfor%}
         )
         {{ nameCamelCase }} = {{ nameCamelCase }}Repository.save({{ nameCamelCase }})
-        publisher.publishEvent({{ namePascalCase }}UpdateEvent(this, {{ nameCamelCase }}))
+        publisher.publishEvent({{ namePluralPascalCase }}UpdatedEvent(this, {{ nameCamelCase }}))
         return {{ nameCamelCase }}
     }
 
     fun deleteById(id: Int): Boolean {
         val {{ nameCamelCase }} = {{ nameCamelCase }}Repository.findByIdOrNull(id) ?: return false
         {{ nameCamelCase }}Repository.deleteById(id)
-        publisher.publishEvent({{ namePascalCase }}DeleteEvent(this, {{ nameCamelCase }}))
+        publisher.publishEvent({{ namePluralPascalCase }}DeletedEvent(this, {{ nameCamelCase }}))
         return true
     }
 {%for field in fields%}{%if field.isFieldRelational%}
-    fun deleteBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }}: Int): Boolean {
+    fun deleteBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: List<Int>): Boolean {
         val {{ namePluralCamelCase }} = {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}({{ field.fieldNameCamelCase }})
         if ({{ namePluralCamelCase }}.isEmpty()) {
             return false
         }
         {{ nameCamelCase }}Repository.deleteAll({{ namePluralCamelCase }})
-        {{ namePluralCamelCase }}.forEach { publisher.publishEvent({{ namePascalCase }}DeleteEvent(this, it)) }
+        publisher.publishEvent({{ namePluralPascalCase }}DeletedEvent(this, {{ namePluralCamelCase }}))
         return true
     }
 {%endif%}{%endfor%}
