@@ -6,7 +6,7 @@ import { fromValue } from 'wonka'
 describe('{{ namePascalCase }}List', () => {
   const {{ nameCamelCase }} = {
     id: '1'{%for field in fields%},
-    {{field.fieldNameCamelCase}}: {{field.fieldVueTypescriptTestValue}}{%endfor%}
+    {{field.fieldNameCamelCase}}: {{field.fieldFrontendTestValue}}{%endfor%}
   }
 
   it('forwards to {{ nameCamelCase }} page on Show', () => {

@@ -312,31 +312,31 @@ func provideInputFieldContextAttributes(context map[string]interface{}, attribut
 func provideVueTemplateContextAttributes(context map[string]interface{}, attribute ModelAttribute) {
 	switch attribute.Type {
 	case STRING:
-		context["fieldVueTypescriptTestValue"] = "'Some streetName'"
+		context["fieldFrontendTestValue"] = "'Some streetName'"
 	case INT:
-		context["fieldVueTypescriptTestValue"] = "10"
+		context["fieldFrontendTestValue"] = "10"
 	case TEXT:
-		context["fieldVueTypescriptTestValue"] = "'Some streetName'"
+		context["fieldFrontendTestValue"] = "'Some streetName'"
 	case DATE:
-		context["fieldVueTypescriptTestValue"] = "'2000-01-01'"
+		context["fieldFrontendTestValue"] = "'2000-01-01'"
 	case DATETIME:
-		context["fieldVueTypescriptTestValue"] = "'2000-01-01T00:00'"
+		context["fieldFrontendTestValue"] = "'2000-01-01T00:00'"
 	case BOOLEAN:
-		context["fieldVueTypescriptTestValue"] = "true"
+		context["fieldFrontendTestValue"] = "true"
 	case NULL_STRING:
-		context["fieldVueTypescriptTestValue"] = "'Some streetName'"
+		context["fieldFrontendTestValue"] = "'Some streetName'"
 	case NULL_INT:
-		context["fieldVueTypescriptTestValue"] = "10"
+		context["fieldFrontendTestValue"] = "10"
 	case NULL_TEXT:
-		context["fieldVueTypescriptTestValue"] = "'Some streetName'"
+		context["fieldFrontendTestValue"] = "'Some streetName'"
 	case NULL_DATE:
-		context["fieldVueTypescriptTestValue"] = "'2000-01-01'"
+		context["fieldFrontendTestValue"] = "'2000-01-01'"
 	case NULL_DATETIME:
-		context["fieldVueTypescriptTestValue"] = "'2000-01-01T00:00'"
+		context["fieldFrontendTestValue"] = "'2000-01-01T00:00'"
 	case NULL_BOOLEAN:
-		context["fieldVueTypescriptTestValue"] = "true"
+		context["fieldFrontendTestValue"] = "true"
 	case RELATIONAL:
-		context["fieldVueTypescriptTestValue"] = "1"
+		context["fieldFrontendTestValue"] = "1"
 	default:
 		panic("Undetermined attribute type.")
 	}
