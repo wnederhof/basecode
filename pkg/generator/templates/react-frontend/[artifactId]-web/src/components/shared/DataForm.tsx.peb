@@ -15,6 +15,8 @@ export enum DataFormFieldType {
   DATETIME_OPTIONAL = 'DATETIME_OPTIONAL',
   INT = 'INT',
   INT_OPTIONAL = 'INT_OPTIONAL',
+  BOOLEAN = 'BOOLEAN',
+  BOOLEAN_OPTIONAL = 'BOOLEAN_OPTIONAL',
 }
 
 export interface DataFormFieldOption {
@@ -27,6 +29,7 @@ export interface DataFormField {
   label?: string
   options?: DataFormFieldOption[]
   type: DataFormFieldType
+  hidden?: boolean
 }
 
 export interface DataFormProps {
@@ -206,6 +209,31 @@ const formElements = {
       onChange={(e) => onUpdate(e.target.value)}
     />
   ),
+  [DataFormFieldType.BOOLEAN]: (
+    field: DataFormField,
+    value: any,
+    onUpdate: any
+  ) => (
+    <input
+      type="checkbox"
+      name={field.name}
+      defaultValue={value}
+      onChange={(e) => onUpdate(e.target.value)}
+      required
+    />
+  ),
+  [DataFormFieldType.BOOLEAN_OPTIONAL]: (
+    field: DataFormField,
+    value: any,
+    onUpdate: any
+  ) => (
+    <input
+      type="checkbox"
+      name={field.name}
+      defaultValue={value}
+      onChange={(e) => onUpdate(e.target.value)}
+    />
+  ),
 }
 
 function LoadedDataForm(props: DataFormProps) {
@@ -229,7 +257,7 @@ function LoadedDataForm(props: DataFormProps) {
     >
       <table>
         <tbody>
-          {props.fields.map((field) => (
+          {props.fields.filter((field) => !field.hidden).map((field) => (
             <tr key={field.name}>
               <td>{field.label}</td>
               <td>

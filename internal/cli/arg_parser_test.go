@@ -10,6 +10,7 @@ import (
 func TestParseArgs(t *testing.T) {
 	expected := generator.Model{Name: "someModel", Attributes: []generator.ModelAttribute{
 		{Name: "someField", Type: generator.STRING, Relation: ""},
+		{Name: "someField", Type: generator.STRING, Relation: ""},
 		{Name: "someField", Type: generator.INT, Relation: ""},
 		{Name: "someField", Type: generator.TEXT, Relation: ""},
 		{Name: "someField", Type: generator.DATE, Relation: ""},
@@ -25,6 +26,7 @@ func TestParseArgs(t *testing.T) {
 	}}
 	actual, _ := parseArgsFromStrings([]string{
 		"someModel",
+		"someField",
 		"someField:string",
 		"someField:int",
 		"someField:text",

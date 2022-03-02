@@ -84,11 +84,12 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
             name: '{{ field.fieldNameCamelCase }}',
             label: '{{ field.fieldNamePascalCase }}',
             type: DataFormFieldType.{{ field.fieldInputType }}{% if field.isFieldRelational %},
+            hidden: props.{{ field.fieldNameCamelCase }}
             options: {{ field.fieldTypePluralCamelCase }}QueryResult?.data?.{{ field.fieldTypePluralCamelCase }}?.map(({{ field.fieldTypeCamelCase }}: any) => {
               return {label: {{ field.fieldTypeCamelCase }}.id, value: {{ field.fieldTypeCamelCase }}.id}
             }){%endif%}
           },{%endfor%}
-        ].filter(field => !(props as any)[field.name])}
+        ]
         value={data?.{{ nameCamelCase }}{{ "}" }}
         onSubmit={doSubmit}
         onCancel={props.onCancel}

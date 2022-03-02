@@ -80,9 +80,11 @@ When both the backend and frontend are running, you can build your next best thi
 - X Use DGS
 - X Use NextJS and/or Angular instead of NuxtJS?
 - X Fix relationships
-- Add tests
+- X Add tests
+- X Fix SSR using Next-URQL
+- Use codegen using Pluck
+- Fix typing issues in React
 - Default Tailwind?
-- Fix SSR using Next-URQL
 - Id as LONG
 
 ## License
@@ -90,5 +92,4 @@ Licensed under [MIT](LICENSE.md).
 
 ## Credits
 - The `new` template is based on the code generated using Spring Boot Initializr.
-- The `frontend` template is mostly based on the code generated using NuxtJS.
 - The `react-frontend` template is mostly based on https://github.com/sanjaytwisk/nextjs-ts.

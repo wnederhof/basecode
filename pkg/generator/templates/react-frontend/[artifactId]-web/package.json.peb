@@ -25,8 +25,10 @@
   "dependencies": {
     "graphql": "^16.2.0",
     "next": "12.0.7",
+    "next-urql": "^3.3.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-is": "^17.0.2",
     "svg-sprite-loader": "6.0.8",
     "urql": "^2.0.6",
     "wonka": "^4.0.15"

@@ -23,10 +23,16 @@ func parseArgsFromStrings(args []string) (generator.Model, error) {
 	attributes := make([]generator.ModelAttribute, attributeCount)
 	for i := 1; i <= attributeCount; i++ {
 		parts := strings.Split(args[i], ":")
-		if len(parts) != 2 {
+		if len(parts) > 2 {
 			return generator.Model{}, errors.New("usage: <name> (<fieldName>:<fieldType>)+")
 		}
-		parseTypeResult, err := parseType(parts[1])
+		var parseTypeResult uint8
+		var err error
+		if len(parts) == 2 {
+			parseTypeResult, err = parseType(parts[1])
+		} else {
+			parseTypeResult, err = parseType("string")
+		}
 		if err != nil {
 			return generator.Model{}, err
 		}
