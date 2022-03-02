@@ -220,7 +220,7 @@ func provideKotlinFieldContextAttributes(context map[string]interface{}, attribu
 	case STRING:
 		context["fieldKotlinType"] = "String"
 		context["fieldKotlinTypeNotNullable"] = "String"
-		context["fieldKotlinTestDummyValue"] = "\"Some streetName\""
+		context["fieldKotlinTestDummyValue"] = "\"Some " + attribute.Name + "\""
 	case INT:
 		context["fieldKotlinType"] = "Int"
 		context["fieldKotlinTypeNotNullable"] = "Int"
