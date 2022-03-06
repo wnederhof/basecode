@@ -51,9 +51,6 @@ func TestParseArgsInvalidInput(t *testing.T) {
 	_, err = parseArgsFromStrings([]string{ "test" })
 	assert.Equal(t, err, errors.New("usage: <name> (<fieldName>:<fieldType>)+"))
 
-	_, err = parseArgsFromStrings([]string{ "test", "fieldName" })
-	assert.Equal(t, err, errors.New("usage: <name> (<fieldName>:<fieldType>)+"))
-
 	_, err = parseArgsFromStrings([]string{ "test", "fieldName:something:else" })
 	assert.Equal(t, err, errors.New("usage: <name> (<fieldName>:<fieldType>)+"))
 
