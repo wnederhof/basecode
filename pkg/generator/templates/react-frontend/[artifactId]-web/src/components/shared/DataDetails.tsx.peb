@@ -4,7 +4,7 @@ import { ErrorMessage } from '@components/shared/ErrorMessage'
 export interface DataDetailsField<T> {
   key: string
   label: string
-  value: (data: T) => string
+  value: (data: T) => string | number
   hidden?: boolean
 }
 

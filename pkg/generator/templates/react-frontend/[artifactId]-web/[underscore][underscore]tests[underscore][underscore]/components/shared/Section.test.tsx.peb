@@ -1,34 +1,34 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { ActionSection } from '../../../src/components/shared/ActionSection'
+import { Section } from '../../../src/components/shared/Section'
 
-describe('ActionSection', () => {
+describe('Section', () => {
   it('renders the header', () => {
     render(
-      <ActionSection header="Header">
+      <Section header="Header">
         <div />
-      </ActionSection>
+      </Section>
     )
     expect(screen.queryByText('Header').nodeName).toBe('H1')
   })
 
   it('renders children', () => {
     render(
-      <ActionSection header="Header">
+      <Section header="Header">
         <p>Child</p>
-      </ActionSection>
+      </Section>
     )
     expect(screen.queryByText('Child').nodeName).toBe('P')
   })
 
   it('renders nested headers at least three levels deep', () => {
     render(
-      <ActionSection header="Header 1">
-        <ActionSection header="Header 2">
-          <ActionSection header="Header 3">
+      <Section header="Header 1">
+        <Section header="Header 2">
+          <Section header="Header 3">
             <div />
-          </ActionSection>
-        </ActionSection>
-      </ActionSection>
+          </Section>
+        </Section>
+      </Section>
     )
     expect(screen.queryByText('Header 1').nodeName).toBe('H1')
     expect(screen.queryByText('Header 2').nodeName).toBe('H2')
@@ -37,9 +37,9 @@ describe('ActionSection', () => {
 
   it('does not render Back, New, Edit when they are not set', () => {
     render(
-      <ActionSection header="Header">
+      <Section header="Header">
         <div />
-      </ActionSection>
+      </Section>
     )
     expect(screen.queryByText('Back')).toBeNull()
     expect(screen.queryByText('New')).toBeNull()
@@ -49,9 +49,9 @@ describe('ActionSection', () => {
   it('shows a Back button which is clickable when onBack is set', () => {
     const backFn = jest.fn()
     render(
-      <ActionSection header="Header" onBack={backFn}>
+      <Section header="Header" onBack={backFn}>
         <div />
-      </ActionSection>
+      </Section>
     )
     expect(screen.queryByText('Back')).not.toBeNull()
     fireEvent(
@@ -67,9 +67,9 @@ describe('ActionSection', () => {
   it('shows a New button which is clickable when onBack is set', () => {
     const newFn = jest.fn()
     render(
-      <ActionSection header="Header" onNew={newFn}>
+      <Section header="Header" onNew={newFn}>
         <div />
-      </ActionSection>
+      </Section>
     )
     expect(screen.queryByText('New')).not.toBeNull()
     fireEvent(
@@ -85,9 +85,9 @@ describe('ActionSection', () => {
   it('shows an Edit button which is clickable when onBack is set', () => {
     const editFn = jest.fn()
     render(
-      <ActionSection header="Header" onEdit={editFn}>
+      <Section header="Header" onEdit={editFn}>
         <div />
-      </ActionSection>
+      </Section>
     )
     expect(screen.queryByText('Edit')).not.toBeNull()
     fireEvent(

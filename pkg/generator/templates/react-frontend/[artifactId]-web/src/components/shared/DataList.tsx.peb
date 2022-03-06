@@ -5,7 +5,7 @@ import { ErrorMessage } from '@components/shared/ErrorMessage'
 export interface DataListField {
   key: string
   label: string
-  value: (data: T) => string
+  value: (data: T) => string | number
   hidden?: boolean
 }
 
@@ -62,9 +62,7 @@ export function DataList<T>(props: DataListProps<T>) {
               {(!props.canDelete || props.canDelete(row)) && (
                 <button
                   disabled={props.canDelete && !props.canDelete(row)}
-                  onClick={() =>
-                    confirm('Are you sure?') && props.onDelete(row)
-                  }
+                  onClick={() => props.onDelete(row)}
                 >
                   Delete
                 </button>

@@ -30,6 +30,7 @@ export interface DataFormField {
   options?: DataFormFieldOption[]
   type: DataFormFieldType
   hidden?: boolean
+  value: (data: T) => string | number
 }
 
 export interface DataFormProps {

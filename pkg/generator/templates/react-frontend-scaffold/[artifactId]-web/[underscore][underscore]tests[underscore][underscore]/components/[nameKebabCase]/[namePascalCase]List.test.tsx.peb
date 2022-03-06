@@ -181,4 +181,37 @@ describe('{{ namePascalCase }}List', () => {
     })
     expect(mockClient.executeMutation).toBeCalled()
   })
+
+  it('does not call mutation when Delete is clicked and not confirmed', async () => {
+    jest.spyOn(global, 'confirm' as any).mockReturnValueOnce(false)
+    const mockClient: any = {
+      executeQuery: () =>
+        fromValue({
+          data: {
+            {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
+          },
+        }),
+      executeMutation: jest.fn(() =>
+        fromValue({
+          data: {},
+        })
+      ),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient}>
+        <{{ namePascalCase }}List />
+      </Provider>
+    )
+    await waitFor(() => {
+      fireEvent(
+        screen.getByText('Delete'),
+        new MouseEvent('click', {
+          bubbles: true,
+          cancelable: true,
+        })
+      )
+    })
+    expect(mockClient.executeMutation).not.toBeCalled()
+  })
 })

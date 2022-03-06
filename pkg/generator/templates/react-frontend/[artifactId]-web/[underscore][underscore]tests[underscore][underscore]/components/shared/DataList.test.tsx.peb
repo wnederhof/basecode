@@ -198,45 +198,7 @@ describe('DataList', () => {
     expect(screen.queryByText('Show')).not.toBeNull()
   })
 
-  it('renders Delete and handles click, does not call onDelete for confirm false', () => {
-    jest.spyOn(global, 'confirm' as any).mockReturnValueOnce(false)
-
-    const deleteFn = jest.fn()
-    render(
-      <DataList
-        primaryKey={row => row.id}
-        fields={[
-          {
-            key: 'name',
-            label: 'Name',
-          },
-        ]}
-        rows={[
-          {
-            id: 1,
-            name: 'John Doe',
-          },
-        ]}
-        showUrl={() => ''}
-        onEdit={jest.fn()}
-        onDelete={deleteFn}
-        canEdit={() => false}
-        canShow={() => false}
-      />
-    )
-    fireEvent(
-      screen.queryByText('Delete'),
-      new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-      })
-    )
-    expect(deleteFn).not.toBeCalled()
-  })
-
-  it('renders Delete and handles click, calls onDelete for confirm true', () => {
-    jest.spyOn(global, 'confirm' as any).mockReturnValueOnce(true)
-
+  it('renders Delete and handles click by calling onDelete', () => {
     const deleteFn = jest.fn()
     render(
       <DataList

@@ -1,7 +1,7 @@
 import { Modal } from '@components/shared/Modal'
 import { DataDetails } from '@components/shared/DataDetails'
 import { gql, useQuery } from 'urql'
-import { ActionSection } from '@components/shared/ActionSection'
+import { Section } from '@components/shared/Section'
 import { ReactNode, useMemo, useState } from 'react'
 import { {{ namePascalCase }}Editor } from '@components/app/{{ nameKebabCase }}/{{ namePascalCase }}Editor'
 import { Query, {{ namePascalCase }} } from '@generated/graphql'
@@ -33,7 +33,7 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
     ),
   })
   return (
-    <ActionSection
+    <Section
       header={props.showHeader ? "{{namePascalCase}} Details" : undefined}
       onEdit={props.showEdit ? () => setShowEditor(true) : undefined}
       onBack={props.showBack ? () => history.back() : undefined}
@@ -60,6 +60,6 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
           onCancel={() => setShowEditor(false)}
         />
       </Modal>
-    </ActionSection>
+    </Section>
   )
 }
