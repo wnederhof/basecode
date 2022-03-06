@@ -5,26 +5,26 @@ import { ErrorMessage } from '@components/shared/ErrorMessage'
 export interface DataListField {
   key: string
   label: string
-  value?: (data: any) => any
+  value: (data: T) => string
   hidden?: boolean
 }
 
-export interface DataListProps<FieldType> {
-  primaryKey: string
-  fields: DataListField[]
+export interface DataListProps<T> {
+  primaryKey: (row: T) => string
+  fields: DataListField<T>[]
   errorMessage?: string
   fetching?: boolean
-  rows: FieldType[]
-  canShow?: (row: FieldType) => boolean
-  canEdit?: (row: FieldType) => boolean
-  canDelete?: (row: FieldType) => boolean
-  showUrl: (row: FieldType) => string
-  onEdit: (row: FieldType) => void
-  onDelete: (row: FieldType) => void
+  rows?: T[]
+  canShow?: (row: T) => boolean
+  canEdit?: (row: T) => boolean
+  canDelete?: (row: T) => boolean
+  showUrl: (row: T) => string
+  onEdit: (row: T) => void
+  onDelete: (row: T) => void
 }
 
-function extractValue(field: DataListField, value: any) {
-  return value && (field.value ? field.value(value) : value[field.key])
+function extractValue<T>(field: DataListField, value: T) {
+  return value && field.value(value)
 }
 
 export function DataList<T>(props: DataListProps<T>) {
@@ -34,7 +34,7 @@ export function DataList<T>(props: DataListProps<T>) {
   if (props.errorMessage) {
     return <ErrorMessage message={props.errorMessage} />
   }
-  return props.rows.length === 0 ? (
+  return !props.rows || props.rows.length === 0 ? (
     <div>No entries.</div>
   ) : (
     <table>
@@ -47,8 +47,8 @@ export function DataList<T>(props: DataListProps<T>) {
         </tr>
       </thead>
       <tbody>
-        {props.rows.map((row: T) => (
-          <tr key={(row as any)[props.primaryKey]}>
+        {props.rows?.map((row: T) => (
+          <tr key={props.primaryKey(row)}>
             {props.fields.filter((field) => !field.hidden).map((field) => (
               <td key={field.key}>{extractValue(field, row)}</td>
             ))}

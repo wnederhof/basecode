@@ -1,25 +1,25 @@
 import { LoadingIndicator } from '@components/shared/LoadingIndicator'
 import { ErrorMessage } from '@components/shared/ErrorMessage'
 
-export interface DataDetailsField {
+export interface DataDetailsField<T> {
   key: string
   label: string
-  value?: (data: any) => string
+  value: (data: T) => string
   hidden?: boolean
 }
 
-export interface DataDetailsProps {
-  fields: DataDetailsField[]
+export interface DataDetailsProps<T> {
+  fields: DataDetailsField<T>[]
   errorMessage?: string
   fetching?: boolean
-  value: any
+  value: T
 }
 
-function extractValue(field: DataDetailsField, value: any) {
-  return value && (field.value ? field.value(value) : value[field.key])
+function extractValue<T>(field: DataDetailsField<T>, value: T) {
+  return value && field.value(value)
 }
 
-export function DataDetails(props: DataDetailsProps) {
+export function DataDetails<T>(props: DataDetailsProps<T>) {
   if (props.fetching) {
     return <LoadingIndicator />
   }

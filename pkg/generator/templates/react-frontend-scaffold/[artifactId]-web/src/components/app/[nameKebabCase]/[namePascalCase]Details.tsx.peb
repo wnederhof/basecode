@@ -4,7 +4,7 @@ import { gql, useQuery } from 'urql'
 import { ActionSection } from '@components/shared/ActionSection'
 import { ReactNode, useMemo, useState } from 'react'
 import { {{ namePascalCase }}Editor } from '@components/app/{{ nameKebabCase }}/{{ namePascalCase }}Editor'
-import { Query } from '@generated/graphql'
+import { Query, {{ namePascalCase }} } from '@generated/graphql'
 
 export interface {{ namePascalCase }}DetailsProps {
   id: string{%for field in fields%}{%if field.isFieldRelational%}
@@ -18,7 +18,7 @@ export interface {{ namePascalCase }}DetailsProps {
 export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsProps) {
   const [showEditor, setShowEditor] = useState(false)
   const [{ data, error, fetching }] = useQuery<Query>({
-    query: gql`query {{nameCamelCase}}($id: ID!) {
+    query: gql`query {{nameCamelCase}}Details($id: ID!) {
       {{nameCamelCase}}(id: $id) {
         id{%for field in fields%}
         {{field.fieldNameCamelCase}}{%endfor%}
@@ -45,10 +45,10 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
           {
             key: '{{ field.fieldNameCamelCase }}',
             label: '{{ field.fieldNamePascalCase }}',
-            value: (data: any) => data.{{ field.fieldNameCamelCase }},
-            hidden: !!props.{{ field.fieldNameCamelCase }}
+            value: (data: {{ namePascalCase }}) => data.{{ field.fieldNameCamelCase }}{%if field.isFieldRelational%},
+            hidden: !!props.{{ field.fieldNameCamelCase }}{%endif%}
           },{%endfor%}
-        ]
+        ]}
         value={data?.{{ nameCamelCase }}{{ "}" }}
       />
       {props.children}

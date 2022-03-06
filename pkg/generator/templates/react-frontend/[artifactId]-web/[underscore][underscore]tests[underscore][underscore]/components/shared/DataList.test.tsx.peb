@@ -6,7 +6,7 @@ describe('DataList', () => {
     expect(() =>
       render(
         <DataList
-          primaryKey="id"
+          primaryKey={row => row.id}
           fields={[]}
           rows={[]}
           showUrl={jest.fn()}
@@ -20,7 +20,7 @@ describe('DataList', () => {
   it('shows loading indicator if fetching is true', () => {
     render(
       <DataList
-        primaryKey="id"
+        primaryKey={row => row.id}
         fetching={true}
         fields={[
           {
@@ -43,7 +43,7 @@ describe('DataList', () => {
   it('shows error message if errorMessage is provided', () => {
     render(
       <DataList
-        primaryKey="id"
+        primaryKey={row => row.id}
         fields={[
           {
             key: 'name',
@@ -66,7 +66,7 @@ describe('DataList', () => {
   it('renders No entries when rows is empty', () => {
     render(
       <DataList
-        primaryKey="id"
+        primaryKey={row => row.id}
         fields={[
           {
             key: 'name',
@@ -88,7 +88,7 @@ describe('DataList', () => {
   it('renders rows and columns', () => {
     render(
       <DataList
-        primaryKey="id"
+        primaryKey={row => row.id}
         fields={[
           {
             key: 'name',
@@ -117,7 +117,7 @@ describe('DataList', () => {
   it('does not render delete, show or edit if canDelete, canEdit and canShow return false', () => {
     render(
       <DataList
-        primaryKey="id"
+        primaryKey={row => row.id}
         fields={[
           {
             key: 'name',
@@ -146,7 +146,7 @@ describe('DataList', () => {
   it('renders delete, show or edit if canDelete, canEdit and canShow are not set', () => {
     render(
       <DataList
-        primaryKey="id"
+        primaryKey={row => row.id}
         fields={[
           {
             key: 'name',
@@ -172,7 +172,7 @@ describe('DataList', () => {
   it('renders delete, show or edit if canDelete, canEdit and canShow return true', () => {
     render(
       <DataList
-        primaryKey="id"
+        primaryKey={row => row.id}
         fields={[
           {
             key: 'name',
@@ -204,7 +204,7 @@ describe('DataList', () => {
     const deleteFn = jest.fn()
     render(
       <DataList
-        primaryKey="id"
+        primaryKey={row => row.id}
         fields={[
           {
             key: 'name',
@@ -240,7 +240,7 @@ describe('DataList', () => {
     const deleteFn = jest.fn()
     render(
       <DataList
-        primaryKey="id"
+        primaryKey={row => row.id}
         fields={[
           {
             key: 'name',
@@ -274,7 +274,7 @@ describe('DataList', () => {
     const editFn = jest.fn()
     render(
       <DataList
-        primaryKey="id"
+        primaryKey={row => row.id}
         fields={[
           {
             key: 'name',
@@ -307,7 +307,7 @@ describe('DataList', () => {
   it('renders Show and handles click', () => {
     render(
       <DataList
-        primaryKey="id"
+        primaryKey={row => row.id}
         fields={[
           {
             key: 'name',

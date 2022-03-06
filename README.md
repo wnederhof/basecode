@@ -82,7 +82,7 @@ When both the backend and frontend are running, you can build your next best thi
 - X Fix relationships
 - X Add tests
 - X Fix SSR using Next-URQL
-- Use codegen using Pluck
+- X Use codegen using Pluck
 - Fix typing issues in React
 - Default Tailwind?
 - Id as LONG

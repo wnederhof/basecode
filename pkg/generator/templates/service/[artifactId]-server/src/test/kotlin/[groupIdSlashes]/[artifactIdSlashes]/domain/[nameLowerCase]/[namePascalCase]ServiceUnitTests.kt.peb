@@ -95,7 +95,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
 {%endif%}{%for field in fields%}{%if field.isFieldRelational%}
     @Test
     fun `findAll delegates to findBy{{field.fieldNamePascalCase}} when filter only contains {{field.fieldNameCamelCase}}`() {
-        whenever({{ nameCamelCase }}Repository.findBy{{field.fieldNamePascalCase}}(1))
+        whenever({{ nameCamelCase }}Repository.findBy{{field.fieldNamePluralPascalCase}}(listOf(1)))
             .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_1))
 
         val actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}Service.{{ namePascalCase }}FilterInput({{field.fieldNameCamelCase}} = 1))
@@ -116,7 +116,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
         verify(publisher)
-            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}CreatedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}CreatedEvent({{ nameCamelCase }}Service, listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
     }
 {%if hasRelations%}
     @Test
@@ -145,7 +145,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
         verify(publisher)
-            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}UpdatedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}UpdatedEvent({{ nameCamelCase }}Service, listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
     }
 {%if hasRelations%}
     @Test
@@ -168,7 +168,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         verify({{ nameCamelCase }}Repository).deleteById(1)
 
         verify(publisher)
-            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}DeletedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}DeletedEvent({{ nameCamelCase }}Service, listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
     }
 
     @Test
@@ -184,22 +184,22 @@ internal class {{ namePascalCase }}ServiceUnitTests {
 {%for field in fields%}{%if field.isFieldRelational%}
     @Test
     fun `deleteBy{{ field.fieldNamePascalCase }} deletes {{ field.fieldTypePluralCamelCase }} by {{ field.fieldNameCamelCase }} and publishes event`() {
-        whenever({{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}(10))
+        whenever({{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}(listOf(10)))
             .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
-        val actual = {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePascalCase }}(10)
+        val actual = {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePluralPascalCase }}(listOf(10))
         assertThat(actual).isEqualTo(true)
 
         verify({{ nameCamelCase }}Repository).deleteAll(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-        verify(publisher).publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}DeletedEvent({{ nameCamelCase }}Service, {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+        verify(publisher).publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}DeletedEvent({{ nameCamelCase }}Service, listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
     }
 
     @Test
     fun `deleteBy{{ field.fieldNamePascalCase }} returns false if no {{ field.fieldTypePluralCamelCase }} are deleted and publishes no events`() {
-        whenever({{ nameCamelCase }}Repository.findBy{{ field.fieldNamePascalCase }}(10))
+        whenever({{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}(listOf(10)))
             .thenReturn(listOf())
 
-        val actual = {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePascalCase }}(10)
+        val actual = {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePluralPascalCase }}(listOf(10))
         assertThat(actual).isEqualTo(false)
 
         verify({{ nameCamelCase }}Repository, times(0)).deleteAll(any())

@@ -4,7 +4,7 @@ import { ActionSection } from '@components/shared/ActionSection'
 import { Modal } from '@components/shared/Modal'
 import { ReactNode, useMemo, useState } from 'react'
 import { {{namePascalCase}}Editor } from '@components/app/{{ nameKebabCase }}/{{namePascalCase}}Editor'
-import { Mutation, Query } from '@generated/graphql'
+import { Mutation, Query, {{ namePascalCase }} } from '@generated/graphql'
 
 export interface {{ namePascalCase }}EditorState {
   show: boolean
@@ -34,7 +34,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
   })
   const [{ data, error, fetching }] = useQuery<Query>({
     query: gql`
-      {%if hasRelations%}query {{namePluralCamelCase}}($filter: {{namePascalCase}}Filter) {%endif%}{
+      {%if hasRelations%}query {{nameCamelCase}}List($filter: {{namePascalCase}}Filter) {%endif%}{
         {{namePluralCamelCase}}{%if hasRelations%}(filter: $filter){%endif%} {
           id{%for field in fields%}
           {{field.fieldNameCamelCase}}{%endfor%}
@@ -59,21 +59,21 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
       onNew={() => setEditorState({ show: true })}
     >
       <DataList
-        primaryKey="id"
+        primaryKey={row => row.id}
         fields={[{%for field in fields%}
           {
             key: '{{ field.fieldNameCamelCase }}',
             label: '{{ field.fieldNamePascalCase }}',
-            value: (data: any) => data.{{ field.fieldNameCamelCase }},
-            hidden: !!props.{{ field.fieldNameCamelCase }}
+            value: (data: {{ namePascalCase }}) => data.{{ field.fieldNameCamelCase }}{%if field.isFieldRelational%},
+            hidden: !!props.{{ field.fieldNameCamelCase }}{%endif%}
           },{%endfor%}
         ]}
         errorMessage={error?.message}
         fetching={fetching}
         rows={data?.{{namePluralCamelCase}}{{ "}" }}
-        showUrl={(row: any) => `/{{ namePluralKebabCase }}/${row.id}`}
-        onEdit={(row: any) => setEditorState({ show: true, id: row.id })}
-        onDelete={(row: any) => delete{{namePascalCase}}(row.id)}
+        showUrl={(row: {{ namePascalCase }}) => `/{{ namePluralKebabCase }}/${row.id}`}
+        onEdit={(row: {{ namePascalCase }}) => setEditorState({ show: true, id: row.id })}
+        onDelete={(row: {{ namePascalCase }}) => delete{{namePascalCase}}(row.id)}
       />
       {props.children}
       <Modal
