@@ -1,5 +1,5 @@
 CREATE TABLE {{ namePluralSnakeCase }} (
-    id SERIAL PRIMARY KEY{%for field in fields%},
+    id BIGSERIAL PRIMARY KEY{%for field in fields%},
     {{ field.fieldNameSnakeCase }} {{ field.fieldDatabaseDefinitionType }}{%endfor%},
     created_at TIMESTAMP,
     updated_at TIMESTAMP

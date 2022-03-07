@@ -16,7 +16,7 @@ import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCa
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyLong
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -77,7 +77,7 @@ class {{ namePascalCase }}ResolverTests {
 
     @Test
     fun `update{{ namePascalCase }} delegates the call to the service's update`() {
-        whenever({{ nameCamelCase }}Service.update(anyInt(), any()))
+        whenever({{ nameCamelCase }}Service.update(anyLong(), any()))
             .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
         val update{{ namePascalCase }}Input = mapOf({%for field in fields%}

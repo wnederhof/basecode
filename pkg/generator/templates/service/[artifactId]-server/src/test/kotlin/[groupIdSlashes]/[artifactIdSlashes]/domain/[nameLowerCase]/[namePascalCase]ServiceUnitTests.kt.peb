@@ -41,6 +41,9 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         val actual = {{ nameCamelCase }}Service.findById(1)
 
         assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+
+        verify(publisher)
+            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}SelectedEvent({{ nameCamelCase }}Service, listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
     }
 
     @Test
@@ -51,6 +54,9 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         val actual = {{ nameCamelCase }}Service.findById(1)
 
         assertThat(actual).isNull()
+
+        verify(publisher, times(0))
+            .publishEvent(any())
     }
 
     @Test
@@ -61,6 +67,9 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         val actual = {{ nameCamelCase }}Service.findByIds(listOf(1))
 
         assertThat(actual).isEqualTo(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+
+        verify(publisher)
+            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}SelectedEvent({{ nameCamelCase }}Service, listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
     }
 {%for field in fields%}{%if field.isFieldRelational%}
     @Test
@@ -71,6 +80,9 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         val actual = {{ nameCamelCase }}Service.findBy{{ field.fieldNamePluralPascalCase }}(listOf(1))
 
         assertThat(actual).isEqualTo(actual)
+
+        verify(publisher)
+            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}SelectedEvent({{ nameCamelCase }}Service, listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
     }
 {%endif%}{%endfor%}
     @Test
@@ -81,6 +93,9 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         val actual = {{ nameCamelCase }}Service.findAll()
 
         assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+
+        verify(publisher)
+            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}SelectedEvent({{ nameCamelCase }}Service, listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
     }
 {%if hasRelations%}
     @Test
@@ -91,6 +106,9 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         val actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}Service.{{ namePascalCase }}FilterInput())
 
         assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+
+        verify(publisher)
+            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}SelectedEvent({{ nameCamelCase }}Service, listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
     }
 {%endif%}{%for field in fields%}{%if field.isFieldRelational%}
     @Test
@@ -101,6 +119,9 @@ internal class {{ namePascalCase }}ServiceUnitTests {
         val actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}Service.{{ namePascalCase }}FilterInput({{field.fieldNameCamelCase}} = 1))
 
         assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_1)
+
+        verify(publisher)
+            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}SelectedEvent({{ nameCamelCase }}Service, listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
     }
 {%endif%}{%endfor%}
     @Test
