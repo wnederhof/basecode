@@ -33,25 +33,27 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
     ),
   })
   return (
-    <Section
-      header={props.showHeader ? "{{namePascalCase}} Details" : undefined}
-      onEdit={props.showEdit ? () => setShowEditor(true) : undefined}
-      onBack={props.showBack ? () => history.back() : undefined}
-    >
-      <DataDetails
-        fetching={fetching}
-        errorMessage={error?.message}
-        fields={[{%for field in fields%}
-          {
-            key: '{{ field.fieldNameCamelCase }}',
-            label: '{{ field.fieldNamePascalCase }}',
-            value: (data: {{ namePascalCase }}) => data.{{ field.fieldNameCamelCase }}{%if field.isFieldRelational%},
-            hidden: !!props.{{ field.fieldNameCamelCase }}{%endif%}
-          },{%endfor%}
-        ]}
-        value={data?.{{ nameCamelCase }}{{ "}" }}
-      />
-      {props.children}
+    <>
+      <Section
+        header={props.showHeader ? "{{namePascalCase}} Details" : undefined}
+        onEdit={props.showEdit ? () => setShowEditor(true) : undefined}
+        onBack={props.showBack ? () => history.back() : undefined}
+      >
+        <DataDetails
+          fetching={fetching}
+          errorMessage={error?.message}
+          fields={[{%for field in fields%}
+            {
+              key: '{{ field.fieldNameCamelCase }}',
+              label: '{{ field.fieldNamePascalCase }}',
+              value: (data: {{ namePascalCase }}) => data.{{ field.fieldNameCamelCase }}{%if field.isFieldRelational%},
+              hidden: !!props.{{ field.fieldNameCamelCase }}{%endif%}
+            },{%endfor%}
+          ]}
+          value={data?.{{ nameCamelCase }}{{ "}" }}
+        />
+        {props.children}
+      </Section>
       <Modal title="Edit {{namePascalCase}}" visible={{ "{" }}showEditor{{ "}" }}>
         <{{namePascalCase}}Editor
           id={props.id}{%for field in fields%}{%if field.isFieldRelational%}
@@ -60,6 +62,6 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
           onCancel={() => setShowEditor(false)}
         />
       </Modal>
-    </Section>
+    </>
   )
 }

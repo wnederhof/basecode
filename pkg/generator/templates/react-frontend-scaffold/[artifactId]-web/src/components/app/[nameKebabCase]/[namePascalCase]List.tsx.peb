@@ -55,28 +55,30 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
     ),
   })
   return (
-    <Section
-      header={props.showHeader ? '{{namePascalCase}} Overview' : undefined}
-      onNew={() => setEditorState({ show: true })}
-    >
-      <DataList
-        primaryKey={row => row.id}
-        fields={[{%for field in fields%}
-          {
-            key: '{{ field.fieldNameCamelCase }}',
-            label: '{{ field.fieldNamePascalCase }}',
-            value: (data: {{ namePascalCase }}) => data.{{ field.fieldNameCamelCase }}{%if field.isFieldRelational%},
-            hidden: !!props.{{ field.fieldNameCamelCase }}{%endif%}
-          },{%endfor%}
-        ]}
-        errorMessage={error?.message}
-        fetching={fetching}
-        rows={data?.{{namePluralCamelCase}}{{ "}" }}
-        showUrl={(row: {{ namePascalCase }}) => `/{{ namePluralKebabCase }}/${row.id}`}
-        onEdit={(row: {{ namePascalCase }}) => setEditorState({ show: true, id: row.id })}
-        onDelete={(row: {{ namePascalCase }}) => handleDelete(row.id)}
-      />
-      {props.children}
+    <>
+      <Section
+        header={props.showHeader ? '{{namePascalCase}} Overview' : undefined}
+        onNew={() => setEditorState({ show: true })}
+      >
+        <DataList
+          primaryKey={row => row.id}
+          fields={[{%for field in fields%}
+            {
+              key: '{{ field.fieldNameCamelCase }}',
+              label: '{{ field.fieldNamePascalCase }}',
+              value: (data: {{ namePascalCase }}) => data.{{ field.fieldNameCamelCase }}{%if field.isFieldRelational%},
+              hidden: !!props.{{ field.fieldNameCamelCase }}{%endif%}
+            },{%endfor%}
+          ]}
+          errorMessage={error?.message}
+          fetching={fetching}
+          rows={data?.{{namePluralCamelCase}}{{ "}" }}
+          showUrl={(row: {{ namePascalCase }}) => `/{{ namePluralKebabCase }}/${row.id}`}
+          onEdit={(row: {{ namePascalCase }}) => setEditorState({ show: true, id: row.id })}
+          onDelete={(row: {{ namePascalCase }}) => handleDelete(row.id)}
+        />
+        {props.children}
+      </Section>
       <Modal
         title={editorState.id ? "Edit {{namePascalCase}}" : "New {{namePascalCase}}"}
         visible={{ "{" }}editorState.show{{ "}" }}
@@ -89,6 +91,6 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
           onCancel={() => setEditorState({ show: false })}
         />
       </Modal>
-    </Section>
+    </>
   )
 }
