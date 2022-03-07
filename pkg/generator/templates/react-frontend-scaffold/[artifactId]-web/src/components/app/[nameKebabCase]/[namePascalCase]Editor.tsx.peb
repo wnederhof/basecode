@@ -5,7 +5,7 @@ import { Section } from '@components/shared/Section'
 import { Mutation, Query{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%} } from '@generated/graphql'
 
 export interface {{ namePascalCase }}EditorProps {
-  id?: string{%for field in fields%}{%if field.isFieldRelational%}
+  id?: string | number{%for field in fields%}{%if field.isFieldRelational%}
   {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
   showHeader?: boolean
   onSave: () => void
@@ -37,7 +37,11 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
         .then(() => props.onSave())
         .catch((reason) => alert(`Updating {{ nameCamelCase }} failed. Reason: ${reason}`))
     } else {
-      executeCreateMutation({ input: formData })
+      const formData{%if hasRelations%}WithRelations{%endif%} = { ...formData }{%for field in fields%}{%if field.isFieldRelational%}
+      if (props.{{ field.fieldNameCamelCase }}) {
+        formData{%if hasRelations%}WithRelations{%endif%}.{{  field.fieldNameCamelCase }} = props.{{ field.fieldNameCamelCase }}
+      }{%endif%}{%endfor%}
+      executeCreateMutation({ input: formData{%if hasRelations%}WithRelations{%endif%} })
         .then(() => props.onSave())
         .catch((reason) => alert(`Creating {{ nameCamelCase }} failed. Reason: ${reason}`))
     }

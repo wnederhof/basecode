@@ -7,7 +7,7 @@ import { {{ namePascalCase }}Editor } from '@components/app/{{ nameKebabCase }}/
 import { Query, {{ namePascalCase }} } from '@generated/graphql'
 
 export interface {{ namePascalCase }}DetailsProps {
-  id: string{%for field in fields%}{%if field.isFieldRelational%}
+  id: string | number{%for field in fields%}{%if field.isFieldRelational%}
   {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
   showHeader?: boolean
   showEdit?: boolean
