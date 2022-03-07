@@ -36,8 +36,8 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
       executeUpdateMutation({ id: props.id, input: formData })
         .then(() => props.onSave())
         .catch((reason) => alert(`Updating {{ nameCamelCase }} failed. Reason: ${reason}`))
-    } else {
-      const formData{%if hasRelations%}WithRelations{%endif%} = { ...formData }{%for field in fields%}{%if field.isFieldRelational%}
+    } else {{ "{" }}{%if hasRelations%}
+      const formDataWithRelations = { ...formData }{%endif%}{%for field in fields%}{%if field.isFieldRelational%}
       if (props.{{ field.fieldNameCamelCase }}) {
         formData{%if hasRelations%}WithRelations{%endif%}.{{  field.fieldNameCamelCase }} = props.{{ field.fieldNameCamelCase }}
       }{%endif%}{%endfor%}
