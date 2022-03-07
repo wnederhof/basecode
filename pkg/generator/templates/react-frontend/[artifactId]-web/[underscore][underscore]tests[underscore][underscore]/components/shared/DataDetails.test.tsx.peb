@@ -2,37 +2,38 @@ import { render, screen } from '@testing-library/react'
 import {
   DataDetails,
   DataDetailsField,
-} from '../../../src/components/shared/DataDetails'
+} from '@components/shared/DataDetails'
+
+interface ExampleType {
+  name: string
+}
+
+const fields: DataDetailsField<ExampleType>[] = [
+  {
+    key: 'name',
+    label: 'Name',
+    value: (data) => data.name,
+  },
+]
 
 describe('DataDetails', () => {
   it('shows loading indicator if fetching is true', () => {
-    const employee = {
+    const example = {
+      id: 1,
       name: 'John Doe',
     }
-    const fields: DataDetailsField[] = [
-      {
-        key: 'name',
-        label: 'Name',
-      },
-    ]
-    render(<DataDetails fields={fields} value={employee} fetching={true} />)
+    render(<DataDetails fields={fields} value={example} fetching={true} />)
     expect(screen.getByTestId('loadingIndicator')).not.toBeNull()
   })
 
   it('shows error message if errorMessage is provided', () => {
-    const employee = {
+    const example = {
       name: 'John Doe',
     }
-    const fields: DataDetailsField[] = [
-      {
-        key: 'name',
-        label: 'Name',
-      },
-    ]
     render(
       <DataDetails
         fields={fields}
-        value={employee}
+        value={example}
         errorMessage={'Some Error Message'}
       />
     )
@@ -40,32 +41,26 @@ describe('DataDetails', () => {
   })
 
   it('renders fields', () => {
-    const employee = {
+    const example = {
       name: 'John Doe',
     }
-    const fields: DataDetailsField[] = [
-      {
-        key: 'name',
-        label: 'Name',
-      },
-    ]
-    render(<DataDetails fields={fields} value={employee} />)
+    render(<DataDetails fields={fields} value={example} />)
     expect(screen.queryByText('Name')).not.toBeNull()
     expect(screen.queryByText('John Doe')).not.toBeNull()
   })
 
   it('utilizes the value transformation function', () => {
-    const employee = {
+    const example = {
       name: 'John Doe',
     }
-    const fields: DataDetailsField[] = [
+    const fields: DataDetailsField<ExampleType>[] = [
       {
         key: 'name',
         label: 'Name',
         value: (value) => 'Someone named ' + value.name,
       },
     ]
-    render(<DataDetails fields={fields} value={employee} />)
+    render(<DataDetails fields={fields} value={example} />)
     expect(screen.queryByText('Name')).not.toBeNull()
     expect(screen.queryByText('Someone named John Doe')).not.toBeNull()
   })

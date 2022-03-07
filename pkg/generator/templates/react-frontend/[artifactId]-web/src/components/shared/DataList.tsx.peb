@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { LoadingIndicator } from '@components/shared/LoadingIndicator'
 import { ErrorMessage } from '@components/shared/ErrorMessage'
 
-export interface DataListField {
+export interface DataListField<T> {
   key: string
   label: string
   value: (data: T) => string | number
@@ -10,7 +10,7 @@ export interface DataListField {
 }
 
 export interface DataListProps<T> {
-  primaryKey: (row: T) => string
+  primaryKey: (row: T) => string | number
   fields: DataListField<T>[]
   errorMessage?: string
   fetching?: boolean
@@ -23,7 +23,7 @@ export interface DataListProps<T> {
   onDelete: (row: T) => void
 }
 
-function extractValue<T>(field: DataListField, value: T) {
+function extractValue<T>(field: DataListField<T>, value: T) {
   return value && field.value(value)
 }
 

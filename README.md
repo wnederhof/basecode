@@ -83,10 +83,11 @@ When both the backend and frontend are running, you can build your next best thi
 - X Add tests
 - X Fix SSR using Next-URQL
 - X Use codegen using Pluck
-- Fix typing issues in React
+- X Fix typing issues in React
 - Default Tailwind?
 - Id as LONG
 - Fix possibility of authentication and broader events
+- Test with Cypress
 
 ## License
 Licensed under [MIT](LICENSE.md).

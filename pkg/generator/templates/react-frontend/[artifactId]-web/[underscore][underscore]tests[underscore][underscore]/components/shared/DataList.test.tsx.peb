@@ -1,12 +1,27 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { DataList } from '../../../src/components/shared/DataList'
+import { DataList } from '@components/shared/DataList'
+
+interface ExampleType {
+  id: number
+  name: string
+}
 
 describe('DataList', () => {
+  const primaryKey = (row: ExampleType) => row.id
+  const fields = [
+    {
+      key: 'name',
+      label: 'Name',
+      value: (row: ExampleType) => row.name,
+    },
+  ]
+  const row = { id: 1, name: 'John Doe' }
+
   it('renders', () => {
     expect(() =>
       render(
         <DataList
-          primaryKey={row => row.id}
+          primaryKey={primaryKey}
           fields={[]}
           rows={[]}
           showUrl={jest.fn()}
@@ -20,14 +35,9 @@ describe('DataList', () => {
   it('shows loading indicator if fetching is true', () => {
     render(
       <DataList
-        primaryKey={row => row.id}
+        primaryKey={primaryKey}
         fetching={true}
-        fields={[
-          {
-            key: 'name',
-            label: 'Name',
-          },
-        ]}
+        fields={fields}
         rows={[]}
         showUrl={jest.fn()}
         onEdit={jest.fn()}
@@ -43,13 +53,8 @@ describe('DataList', () => {
   it('shows error message if errorMessage is provided', () => {
     render(
       <DataList
-        primaryKey={row => row.id}
-        fields={[
-          {
-            key: 'name',
-            label: 'Name',
-          },
-        ]}
+        primaryKey={primaryKey}
+        fields={fields}
         rows={[]}
         errorMessage="Some Error Message"
         showUrl={jest.fn()}
@@ -66,13 +71,8 @@ describe('DataList', () => {
   it('renders No entries when rows is empty', () => {
     render(
       <DataList
-        primaryKey={row => row.id}
-        fields={[
-          {
-            key: 'name',
-            label: 'Name',
-          },
-        ]}
+        primaryKey={primaryKey}
+        fields={fields}
         rows={[]}
         showUrl={jest.fn()}
         onEdit={jest.fn()}
@@ -88,19 +88,9 @@ describe('DataList', () => {
   it('renders rows and columns', () => {
     render(
       <DataList
-        primaryKey={row => row.id}
-        fields={[
-          {
-            key: 'name',
-            label: 'Name',
-          },
-        ]}
-        rows={[
-          {
-            id: 1,
-            name: 'John Doe',
-          },
-        ]}
+        primaryKey={primaryKey}
+        fields={fields}
+        rows={[row]}
         showUrl={jest.fn()}
         onEdit={jest.fn()}
         onDelete={jest.fn()}
@@ -117,19 +107,9 @@ describe('DataList', () => {
   it('does not render delete, show or edit if canDelete, canEdit and canShow return false', () => {
     render(
       <DataList
-        primaryKey={row => row.id}
-        fields={[
-          {
-            key: 'name',
-            label: 'Name',
-          },
-        ]}
-        rows={[
-          {
-            id: 1,
-            name: 'John Doe',
-          },
-        ]}
+        primaryKey={primaryKey}
+        fields={fields}
+        rows={[row]}
         showUrl={jest.fn()}
         onEdit={jest.fn()}
         onDelete={jest.fn()}
@@ -146,19 +126,9 @@ describe('DataList', () => {
   it('renders delete, show or edit if canDelete, canEdit and canShow are not set', () => {
     render(
       <DataList
-        primaryKey={row => row.id}
-        fields={[
-          {
-            key: 'name',
-            label: 'Name',
-          },
-        ]}
-        rows={[
-          {
-            id: 1,
-            name: 'John Doe',
-          },
-        ]}
+        primaryKey={primaryKey}
+        fields={fields}
+        rows={[row]}
         showUrl={() => ''}
         onEdit={jest.fn()}
         onDelete={jest.fn()}
@@ -172,19 +142,9 @@ describe('DataList', () => {
   it('renders delete, show or edit if canDelete, canEdit and canShow return true', () => {
     render(
       <DataList
-        primaryKey={row => row.id}
-        fields={[
-          {
-            key: 'name',
-            label: 'Name',
-          },
-        ]}
-        rows={[
-          {
-            id: 1,
-            name: 'John Doe',
-          },
-        ]}
+        primaryKey={primaryKey}
+        fields={fields}
+        rows={[row]}
         showUrl={() => ''}
         onEdit={jest.fn()}
         onDelete={jest.fn()}
@@ -202,19 +162,9 @@ describe('DataList', () => {
     const deleteFn = jest.fn()
     render(
       <DataList
-        primaryKey={row => row.id}
-        fields={[
-          {
-            key: 'name',
-            label: 'Name',
-          },
-        ]}
-        rows={[
-          {
-            id: 1,
-            name: 'John Doe',
-          },
-        ]}
+        primaryKey={primaryKey}
+        fields={fields}
+        rows={[row]}
         showUrl={() => ''}
         onEdit={jest.fn()}
         onDelete={deleteFn}
@@ -236,19 +186,9 @@ describe('DataList', () => {
     const editFn = jest.fn()
     render(
       <DataList
-        primaryKey={row => row.id}
-        fields={[
-          {
-            key: 'name',
-            label: 'Name',
-          },
-        ]}
-        rows={[
-          {
-            id: 1,
-            name: 'John Doe',
-          },
-        ]}
+        primaryKey={primaryKey}
+        fields={fields}
+        rows={[row]}
         showUrl={() => ''}
         onEdit={editFn}
         onDelete={jest.fn()}
@@ -269,19 +209,9 @@ describe('DataList', () => {
   it('renders Show and handles click', () => {
     render(
       <DataList
-        primaryKey={row => row.id}
-        fields={[
-          {
-            key: 'name',
-            label: 'Name',
-          },
-        ]}
-        rows={[
-          {
-            id: 1,
-            name: 'John Doe',
-          },
-        ]}
+        primaryKey={primaryKey}
+        fields={fields}
+        rows={[row]}
         showUrl={() => 'https:///'}
         onEdit={jest.fn()}
         onDelete={jest.fn()}
@@ -290,6 +220,8 @@ describe('DataList', () => {
         canShow={() => true}
       />
     )
-    expect(screen.queryByText('Show')['href']).toBe('https:///')
+    expect((screen.getByText('Show') as HTMLAnchorElement).href).toBe(
+      'https:///'
+    )
   })
 })
