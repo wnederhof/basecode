@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { LoadingIndicator } from '@components/shared/LoadingIndicator'
-import { ErrorMessage } from '@components/shared/ErrorMessage'
+import { LoadingIndicator } from '@components/common/LoadingIndicator'
+import { ErrorMessage } from '@components/common/ErrorMessage'
 
 export enum DataFormFieldType {
   RELATIONAL,

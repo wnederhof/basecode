@@ -1,7 +1,7 @@
-import { DataForm, DataFormFieldType } from '@components/shared/DataForm'
+import { DataForm, DataFormFieldType } from '@components/common/DataForm'
 import { gql, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
-import { Section } from '@components/shared/Section'
+import { Section } from '@components/common/Section'
 import { Mutation, Query{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%} } from '@generated/graphql'
 
 export interface {{ namePascalCase }}EditorProps {

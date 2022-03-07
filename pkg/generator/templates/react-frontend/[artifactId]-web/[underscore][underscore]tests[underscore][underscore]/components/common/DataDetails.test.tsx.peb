@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import {
   DataDetails,
   DataDetailsField,
-} from '@components/shared/DataDetails'
+} from '@components/common/DataDetails'
 
 interface ExampleType {
   name: string

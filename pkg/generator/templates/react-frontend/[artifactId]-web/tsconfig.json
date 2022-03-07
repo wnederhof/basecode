@@ -34,8 +34,8 @@
       "@containers/*": [
         "./src/containers/*"
       ],
-      "@common/*": [
-        "./src/common/*"
+      "@lib/*": [
+        "./src/lib/*"
       ],
       "@store/*": [
         "./src/store/*"

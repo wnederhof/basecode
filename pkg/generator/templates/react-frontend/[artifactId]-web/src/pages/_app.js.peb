@@ -1,6 +1,6 @@
 import { withUrqlClient } from 'next-urql'
 import App from 'next/app'
-import { ResetUrqlClientContext } from '@common/reset-urql-client-context'
+import { ResetUrqlClientContext } from '@lib/reset-urql-client-context'
 import '../styles/globals.css'
 
 const MyApp = ({ Component, pageProps, resetUrqlClient }) => {

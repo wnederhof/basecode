@@ -56,8 +56,8 @@ When you want, for example, to generate a blog, you can do that as following:
 ```
 ccg new com.mycorp blog
 cd blog
-ccg generate scaffold Post title:String
-ccg generate scaffold Comment postId:Post comment:String
+ccg generate scaffold Post title
+ccg generate scaffold Comment postId:Post comment
 ```
 Most generators specify the following parameters:
 ```

@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { Section } from '../../../src/components/shared/Section'
+import { Section } from '../../../src/components/common/Section'
 
 describe('Section', () => {
   it('renders the header', () => {

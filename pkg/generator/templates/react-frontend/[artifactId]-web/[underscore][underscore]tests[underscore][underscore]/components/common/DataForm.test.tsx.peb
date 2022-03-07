@@ -3,7 +3,7 @@ import {
   DataForm,
   DataFormField,
   DataFormFieldType,
-} from '@components/shared/DataForm'
+} from '@components/common/DataForm'
 
 const allTypes = [
   DataFormFieldType.RELATIONAL,

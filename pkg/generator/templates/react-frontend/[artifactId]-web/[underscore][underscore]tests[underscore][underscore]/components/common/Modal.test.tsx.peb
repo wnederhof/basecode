@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { Modal } from '../../../src/components/shared/Modal'
+import { Modal } from '../../../src/components/common/Modal'
 
 describe('Modal', () => {
   it('renders nothing if visible is false', () => {
