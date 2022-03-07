@@ -12,7 +12,7 @@ export interface DataDetailsProps<T> {
   fields: DataDetailsField<T>[]
   errorMessage?: string
   fetching?: boolean
-  value: T
+  value: T | null | undefined
 }
 
 function extractValue<T>(field: DataDetailsField<T>, value: T) {
@@ -35,7 +35,7 @@ export function DataDetails<T>(props: DataDetailsProps<T>) {
         {props.fields.filter((field) => !field.hidden).map((field) => (
           <tr key={field.key}>
             <td>{field.label}</td>
-            <td>{extractValue(field, props.value)}</td>
+            <td>{props.value && extractValue(field, props.value)}</td>
           </tr>
         ))}
       </tbody>

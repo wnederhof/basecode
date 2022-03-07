@@ -1,22 +1,22 @@
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { LoadingIndicator } from '@components/shared/LoadingIndicator'
 import { ErrorMessage } from '@components/shared/ErrorMessage'
 
 export enum DataFormFieldType {
-  RELATIONAL = 'RELATIONAL',
-  RELATIONAL_OPTIONAL = 'RELATIONAL_OPTIONAL',
-  STRING = 'STRING',
-  STRING_OPTIONAL = 'STRING_OPTIONAL',
-  TEXT = 'TEXT',
-  TEXT_OPTIONAL = 'TEXT_OPTIONAL',
-  DATE = 'DATE',
-  DATE_OPTIONAL = 'DATE_OPTIONAL',
-  DATETIME = 'DATETIME',
-  DATETIME_OPTIONAL = 'DATETIME_OPTIONAL',
-  INT = 'INT',
-  INT_OPTIONAL = 'INT_OPTIONAL',
-  BOOLEAN = 'BOOLEAN',
-  BOOLEAN_OPTIONAL = 'BOOLEAN_OPTIONAL',
+  RELATIONAL,
+  RELATIONAL_OPTIONAL,
+  STRING,
+  STRING_OPTIONAL,
+  TEXT,
+  TEXT_OPTIONAL,
+  DATE,
+  DATE_OPTIONAL,
+  DATETIME,
+  DATETIME_OPTIONAL,
+  INT,
+  INT_OPTIONAL,
+  BOOLEAN,
+  BOOLEAN_OPTIONAL,
 }
 
 export interface DataFormFieldOption {
@@ -24,255 +24,212 @@ export interface DataFormFieldOption {
   value: string
 }
 
-export interface DataFormField {
+export interface DataFormField<T> {
   name: string
   label?: string
   options?: DataFormFieldOption[]
   type: DataFormFieldType
   hidden?: boolean
-  value: (data: T) => string | number
+  value: (data: T) => string | number | undefined
 }
 
-export interface DataFormProps {
-  fields: DataFormField[]
+export interface DataFormProps<T> {
+  fields: DataFormField<T>[]
   errorMessage?: string
   fetching?: boolean
-  value: any
-  onSubmit: (result: any) => void
+  defaultValue: T
+  onSubmit: (result: T) => void
   onCancel: () => void
 }
 
-const formElements = {
-  [DataFormFieldType.RELATIONAL]: (
-    field: DataFormField,
-    value: any,
-    onUpdate: any
-  ) => (
-    <select
-      name={field.name}
-      required
-      defaultValue={value}
-      onChange={(event) => onUpdate(event.target.value)}
-    >
-      <option value="" />
-      {field.options?.map((option) => (
-        <option
-          key={option.value}
-          value={option.value}
-          onSelect={() => onUpdate(option.value)}
+function createFormElement<T>(
+  field: DataFormField<T>,
+  value: string | number | undefined,
+  onUpdate: (value: string | number | undefined) => void
+) {
+  switch (field.type) {
+    case DataFormFieldType.RELATIONAL:
+      return (
+        <select
+          name={field.name}
+          required
+          defaultValue={value}
+          onChange={(event) => onUpdate(event.target.value)}
         >
-          {option.label}
-        </option>
-      ))}
-    </select>
-  ),
-  [DataFormFieldType.RELATIONAL_OPTIONAL]: (
-    field: DataFormField,
-    value: any,
-    onUpdate: any
-  ) => (
-    <select
-      name={field.name}
-      defaultValue={value}
-      onChange={(event) => onUpdate(event.target.value)}
-    >
-      {field.options?.map((option) => (
-        <option
-          key={option.value}
-          value={option.value}
-          onSelect={() => onUpdate(option.value)}
+          <option value="" />
+          {field.options?.map((option) => (
+            <option
+              key={option.value}
+              value={option.value}
+              onSelect={() => onUpdate(option.value)}
+            >
+              {option.label}
+            </option>
+          ))}
+        </select>
+      )
+    case DataFormFieldType.RELATIONAL_OPTIONAL:
+      return (
+        <select
+          name={field.name}
+          defaultValue={value}
+          onChange={(event) => onUpdate(event.target.value)}
         >
-          {option.label}
-        </option>
-      ))}
-    </select>
-  ),
-  [DataFormFieldType.STRING]: (
-    field: DataFormField,
-    value: any,
-    onUpdate: any
-  ) => (
-    <input
-      name={field.name}
-      type="text"
-      defaultValue={value}
-      onChange={(e) => onUpdate(e.target.value)}
-      required
-    />
-  ),
-  [DataFormFieldType.STRING_OPTIONAL]: (
-    field: DataFormField,
-    value: any,
-    onUpdate: any
-  ) => (
-    <input
-      name={field.name}
-      type="text"
-      defaultValue={value}
-      onChange={(e) => onUpdate(e.target.value)}
-    />
-  ),
-  [DataFormFieldType.TEXT]: (
-    field: DataFormField,
-    value: any,
-    onUpdate: any
-  ) => (
-    <textarea
-      name={field.name}
-      defaultValue={value}
-      onChange={(e) => onUpdate(e.target.value)}
-      required
-    />
-  ),
-  [DataFormFieldType.TEXT_OPTIONAL]: (
-    field: DataFormField,
-    value: any,
-    onUpdate: any
-  ) => (
-    <textarea
-      name={field.name}
-      defaultValue={value}
-      onChange={(e) => onUpdate(e.target.value)}
-    />
-  ),
-  [DataFormFieldType.DATE]: (
-    field: DataFormField,
-    value: any,
-    onUpdate: any
-  ) => (
-    <input
-      type="date"
-      name={field.name}
-      defaultValue={value}
-      onChange={(e) => onUpdate(e.target.value)}
-      required
-    />
-  ),
-  [DataFormFieldType.DATE_OPTIONAL]: (
-    field: DataFormField,
-    value: any,
-    onUpdate: any
-  ) => (
-    <input
-      type="date"
-      name={field.name}
-      defaultValue={value}
-      onChange={(e) => onUpdate(e.target.value)}
-    />
-  ),
-  [DataFormFieldType.DATETIME]: (
-    field: DataFormField,
-    value: any,
-    onUpdate: any
-  ) => (
-    <input
-      type="datetime"
-      name={field.name}
-      defaultValue={value}
-      onChange={(e) => onUpdate(e.target.value)}
-      required
-    />
-  ),
-  [DataFormFieldType.DATETIME_OPTIONAL]: (
-    field: DataFormField,
-    value: any,
-    onUpdate: any
-  ) => (
-    <input
-      type="datetime"
-      name={field.name}
-      defaultValue={value}
-      onChange={(e) => onUpdate(e.target.value)}
-    />
-  ),
-  [DataFormFieldType.INT]: (
-    field: DataFormField,
-    value: any,
-    onUpdate: any
-  ) => (
-    <input
-      type="number"
-      name={field.name}
-      defaultValue={value}
-      onChange={(e) => onUpdate(e.target.value)}
-      required
-    />
-  ),
-  [DataFormFieldType.INT_OPTIONAL]: (
-    field: DataFormField,
-    value: any,
-    onUpdate: any
-  ) => (
-    <input
-      type="number"
-      name={field.name}
-      defaultValue={value}
-      onChange={(e) => onUpdate(e.target.value)}
-    />
-  ),
-  [DataFormFieldType.BOOLEAN]: (
-    field: DataFormField,
-    value: any,
-    onUpdate: any
-  ) => (
-    <input
-      type="checkbox"
-      name={field.name}
-      defaultValue={value}
-      onChange={(e) => onUpdate(e.target.value)}
-      required
-    />
-  ),
-  [DataFormFieldType.BOOLEAN_OPTIONAL]: (
-    field: DataFormField,
-    value: any,
-    onUpdate: any
-  ) => (
-    <input
-      type="checkbox"
-      name={field.name}
-      defaultValue={value}
-      onChange={(e) => onUpdate(e.target.value)}
-    />
-  ),
+          {field.options?.map((option) => (
+            <option
+              key={option.value}
+              value={option.value}
+              onSelect={() => onUpdate(option.value)}
+            >
+              {option.label}
+            </option>
+          ))}
+        </select>
+      )
+    case DataFormFieldType.STRING:
+      return (
+        <input
+          name={field.name}
+          type="text"
+          defaultValue={value}
+          onChange={(e) => onUpdate(e.target.value)}
+          required
+        />
+      )
+    case DataFormFieldType.STRING_OPTIONAL:
+      return (
+        <input
+          name={field.name}
+          type="text"
+          defaultValue={value}
+          onChange={(e) => onUpdate(e.target.value)}
+        />
+      )
+    case DataFormFieldType.TEXT:
+      return (
+        <textarea
+          name={field.name}
+          defaultValue={value}
+          onChange={(e) => onUpdate(e.target.value)}
+          required
+        />
+      )
+    case DataFormFieldType.TEXT_OPTIONAL:
+      return (
+        <textarea
+          name={field.name}
+          defaultValue={value}
+          onChange={(e) => onUpdate(e.target.value)}
+        />
+      )
+    case DataFormFieldType.DATE:
+      return (
+        <input
+          type="date"
+          name={field.name}
+          defaultValue={value}
+          onChange={(e) => onUpdate(e.target.value)}
+          required
+        />
+      )
+    case DataFormFieldType.DATE_OPTIONAL:
+      return (
+        <input
+          type="date"
+          name={field.name}
+          defaultValue={value}
+          onChange={(e) => onUpdate(e.target.value)}
+        />
+      )
+    case DataFormFieldType.DATETIME:
+      return (
+        <input
+          type="datetime"
+          name={field.name}
+          defaultValue={value}
+          onChange={(e) => onUpdate(e.target.value)}
+          required
+        />
+      )
+    case DataFormFieldType.DATETIME_OPTIONAL:
+      return (
+        <input
+          type="datetime"
+          name={field.name}
+          defaultValue={value}
+          onChange={(e) => onUpdate(e.target.value)}
+        />
+      )
+    case DataFormFieldType.INT:
+      return (
+        <input
+          type="number"
+          name={field.name}
+          defaultValue={value}
+          onChange={(e) => onUpdate(e.target.value)}
+          required
+        />
+      )
+    case DataFormFieldType.INT_OPTIONAL:
+      return (
+        <input
+          type="number"
+          name={field.name}
+          defaultValue={value}
+          onChange={(e) => onUpdate(e.target.value)}
+        />
+      )
+    case DataFormFieldType.BOOLEAN:
+      return (
+        <input
+          type="checkbox"
+          name={field.name}
+          defaultValue={value}
+          onChange={(e) => onUpdate(e.target.value)}
+          required
+        />
+      )
+    case DataFormFieldType.BOOLEAN_OPTIONAL:
+      return (
+        <input
+          type="checkbox"
+          name={field.name}
+          defaultValue={value}
+          onChange={(e) => onUpdate(e.target.value)}
+        />
+      )
+  }
 }
 
-function LoadedDataForm(props: DataFormProps) {
-  const initialFormData = useMemo(() => {
-    const result: any = {}
-    if (props.value) {
-      props.fields.forEach((field) => {
-        result[field.name] = props.value[field.name]
-      })
-    }
-    return result
-  }, [props.value])
-  const [formData, setFormData] = useState(initialFormData)
+function LoadedDataForm<T>(props: DataFormProps<T>) {
+  const [formData, setFormData] = useState<T>(props.defaultValue)
   return (
     <form
       role="form"
       onSubmit={(e) => {
         e.preventDefault()
         props.onSubmit(formData)
-      {{ "}}" }}
+      }}
     >
       <table>
         <tbody>
-          {props.fields.filter((field) => !field.hidden).map((field) => (
-            <tr key={field.name}>
-              <td>{field.label}</td>
-              <td>
-                {formElements[field.type](
-                  field,
-                  formData && (formData as any)[field.name],
-                  (v: any) => {
-                    const newValue = { ...formData, [field.name]: v }
-                    setFormData(newValue)
-                  }
-                )}
-              </td>
-            </tr>
-          ))}
+          {props.fields
+            .filter((field) => !field.hidden)
+            .map((field) => (
+              <tr key={field.name}>
+                <td>{field.label}</td>
+                <td>
+                  {createFormElement(
+                    field,
+                    formData && field.value(formData),
+                    (v) => {
+                      const newValue = { ...formData, [field.name]: v }
+                      setFormData(newValue)
+                    }
+                  )}
+                </td>
+              </tr>
+            ))}
           <tr>
             <td />
             <td>
@@ -288,7 +245,7 @@ function LoadedDataForm(props: DataFormProps) {
   )
 }
 
-export function DataForm(props: DataFormProps) {
+export function DataForm<T>(props: DataFormProps<T>) {
   if (props.fetching) {
     return <LoadingIndicator />
   }

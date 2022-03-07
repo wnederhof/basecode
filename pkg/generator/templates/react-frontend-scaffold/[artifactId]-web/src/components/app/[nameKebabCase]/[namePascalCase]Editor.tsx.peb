@@ -2,7 +2,7 @@ import { DataForm, DataFormFieldType } from '@components/shared/DataForm'
 import { gql, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Section } from '@components/shared/Section'
-import { Mutation, Query{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%}, {{ namePascalCase }} } from '@generated/graphql'
+import { Mutation, Query{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%} } from '@generated/graphql'
 
 export interface {{ namePascalCase }}EditorProps {
   id?: string{%for field in fields%}{%if field.isFieldRelational%}
@@ -10,6 +10,10 @@ export interface {{ namePascalCase }}EditorProps {
   showHeader?: boolean
   onSave: () => void
   onCancel: () => void
+}
+
+interface {{ namePascalCase }}Form {{ "{" }}{%for field in fields%}
+  {{ field.fieldNameCamelCase }}: string | number | undefined{%endfor%}
 }
 
 export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProps) {
@@ -27,17 +31,13 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
       }
     }
   `)
-  const doSubmit = (formData: object) => {
+  const doSubmit = (formData: {{ namePascalCase }}Form) => {
     if (props.id) {
       executeUpdateMutation({ id: props.id, input: formData })
         .then(() => props.onSave())
         .catch((reason) => alert(`Updating {{ nameCamelCase }} failed. Reason: ${reason}`))
     } else {
-      {%if hasRelations%}const formDataWithRelations = {
-        {%for field in fields%}{%if field.isFieldRelational%}{{ field.fieldNameCamelCase }}: props.{{ field.fieldNameCamelCase }},
-        {%endif%}{%endfor%}...formData
-      }
-      {%endif%}executeCreateMutation({ input: formData{%if hasRelations%}WithRelations{%endif%} })
+      executeCreateMutation({ input: formData })
         .then(() => props.onSave())
         .catch((reason) => alert(`Creating {{ nameCamelCase }} failed. Reason: ${reason}`))
     }
@@ -75,6 +75,9 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
       []
     ),
   }){%endif%}{%endfor%}
+  const default{{ namePascalCase }}: {{ namePascalCase }}Form = {{ "{" }}{%for field in fields%}
+    {{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }},{%endfor%}
+  }
   return (
     <Section header={props.showHeader ? "{{namePascalCase}} Details" : undefined}>
       <DataForm
@@ -89,10 +92,10 @@ export function {{ namePascalCase }}Editor(props: {{ namePascalCase }}EditorProp
             options: {{ field.fieldTypePluralCamelCase }}QueryResult?.data?.{{ field.fieldTypePluralCamelCase }}?.map(({{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}) => {
               return {label: {{ field.fieldTypeCamelCase }}.id, value: {{ field.fieldTypeCamelCase }}.id}
             }),{%endif%}
-            value: ({{ nameCamelCase }}: {{ namePascalCase }}) => {{ nameCamelCase }}.{{ field.fieldNameCamelCase }},
+            value: ({{ nameCamelCase }}: {{ namePascalCase }}Form) => {{ nameCamelCase }}.{{ field.fieldNameCamelCase }},
           },{%endfor%}
         ]}
-        value={data?.{{ nameCamelCase }}{{ "}" }}
+        defaultValue={default{{ namePascalCase }}{{ "}" }}
         onSubmit={doSubmit}
         onCancel={props.onCancel}
       />

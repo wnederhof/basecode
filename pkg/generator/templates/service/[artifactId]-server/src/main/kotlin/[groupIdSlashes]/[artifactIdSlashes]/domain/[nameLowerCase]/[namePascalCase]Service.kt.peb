@@ -29,7 +29,7 @@ class {{ namePascalCase }}Service(
 {%endif%}{%endfor%}
     fun findAll({%if hasRelations%}filterInput: {{ namePascalCase }}FilterInput? = null{%endif%}): List<{{ namePascalCase }}> { {%for field in fields%}{%if field.isFieldRelational%}
         if (filterInput?.{{ field.fieldNameCamelCase }} != null) {
-            return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}(listOf(filterInput.{{ field.fieldNamePluralCamelCase }}))
+            return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}(listOf(filterInput.{{ field.fieldNameCamelCase }}))
         }
 {%endif%}{%endfor%}
         return {{ nameCamelCase }}Repository.findAll()

@@ -1,6 +1,6 @@
 {%if hasRelations%}package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
 {%for field in fields%}{%if field.isFieldRelational%}
-import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Event.{{ field.fieldTypePascalCase }}DeletedEvent{%endif%}{%endfor%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Event.{{ field.fieldTypePluralPascalCase }}DeletedEvent{%endif%}{%endfor%}
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
@@ -10,7 +10,7 @@ class {{ namePascalCase }}Listener{%if hasRelations%}(
 ) {
 {%for field in fields%}{%if field.isFieldRelational%}
     @EventListener
-    fun onEvent(event: {{ field.fieldTypePascalCase }}DeletedEvent) {
+    fun onEvent(event: {{ field.fieldTypePluralPascalCase }}DeletedEvent) {
         val entityIds = event.entities.mapNotNull { it.id }
         {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePluralPascalCase }}(entityIds)
     }
