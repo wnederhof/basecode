@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { {{ namePascalCase }}Details } from '../../../src/components/app/{{ nameKebabCase }}/{{ namePascalCase }}Details'
-import { Provider } from 'urql'
-import { fromValue, never } from 'wonka'
+import { Client, Provider } from 'urql'
+import { fromValue } from 'wonka'
 
 describe('{{ namePascalCase }}Details', () => {
   const {{ nameCamelCase }} = {
@@ -10,16 +10,19 @@ describe('{{ namePascalCase }}Details', () => {
   }
 
   it('renders details when data is fetched', () => {
-    const mockClient: any = {
-      executeQuery: () =>
-        fromValue({
-          data: { {{ nameCamelCase }} },
-        }),
+    const executeQuery = jest.fn()
+    executeQuery.mockReturnValue(
+      fromValue({
+        data: { {{ nameCamelCase }} },
+      })
+    )
+    const mockClient: Partial<Client> = {
+      executeQuery,
       executeMutation: jest.fn(),
       executeSubscription: jest.fn(),
     }
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}Details id="1" />
       </Provider>
     ){%for field in fields%}
@@ -27,22 +30,25 @@ describe('{{ namePascalCase }}Details', () => {
   })
 
   it('calls history.back when Back is pressed', () => {
-    const mockClient: any = {
-      executeQuery: () =>
-        fromValue({
-          data: { {{ nameCamelCase }} },
-        }),
+    const executeQuery = jest.fn()
+    executeQuery.mockReturnValue(
+      fromValue({
+        data: { {{ nameCamelCase }} },
+      })
+    )
+    const mockClient: Partial<Client> = {
+      executeQuery,
       executeMutation: jest.fn(),
       executeSubscription: jest.fn(),
     }
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}Details id="1" showBack />
       </Provider>
     )
     const backFn = jest.spyOn(history, 'back' as any).mockReturnValue(undefined)
     fireEvent(
-      screen.queryByText('Back'),
+      screen.getByText('Back'),
       new MouseEvent('click', {
         bubbles: true,
         cancelable: true,
@@ -52,22 +58,25 @@ describe('{{ namePascalCase }}Details', () => {
   })
 
   it('opens the edit modal when edit is clicked', () => {
-    const mockClient: any = {
-      executeQuery: () =>
-        fromValue({
-          data: { {{ nameCamelCase }} },
-        }),
+    const executeQuery = jest.fn()
+    executeQuery.mockReturnValue(
+      fromValue({
+        data: { {{ nameCamelCase }} },
+      })
+    )
+    const mockClient: Partial<Client> = {
+      executeQuery,
       executeMutation: jest.fn(),
       executeSubscription: jest.fn(),
     }
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}Details id="1" showEdit />
       </Provider>
     )
     expect(screen.queryByText('Edit {{ namePascalCase }}')).toBeNull()
     fireEvent(
-      screen.queryByText('Edit'),
+      screen.getByText('Edit'),
       new MouseEvent('click', {
         bubbles: true,
         cancelable: true,

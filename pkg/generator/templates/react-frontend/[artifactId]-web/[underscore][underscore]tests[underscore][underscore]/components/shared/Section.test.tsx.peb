@@ -55,7 +55,7 @@ describe('Section', () => {
     )
     expect(screen.queryByText('Back')).not.toBeNull()
     fireEvent(
-      screen.queryByText('Back'),
+      screen.getByText('Back'),
       new MouseEvent('click', {
         bubbles: true,
         cancelable: true,
@@ -73,7 +73,7 @@ describe('Section', () => {
     )
     expect(screen.queryByText('New')).not.toBeNull()
     fireEvent(
-      screen.queryByText('New'),
+      screen.getByText('New'),
       new MouseEvent('click', {
         bubbles: true,
         cancelable: true,
@@ -91,7 +91,7 @@ describe('Section', () => {
     )
     expect(screen.queryByText('Edit')).not.toBeNull()
     fireEvent(
-      screen.queryByText('Edit'),
+      screen.getByText('Edit'),
       new MouseEvent('click', {
         bubbles: true,
         cancelable: true,

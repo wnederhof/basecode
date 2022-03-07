@@ -132,7 +132,10 @@ describe('DataForm', () => {
         onCancel={null}
       />
     )
-    fireEvent(screen.queryByText('Save'), new MouseEvent('click'))
+    fireEvent(
+      screen.getByText('Save'),
+      new MouseEvent('click')
+    )
     expect(submitFn).toBeCalledWith({
       name: 'John Doe',
     })
@@ -159,7 +162,7 @@ describe('DataForm', () => {
       />
     )
     fireEvent(
-      screen.queryByText('Cancel'),
+      screen.getByText('Cancel'),
       new MouseEvent('click', {
         bubbles: true,
         cancelable: true,

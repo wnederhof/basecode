@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { {{ namePascalCase }}List } from '../../../src/components/app/{{ nameKebabCase }}/{{ namePascalCase }}List'
-import { Provider } from 'urql'
+import { Client, Provider } from 'urql'
 import { fromValue } from 'wonka'
 
 describe('{{ namePascalCase }}List', () => {
@@ -10,18 +10,21 @@ describe('{{ namePascalCase }}List', () => {
   }
 
   it('forwards to {{ nameCamelCase }} page on Show', () => {
-    const mockClient: any = {
-      executeQuery: () =>
-        fromValue({
-          data: {
-            {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
-          },
-        }),
+    const executeQuery = jest.fn()
+    executeQuery.mockReturnValue(
+      fromValue({
+        data: {
+          {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
+        },
+      })
+    )
+    const mockClient: Partial<Client> = {
+      executeQuery,
       executeMutation: jest.fn(),
       executeSubscription: jest.fn(),
     }
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}List />
       </Provider>
     )
@@ -29,18 +32,21 @@ describe('{{ namePascalCase }}List', () => {
   })
 
   it('renders entries when data is fetched', () => {
-    const mockClient: any = {
-      executeQuery: () =>
-        fromValue({
-          data: {
-            {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
-          },
-        }),
+    const executeQuery = jest.fn()
+    executeQuery.mockReturnValue(
+      fromValue({
+        data: {
+          {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
+        },
+      }),
+    )
+    const mockClient: Partial<Client> = {
+      executeQuery,
       executeMutation: jest.fn(),
       executeSubscription: jest.fn(),
     }
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}List />
       </Provider>
     ){%for field in fields%}
@@ -48,23 +54,26 @@ describe('{{ namePascalCase }}List', () => {
   })
 
   it('opens modal when edit is clicked', () => {
-    const mockClient: any = {
-      executeQuery: () =>
-        fromValue({
-          data: {
-            {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
-          },
-        }),
+    const executeQuery = jest.fn()
+    executeQuery.mockReturnValue(
+      fromValue({
+        data: {
+          {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
+        },
+      })
+    )
+    const mockClient: Partial<Client> = {
+      executeQuery,
       executeSubscription: jest.fn(),
     }
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}List />
       </Provider>
     )
     expect(screen.queryByText('Edit {{ namePascalCase }}')).toBeNull()
     fireEvent(
-      screen.queryByText('Edit'),
+      screen.getByText('Edit'),
       new MouseEvent('click', {
         bubbles: true,
         cancelable: true,
@@ -74,21 +83,27 @@ describe('{{ namePascalCase }}List', () => {
   })
 
   it('closes modal when Save is clicked', async () => {
-    const mockClient: any = {
-      executeQuery: () =>
-        fromValue({
-          data: {
-            {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
-          },
-        }),
-      executeMutation: () =>
-        fromValue({
-          data: {},
-        }),
+    const executeQuery = jest.fn()
+    const executeMutation = jest.fn()
+    executeQuery.mockReturnValue(
+      fromValue({
+        data: {
+          {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
+        },
+      })
+    )
+    executeMutation.mockReturnValue(
+      fromValue({
+        data: {},
+      })
+    )
+    const mockClient: Partial<Client> = {
+      executeQuery,
+      executeMutation,
       executeSubscription: jest.fn(),
     }
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}List />
       </Provider>
     )
@@ -112,21 +127,27 @@ describe('{{ namePascalCase }}List', () => {
   })
 
   it('closes modal when Save is clicked', async () => {
-    const mockClient: any = {
-      executeQuery: () =>
-        fromValue({
-          data: {
-            {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
-          },
-        }),
-      executeMutation: () =>
-        fromValue({
-          data: {},
-        }),
+    const executeQuery = jest.fn()
+    const executeMutation = jest.fn()
+    executeQuery.mockReturnValue(
+      fromValue({
+        data: {
+          {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
+        },
+      })
+    )
+    executeMutation.mockReturnValue(
+      fromValue({
+        data: {},
+      })
+    )
+    const mockClient: Partial<Client> = {
+      executeQuery,
+      executeMutation,
       executeSubscription: jest.fn(),
     }
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}List />
       </Provider>
     )
@@ -151,22 +172,27 @@ describe('{{ namePascalCase }}List', () => {
 
   it('calls mutation when Delete is clicked and confirmed', async () => {
     jest.spyOn(global, 'confirm' as any).mockReturnValueOnce(true)
-    const mockClient: any = {
-      executeQuery: () =>
-        fromValue({
-          data: {
-            {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
-          },
-        }),
-      executeMutation: jest.fn(() =>
-        fromValue({
-          data: {},
-        })
-      ),
+    const executeQuery = jest.fn()
+    const executeMutation = jest.fn()
+    executeQuery.mockReturnValue(
+      fromValue({
+        data: {
+          {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
+        },
+      }),
+    )
+    executeMutation.mockReturnValue(
+      fromValue({
+        data: {},
+      })
+    )
+    const mockClient: Partial<Client> = {
+      executeQuery,
+      executeMutation,
       executeSubscription: jest.fn(),
     }
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}List />
       </Provider>
     )
@@ -184,22 +210,27 @@ describe('{{ namePascalCase }}List', () => {
 
   it('does not call mutation when Delete is clicked and not confirmed', async () => {
     jest.spyOn(global, 'confirm' as any).mockReturnValueOnce(false)
-    const mockClient: any = {
-      executeQuery: () =>
-        fromValue({
-          data: {
-            {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
-          },
-        }),
-      executeMutation: jest.fn(() =>
-        fromValue({
-          data: {},
-        })
-      ),
+    const executeQuery = jest.fn()
+    const executeMutation = jest.fn()
+    executeQuery.mockReturnValue(
+      fromValue({
+        data: {
+          {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
+        },
+      })
+    )
+    executeMutation.mockReturnValue(
+      fromValue({
+        data: {},
+      })
+    )
+    const mockClient: Partial<Client> = {
+      executeQuery,
+      executeMutation,
       executeSubscription: jest.fn(),
     }
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}List />
       </Provider>
     )

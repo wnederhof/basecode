@@ -4,5 +4,13 @@
   "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended", "plugin:prettier/recommended", "prettier/react"],
   "rules": {
     "@typescript-eslint/no-unused-vars": "error"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["*.test.*", "graphql.ts"],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off"
+      }
+    }
+  ]
 }

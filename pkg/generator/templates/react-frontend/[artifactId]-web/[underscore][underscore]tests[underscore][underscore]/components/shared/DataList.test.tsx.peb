@@ -223,7 +223,7 @@ describe('DataList', () => {
       />
     )
     fireEvent(
-      screen.queryByText('Delete'),
+      screen.getByText('Delete'),
       new MouseEvent('click', {
         bubbles: true,
         cancelable: true,
@@ -257,7 +257,7 @@ describe('DataList', () => {
       />
     )
     fireEvent(
-      screen.queryByText('Edit'),
+      screen.getByText('Edit'),
       new MouseEvent('click', {
         bubbles: true,
         cancelable: true,

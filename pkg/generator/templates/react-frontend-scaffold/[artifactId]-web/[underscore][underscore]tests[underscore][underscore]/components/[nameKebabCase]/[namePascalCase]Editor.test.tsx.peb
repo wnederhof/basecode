@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { {{ namePascalCase }}Editor } from '../../../src/components/app/{{ nameKebabCase }}/{{ namePascalCase }}Editor'
-import { Provider } from 'urql'
+import { Client, Provider } from 'urql'
 import { fromValue } from 'wonka'
 
 describe('{{ namePascalCase }}Editor', () => {
@@ -10,13 +10,13 @@ describe('{{ namePascalCase }}Editor', () => {
   }
 
   it('renders form containing the necessary fields', () => {
-    const mockClient: any = {
+    const mockClient: Partial<Client> = {
       executeQuery: jest.fn(),
       executeMutation: jest.fn(),
       executeSubscription: jest.fn(),
     }
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}Editor onSave={jest.fn()} onCancel={jest.fn()} />
       </Provider>
     ){%for field in fields%}
@@ -24,19 +24,22 @@ describe('{{ namePascalCase }}Editor', () => {
   })
 
   it('renders form containing existing data if id is passed', () => {
-    const mockClient: any = {
-      executeQuery: () =>
-        fromValue({
-          data: {
-            {{ nameCamelCase }}{%for field in fields%}{%if field.isFieldRelational%},
-            {{field.fieldTypePluralCamelCase}}: [{ id: 1 }]{%endif%}{%endfor%}
-          }
-        }),
+    const executeQuery = jest.fn()
+    executeQuery.mockReturnValue(
+      fromValue({
+        data: {
+          {{ nameCamelCase }}{%for field in fields%}{%if field.isFieldRelational%},
+          {{field.fieldTypePluralCamelCase}}: [{ id: 1 }]{%endif%}{%endfor%}
+        }
+      })
+    )
+    const mockClient: Partial<Client> = {
+      executeQuery,
       executeMutation: jest.fn(),
       executeSubscription: jest.fn(),
     }
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}Editor id="1" onSave={jest.fn()} onCancel={jest.fn()} />
       </Provider>
     )
@@ -50,27 +53,32 @@ describe('{{ namePascalCase }}Editor', () => {
   })
 
   it('calls a mutation if Save is clicked if there is an id', async () => {
-    const mockClient: any = {
-      executeQuery: () =>
-        fromValue({
-          data: { {{ nameCamelCase }} },
-        }),
-      executeMutation: jest.fn(() =>
-        fromValue({
-          data: {},
-        })
-      ),
+    const executeQuery = jest.fn()
+    const executeMutation = jest.fn()
+    executeQuery.mockReturnValue(
+      fromValue({
+        data: { {{ nameCamelCase }} },
+      }),
+    )
+    executeMutation.mockReturnValue(
+      fromValue({
+        data: {},
+      })
+    )
+    const mockClient: Partial<Client> = {
+      executeQuery,
+      executeMutation,
       executeSubscription: jest.fn(),
     }
     const saveFn = jest.fn()
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}Editor id="1" onSave={saveFn} onCancel={jest.fn()} />
       </Provider>
     )
     await waitFor(() => {
       fireEvent(
-        screen.queryByText('Save'),
+        screen.getByText('Save'),
         new MouseEvent('click', {
           bubbles: true,
           cancelable: true,
@@ -82,24 +90,26 @@ describe('{{ namePascalCase }}Editor', () => {
   })
 
   it('calls a mutation if Save is clicked if there is no id', async () => {
-    const mockClient: any = {
+    const executeMutation = jest.fn()
+    executeMutation.mockReturnValue(
+      fromValue({
+        data: {},
+      })
+    )
+    const mockClient: Partial<Client> = {
       executeQuery: jest.fn(),
-      executeMutation: jest.fn(() =>
-        fromValue({
-          data: {},
-        })
-      ),
+      executeMutation,
       executeSubscription: jest.fn(),
     }
     const saveFn = jest.fn()
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}Editor onSave={saveFn} onCancel={jest.fn()} />
       </Provider>
     )
     await waitFor(() => {
       fireEvent(
-        screen.queryByText('Save'),
+        screen.getByText('Save'),
         new MouseEvent('click', {
           bubbles: true,
           cancelable: true,
@@ -111,20 +121,24 @@ describe('{{ namePascalCase }}Editor', () => {
   })
 
   it('triggers onCancel when Cancel is pressed', async () => {
-    const mockClient: any = {
-      executeQuery: () => fromValue({ data: {} }),
+    const executeQuery = jest.fn()
+    executeQuery.mockReturnValue(
+      fromValue({ data: {} })
+    )
+    const mockClient: Partial<Client> = {
+      executeQuery,
       executeMutation: jest.fn(),
       executeSubscription: jest.fn(),
     }
     const cancelFn = jest.fn()
     render(
-      <Provider value={mockClient}>
+      <Provider value={mockClient as Client}>
         <{{ namePascalCase }}Editor onSave={jest.fn()} onCancel={cancelFn} />
       </Provider>
     )
     await waitFor(() => {
       fireEvent(
-        screen.queryByText('Cancel'),
+        screen.getByText('Cancel'),
         new MouseEvent('click', {
           bubbles: true,
           cancelable: true,
