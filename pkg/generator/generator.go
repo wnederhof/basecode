@@ -138,7 +138,7 @@ func deleteFiles(sourceDirectory string, targetDirectoryTemplate string, context
 }
 
 func readProperties() (Properties, error) {
-	file, err := os.ReadFile("crudcodegen.yml")
+	file, err := os.ReadFile("basecode.yml")
 	if err != nil {
 		return Properties{}, err
 	}
@@ -155,7 +155,7 @@ func writeProperties(properties Properties, projectName string) error {
 	if err != nil {
 		return err
 	}
-	return os.WriteFile(projectName+"/crudcodegen.yml", d, os.FileMode.Perm(0644))
+	return os.WriteFile(projectName+"/basecode.yml", d, os.FileMode.Perm(0644))
 }
 
 func writeFiles(sourceDirectory string, targetDirectoryTemplate string, context map[string]interface{}, overwrite bool) error {

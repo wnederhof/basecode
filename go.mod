@@ -1,4 +1,4 @@
-module crudcodegen
+module basecode
 
 go 1.16
 

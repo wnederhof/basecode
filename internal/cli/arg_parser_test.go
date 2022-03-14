@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"crudcodegen/pkg/generator"
+	"basecode/pkg/generator"
 	"errors"
 	"github.com/stretchr/testify/assert"
 	"testing"

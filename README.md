@@ -1,17 +1,17 @@
-# CrudCodeGen
-CrudCodeGen is a full-stack scaffolding generator for Kotlin, Spring Boot, GraphQL, Vue (NuxtJS) and PostgreSQL.
+# Basecode
+Basecode is a full-stack scaffolding generator for Kotlin, Spring Boot, GraphQL, Vue (NuxtJS) and PostgreSQL.
 
 - **Productive**: Generate relational CRUD functionality for the frontend and backend including migrations, GraphQL schema extensions, unit tests and integration tests with a single command.
 - **Maintainable**: A package-by-feature backend structure, GraphQL communication and an event-driven backend model make for a highly decoupled and extensible architecture which is built to last.
 - **Incremental**: Start with almost no code. Then, once you're ready for the next step, add a GraphQL API, a frontend and more at your own pace.
 
-CrudCodeGen introduces the concept of "non-intrusive relational scaffolding", which is designed to keep your code maintainable, even for entities with 1-N relationships.
+Basecode introduces the concept of "non-intrusive relational scaffolding", which is designed to keep your code maintainable, even for entities with 1-N relationships.
 
 - **Relational:** the user may generate generate entities with 1-N relationships.
 - **Non-intrusive:** code generated for one entity will not affect code of any another entity, nor will it *change* any other file in the project.
 
 ## Installation
-Pull the latest crudcodegen from the associated Github releases.
+Pull the latest basecode from the associated Github releases.
 
 ## Usage
 ### New project
@@ -67,7 +67,7 @@ Most generators specify the following parameters:
 ```
 Here:
 - `delete` will undo the file generation. This command may also additional generate files, such as migration scripts for dropping a previously created table.
-- `overwrite` will overwrite any existing files. When this option is not specified, CrudCodeGen will abort when a file is about to be overwritten.
+- `overwrite` will overwrite any existing files. When this option is not specified, Basecode will abort when a file is about to be overwritten.
 
 ## Development
 For developing your application, you can use `docker-compose up` to spin up a development database. You can then either start the backend using your IDE by running the `main` method in the `Application.kt` file, or start the Spring Boot server using `./mvnw spring-boot:run`. You should be able to access your GraphQL dashboard at: `http://localhost:8080/graphiql`.

@@ -1,7 +1,7 @@
 package e2e
 
 import (
-	"crudcodegen/internal/cli"
+	"basecode/internal/cli"
 	"fmt"
 	"github.com/stretchr/testify/assert"
 	"io/ioutil"
@@ -32,11 +32,11 @@ func TestGeneratedCodeBuilds(t *testing.T) {
 		return
 	}
 
-	_ = cli.Run([]string { "crudcodegen", "new", "com.wouter", "testapp" })
+	_ = cli.Run([]string { "basecode", "new", "com.wouter", "testapp" })
 
 	_ = os.Chdir(testDir + "/testapp")
-	_ = cli.Run([]string { "crudcodegen", "generate", "frontend" })
-	_ = cli.Run([]string { "crudcodegen", "generate", "scaffold", "Employee", "name:string" })
+	_ = cli.Run([]string { "basecode", "generate", "frontend" })
+	_ = cli.Run([]string { "basecode", "generate", "scaffold", "Employee", "name:string" })
 
 	_ = os.Chdir(testDir + "/testapp/testapp-server")
 	cmd := exec.Command("mvn", "clean", "verify")

@@ -1,7 +1,7 @@
 package cli
 
 import (
-	"crudcodegen/pkg/generator"
+	"basecode/pkg/generator"
 	"errors"
 	"github.com/urfave/cli/v2"
 )
@@ -18,8 +18,8 @@ func Run(args []string) error {
 		},
 	}
 	app := &cli.App{
-		Name:  "crudcodegen",
-		Usage: "CrudCodeGen is a full-stack scaffolding generator for Kotlin, Spring Boot, GraphQL, Vue (NuxtJS) and PostgreSQL.",
+		Name:  "basecode",
+		Usage: "Basecode is a full-stack scaffolding generator for Kotlin, Spring Boot, GraphQL, Vue (NuxtJS) and PostgreSQL.",
 		Commands: []*cli.Command{
 			{
 				Name:    "new",
