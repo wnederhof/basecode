@@ -11,7 +11,7 @@ import (
 )
 
 func TestGeneratedCodeBuilds(t *testing.T) {
-	testDir, err := ioutil.TempDir("", "ccg")
+	testDir, err := ioutil.TempDir("", "basecode")
 	if err != nil {
 		assert.Fail(t, "Could not create temp dir.")
 		return

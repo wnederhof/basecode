@@ -15,15 +15,15 @@ Pull the latest basecode from the associated Github releases.
 
 ## Usage
 ### New project
-You can create a new project using `ccg new`.
+You can create a new project using `basecode new`.
 
 For example:
 ```
-ccg new com.mycorp blog
+basecode new com.mycorp blog
 ```
 
 ### Generate
-Using `ccg generate`, you can generate code based using one of the following generators.
+Using `basecode generate`, you can generate code based using one of the following generators.
 ```
    backend:scaffold, bes   Backend Scaffold
    backend:model, bem      Model files, including migration script, entity and repository
@@ -35,11 +35,11 @@ Using `ccg generate`, you can generate code based using one of the following gen
 ```
 For more information about the generators, use `-h`:
 ```
-ccg generate scaffold -h
+basecode generate scaffold -h
 ```
 In most cases, you will want to use `scaffold`. This generator takes a model name and a list of field names and types and will generate backend and frontend code for the model you specified. For example:
 ```
-ccg generate scaffold Post title:string description:text
+basecode generate scaffold Post title:string description:text
 ```
 Available types:
 - string
@@ -54,10 +54,10 @@ For each of these types, you can add `?` to make this type optional. For example
 # Example
 When you want, for example, to generate a blog, you can do that as following:
 ```
-ccg new com.mycorp blog
+basecode new com.mycorp blog
 cd blog
-ccg generate scaffold Post title
-ccg generate scaffold Comment postId:Post comment
+basecode generate scaffold Post title
+basecode generate scaffold Comment postId:Post comment
 ```
 Most generators specify the following parameters:
 ```
