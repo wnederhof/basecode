@@ -19,7 +19,7 @@ func Run(args []string) error {
 	}
 	app := &cli.App{
 		Name:  "basecode",
-		Usage: "Basecode is a full-stack scaffolding generator for Kotlin, Spring Boot, GraphQL, Vue (NuxtJS) and PostgreSQL.",
+		Usage: "Basecode is a full-stack scaffolding generator for Kotlin, Spring Boot, GraphQL, React (NextJS) and PostgreSQL.",
 		Commands: []*cli.Command{
 			{
 				Name:    "new",

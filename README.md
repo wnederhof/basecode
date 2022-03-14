@@ -1,5 +1,5 @@
 # Basecode
-Basecode is a full-stack scaffolding generator for Kotlin, Spring Boot, GraphQL, Vue (NuxtJS) and PostgreSQL.
+Basecode is a full-stack scaffolding generator for Kotlin, Spring Boot, GraphQL, React (NextJS) and PostgreSQL.
 
 - **Productive**: Generate relational CRUD functionality for the frontend and backend including migrations, GraphQL schema extensions, unit tests and integration tests with a single command.
 - **Maintainable**: A package-by-feature backend structure, GraphQL communication and an event-driven backend model make for a highly decoupled and extensible architecture which is built to last.
