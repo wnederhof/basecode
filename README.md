@@ -15,7 +15,7 @@ Pull the latest basecode from the associated Github releases.
 
 ## Usage
 ### New project
-You can create a new project using `basecode new`.
+Provided that basecode is available under the alias `basecode`, you can create a new project using `basecode new`.
 
 For example:
 ```
