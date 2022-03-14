@@ -20,7 +20,7 @@ jobs:
       - name: Build
         env:
           GOPROXY: "https://proxy.golang.org"
-        run: go build -ldflags "-s -w" basecode/cmd/basecode
+        run: go build -ldflags "-s -w" cmd/basecode
       - name: Set env
         run: echo "${{matrix.os}}" >> PLATFORM
       - uses: "marvinpinto/action-automatic-releases@latest"
