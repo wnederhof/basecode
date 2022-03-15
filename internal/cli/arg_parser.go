@@ -40,7 +40,7 @@ func parseArgsFromStrings(args []string) (generator.Model, error) {
 		if parseTypeResult == generator.RELATIONAL {
 			relation = parts[1]
 		}
-		attributes[i - 1] = generator.ModelAttribute{
+		attributes[i-1] = generator.ModelAttribute{
 			Name:     parts[0],
 			Type:     parseTypeResult,
 			Relation: relation,

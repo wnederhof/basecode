@@ -65,7 +65,7 @@ func provideFileContextAttributes(context map[string]interface{}, projectName st
 		return
 	}
 	suffix := strconv.Itoa(len(res) + 1)
-	context["nextMigrationPrefix"] = strings.Repeat("0", 3 - len(suffix)) + suffix
+	context["nextMigrationPrefix"] = strings.Repeat("0", 3-len(suffix)) + suffix
 }
 
 func provideRelationContextAttributes(context map[string]interface{}, attributes []ModelAttribute) {
@@ -268,8 +268,8 @@ func provideKotlinFieldContextAttributes(context map[string]interface{}, attribu
 		context["fieldKotlinTypeNotNullable"] = "Boolean"
 		context["fieldKotlinTestDummyValue"] = "true"
 	case RELATIONAL:
-		context["fieldKotlinType"] = "Int"
-		context["fieldKotlinTypeNotNullable"] = "Int"
+		context["fieldKotlinType"] = "Long"
+		context["fieldKotlinTypeNotNullable"] = "Long"
 		context["fieldKotlinTestDummyValue"] = "10"
 	default:
 		panic("Undetermined attribute type.")

@@ -38,8 +38,7 @@ func TestProvideEntityContextAttributes(t *testing.T) {
 }
 
 func TestProvideRelationContextAttributes(t *testing.T) {
-	emptyAttributes := []ModelAttribute{
-	}
+	emptyAttributes := []ModelAttribute{}
 
 	attributesNoRelations := []ModelAttribute{
 		{Name: "name", Type: STRING, Relation: ""},
@@ -210,7 +209,7 @@ func TestProvideFieldNameContextAttributes(t *testing.T) {
 	assert.Equal(t, "Date?", fields[9]["fieldKotlinType"])
 	assert.Equal(t, "DateTime?", fields[10]["fieldKotlinType"])
 	assert.Equal(t, "Boolean?", fields[11]["fieldKotlinType"])
-	assert.Equal(t, "Int", fields[12]["fieldKotlinType"])
+	assert.Equal(t, "Long", fields[12]["fieldKotlinType"])
 
 	// fieldKotlinTypeNotNullable
 	assert.Equal(t, "String", fields[0]["fieldKotlinTypeNotNullable"])
@@ -225,7 +224,7 @@ func TestProvideFieldNameContextAttributes(t *testing.T) {
 	assert.Equal(t, "Date", fields[9]["fieldKotlinTypeNotNullable"])
 	assert.Equal(t, "DateTime", fields[10]["fieldKotlinTypeNotNullable"])
 	assert.Equal(t, "Boolean", fields[11]["fieldKotlinTypeNotNullable"])
-	assert.Equal(t, "Int", fields[12]["fieldKotlinTypeNotNullable"])
+	assert.Equal(t, "Long", fields[12]["fieldKotlinTypeNotNullable"])
 
 	// fieldKotlinTestDummyValue
 	assert.Equal(t, "\"Some streetName\"", fields[0]["fieldKotlinTestDummyValue"])

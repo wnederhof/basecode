@@ -32,11 +32,12 @@ func TestGeneratedCodeBuilds(t *testing.T) {
 		return
 	}
 
-	_ = cli.Run([]string { "basecode", "new", "com.wouter", "testapp" })
+	_ = cli.Run([]string{"basecode", "new", "com.wouter", "testapp"})
 
 	_ = os.Chdir(testDir + "/testapp")
-	_ = cli.Run([]string { "basecode", "generate", "frontend" })
-	_ = cli.Run([]string { "basecode", "generate", "scaffold", "Employee", "name:string" })
+	_ = cli.Run([]string{"basecode", "generate", "frontend"})
+	_ = cli.Run([]string{"basecode", "generate", "scaffold", "Post", "title", "description:text"})
+	_ = cli.Run([]string{"basecode", "generate", "scaffold", "Comment", "postId:Post", "author", "content:text"})
 
 	_ = os.Chdir(testDir + "/testapp/testapp-server")
 	cmd := exec.Command("mvn", "clean", "verify")
@@ -45,7 +46,7 @@ func TestGeneratedCodeBuilds(t *testing.T) {
 
 	fmt.Println(string(stdout))
 	if err != nil {
-		assert.Fail(t, "Could not execute maven clean verify.", err.Error());
+		assert.Fail(t, "Could not execute maven clean verify.", err.Error())
 		_ = os.RemoveAll(testDir)
 		_ = os.Chdir(oldDir)
 		return
@@ -59,7 +60,7 @@ func TestGeneratedCodeBuilds(t *testing.T) {
 
 	fmt.Println(string(stdout))
 	if err != nil {
-		assert.Fail(t, "Could not execute npm." + err.Error());
+		assert.Fail(t, "Could not execute npm."+err.Error())
 		_ = os.RemoveAll(testDir)
 		_ = os.Chdir(oldDir)
 		return
