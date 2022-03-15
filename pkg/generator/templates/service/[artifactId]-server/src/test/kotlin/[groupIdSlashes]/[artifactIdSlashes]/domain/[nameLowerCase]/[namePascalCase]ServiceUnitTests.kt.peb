@@ -114,11 +114,11 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     @Test
     fun `findAll delegates to findBy{{field.fieldNamePascalCase}} when filter only contains {{field.fieldNameCamelCase}}`() {
         whenever({{ nameCamelCase }}Repository.findBy{{field.fieldNamePluralPascalCase}}(listOf(1)))
-            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_1))
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
         val actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}Service.{{ namePascalCase }}FilterInput({{field.fieldNameCamelCase}} = 1))
 
-        assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_1)
+        assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
         verify(publisher)
             .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}SelectedEvent({{ nameCamelCase }}Service, listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
