@@ -171,7 +171,7 @@ describe('{{ namePascalCase }}List', () => {
   })
 
   it('calls mutation when Delete is clicked and confirmed', async () => {
-    jest.spyOn(global, 'confirm' as any).mockReturnValueOnce(true)
+    jest.spyOn(window, 'confirm').mockReturnValueOnce(true)
     const executeQuery = jest.fn()
     const executeMutation = jest.fn()
     executeQuery.mockReturnValue(
@@ -209,7 +209,7 @@ describe('{{ namePascalCase }}List', () => {
   })
 
   it('does not call mutation when Delete is clicked and not confirmed', async () => {
-    jest.spyOn(global, 'confirm' as any).mockReturnValueOnce(false)
+    jest.spyOn(window, 'confirm').mockReturnValueOnce(false)
     const executeQuery = jest.fn()
     const executeMutation = jest.fn()
     executeQuery.mockReturnValue(

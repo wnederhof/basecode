@@ -46,7 +46,7 @@ describe('{{ namePascalCase }}Details', () => {
         <{{ namePascalCase }}Details id="1" showBack />
       </Provider>
     )
-    const backFn = jest.spyOn(history, 'back' as any).mockReturnValue(undefined)
+    const backFn = jest.spyOn(history, 'back').mockReturnValue(undefined)
     fireEvent(
       screen.getByText('Back'),
       new MouseEvent('click', {
