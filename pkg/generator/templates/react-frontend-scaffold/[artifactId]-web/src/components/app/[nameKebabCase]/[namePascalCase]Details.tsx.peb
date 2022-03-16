@@ -36,8 +36,14 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
     <>
       <Section
         header={props.showHeader ? "{{namePascalCase}} Details" : undefined}
-        onEdit={props.showEdit ? () => setShowEditModal(true) : undefined}
-        onBack={props.showBack ? () => history.back() : undefined}
+        actionBar={
+          <SectionBar.CommonActions
+            showEdit={props.showEdit}
+            showBack={props.showBack}
+            onEdit={() => setShowEditModal(true)}
+            onBack={() => history.back()}
+          />
+        }
       >
         <DataDetails
           fetching={fetching}

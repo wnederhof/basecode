@@ -57,8 +57,14 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
   return (
     <>
       <Section
+        showHeader={props.showHeader}
         header={props.showHeader ? '{{namePascalCase}} Overview' : undefined}
-        onNew={() => setEditModal({ show: true })}
+        actionBar={
+          <SectionBar.CommonActions
+            showNew
+            onNew={() => setEditModal({ show: true })}
+          />
+        }
       >
         <DataList
           primaryKey={row => row.id}

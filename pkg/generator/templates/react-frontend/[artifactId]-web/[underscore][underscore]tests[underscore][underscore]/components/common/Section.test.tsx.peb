@@ -8,7 +8,7 @@ describe('Section', () => {
         <div />
       </Section>
     )
-    expect(screen.queryByText('Header').nodeName).toBe('H1')
+    expect(screen.getByText('Header').nodeName).toBe('H1')
   })
 
   it('renders children', () => {
@@ -17,7 +17,7 @@ describe('Section', () => {
         <p>Child</p>
       </Section>
     )
-    expect(screen.queryByText('Child').nodeName).toBe('P')
+    expect(screen.getByText('Child').nodeName).toBe('P')
   })
 
   it('renders nested headers at least three levels deep', () => {
@@ -30,9 +30,9 @@ describe('Section', () => {
         </Section>
       </Section>
     )
-    expect(screen.queryByText('Header 1').nodeName).toBe('H1')
-    expect(screen.queryByText('Header 2').nodeName).toBe('H2')
-    expect(screen.queryByText('Header 3').nodeName).toBe('H3')
+    expect(screen.getByText('Header 1').nodeName).toBe('H1')
+    expect(screen.getByText('Header 2').nodeName).toBe('H2')
+    expect(screen.getByText('Header 3').nodeName).toBe('H3')
   })
 
   it('does not render Back, New, Edit when they are not set', () => {
@@ -49,7 +49,15 @@ describe('Section', () => {
   it('shows a Back button which is clickable when onBack is set', () => {
     const backFn = jest.fn()
     render(
-      <Section header="Header" onBack={backFn}>
+      <Section
+        header="Header"
+        actionBar={
+          <SectionBar.CommonActions
+            showBack
+            onBack={backFn}
+          />
+        }
+      >
         <div />
       </Section>
     )
@@ -67,7 +75,15 @@ describe('Section', () => {
   it('shows a New button which is clickable when onBack is set', () => {
     const newFn = jest.fn()
     render(
-      <Section header="Header" onNew={newFn}>
+      <Section
+        header="Header"
+        actionBar={
+          <SectionBar.CommonActions
+            showNew
+            onNew={newFn}
+          />
+        }
+      >
         <div />
       </Section>
     )
@@ -85,7 +101,14 @@ describe('Section', () => {
   it('shows an Edit button which is clickable when onBack is set', () => {
     const editFn = jest.fn()
     render(
-      <Section header="Header" onEdit={editFn}>
+      <Section header="Header"
+        actionBar={
+          <SectionBar.CommonActions
+            showEdit
+            onEdit={editFn}
+          />
+        }
+      >
         <div />
       </Section>
     )
