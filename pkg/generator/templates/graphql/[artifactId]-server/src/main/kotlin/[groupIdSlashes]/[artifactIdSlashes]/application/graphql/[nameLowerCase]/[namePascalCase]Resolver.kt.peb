@@ -49,7 +49,7 @@ class {{ namePascalCase }}Resolver(
         return dfe.getDataLoader<Long, {{ field.fieldTypePascalCase }}?>("{{ field.fieldTypeCamelCase }}ById")
             .load({{ nameCamelCase }}.{{ field.fieldNameCamelCase }})
     }
-{%endif%}{%endfor%}{%for field in fields%}{%if field.isFieldRelational%}
+
     @DgsData(parentType = "{{ field.fieldTypePascalCase }}", field = "{{ namePluralCamelCase }}")
     fun {{ namePluralCamelCase }}By{{ field.fieldTypePascalCase }}(dfe: DgsDataFetchingEnvironment): CompletableFuture<Iterable<{{ namePascalCase }}>> {
         val {{ field.fieldTypeCamelCase }} = dfe.getSource<{{ field.fieldTypePascalCase }}>()
@@ -58,5 +58,5 @@ class {{ namePascalCase }}Resolver(
             .load({{ field.fieldNameCamelCase }})
             .thenApply { it ?: listOf() }
     }
-{%endif%}{%endfor%}{%endif%}
+{%endif%}{%endfor%}
 }
