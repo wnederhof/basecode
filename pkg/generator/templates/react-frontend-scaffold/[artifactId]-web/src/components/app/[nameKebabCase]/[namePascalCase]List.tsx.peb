@@ -60,7 +60,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
         showHeader={props.showHeader}
         header={props.showHeader ? '{{namePascalCase}} Overview' : undefined}
         actionBar={
-          <SectionBar.CommonActions
+          <Section.CommonActions
             showNew
             onNew={() => setEditModal({ show: true })}
           />

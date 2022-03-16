@@ -52,7 +52,7 @@ describe('Section', () => {
       <Section
         header="Header"
         actionBar={
-          <SectionBar.CommonActions
+          <Section.CommonActions
             showBack
             onBack={backFn}
           />
@@ -78,7 +78,7 @@ describe('Section', () => {
       <Section
         header="Header"
         actionBar={
-          <SectionBar.CommonActions
+          <Section.CommonActions
             showNew
             onNew={newFn}
           />
@@ -103,7 +103,7 @@ describe('Section', () => {
     render(
       <Section header="Header"
         actionBar={
-          <SectionBar.CommonActions
+          <Section.CommonActions
             showEdit
             onEdit={editFn}
           />
