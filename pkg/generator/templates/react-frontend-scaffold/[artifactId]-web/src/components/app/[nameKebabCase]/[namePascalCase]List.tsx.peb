@@ -3,10 +3,10 @@ import { gql, useMutation, useQuery } from 'urql'
 import { Section } from '@components/common/Section'
 import { Modal } from '@components/common/Modal'
 import { ReactNode, useMemo, useState } from 'react'
-import { {{namePascalCase}}Editor } from '@components/app/{{ nameKebabCase }}/{{namePascalCase}}Editor'
+import { {{namePascalCase}}Form } from '@components/app/{{ nameKebabCase }}/{{namePascalCase}}Form'
 import { Mutation, Query, {{ namePascalCase }} } from '@generated/graphql'
 
-export interface {{ namePascalCase }}EditorState {
+export interface {{ namePascalCase }}ModalState {
   show: boolean
   id?: string
 }
@@ -30,7 +30,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
         { additionalTypenames: ['{{ namePascalCase }}'] }
       ).catch((reason) => alert(`Deleting {{ namePascalCase }} failed. Reason: ${reason}`))
   }
-  const [editorState, setEditorState] = useState<{{ namePascalCase }}EditorState>({
+  const [editModalState, setEditModalState] = useState<{{ namePascalCase }}ModalState>({
     show: false
   })
   const [{ data, error, fetching }] = useQuery<Query>({
@@ -58,7 +58,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
     <>
       <Section
         header={props.showHeader ? '{{namePascalCase}} Overview' : undefined}
-        onNew={() => setEditorState({ show: true })}
+        onNew={() => setEditModalState({ show: true })}
       >
         <DataList
           primaryKey={row => row.id}
@@ -74,21 +74,21 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
           fetching={fetching}
           rows={data?.{{namePluralCamelCase}}{{ "}" }}
           showUrl={(row: {{ namePascalCase }}) => `/{{ namePluralKebabCase }}/${row.id}`}
-          onEdit={(row: {{ namePascalCase }}) => setEditorState({ show: true, id: row.id })}
+          onEdit={(row: {{ namePascalCase }}) => setEditModalState({ show: true, id: row.id })}
           onDelete={(row: {{ namePascalCase }}) => handleDelete(row.id)}
         />
         {props.children}
       </Section>
       <Modal
-        title={editorState.id ? "Edit {{namePascalCase}}" : "New {{namePascalCase}}"}
-        visible={{ "{" }}editorState.show{{ "}" }}
+        title={editModalState.id ? "Edit {{namePascalCase}}" : "New {{namePascalCase}}"}
+        visible={{ "{" }}editModalState.show{{ "}" }}
       >
-        <{{namePascalCase}}Editor
-          key={editorState.id}
-          id={editorState.id}{%for field in fields%}{%if field.isFieldRelational%}
+        <{{namePascalCase}}Form
+          key={editModalState.id}
+          id={editModalState.id}{%for field in fields%}{%if field.isFieldRelational%}
           {{ field.fieldNameCamelCase }}={props.{{ field.fieldNameCamelCase }}{{ "}" }}{%endif%}{%endfor%}
-          onSave={() => setEditorState({ show: false })}
-          onCancel={() => setEditorState({ show: false })}
+          onSave={() => setEditModalState({ show: false })}
+          onCancel={() => setEditModalState({ show: false })}
         />
       </Modal>
     </>

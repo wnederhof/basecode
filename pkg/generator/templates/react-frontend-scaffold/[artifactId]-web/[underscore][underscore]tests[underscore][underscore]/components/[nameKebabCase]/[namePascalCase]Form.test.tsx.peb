@@ -1,9 +1,9 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { {{ namePascalCase }}Editor } from '../../../src/components/app/{{ nameKebabCase }}/{{ namePascalCase }}Editor'
+import { {{ namePascalCase }}Form } from '../../../src/components/app/{{ nameKebabCase }}/{{ namePascalCase }}Form'
 import { Client, Provider } from 'urql'
 import { fromValue } from 'wonka'
 
-describe('{{ namePascalCase }}Editor', () => {
+describe('{{ namePascalCase }}Form', () => {
   const {{ nameCamelCase }} = {
     id: '1'{%for field in fields%},
     {{field.fieldNameCamelCase}}: {{field.fieldFrontendTestValue}}{%endfor%}
@@ -17,7 +17,7 @@ describe('{{ namePascalCase }}Editor', () => {
     }
     render(
       <Provider value={mockClient as Client}>
-        <{{ namePascalCase }}Editor onSave={jest.fn()} onCancel={jest.fn()} />
+        <{{ namePascalCase }}Form onSave={jest.fn()} onCancel={jest.fn()} />
       </Provider>
     ){%for field in fields%}
     expect(screen.queryByText('{{ field.fieldNamePascalCase }}')).not.toBeNull(){%endfor%}
@@ -40,7 +40,7 @@ describe('{{ namePascalCase }}Editor', () => {
     }
     render(
       <Provider value={mockClient as Client}>
-        <{{ namePascalCase }}Editor id="1" onSave={jest.fn()} onCancel={jest.fn()} />
+        <{{ namePascalCase }}Form id="1" onSave={jest.fn()} onCancel={jest.fn()} />
       </Provider>
     )
     const expectedFormValues = {
@@ -73,7 +73,7 @@ describe('{{ namePascalCase }}Editor', () => {
     const saveFn = jest.fn()
     render(
       <Provider value={mockClient as Client}>
-        <{{ namePascalCase }}Editor id="1" onSave={saveFn} onCancel={jest.fn()} />
+        <{{ namePascalCase }}Form id="1" onSave={saveFn} onCancel={jest.fn()} />
       </Provider>
     )
     await waitFor(() => {
@@ -104,7 +104,7 @@ describe('{{ namePascalCase }}Editor', () => {
     const saveFn = jest.fn()
     render(
       <Provider value={mockClient as Client}>
-        <{{ namePascalCase }}Editor onSave={saveFn} onCancel={jest.fn()} />
+        <{{ namePascalCase }}Form onSave={saveFn} onCancel={jest.fn()} />
       </Provider>
     )
     await waitFor(() => {
@@ -133,7 +133,7 @@ describe('{{ namePascalCase }}Editor', () => {
     const cancelFn = jest.fn()
     render(
       <Provider value={mockClient as Client}>
-        <{{ namePascalCase }}Editor onSave={jest.fn()} onCancel={cancelFn} />
+        <{{ namePascalCase }}Form onSave={jest.fn()} onCancel={cancelFn} />
       </Provider>
     )
     await waitFor(() => {
