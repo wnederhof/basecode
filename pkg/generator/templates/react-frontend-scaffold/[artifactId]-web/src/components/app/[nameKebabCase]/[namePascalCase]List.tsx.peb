@@ -30,7 +30,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
         { additionalTypenames: ['{{ namePascalCase }}'] }
       ).catch((reason) => alert(`Deleting {{ namePascalCase }} failed. Reason: ${reason}`))
   }
-  const [editModalState, setEditModalState] = useState<{{ namePascalCase }}ModalState>({
+  const [editModalState, setEditModal] = useState<{{ namePascalCase }}ModalState>({
     show: false
   })
   const [{ data, error, fetching }] = useQuery<Query>({
@@ -58,7 +58,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
     <>
       <Section
         header={props.showHeader ? '{{namePascalCase}} Overview' : undefined}
-        onNew={() => setEditModalState({ show: true })}
+        onNew={() => setEditModal({ show: true })}
       >
         <DataList
           primaryKey={row => row.id}
@@ -74,7 +74,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
           fetching={fetching}
           rows={data?.{{namePluralCamelCase}}{{ "}" }}
           showUrl={(row: {{ namePascalCase }}) => `/{{ namePluralKebabCase }}/${row.id}`}
-          onEdit={(row: {{ namePascalCase }}) => setEditModalState({ show: true, id: row.id })}
+          onEdit={(row: {{ namePascalCase }}) => setEditModal({ show: true, id: row.id })}
           onDelete={(row: {{ namePascalCase }}) => handleDelete(row.id)}
         />
         {props.children}
@@ -87,8 +87,8 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
           key={editModalState.id}
           id={editModalState.id}{%for field in fields%}{%if field.isFieldRelational%}
           {{ field.fieldNameCamelCase }}={props.{{ field.fieldNameCamelCase }}{{ "}" }}{%endif%}{%endfor%}
-          onSave={() => setEditModalState({ show: false })}
-          onCancel={() => setEditModalState({ show: false })}
+          onSave={() => setEditModal({ show: false })}
+          onCancel={() => setEditModal({ show: false })}
         />
       </Modal>
     </>
