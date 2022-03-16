@@ -51,7 +51,7 @@ function SectionRoot(props: SectionRootProps) {
       break
   }
   return (
-    <LevelContext.Provider value={{ layoutLevel: layoutLevel + 1 }}>
+    <LevelContext.Provider value={{ "{{" }} layoutLevel: layoutLevel + 1 {{ "}}" }}>
       {header}
       {props.actionBar}
       {props.children}
