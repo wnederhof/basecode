@@ -3,5 +3,5 @@ interface ErrorMessageProps {
 }
 
 export const ErrorMessage = ({ message }: ErrorMessageProps) => (
-  <p data-testid="errorMessage">{message}</p>
+  <p>{message}</p>
 )

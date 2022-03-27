@@ -1,13 +1,10 @@
 import { {{namePascalCase}}Details } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}Details'
 import { useRouter } from 'next/router'
 
-export default function {{namePascalCase}}Id() {
+export default function Show{{namePascalCase}}() {
   const router = useRouter()
   const { {{nameCamelCase}}Id } = router.query
   return <{{ namePascalCase }}Details
     id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }}
-    showHeader
-    showEdit
-    showBack
   />
 }

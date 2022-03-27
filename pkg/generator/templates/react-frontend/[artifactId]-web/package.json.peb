@@ -26,6 +26,7 @@
   "dependencies": {
     "@graphql-codegen/cli": "^2.6.2",
     "@graphql-codegen/typescript": "^2.4.5",
+    "formik": "^2.2.9",
     "graphql": "^16.2.0",
     "next": "12.0.7",
     "next-urql": "^3.3.2",

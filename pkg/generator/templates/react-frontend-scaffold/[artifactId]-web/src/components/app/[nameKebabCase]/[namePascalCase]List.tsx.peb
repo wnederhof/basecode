@@ -1,20 +1,12 @@
-import { DataList } from '@components/common/DataList'
+import Link from 'next/link'
 import { gql, useMutation, useQuery } from 'urql'
-import { Section } from '@components/common/Section'
-import { Modal } from '@components/common/Modal'
-import { ReactNode, useMemo, useState } from 'react'
-import { {{namePascalCase}}Form } from '@components/app/{{ nameKebabCase }}/{{namePascalCase}}Form'
-import { Mutation, Query, {{ namePascalCase }} } from '@generated/graphql'
+import { useMemo } from 'react'
+import { Mutation, Query } from '@generated/graphql'
+import { LoadingIndicator } from '@components/common/LoadingIndicator'
+import { ErrorMessage } from '@components/common/ErrorMessage'
 
-export interface {{ namePascalCase }}ModalState {
-  show: boolean
-  id?: string
-}
-
-export interface {{ namePascalCase }}ListProps {
-  showHeader?: boolean{%for field in fields%}{%if field.isFieldRelational%}
+export interface {{ namePascalCase }}ListProps {{ "{" }}{%for field in fields%}{%if field.isFieldRelational%}
   {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
-  children?: ReactNode
 }
 
 export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
@@ -23,6 +15,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
       delete{{ namePascalCase }}(id: $id)
     }
   `)
+
   const handleDelete = (id: string) => {
     confirm("Are you sure you want to delete {{ namePascalCase }}?") &&
       executeDeleteMutation(
@@ -30,9 +23,7 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
         { additionalTypenames: ['{{ namePascalCase }}'] }
       ).catch((reason) => alert(`Deleting {{ namePascalCase }} failed. Reason: ${reason}`))
   }
-  const [editModalState, setEditModal] = useState<{{ namePascalCase }}ModalState>({
-    show: false
-  })
+
   const [{ data, error, fetching }] = useQuery<Query>({
     query: gql`
       {%if hasRelations%}query {{nameCamelCase}}List($filter: {{namePascalCase}}Filter) {%endif%}{
@@ -54,48 +45,37 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
       []
     ),
   })
+
+  if (fetching)
+    return <LoadingIndicator />
+
+  if (error?.message)
+    return <ErrorMessage message={error?.message} />
+
   return (
     <>
-      <Section
-        header={props.showHeader ? '{{namePascalCase}} Overview' : undefined}
-        actionBar={
-          <Section.CommonActions
-            showNew
-            onNew={() => setEditModal({ show: true })}
-          />
-        }
-      >
-        <DataList
-          primaryKey={row => row.id}
-          fields={[{%for field in fields%}
-            {
-              key: '{{ field.fieldNameCamelCase }}',
-              label: '{{ field.fieldNamePascalCase }}',
-              value: (data: {{ namePascalCase }}) => data.{{ field.fieldNameCamelCase }}{%if field.isFieldRelational%},
-              hidden: !!props.{{ field.fieldNameCamelCase }}{%endif%}
-            },{%endfor%}
-          ]}
-          errorMessage={error?.message}
-          fetching={fetching}
-          rows={data?.{{namePluralCamelCase}}{{ "}" }}
-          showUrl={(row: {{ namePascalCase }}) => `/{{ namePluralKebabCase }}/${row.id}`}
-          onEdit={(row: {{ namePascalCase }}) => setEditModal({ show: true, id: row.id })}
-          onDelete={(row: {{ namePascalCase }}) => handleDelete(row.id)}
-        />
-        {props.children}
-      </Section>
-      <Modal
-        title={editModalState.id ? "Edit {{namePascalCase}}" : "New {{namePascalCase}}"}
-        visible={{ "{" }}editModalState.show{{ "}" }}
-      >
-        <{{namePascalCase}}Form
-          key={editModalState.id}
-          id={editModalState.id}{%for field in fields%}{%if field.isFieldRelational%}
-          {{ field.fieldNameCamelCase }}={props.{{ field.fieldNameCamelCase }}{{ "}" }}{%endif%}{%endfor%}
-          onSave={() => setEditModal({ show: false })}
-          onCancel={() => setEditModal({ show: false })}
-        />
-      </Modal>
+      <h1>{{namePascalCase}} Overview</h1>
+      <div>
+        <Link href={`/{{ namePluralKebabCase }}/new`}>New</Link>
+      </div>
+      <table>
+        <thead>
+        <tr>{%for field in fields%}{%if field.isFieldRelational%}{ !props.{{ field.fieldNameCamelCase }} &&{%endif%}
+          <td>{{ field.fieldNameCamelCase }}</td>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
+          <td>Action</td>
+        </tr>
+        </thead>
+        <tbody>{data?.{{ namePluralCamelCase }}?.map(row =>
+          <tr key={row.id}>{%for field in fields%}{%if field.isFieldRelational%}{!props.{{ field.fieldNameCamelCase }} &&{%endif%}
+            <td>{row.{{ field.fieldNameCamelCase }}}</td>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
+            <td>
+              <Link href={`/{{ namePluralKebabCase }}/${row.id}`}>Show</Link>
+              <Link href={`/{{ namePluralKebabCase }}/${row.id}/edit`}>Edit</Link>
+              <button onClick={() => handleDelete(row.id)}>Delete</button>
+            </td>
+          </tr>)
+        }</tbody>
+      </table>
     </>
   )
 }

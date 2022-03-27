@@ -1,13 +1,13 @@
-import { DataForm, DataFormFieldType } from '@components/common/DataForm'
 import { gql, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
-import { Section } from '@components/common/Section'
 import { Mutation, Query{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%} } from '@generated/graphql'
+import { Formik, Field, Form, FormikHelpers } from 'formik'
+import { LoadingIndicator } from '@components/common/LoadingIndicator'
+import { ErrorMessage } from '@components/common/ErrorMessage'
 
 export interface {{ namePascalCase }}FormProps {
   id?: string | number{%for field in fields%}{%if field.isFieldRelational%}
   {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
-  showHeader?: boolean
   onSave: () => void
   onCancel: () => void
 }
@@ -24,6 +24,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
       }
     }
   `)
+
   const [, executeUpdateMutation] = useMutation<Mutation>(gql`
     mutation update{{namePascalCase}}($id: ID!, $input: Update{{namePascalCase}}Input!) {
       update{{namePascalCase}}(id: $id, input: $input) {
@@ -31,7 +32,11 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
       }
     }
   `)
-  const doSubmit = (formData: {{ namePascalCase }}FormData) => {
+
+  const doSubmit = (
+    formData: {{ namePascalCase }}FormData,
+    { setSubmitting }: FormikHelpers<{{ namePascalCase }}FormData>
+  ) => {
     if (props.id) {
       executeUpdateMutation({ id: props.id, input: formData })
         .then(() => props.onSave())
@@ -44,8 +49,10 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
       executeCreateMutation({ input: formData{%if hasRelations%}WithRelations{%endif%} })
         .then(() => props.onSave())
         .catch((reason) => alert(`Creating {{ nameCamelCase }} failed. Reason: ${reason}`))
+        .finally(() => setSubmitting(false))
     }
   }
+
   const [{ data, error, fetching }] = useQuery<Query>({
     query: gql`
       query {{nameCamelCase}}Form($id: ID!) {
@@ -63,7 +70,8 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
       }),
       []
     ),
-  }){%for field in fields%}{%if field.isFieldRelational%}
+  })
+{%for field in fields%}{%if field.isFieldRelational%}
   const [{{ field.fieldTypePluralCamelCase }}QueryResult] = useQuery<Query>({
     query: gql`
       query {{field.fieldTypePluralCamelCase}}For{{ namePascalCase }}Options {
@@ -78,31 +86,33 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
       }),
       []
     ),
-  }){%endif%}{%endfor%}
-  const default{{ namePascalCase }}: {{ namePascalCase }}FormData = {{ "{" }}{%for field in fields%}
-    {{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }},{%endfor%}
-  }
+  })
+{%endif%}{%endfor%}
+  if (fetching{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.fetching{%endif%}{%endfor%})
+    return <LoadingIndicator />
+
+  const errorMessage = error?.message{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.error?.message{%endif%}{%endfor%}
+  if (errorMessage)
+    return <ErrorMessage message={errorMessage} />
+
   return (
-    <Section header={props.showHeader ? "{{namePascalCase}} Details" : undefined}>
-      <DataForm
-        errorMessage={error?.message{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.error?.message{%endif%}{%endfor%}}
-        fetching={fetching{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.fetching{%endif%}{%endfor%}}
-        fields={[{%for field in fields%}
-          {
-            name: '{{ field.fieldNameCamelCase }}',
-            label: '{{ field.fieldNamePascalCase }}',
-            type: DataFormFieldType.{{ field.fieldInputType }},{% if field.isFieldRelational %}{%if field.isFieldRelational%}
-            hidden: !!props.{{ field.fieldNameCamelCase }},{%endif%}
-            options: {{ field.fieldTypePluralCamelCase }}QueryResult?.data?.{{ field.fieldTypePluralCamelCase }}?.map(({{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}) => {
-              return {label: {{ field.fieldTypeCamelCase }}.id, value: {{ field.fieldTypeCamelCase }}.id}
-            }),{%endif%}
-            value: ({{ nameCamelCase }}: {{ namePascalCase }}FormData) => {{ nameCamelCase }}.{{ field.fieldNameCamelCase }},
-          },{%endfor%}
-        ]}
-        defaultValue={default{{ namePascalCase }}{{ "}" }}
-        onSubmit={doSubmit}
-        onCancel={props.onCancel}
-      />
-    </Section>
+    <Formik
+      onSubmit={doSubmit}
+      initialValues={{ "{" }}{{ "{" }}{%for field in fields%}
+        {{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }},{%endfor%}
+      {{ "}" }} as {{ namePascalCase }}FormData{{ "}" }}
+    >
+      <h1>{props.id ? "Edit {{namePascalCase}}" : "New {{namePascalCase}}"}</h1>
+      <Form>{%for field in fields%}
+        <label htmlFor="{{ field.fieldNameCamelCase }}">{{ field.fieldNamePascalCase }}</label>
+        <Field
+          id="{{ field.fieldNameCamelCase }}"
+          name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
+          hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
+        />
+{%endfor%}
+        <button type="submit">Submit</button>
+      </Form>
+    </Formik>
   )
 }

@@ -1,0 +1,12 @@
+import { {{namePascalCase}}Form } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}Form'
+import { useRouter } from 'next/router'
+
+export default function Show{{namePascalCase}}() {
+  const router = useRouter()
+  const { {{nameCamelCase}}Id } = router.query
+  return <{{ namePascalCase }}Form
+    id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }}
+    onSubmit={() => history.back()}
+    onCancel={() => history.back()}
+  />
+}

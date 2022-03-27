@@ -132,7 +132,7 @@ class {{ namePascalCase }}ResolverTests {
         whenever({{ field.fieldTypeCamelCase }}Service.findAll())
             .thenReturn(listOf({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.copy(id = {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})))
 
-        whenever({{ nameCamelCase }}Service.findBy{{ field.fieldTypePascalCase }}Ids(setOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})))
+        whenever({{ nameCamelCase }}Service.findBy{{ field.fieldNamePluralPascalCase }}(setOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})))
             .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
 
         val ids = dgsQueryExecutor.executeAndExtractJsonPath<List<String>>(
