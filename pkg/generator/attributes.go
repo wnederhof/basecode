@@ -86,6 +86,7 @@ func provideFieldContextAttributes(context map[string]interface{}, attributes []
 		context["fields"].([]map[string]interface{})[i] = make(map[string]interface{}, len(attributes))
 		fieldContext := context["fields"].([]map[string]interface{})[i]
 		provideVariableWithDifferentCases(fieldContext, "fieldName", attribute.Name)
+		provideTypeNames(fieldContext, attribute)
 		if attribute.Type == RELATIONAL {
 			provideVariableWithDifferentCases(fieldContext, "fieldType", attribute.Relation)
 		}
@@ -96,6 +97,39 @@ func provideFieldContextAttributes(context map[string]interface{}, attributes []
 		provideKotlinFieldContextAttributes(fieldContext, attribute)
 		provideInputFieldContextAttributes(fieldContext, attribute)
 		provideVueTemplateContextAttributes(fieldContext, attribute)
+	}
+}
+
+func provideTypeNames(context map[string]interface{}, attribute ModelAttribute) {
+	switch attribute.Type {
+	case STRING:
+		context["fieldType"] = "STRING"
+	case INT:
+		context["fieldType"] = "INT"
+	case TEXT:
+		context["fieldType"] = "TEXT"
+	case DATE:
+		context["fieldType"] = "DATE"
+	case DATETIME:
+		context["fieldType"] = "DATETIME"
+	case BOOLEAN:
+		context["fieldType"] = "BOOLEAN"
+	case NULL_STRING:
+		context["fieldType"] = "NULL_STRING"
+	case NULL_INT:
+		context["fieldType"] = "NULL_INT"
+	case NULL_TEXT:
+		context["fieldType"] = "NULL_TEXT"
+	case NULL_DATE:
+		context["fieldType"] = "NULL_DATE"
+	case NULL_DATETIME:
+		context["fieldType"] = "NULL_DATETIME"
+	case NULL_BOOLEAN:
+		context["fieldType"] = "NULL_BOOLEAN"
+	case RELATIONAL:
+		context["fieldType"] = "RELATIONAL"
+	default:
+		panic("Undetermined attribute type.")
 	}
 }
 

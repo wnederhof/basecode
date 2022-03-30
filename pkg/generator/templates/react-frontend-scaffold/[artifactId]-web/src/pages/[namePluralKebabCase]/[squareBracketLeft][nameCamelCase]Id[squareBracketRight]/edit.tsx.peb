@@ -6,7 +6,7 @@ export default function Show{{namePascalCase}}() {
   const { {{nameCamelCase}}Id } = router.query
   return <{{ namePascalCase }}Form
     id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }}
-    onSubmit={() => history.back()}
+    onSave={() => history.back()}
     onCancel={() => history.back()}
   />
 }

@@ -1,11 +1,8 @@
 import { {{namePascalCase}}Form } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}Form'
-import { useRouter } from 'next/router'
 
 export default function New{{namePascalCase}}() {
-  const router = useRouter()
-  const { {{nameCamelCase}}Id } = router.query
   return <{{ namePascalCase }}Form
-    onSubmit={() => history.back()}
+    onSave={() => history.back()}
     onCancel={() => history.back()}
   />
 }

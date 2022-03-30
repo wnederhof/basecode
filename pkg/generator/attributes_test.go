@@ -78,22 +78,47 @@ func TestProvideFieldNameContextAttributes(t *testing.T) {
 		{Name: "streetName", Type: NULL_DATE, Relation: ""},
 		{Name: "streetName", Type: NULL_DATETIME, Relation: ""},
 		{Name: "streetName", Type: NULL_BOOLEAN, Relation: ""},
-		{Name: "streetName", Type: RELATIONAL, Relation: "Relation"},
+		{Name: "streetName", Type: RELATIONAL, Relation: "SomeRelation"},
 	}
 
 	provideFieldContextAttributes(context, attributes)
 	fields := context["fields"].([]map[string]interface{})
 
 	// fieldName
-	assert.Equal(t, "streetName", fields[0]["fieldNameCamelCase"])
-	assert.Equal(t, "StreetName", fields[0]["fieldNamePascalCase"])
-	assert.Equal(t, "streetNames", fields[0]["fieldNamePluralCamelCase"])
-	assert.Equal(t, "streetname", fields[0]["fieldNameLowerCase"])
-	assert.Equal(t, "StreetNames", fields[0]["fieldNamePluralPascalCase"])
-	assert.Equal(t, "street_names", fields[0]["fieldNamePluralSnakeCase"])
-	assert.Equal(t, "street-name", fields[0]["fieldNameKebabCase"])
-	assert.Equal(t, "street-names", fields[0]["fieldNamePluralKebabCase"])
-	assert.Equal(t, "STREET_NAME", fields[0]["fieldNameScreamingSnakeCase"])
+	assert.Equal(t, "STRING", fields[0]["fieldType"])
+	assert.Equal(t, "INT", fields[1]["fieldType"])
+	assert.Equal(t, "TEXT", fields[2]["fieldType"])
+	assert.Equal(t, "DATE", fields[3]["fieldType"])
+	assert.Equal(t, "DATETIME", fields[4]["fieldType"])
+	assert.Equal(t, "BOOLEAN", fields[5]["fieldType"])
+	assert.Equal(t, "NULL_STRING", fields[6]["fieldType"])
+	assert.Equal(t, "NULL_INT", fields[7]["fieldType"])
+	assert.Equal(t, "NULL_TEXT", fields[8]["fieldType"])
+	assert.Equal(t, "NULL_DATE", fields[9]["fieldType"])
+	assert.Equal(t, "NULL_DATETIME", fields[10]["fieldType"])
+	assert.Equal(t, "NULL_BOOLEAN", fields[11]["fieldType"])
+
+	// fieldName
+	assert.Equal(t, "someRelation", fields[12]["fieldTypeCamelCase"])
+	assert.Equal(t, "SomeRelation", fields[12]["fieldTypePascalCase"])
+	assert.Equal(t, "someRelations", fields[12]["fieldTypePluralCamelCase"])
+	assert.Equal(t, "somerelation", fields[12]["fieldTypeLowerCase"])
+	assert.Equal(t, "SomeRelations", fields[12]["fieldTypePluralPascalCase"])
+	assert.Equal(t, "some_relations", fields[12]["fieldTypePluralSnakeCase"])
+	assert.Equal(t, "some-relation", fields[12]["fieldTypeKebabCase"])
+	assert.Equal(t, "some-relations", fields[12]["fieldTypePluralKebabCase"])
+	assert.Equal(t, "SOME_RELATION", fields[12]["fieldTypeScreamingSnakeCase"])
+
+	// fieldName
+	assert.Equal(t, "someRelation", fields[12]["fieldTypeCamelCase"])
+	assert.Equal(t, "SomeRelation", fields[12]["fieldTypePascalCase"])
+	assert.Equal(t, "someRelations", fields[12]["fieldTypePluralCamelCase"])
+	assert.Equal(t, "somerelation", fields[12]["fieldTypeLowerCase"])
+	assert.Equal(t, "SomeRelations", fields[12]["fieldTypePluralPascalCase"])
+	assert.Equal(t, "some_relations", fields[12]["fieldTypePluralSnakeCase"])
+	assert.Equal(t, "some-relation", fields[12]["fieldTypeKebabCase"])
+	assert.Equal(t, "some-relations", fields[12]["fieldTypePluralKebabCase"])
+	assert.Equal(t, "SOME_RELATION", fields[12]["fieldTypeScreamingSnakeCase"])
 
 	// fieldName
 	assert.Equal(t, "streetName", fields[0]["fieldNameCamelCase"])

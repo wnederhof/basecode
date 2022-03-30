@@ -37,7 +37,7 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
     <>
       <h1>{{namePascalCase}} Details</h1>
       <div>
-        <Link href={`/{{ namePluralKebabCase }}/${row.id}/edit`}>Edit</Link>
+        <Link href={`/{{ namePluralKebabCase }}/${props.id}/edit`}>Edit</Link>
         <button onClick={() => history.back()}>Back</button>
       </div>
       <table>

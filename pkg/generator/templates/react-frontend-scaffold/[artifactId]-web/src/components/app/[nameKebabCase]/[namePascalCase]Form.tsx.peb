@@ -92,6 +92,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
     return <LoadingIndicator />
 
   const errorMessage = error?.message{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.error?.message{%endif%}{%endfor%}
+
   if (errorMessage)
     return <ErrorMessage message={errorMessage} />
 
@@ -102,14 +103,18 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
         {{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }},{%endfor%}
       {{ "}" }} as {{ namePascalCase }}FormData{{ "}" }}
     >
-      <h1>{props.id ? "Edit {{namePascalCase}}" : "New {{namePascalCase}}"}</h1>
-      <Form>{%for field in fields%}
-        <label htmlFor="{{ field.fieldNameCamelCase }}">{{ field.fieldNamePascalCase }}</label>
-        <Field
-          id="{{ field.fieldNameCamelCase }}"
-          name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
-          hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
-        />
+      <Form>
+        <h1>{props.id ? "Edit {{namePascalCase}}" : "New {{namePascalCase}}"}</h1>
+{%for field in fields%}
+        <div>
+          <label htmlFor="{{ field.fieldNameCamelCase }}">{{ field.fieldNamePascalCase }}</label>
+{% if field.fieldType
+          <Field
+            id="{{ field.fieldNameCamelCase }}"
+            name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
+            hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
+          />
+        </div>
 {%endfor%}
         <button type="submit">Submit</button>
       </Form>
