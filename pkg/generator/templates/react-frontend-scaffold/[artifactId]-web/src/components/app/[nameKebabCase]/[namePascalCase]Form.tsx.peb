@@ -33,7 +33,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
     }
   `)
 
-  function handleMutationError(result: OperationResult<Mutation, object>) {
+  function handleMutationResult(result: OperationResult<Mutation, object>) {
     if (result.error) {
       alert(`An error occured: ${result.error.message}`)
     }
@@ -46,7 +46,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
   ) => {
     if (props.id) {
       executeUpdateMutation({ id: props.id, input: formData })
-        .then(result => handleMutationError(result) && props.onSave())
+        .then(result => handleMutationResult(result) && props.onSave())
         .catch((reason) => alert(`Updating {{ nameCamelCase }} failed. Reason: ${reason}`))
     } else {{ "{" }}{%if hasRelations%}
       const formDataWithRelations = { ...formData }{%endif%}{%for field in fields%}{%if field.isFieldRelational%}
@@ -54,7 +54,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
         formData{%if hasRelations%}WithRelations{%endif%}.{{  field.fieldNameCamelCase }} = props.{{ field.fieldNameCamelCase }}
       }{%endif%}{%endfor%}
       executeCreateMutation({ input: formData{%if hasRelations%}WithRelations{%endif%} })
-        .then(result => handleMutationError(result) && props.onSave())
+        .then(result => handleMutationResult(result) && props.onSave())
         .catch((reason) => alert(`Creating {{ nameCamelCase }} failed. Reason: ${reason}`))
         .finally(() => setSubmitting(false))
     }
