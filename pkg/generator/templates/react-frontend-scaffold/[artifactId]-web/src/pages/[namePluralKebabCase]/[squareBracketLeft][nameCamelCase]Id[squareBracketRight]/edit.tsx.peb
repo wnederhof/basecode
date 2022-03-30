@@ -4,9 +4,15 @@ import { useRouter } from 'next/router'
 export default function Show{{namePascalCase}}() {
   const router = useRouter()
   const { {{nameCamelCase}}Id } = router.query
-  return <{{ namePascalCase }}Form
-    id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }}
-    onSave={() => history.back()}
-    onCancel={() => history.back()}
-  />
+  return (
+    <>
+      <h1>Edit {{ namePascalCase }}</h1>
+      <a href="javascript:history.back()">Go back</a>
+      <{{ namePascalCase }}Form
+        id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }}
+        onSave={() => history.back()}
+        onCancel={() => history.back()}
+      />
+    </>
+  )
 }

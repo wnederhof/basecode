@@ -1,8 +1,13 @@
 import { {{namePascalCase}}Form } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}Form'
 
 export default function New{{namePascalCase}}() {
-  return <{{ namePascalCase }}Form
-    onSave={() => history.back()}
-    onCancel={() => history.back()}
-  />
+  return (
+    <>
+      <h1>New {{ namePascalCase }}</h1>
+      <{{ namePascalCase }}Form
+        onSave={() => history.back()}
+        onCancel={() => history.back()}
+      />
+    </>
+  )
 }

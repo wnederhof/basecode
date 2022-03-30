@@ -27,11 +27,13 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
     ),
   })
 
-  if (fetching)
+  if (fetching) {
     return <LoadingIndicator />
+  }
 
-  if (error?.message)
+  if (error?.message) {
     return <ErrorMessage message={error?.message} />
+  }
 
   return (
     <>

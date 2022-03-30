@@ -1,4 +1,4 @@
-import { gql, useMutation, useQuery } from 'urql'
+import { gql, OperationResult, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Mutation, Query{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%} } from '@generated/graphql'
 import { Formik, Field, Form, FormikHelpers } from 'formik'
@@ -13,7 +13,7 @@ export interface {{ namePascalCase }}FormProps {
 }
 
 interface {{ namePascalCase }}FormData {{ "{" }}{%for field in fields%}
-  {{ field.fieldNameCamelCase }}: {%if field.fieldType == "INT" or field.fieldType == "NULL_INT" or field.fieldType == "RELATIONAL"%}number{%else%}string{%endif%} | undefined{%endfor%}
+  {{ field.fieldNameCamelCase }}: {%if field.fieldType == "INT" or field.fieldType == "NULL_INT"%}number{%elif field.fieldType == "RELATIONAL"%}number | string{%else%}string{%endif%} | undefined{%endfor%}
 }
 
 export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
@@ -33,13 +33,20 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
     }
   `)
 
+  function handleMutationError(result: OperationResult<Mutation, object>) {
+    if (result.error) {
+      alert(`An error occured: ${result.error.message}`)
+    }
+    return !result.error
+  }
+
   const doSubmit = (
     formData: {{ namePascalCase }}FormData,
     { setSubmitting }: FormikHelpers<{{ namePascalCase }}FormData>
   ) => {
     if (props.id) {
       executeUpdateMutation({ id: props.id, input: formData })
-        .then(() => props.onSave())
+        .then(result => handleMutationError(result) && props.onSave())
         .catch((reason) => alert(`Updating {{ nameCamelCase }} failed. Reason: ${reason}`))
     } else {{ "{" }}{%if hasRelations%}
       const formDataWithRelations = { ...formData }{%endif%}{%for field in fields%}{%if field.isFieldRelational%}
@@ -47,7 +54,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
         formData{%if hasRelations%}WithRelations{%endif%}.{{  field.fieldNameCamelCase }} = props.{{ field.fieldNameCamelCase }}
       }{%endif%}{%endfor%}
       executeCreateMutation({ input: formData{%if hasRelations%}WithRelations{%endif%} })
-        .then(() => props.onSave())
+        .then(result => handleMutationError(result) && props.onSave())
         .catch((reason) => alert(`Creating {{ nameCamelCase }} failed. Reason: ${reason}`))
         .finally(() => setSubmitting(false))
     }
@@ -88,19 +95,21 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
     ),
   })
 {%endif%}{%endfor%}
-  if (fetching{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.fetching{%endif%}{%endfor%})
+  if (fetching{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.fetching{%endif%}{%endfor%}) {
     return <LoadingIndicator />
+  }
 
   const errorMessage = error?.message{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.error?.message{%endif%}{%endfor%}
 
-  if (errorMessage)
+  if (errorMessage) {
     return <ErrorMessage message={errorMessage} />
+  }
 
   return (
     <Formik
       onSubmit={doSubmit}
       initialValues={{ "{" }}{{ "{" }}{%for field in fields%}
-        {{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }},{%endfor%}
+        {{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" or field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT"%} || ''{%endif%},{%endfor%}
       {{ "}" }} as {{ namePascalCase }}FormData{{ "}" }}
     >
       <Form>

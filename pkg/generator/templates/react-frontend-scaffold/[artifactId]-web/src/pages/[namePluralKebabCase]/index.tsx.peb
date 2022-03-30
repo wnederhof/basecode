@@ -1,5 +1,10 @@
 import { {{namePascalCase}}List } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}List'
 
 export default function {{namePluralPascalCase}}() {
-  return <{{namePascalCase}}List />
+  return (
+    <>
+      <h1>List of {{ namePluralPascalCase }}</h1>
+      <{{namePascalCase}}List />
+    </>
+  )
 }

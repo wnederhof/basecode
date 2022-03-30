@@ -46,11 +46,13 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
     ),
   })
 
-  if (fetching)
+  if (fetching) {
     return <LoadingIndicator />
+  }
 
-  if (error?.message)
+  if (error?.message) {
     return <ErrorMessage message={error?.message} />
+  }
 
   return (
     <>

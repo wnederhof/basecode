@@ -4,7 +4,13 @@ import { useRouter } from 'next/router'
 export default function Show{{namePascalCase}}() {
   const router = useRouter()
   const { {{nameCamelCase}}Id } = router.query
-  return <{{ namePascalCase }}Details
-    id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }}
-  />
+  return (
+    <>
+      <h1>Show {{ namePascalCase }}</h1>
+      <a href="javascript:history.back()">Go back</a>
+      <{{ namePascalCase }}Details
+        id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }}
+      />
+    </>
+  )
 }
