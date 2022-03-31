@@ -56,7 +56,6 @@ export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
 
   return (
     <>
-      <h1>{{namePascalCase}} Overview</h1>
       <div>
         <Link href={`/{{ namePluralKebabCase }}/new`}>New</Link>
       </div>

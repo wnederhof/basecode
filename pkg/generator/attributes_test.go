@@ -231,8 +231,8 @@ func TestProvideFieldNameContextAttributes(t *testing.T) {
 	assert.Equal(t, "String?", fields[6]["fieldKotlinType"])
 	assert.Equal(t, "Int?", fields[7]["fieldKotlinType"])
 	assert.Equal(t, "String?", fields[8]["fieldKotlinType"])
-	assert.Equal(t, "Date?", fields[9]["fieldKotlinType"])
-	assert.Equal(t, "DateTime?", fields[10]["fieldKotlinType"])
+	assert.Equal(t, "LocalDate?", fields[9]["fieldKotlinType"])
+	assert.Equal(t, "LocalDateTime?", fields[10]["fieldKotlinType"])
 	assert.Equal(t, "Boolean?", fields[11]["fieldKotlinType"])
 	assert.Equal(t, "Long", fields[12]["fieldKotlinType"])
 

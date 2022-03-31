@@ -265,12 +265,12 @@ func provideKotlinFieldContextAttributes(context map[string]interface{}, attribu
 		context["fieldKotlinTypeNotNullable"] = "String"
 		context["fieldKotlinTestDummyValue"] = "\"Some streetName\""
 	case DATE:
-		context["fieldKotlinType"] = "Date"
-		context["fieldKotlinTypeNotNullable"] = "Date"
+		context["fieldKotlinType"] = "LocalDate"
+		context["fieldKotlinTypeNotNullable"] = "LocalDate"
 		context["fieldKotlinTestDummyValue"] = "LocalDate.of(2000, 1, 1)"
 	case DATETIME:
-		context["fieldKotlinType"] = "DateTime"
-		context["fieldKotlinTypeNotNullable"] = "DateTime"
+		context["fieldKotlinType"] = "LocalDateTime"
+		context["fieldKotlinTypeNotNullable"] = "LocalDateTime"
 		context["fieldKotlinTestDummyValue"] = "LocalDateTime.of(2000, 1, 1, 0, 0)"
 	case BOOLEAN:
 		context["fieldKotlinType"] = "Boolean"

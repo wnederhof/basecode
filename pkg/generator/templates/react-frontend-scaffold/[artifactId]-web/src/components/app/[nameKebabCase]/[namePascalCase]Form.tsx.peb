@@ -113,53 +113,45 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
       {{ "}" }} as {{ namePascalCase }}FormData{{ "}" }}
     >
       <Form>
-        <h1>{props.id ? "Edit {{namePascalCase}}" : "New {{namePascalCase}}"}</h1>
-{%for field in fields%}
         <div>
           <label htmlFor="{{ field.fieldNameCamelCase }}">{{ field.fieldNamePascalCase }}</label>{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" %}
           <Field
-            id="{{ field.fieldNameCamelCase }}"
             name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
+            type="text"
             hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
           />
 {%elif field.fieldType == "INT" or field.fieldType == "NULL_INT" %}
           <Field
-            id="{{ field.fieldNameCamelCase }}"
             name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
             type="number"
             hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
           />
 {%elif field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT" %}
           <Field
-            id="{{ field.fieldNameCamelCase }}"
             name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
             as="textarea"
             hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
           />
 {%elif field.fieldType == "INT" or field.fieldType == "NULL_INT" %}
           <Field
-            id="{{ field.fieldNameCamelCase }}"
             name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
             type="number"
             hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
           />
 {%elif field.fieldType == "DATE" or field.fieldType == "NULL_DATE" %}
           <Field
-            id="{{ field.fieldNameCamelCase }}"
             name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
             type="date"
             hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
           />
 {%elif field.fieldType == "DATETIME" or field.fieldType == "NULL_DATETIME" %}
           <Field
-            id="{{ field.fieldNameCamelCase }}"
             name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
             type="datetime"
             hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
           />
 {%elif field.fieldType == "RELATIONAL" %}
           <Field
-            id="{{ field.fieldNameCamelCase }}"
             name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
             as="select"
             hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
