@@ -63,13 +63,13 @@ func parseType(s string) (uint8, error) {
 		"int",
 		"text",
 		"date",
-		"datetime",
+		"datetime__DISABLED", // This type does not work yet.
 		"boolean",
 		"string?",
 		"int?",
 		"text?",
 		"date?",
-		"datetime?",
+		"datetime__DISABLED?", // This type does not work yet.
 		"boolean?",
 	}
 
