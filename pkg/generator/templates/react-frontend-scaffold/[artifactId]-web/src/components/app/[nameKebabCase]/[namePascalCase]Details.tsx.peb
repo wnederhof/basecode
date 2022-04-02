@@ -1,4 +1,3 @@
-import Link from 'next/link'
 import { gql, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Query } from '@generated/graphql'
@@ -38,7 +37,7 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
   return (
     <table>
       <tbody>{%for field in fields%}{%if field.isFieldRelational%}{!props.{{ field.fieldNameCamelCase }} &&{%endif%}
-        <tr key={data?.{{ nameCamelCase }}?.id}>
+        <tr>
           <td>{{ field.fieldNameCamelCase }}</td>
           <td>{data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}}</td>
         </tr>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
