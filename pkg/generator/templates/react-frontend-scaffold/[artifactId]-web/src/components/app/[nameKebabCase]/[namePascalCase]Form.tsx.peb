@@ -13,7 +13,7 @@ export interface {{ namePascalCase }}FormProps {
 }
 
 interface {{ namePascalCase }}FormData {{ "{" }}{%for field in fields%}
-  {{ field.fieldNameCamelCase }}: {%if field.fieldType == "INT" or field.fieldType == "NULL_INT"%}number{%elif field.fieldType == "RELATIONAL"%}number | string{%else%}string{%endif%} | undefined{%endfor%}
+  {{ field.fieldNameCamelCase }}: {%if field.fieldType == "INT" or field.fieldType == "NULL_INT"%}number{%elif field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%}boolean{%elif field.fieldType == "RELATIONAL"%}number | string{%else%}string{%endif%} | undefined{%endfor%}
 }
 
 export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
@@ -109,7 +109,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
     <Formik
       onSubmit={doSubmit}
       initialValues={{ "{" }}{{ "{" }}{%for field in fields%}
-        {{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" or field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT"%} || ''{%endif%},{%endfor%}
+        {{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} || false{%endif%}{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" or field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT"%} || ''{%endif%},{%endfor%}
       {{ "}" }} as {{ namePascalCase }}FormData{{ "}" }}
     >
       <Form role="form">{%for field in fields%}
@@ -148,6 +148,12 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
           <Field
             name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
             type="datetime"
+            hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
+          />
+{%elif field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN" %}
+          <Field
+            name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
+            type="checkbox"
             hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
           />
 {%elif field.fieldType == "RELATIONAL" %}

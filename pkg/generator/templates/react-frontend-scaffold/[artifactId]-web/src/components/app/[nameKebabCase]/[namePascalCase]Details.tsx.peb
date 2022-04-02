@@ -38,7 +38,7 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
     <table>
       <tbody>{%for field in fields%}{%if field.isFieldRelational%}{!props.{{ field.fieldNameCamelCase }} &&{%endif%}
         <tr>
-          <td>{{ field.fieldNameCamelCase }}</td>
+          <td>{{ field.fieldNamePascalCase }}</td>
           <td>{data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}}</td>
         </tr>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
       </tbody>

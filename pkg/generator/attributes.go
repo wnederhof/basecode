@@ -263,7 +263,7 @@ func provideKotlinFieldContextAttributes(context map[string]interface{}, attribu
 		context["fieldKotlinAnnotations"] = "@Lob"
 		context["fieldKotlinType"] = "String"
 		context["fieldKotlinTypeNotNullable"] = "String"
-		context["fieldKotlinTestDummyValue"] = "\"Some streetName\""
+		context["fieldKotlinTestDummyValue"] = "\"Some " + attribute.Name + "\""
 	case DATE:
 		context["fieldKotlinType"] = "LocalDate"
 		context["fieldKotlinTypeNotNullable"] = "LocalDate"
@@ -279,7 +279,7 @@ func provideKotlinFieldContextAttributes(context map[string]interface{}, attribu
 	case NULL_STRING:
 		context["fieldKotlinType"] = "String?"
 		context["fieldKotlinTypeNotNullable"] = "String"
-		context["fieldKotlinTestDummyValue"] = "\"Some streetName\""
+		context["fieldKotlinTestDummyValue"] = "\"Some " + attribute.Name + "\""
 	case NULL_INT:
 		context["fieldKotlinType"] = "Int?"
 		context["fieldKotlinTypeNotNullable"] = "Int"
@@ -288,7 +288,7 @@ func provideKotlinFieldContextAttributes(context map[string]interface{}, attribu
 		context["fieldKotlinAnnotations"] = "@Lob"
 		context["fieldKotlinType"] = "String?"
 		context["fieldKotlinTypeNotNullable"] = "String"
-		context["fieldKotlinTestDummyValue"] = "\"Some streetName\""
+		context["fieldKotlinTestDummyValue"] = "\"Some " + attribute.Name + "\""
 	case NULL_DATE:
 		context["fieldKotlinType"] = "LocalDate?"
 		context["fieldKotlinTypeNotNullable"] = "LocalDate"
