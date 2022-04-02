@@ -63,14 +63,12 @@ func parseType(s string) (uint8, error) {
 		"int",
 		"text",
 		"date",
-		"datetime__DISABLED", // This type does not work yet.
 		"boolean",
-		"string?",
-		"int?",
-		"text?",
-		"date?",
-		"datetime__DISABLED?", // This type does not work yet.
-		"boolean?",
+		"string_opt",
+		"int_opt",
+		"text_opt",
+		"date_opt",
+		"boolean_opt",
 	}
 
 	for i, testcase := range cases {

@@ -13,13 +13,11 @@ const (
 	INT
 	TEXT
 	DATE
-	DATETIME
 	BOOLEAN
 	NULL_STRING
 	NULL_INT
 	NULL_TEXT
 	NULL_DATE
-	NULL_DATETIME
 	NULL_BOOLEAN
 	RELATIONAL
 )
@@ -110,8 +108,6 @@ func provideTypeNames(context map[string]interface{}, attribute ModelAttribute) 
 		context["fieldType"] = "TEXT"
 	case DATE:
 		context["fieldType"] = "DATE"
-	case DATETIME:
-		context["fieldType"] = "DATETIME"
 	case BOOLEAN:
 		context["fieldType"] = "BOOLEAN"
 	case NULL_STRING:
@@ -122,8 +118,6 @@ func provideTypeNames(context map[string]interface{}, attribute ModelAttribute) 
 		context["fieldType"] = "NULL_TEXT"
 	case NULL_DATE:
 		context["fieldType"] = "NULL_DATE"
-	case NULL_DATETIME:
-		context["fieldType"] = "NULL_DATETIME"
 	case NULL_BOOLEAN:
 		context["fieldType"] = "NULL_BOOLEAN"
 	case RELATIONAL:
@@ -143,8 +137,6 @@ func provideDatabaseDefinitionTypeContextAttributes(context map[string]interface
 		context["fieldDatabaseDefinitionType"] = "TEXT NOT NULL"
 	case DATE:
 		context["fieldDatabaseDefinitionType"] = "DATE NOT NULL"
-	case DATETIME:
-		context["fieldDatabaseDefinitionType"] = "TIMESTAMP NOT NULL"
 	case BOOLEAN:
 		context["fieldDatabaseDefinitionType"] = "BOOLEAN NOT NULL"
 	case NULL_STRING:
@@ -155,8 +147,6 @@ func provideDatabaseDefinitionTypeContextAttributes(context map[string]interface
 		context["fieldDatabaseDefinitionType"] = "TEXT NULL"
 	case NULL_DATE:
 		context["fieldDatabaseDefinitionType"] = "DATE NULL"
-	case NULL_DATETIME:
-		context["fieldDatabaseDefinitionType"] = "TIMESTAMP NULL"
 	case NULL_BOOLEAN:
 		context["fieldDatabaseDefinitionType"] = "BOOLEAN NULL"
 	case RELATIONAL:
@@ -176,8 +166,6 @@ func provideIsFieldNullableContextAttributes(context map[string]interface{}, att
 		context["isFieldNullable"] = false
 	case DATE:
 		context["isFieldNullable"] = false
-	case DATETIME:
-		context["isFieldNullable"] = false
 	case BOOLEAN:
 		context["isFieldNullable"] = false
 	case NULL_STRING:
@@ -187,8 +175,6 @@ func provideIsFieldNullableContextAttributes(context map[string]interface{}, att
 	case NULL_TEXT:
 		context["isFieldNullable"] = true
 	case NULL_DATE:
-		context["isFieldNullable"] = true
-	case NULL_DATETIME:
 		context["isFieldNullable"] = true
 	case NULL_BOOLEAN:
 		context["isFieldNullable"] = true
@@ -217,9 +203,6 @@ func provideGraphQLFieldTypeContextAttributes(context map[string]interface{}, at
 	case DATE:
 		context["nullableGraphQLFieldType"] = "Date"
 		context["graphQLFieldType"] = "Date!"
-	case DATETIME:
-		context["nullableGraphQLFieldType"] = "DateTime"
-		context["graphQLFieldType"] = "DateTime!"
 	case BOOLEAN:
 		context["nullableGraphQLFieldType"] = "Boolean"
 		context["graphQLFieldType"] = "Boolean!"
@@ -235,9 +218,6 @@ func provideGraphQLFieldTypeContextAttributes(context map[string]interface{}, at
 	case NULL_DATE:
 		context["nullableGraphQLFieldType"] = "Date"
 		context["graphQLFieldType"] = "Date"
-	case NULL_DATETIME:
-		context["nullableGraphQLFieldType"] = "DateTime"
-		context["graphQLFieldType"] = "DateTime"
 	case NULL_BOOLEAN:
 		context["nullableGraphQLFieldType"] = "Boolean"
 		context["graphQLFieldType"] = "Boolean"
@@ -268,10 +248,6 @@ func provideKotlinFieldContextAttributes(context map[string]interface{}, attribu
 		context["fieldKotlinType"] = "LocalDate"
 		context["fieldKotlinTypeNotNullable"] = "LocalDate"
 		context["fieldKotlinTestDummyValue"] = "LocalDate.of(2000, 1, 1)"
-	case DATETIME:
-		context["fieldKotlinType"] = "LocalDateTime"
-		context["fieldKotlinTypeNotNullable"] = "LocalDateTime"
-		context["fieldKotlinTestDummyValue"] = "LocalDateTime.of(2000, 1, 1, 0, 0)"
 	case BOOLEAN:
 		context["fieldKotlinType"] = "Boolean"
 		context["fieldKotlinTypeNotNullable"] = "Boolean"
@@ -293,17 +269,13 @@ func provideKotlinFieldContextAttributes(context map[string]interface{}, attribu
 		context["fieldKotlinType"] = "LocalDate?"
 		context["fieldKotlinTypeNotNullable"] = "LocalDate"
 		context["fieldKotlinTestDummyValue"] = "LocalDate.of(2000, 1, 1)"
-	case NULL_DATETIME:
-		context["fieldKotlinType"] = "LocalDateTime?"
-		context["fieldKotlinTypeNotNullable"] = "LocalDateTime"
-		context["fieldKotlinTestDummyValue"] = "LocalDateTime.of(2000, 1, 1, 0, 0)"
 	case NULL_BOOLEAN:
 		context["fieldKotlinType"] = "Boolean?"
 		context["fieldKotlinTypeNotNullable"] = "Boolean"
 		context["fieldKotlinTestDummyValue"] = "true"
 	case RELATIONAL:
-		context["fieldKotlinType"] = "Long"
-		context["fieldKotlinTypeNotNullable"] = "Long"
+		context["fieldKotlinType"] = "Int"
+		context["fieldKotlinTypeNotNullable"] = "Int"
 		context["fieldKotlinTestDummyValue"] = "10"
 	default:
 		panic("Undetermined attribute type.")
@@ -320,8 +292,6 @@ func provideInputFieldContextAttributes(context map[string]interface{}, attribut
 		context["fieldInputType"] = "TEXT"
 	case DATE:
 		context["fieldInputType"] = "DATE"
-	case DATETIME:
-		context["fieldInputType"] = "DATETIME"
 	case BOOLEAN:
 		context["fieldInputType"] = "BOOLEAN"
 	case NULL_STRING:
@@ -332,8 +302,6 @@ func provideInputFieldContextAttributes(context map[string]interface{}, attribut
 		context["fieldInputType"] = "TEXT_OPTIONAL"
 	case NULL_DATE:
 		context["fieldInputType"] = "DATE_OPTIONAL"
-	case NULL_DATETIME:
-		context["fieldInputType"] = "DATETIME_OPTIONAL"
 	case NULL_BOOLEAN:
 		context["fieldInputType"] = "BOOLEAN_OPTIONAL"
 	case RELATIONAL:
@@ -353,8 +321,6 @@ func provideVueTemplateContextAttributes(context map[string]interface{}, attribu
 		context["fieldFrontendTestValue"] = "'Some streetName'"
 	case DATE:
 		context["fieldFrontendTestValue"] = "'2000-01-01'"
-	case DATETIME:
-		context["fieldFrontendTestValue"] = "'2000-01-01T00:00'"
 	case BOOLEAN:
 		context["fieldFrontendTestValue"] = "true"
 	case NULL_STRING:
@@ -365,8 +331,6 @@ func provideVueTemplateContextAttributes(context map[string]interface{}, attribu
 		context["fieldFrontendTestValue"] = "'Some streetName'"
 	case NULL_DATE:
 		context["fieldFrontendTestValue"] = "'2000-01-01'"
-	case NULL_DATETIME:
-		context["fieldFrontendTestValue"] = "'2000-01-01T00:00'"
 	case NULL_BOOLEAN:
 		context["fieldFrontendTestValue"] = "true"
 	case RELATIONAL:
