@@ -112,7 +112,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
         {{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" or field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT"%} || ''{%endif%},{%endfor%}
       {{ "}" }} as {{ namePascalCase }}FormData{{ "}" }}
     >
-      <Form>{%for field in fields%}
+      <Form role="form">{%for field in fields%}
         <div>
           <label htmlFor="{{ field.fieldNameCamelCase }}">{{ field.fieldNamePascalCase }}</label>{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" %}
           <Field
@@ -162,7 +162,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
           </Field>
 {%endif%}        </div>
 {%endfor%}
-        <button type="submit">Submit</button>
+        <button type="submit">Save</button>
       </Form>
     </Formik>
   )

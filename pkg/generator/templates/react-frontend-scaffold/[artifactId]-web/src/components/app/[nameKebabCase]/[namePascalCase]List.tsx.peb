@@ -4,12 +4,12 @@ import { useMemo } from 'react'
 import { Mutation, Query } from '@generated/graphql'
 import { LoadingIndicator } from '@components/common/LoadingIndicator'
 import { ErrorMessage } from '@components/common/ErrorMessage'
-
+{%if hasRelations%}
 export interface {{ namePascalCase }}ListProps {{ "{" }}{%for field in fields%}{%if field.isFieldRelational%}
   {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
 }
-
-export function {{ namePascalCase }}List(props: {{ namePascalCase }}ListProps) {
+{%endif%}
+export function {{ namePascalCase }}List({%if hasRelations%}props: {{ namePascalCase }}ListProps{%endif%}) {
   const [, executeDeleteMutation] = useMutation<Mutation>(gql`
     mutation delete{{ namePascalCase }}($id: ID!) {
       delete{{ namePascalCase }}(id: $id)

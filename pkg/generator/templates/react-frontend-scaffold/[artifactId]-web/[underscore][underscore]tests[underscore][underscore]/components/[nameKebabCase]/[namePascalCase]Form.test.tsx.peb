@@ -119,32 +119,4 @@ describe('{{ namePascalCase }}Form', () => {
     expect(mockClient.executeMutation).toBeCalled()
     expect(saveFn).toBeCalled()
   })
-
-  it('triggers onCancel when Cancel is pressed', async () => {
-    const executeQuery = jest.fn()
-    executeQuery.mockReturnValue(
-      fromValue({ data: {} })
-    )
-    const mockClient: Partial<Client> = {
-      executeQuery,
-      executeMutation: jest.fn(),
-      executeSubscription: jest.fn(),
-    }
-    const cancelFn = jest.fn()
-    render(
-      <Provider value={mockClient as Client}>
-        <{{ namePascalCase }}Form onSave={jest.fn()} onCancel={cancelFn} />
-      </Provider>
-    )
-    await waitFor(() => {
-      fireEvent(
-        screen.getByText('Cancel'),
-        new MouseEvent('click', {
-          bubbles: true,
-          cancelable: true,
-        })
-      )
-    })
-    expect(cancelFn).toBeCalled()
-  })
 })

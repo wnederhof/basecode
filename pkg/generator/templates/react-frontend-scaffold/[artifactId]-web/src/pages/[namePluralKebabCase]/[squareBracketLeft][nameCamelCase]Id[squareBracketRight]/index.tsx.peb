@@ -8,6 +8,7 @@ export default function Show{{namePascalCase}}() {
     <>
       <h1>Show {{ namePascalCase }}</h1>
       <a href="javascript:history.back()">Go back</a>
+      <Link href={`/{{ namePluralKebabCase }}/${{ "{" }}{{nameCamelCase}}Id{{ "}" }}/edit`}>Edit</Link>
       <{{ namePascalCase }}Details
         id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }}
       />

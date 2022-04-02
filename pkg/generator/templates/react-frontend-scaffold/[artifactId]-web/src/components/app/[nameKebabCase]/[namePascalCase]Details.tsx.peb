@@ -36,19 +36,13 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
   }
 
   return (
-    <>
-      <div>
-        <Link href={`/{{ namePluralKebabCase }}/${props.id}/edit`}>Edit</Link>
-        <button onClick={() => history.back()}>Back</button>
-      </div>
-      <table>
-        <tbody>{%for field in fields%}{%if field.isFieldRelational%}{!props.{{ field.fieldNameCamelCase }} &&{%endif%}
-          <tr key={data?.{{ nameCamelCase }}?.id}>
-            <td>{{ field.fieldNameCamelCase }}</td>
-            <td>{data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}}</td>
-          </tr>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
-        </tbody>
-      </table>
-    </>
+    <table>
+      <tbody>{%for field in fields%}{%if field.isFieldRelational%}{!props.{{ field.fieldNameCamelCase }} &&{%endif%}
+        <tr key={data?.{{ nameCamelCase }}?.id}>
+          <td>{{ field.fieldNameCamelCase }}</td>
+          <td>{data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}}</td>
+        </tr>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
+      </tbody>
+    </table>
   )
 }
