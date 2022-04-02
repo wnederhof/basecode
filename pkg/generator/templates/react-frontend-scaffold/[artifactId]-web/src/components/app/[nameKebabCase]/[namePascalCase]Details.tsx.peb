@@ -39,7 +39,7 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
       <tbody>{%for field in fields%}{%if field.isFieldRelational%}{!props.{{ field.fieldNameCamelCase }} &&{%endif%}
         <tr>
           <td>{{ field.fieldNamePascalCase }}</td>
-          <td>{data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}}</td>
+          <td>{{ "{" }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%}'' + {%endif%}data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{{ "}" }}</td>
         </tr>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
       </tbody>
     </table>

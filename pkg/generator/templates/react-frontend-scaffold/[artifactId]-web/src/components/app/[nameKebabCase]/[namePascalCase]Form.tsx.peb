@@ -112,7 +112,8 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
         {{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} || false{%endif%}{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" or field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT"%} || ''{%endif%},{%endfor%}
       {{ "}" }} as {{ namePascalCase }}FormData{{ "}" }}
     >
-      <Form role="form">{%for field in fields%}
+      <Form role="form">
+{%for field in fields%}
         <div>
           <label htmlFor="{{ field.fieldNameCamelCase }}">{{ field.fieldNamePascalCase }}</label>{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" %}
           <Field
@@ -152,9 +153,9 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
           />
 {%elif field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN" %}
           <Field
-            name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
+            name="{{ field.fieldNameCamelCase }}"
             type="checkbox"
-            hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
+            hidden={props.{{ field.fieldNameCamelCase }}}
           />
 {%elif field.fieldType == "RELATIONAL" %}
           <Field
@@ -166,8 +167,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
               <option key={{ "{" }}{{ field.fieldTypeCamelCase }}.id} value={{ "{" }}{{ field.fieldTypeCamelCase }}.id}>{{ "{" }}{{ field.fieldTypeCamelCase }}.id}</option>
             )}
           </Field>
-{%endif%}        </div>
-{%endfor%}
+{%endif%}        </div>{%endfor%}
         <button type="submit">Save</button>
       </Form>
     </Formik>
