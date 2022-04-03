@@ -77,8 +77,9 @@ To start the frontend, make sure your artifacts are installed using `npm install
 When both the backend and frontend are running, you can build your next best thing at: `http://localhost:3000`. (Note: as of yet, there is no index page). If you created an entity called `Post`, you will find your scaffolds at: `http://localhost:3000/posts`.
 
 ## TODO
+- Nullable types
+- Add authentication mechanisms
 - Test with Cypress
-- Test other field types
 
 ## License
 Licensed under [MIT](LICENSE.md).
