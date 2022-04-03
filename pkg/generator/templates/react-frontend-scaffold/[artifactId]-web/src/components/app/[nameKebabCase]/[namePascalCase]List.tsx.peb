@@ -15,7 +15,7 @@ export function {{ namePascalCase }}List({%if hasRelations%}props: {{ namePascal
   `)
 
   const handleDelete = (id: string) => {
-    confirm("Are you sure you want to delete {{ namePascalCase }}?") &&
+    confirm('Are you sure you want to delete {{ namePascalCase }}?') &&
       executeDeleteMutation(
         { id },
         { additionalTypenames: ['{{ namePascalCase }}'] }
