@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { {{namePascalCase}}Form } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}Form'
 import { useRouter } from 'next/router'
 
@@ -7,7 +8,14 @@ export default function Show{{namePascalCase}}() {
   return (
     <>
       <h1>Edit {{ namePascalCase }}</h1>
-      <a href="javascript:history.back()">Go back</a>
+      <ul>
+        <li>
+          <Link href="/{{ namePluralKebabCase }}">Overview</Link>
+        </li>
+        <li>
+          <Link href={`/{{ namePluralKebabCase }}/${{ "{" }}{{ nameCamelCase }}Id{{ "}" }}`}>Show</Link>
+        </li>
+      </ul>
       <{{ namePascalCase }}Form
         id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }}
         onSave={() => history.back()}

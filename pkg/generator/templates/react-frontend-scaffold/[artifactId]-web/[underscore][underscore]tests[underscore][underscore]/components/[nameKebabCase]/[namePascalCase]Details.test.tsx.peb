@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { {{ namePascalCase }}Details } from '../../../src/components/app/{{ nameKebabCase }}/{{ namePascalCase }}Details'
 import { Client, Provider } from 'urql'
 import { fromValue } from 'wonka'

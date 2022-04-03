@@ -1,8 +1,6 @@
 import { gql, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Query } from '@generated/graphql'
-import { LoadingIndicator } from '@components/common/LoadingIndicator'
-import { ErrorMessage } from '@components/common/ErrorMessage'
 
 export interface {{ namePascalCase }}DetailsProps {
   id: string | number{%for field in fields%}{%if field.isFieldRelational%}
@@ -27,11 +25,11 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
   })
 
   if (fetching) {
-    return <LoadingIndicator />
+    return <div>Loading...</div>
   }
 
   if (error?.message) {
-    return <ErrorMessage message={error?.message} />
+    return <div>{error?.message}</div>
   }
 
   return (

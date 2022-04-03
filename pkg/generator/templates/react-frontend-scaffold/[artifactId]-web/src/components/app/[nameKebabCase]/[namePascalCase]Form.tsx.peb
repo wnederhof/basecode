@@ -2,8 +2,6 @@ import { gql, OperationResult, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Mutation, Query{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%} } from '@generated/graphql'
 import { Formik, Field, Form, FormikHelpers } from 'formik'
-import { LoadingIndicator } from '@components/common/LoadingIndicator'
-import { ErrorMessage } from '@components/common/ErrorMessage'
 
 export interface {{ namePascalCase }}FormProps {
   id?: string | number{%for field in fields%}{%if field.isFieldRelational%}
@@ -35,7 +33,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
 
   function handleMutationResult(result: OperationResult<Mutation, object>) {
     if (result.error) {
-      alert(`An error occured: ${result.error.message}`)
+      alert(`An error occurred: ${result.error.message}`)
     }
     return !result.error
   }
@@ -96,13 +94,13 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
   })
 {%endif%}{%endfor%}
   if (fetching{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.fetching{%endif%}{%endfor%}) {
-    return <LoadingIndicator />
+    return <div>Loading...</div>
   }
 
   const errorMessage = error?.message{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.error?.message{%endif%}{%endfor%}
 
   if (errorMessage) {
-    return <ErrorMessage message={errorMessage} />
+    return <div>{errorMessage}</div>
   }
 
   return (
@@ -117,51 +115,39 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
         <div>
           <label htmlFor="{{ field.fieldNameCamelCase }}">{{ field.fieldNamePascalCase }}</label>{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" %}
           <Field
-            name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
+            name="{{ field.fieldNameCamelCase }}"
             type="text"
-            hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
           />
 {%elif field.fieldType == "INT" or field.fieldType == "NULL_INT" %}
           <Field
-            name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
+            name="{{ field.fieldNameCamelCase }}"
             type="number"
-            hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
           />
 {%elif field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT" %}
           <Field
-            name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
+            name="{{ field.fieldNameCamelCase }}"
             as="textarea"
-            hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
           />
 {%elif field.fieldType == "INT" or field.fieldType == "NULL_INT" %}
           <Field
-            name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
+            name="{{ field.fieldNameCamelCase }}"
             type="number"
-            hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
           />
 {%elif field.fieldType == "DATE" or field.fieldType == "NULL_DATE" %}
           <Field
-            name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
+            name="{{ field.fieldNameCamelCase }}"
             type="date"
-            hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
-          />
-{%elif field.fieldType == "DATETIME" or field.fieldType == "NULL_DATETIME" %}
-          <Field
-            name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
-            type="datetime"
-            hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
           />
 {%elif field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN" %}
           <Field
             name="{{ field.fieldNameCamelCase }}"
             type="checkbox"
-            hidden={props.{{ field.fieldNameCamelCase }}}
           />
 {%elif field.fieldType == "RELATIONAL" %}
           <Field
-            name="{{ field.fieldNameCamelCase }}"{%if field.isFieldRelational%}
+            name="{{ field.fieldNameCamelCase }}"
             as="select"
-            hidden={props.{{ field.fieldNameCamelCase }}}{%endif%}
+            hidden={props.{{ field.fieldNameCamelCase }}}
           >
             {data?.{{ field.fieldTypePluralCamelCase }}?.map(({{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}) =>
               <option key={{ "{" }}{{ field.fieldTypeCamelCase }}.id} value={{ "{" }}{{ field.fieldTypeCamelCase }}.id}>{{ "{" }}{{ field.fieldTypeCamelCase }}.id}</option>

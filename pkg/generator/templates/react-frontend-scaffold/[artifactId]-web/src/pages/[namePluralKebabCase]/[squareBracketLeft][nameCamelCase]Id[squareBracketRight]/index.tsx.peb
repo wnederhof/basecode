@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { {{namePascalCase}}Details } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}Details'
 import { useRouter } from 'next/router'
 
@@ -7,8 +8,14 @@ export default function Show{{namePascalCase}}() {
   return (
     <>
       <h1>Show {{ namePascalCase }}</h1>
-      <a href="javascript:history.back()">Go back</a>
-      <Link href={`/{{ namePluralKebabCase }}/${{ "{" }}{{nameCamelCase}}Id{{ "}" }}/edit`}>Edit</Link>
+      <ul>
+        <li>
+          <Link href="/{{ namePluralKebabCase }}">Overview</Link>
+        </li>
+        <li>
+          <Link href={`/{{ namePluralKebabCase }}/${{ "{" }}{{ nameCamelCase }}Id{{ "}" }}/edit`}>Edit</Link>
+        </li>
+      </ul>
       <{{ namePascalCase }}Details
         id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }}
       />

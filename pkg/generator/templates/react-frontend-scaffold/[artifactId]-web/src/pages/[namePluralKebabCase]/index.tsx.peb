@@ -1,9 +1,15 @@
+import Link from 'next/link'
 import { {{namePascalCase}}List } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}List'
 
 export default function {{namePluralPascalCase}}() {
   return (
     <>
       <h1>List of {{ namePluralPascalCase }}</h1>
+      <ul>
+        <li>
+          <Link href="/{{ namePluralKebabCase }}/new">New</Link>
+        </li>
+      </ul>
       <{{namePascalCase}}List />
     </>
   )

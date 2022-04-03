@@ -2,8 +2,6 @@ import Link from 'next/link'
 import { gql, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Mutation, Query } from '@generated/graphql'
-import { LoadingIndicator } from '@components/common/LoadingIndicator'
-import { ErrorMessage } from '@components/common/ErrorMessage'
 {%if hasRelations%}
 export interface {{ namePascalCase }}ListProps {{ "{" }}{%for field in fields%}{%if field.isFieldRelational%}
   {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
@@ -47,36 +45,31 @@ export function {{ namePascalCase }}List({%if hasRelations%}props: {{ namePascal
   })
 
   if (fetching) {
-    return <LoadingIndicator />
+    return <div>Loading...</div>
   }
 
   if (error?.message) {
-    return <ErrorMessage message={error?.message} />
+    return <div>{error?.message}</div>
   }
 
   return (
-    <>
-      <div>
-        <Link href={`/{{ namePluralKebabCase }}/new`}>New</Link>
-      </div>
-      <table>
-        <thead>
-        <tr>{%for field in fields%}{%if field.isFieldRelational%}{ !props.{{ field.fieldNameCamelCase }} &&{%endif%}
-          <th>{{ field.fieldNamePascalCase }}</th>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
-          <th>Action</th>
-        </tr>
-        </thead>
-        <tbody>{data?.{{ namePluralCamelCase }}?.map(row =>
-          <tr key={row.id}>{%for field in fields%}{%if field.isFieldRelational%}{!props.{{ field.fieldNameCamelCase }} &&{%endif%}
-            <td>{{ "{" }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%}'' + {%endif%}row.{{ field.fieldNameCamelCase }}{{ "}" }}</td>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
-            <td>
-              <Link href={`/{{ namePluralKebabCase }}/${row.id}`}>Show</Link>
-              <Link href={`/{{ namePluralKebabCase }}/${row.id}/edit`}>Edit</Link>
-              <button onClick={() => handleDelete(row.id)}>Delete</button>
-            </td>
-          </tr>)
-        }</tbody>
-      </table>
-    </>
+    <table>
+      <thead>
+      <tr>{%for field in fields%}{%if field.isFieldRelational%}{ !props.{{ field.fieldNameCamelCase }} &&{%endif%}
+        <th>{{ field.fieldNamePascalCase }}</th>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
+        <th>Action</th>
+      </tr>
+      </thead>
+      <tbody>{data?.{{ namePluralCamelCase }}?.map(row =>
+        <tr key={row.id}>{%for field in fields%}{%if field.isFieldRelational%}{!props.{{ field.fieldNameCamelCase }} &&{%endif%}
+          <td>{{ "{" }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%}'' + {%endif%}row.{{ field.fieldNameCamelCase }}{{ "}" }}</td>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
+          <td>
+            <Link href={`/{{ namePluralKebabCase }}/${row.id}`}>Show</Link>
+            <Link href={`/{{ namePluralKebabCase }}/${row.id}/edit`}>Edit</Link>
+            <button onClick={() => handleDelete(row.id)}>Delete</button>
+          </td>
+        </tr>)
+      }</tbody>
+    </table>
   )
 }
