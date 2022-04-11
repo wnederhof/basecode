@@ -1,0 +1,8 @@
+import { RegisterSuccess } from '@components/app/auth/RegisterSuccess'
+
+export default function LoginPage() {
+  return <>
+    <h1>Login</h1>
+    <RegisterSuccess />
+  </>
+}

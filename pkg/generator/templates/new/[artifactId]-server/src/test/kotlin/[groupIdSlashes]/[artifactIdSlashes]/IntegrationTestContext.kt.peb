@@ -13,7 +13,7 @@ import org.testcontainers.junit.jupiter.Testcontainers
 abstract class IntegrationTestContext {
     companion object {
         @JvmField
-        var POSTGRES_CONTAINER: PostgreSQLContainer<Nothing> = PostgreSQLContainer<Nothing>().apply {
+        val POSTGRES_CONTAINER: PostgreSQLContainer<Nothing> = PostgreSQLContainer<Nothing>("postgres:14-alpine").apply {
             withDatabaseName("foo")
             withUsername("foo")
             withPassword("secret")

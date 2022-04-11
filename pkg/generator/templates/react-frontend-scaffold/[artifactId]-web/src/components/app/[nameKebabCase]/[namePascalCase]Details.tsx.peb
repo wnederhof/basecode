@@ -24,12 +24,12 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
     ),
   })
 
-  if (fetching) {
-    return <div>Loading...</div>
-  }
-
   if (error?.message) {
     return <div>{error?.message}</div>
+  }
+
+  if (fetching || !data) {
+    return <div>Loading...</div>
   }
 
   return (
@@ -37,7 +37,7 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
       <tbody>{%for field in fields%}{%if field.isFieldRelational%}{!props.{{ field.fieldNameCamelCase }} &&{%endif%}
         <tr>
           <td>{{ field.fieldNamePascalCase }}</td>
-          <td>{{ "{" }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%}'' + {%endif%}data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{{ "}" }}</td>
+          <td>{{ "{" }}data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%}{{ "}" }}</td>
         </tr>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
       </tbody>
     </table>

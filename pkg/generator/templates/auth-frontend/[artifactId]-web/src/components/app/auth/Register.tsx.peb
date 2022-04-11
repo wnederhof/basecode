@@ -1,0 +1,66 @@
+import { AppButton } from '@components/presentational/AppButton'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { gql, useMutation } from 'urql'
+
+export const Register = () => {
+  const router = useRouter()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [, executeRegisterMutation] = useMutation(gql`
+    mutation registerUser($input: RegisterUserInput!) {
+      registerUser(input: $input) {
+        id
+      }
+    }
+  `)
+  const doRegister = () => {
+    executeRegisterMutation(
+      { input: { email, password } },
+      {
+        additionalTypenames: ['User'],
+      }
+    ).then((data) => {
+      if (data.error) {
+        alert('An error occurred. ' + data.error.message)
+        return
+      }
+      router.push('/auth/register-success')
+    })
+  }
+  return (
+    <form
+      onSubmit={(e) => {
+        doRegister()
+        e.preventDefault()
+      }}
+    >
+      <>
+        <div>
+          <div>
+            <input
+              autoFocus
+              type="text"
+              defaultValue={email}
+              placeholder="Email"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+          <div>
+            <input
+              type="password"
+              defaultValue={password}
+              placeholder="Password"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+        </div>
+        <div>
+          <button type="submit">Register</button>
+          <Link href="/auth/login">Login</Link>
+        </div>
+      </>
+    </form>
+  )
+}

@@ -1,0 +1,68 @@
+import { AppButton } from '@components/presentational/AppButton'
+import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { useState } from 'react'
+import { ResetUrqlClientContext } from 'src/lib/urqlclient'
+import { gql, useMutation } from 'urql'
+
+export const Login = () => {
+  const router = useRouter()
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [, executeLoginMutation] = useMutation(gql`
+    mutation login($email: String!, $password: String!) {
+      login(email: $email, password: $password) {
+        id
+      }
+    }
+  `)
+  const doLogin = (resetUrqlClient: any) => {
+    executeLoginMutation({ email, password }).then((loginResult) => {
+      if (loginResult?.data?.login) {
+        router.push('/')
+        resetUrqlClient()
+      } else {
+        alert(
+          'Could not login. Please check your email and password and try again.'
+        )
+      }
+    })
+  }
+  return (
+    <ResetUrqlClientContext.Consumer>
+      {(resetUrqlClient) => (
+        <form
+          onSubmit={(e) => {
+            doLogin(resetUrqlClient)
+            e.preventDefault()
+          }}
+        >
+          <>
+            <div>
+              Username
+              <input
+                autoFocus
+                type="text"
+                defaultValue={email}
+                placeholder="Email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                defaultValue={password}
+                placeholder="Password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <div>
+              <button type="submit">Login</AppButton>
+              <Link href="/auth/register">Register</Link>
+            </div>
+          </div>
+        </>
+      )}
+    </ResetUrqlClientContext.Consumer>
+  )
+}

@@ -50,7 +50,7 @@ describe('{{ namePascalCase }}List', () => {
         <{{ namePascalCase }}List />
       </Provider>
     ){%for field in fields%}
-    expect(screen.getAllByText('' + {{ nameCamelCase }}.{{ field.fieldNameCamelCase }}).length).not.toBe(0){%endfor%}
+    expect(screen.getAllByText({{ nameCamelCase }}.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%}).length).not.toBe(0){%endfor%}
   })
 
   it('calls mutation when Delete is clicked and confirmed', async () => {
