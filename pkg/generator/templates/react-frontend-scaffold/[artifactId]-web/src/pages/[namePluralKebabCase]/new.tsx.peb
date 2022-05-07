@@ -4,12 +4,14 @@ import { {{namePascalCase}}Form } from '@components/app/{{nameKebabCase}}/{{name
 export default function New{{namePascalCase}}() {
   return (
     <>
-      <h1>New {{ namePascalCase }}</h1>
+      <h1>Navigation</h1>
       <ul>
         <li>
           <Link href="/{{ namePluralKebabCase }}">Overview</Link>
         </li>
       </ul>
+
+      <h1>New {{ namePascalCase }}</h1>
       <{{ namePascalCase }}Form
         onSave={() => history.back()}
         onCancel={() => history.back()}

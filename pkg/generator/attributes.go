@@ -314,21 +314,21 @@ func provideInputFieldContextAttributes(context map[string]interface{}, attribut
 func provideVueTemplateContextAttributes(context map[string]interface{}, attribute ModelAttribute) {
 	switch attribute.Type {
 	case STRING:
-		context["fieldFrontendTestValue"] = "'Some streetName'"
+		context["fieldFrontendTestValue"] = "'Some " + attribute.Name + "'"
 	case INT:
 		context["fieldFrontendTestValue"] = "10"
 	case TEXT:
-		context["fieldFrontendTestValue"] = "'Some streetName'"
+		context["fieldFrontendTestValue"] = "'Some " + attribute.Name + "'"
 	case DATE:
 		context["fieldFrontendTestValue"] = "'2000-01-01'"
 	case BOOLEAN:
 		context["fieldFrontendTestValue"] = "true"
 	case NULL_STRING:
-		context["fieldFrontendTestValue"] = "'Some streetName'"
+		context["fieldFrontendTestValue"] = "'Some " + attribute.Name + "'"
 	case NULL_INT:
 		context["fieldFrontendTestValue"] = "10"
 	case NULL_TEXT:
-		context["fieldFrontendTestValue"] = "'Some streetName'"
+		context["fieldFrontendTestValue"] = "'Some " + attribute.Name + "'"
 	case NULL_DATE:
 		context["fieldFrontendTestValue"] = "'2000-01-01'"
 	case NULL_BOOLEAN:

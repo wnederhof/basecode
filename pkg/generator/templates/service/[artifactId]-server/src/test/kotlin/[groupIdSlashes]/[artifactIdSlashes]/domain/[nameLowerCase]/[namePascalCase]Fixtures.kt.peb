@@ -1,11 +1,23 @@
 package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
 
-import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
 
 object {{ namePascalCase }}Fixtures {
 
-    val {{ nameScreamingSnakeCase }}_FIXTURE_1 = {{ namePascalCase }}(
+    val LOCAL_DATE_TIME_FIXTURE = LocalDateTime.now()
+    val OFFSET_DATE_TIME_FIXTURE = LOCAL_DATE_TIME_FIXTURE
+        .atZone(ZoneId.systemDefault())
+        .toOffsetDateTime()
+
+    val {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1 = {{ namePascalCase }}(
+        id = 1{%for field in fields%},
+        {{ field.fieldNameCamelCase }} = {{ field.fieldKotlinTestDummyValue }}{%endfor%},
+        createdAt = OFFSET_DATE_TIME_FIXTURE,
+    )
+
+    val {{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1 = {{ namePascalCase }}Entity(
         id = null{%for field in fields%},
         {{ field.fieldNameCamelCase }} = {{ field.fieldKotlinTestDummyValue }}{%endfor%}
     )
@@ -18,6 +30,9 @@ object {{ namePascalCase }}Fixtures {
         {{ field.fieldNameCamelCase }} = {{ field.fieldKotlinTestDummyValue }},{%endfor%}
     )
 
-    val {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1 = {{ nameScreamingSnakeCase }}_FIXTURE_1.copy(id = 1)
+    val {{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1 = {{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1.copy(
+        id = 1,
+        createdAt = LOCAL_DATE_TIME_FIXTURE,
+    )
 
 }

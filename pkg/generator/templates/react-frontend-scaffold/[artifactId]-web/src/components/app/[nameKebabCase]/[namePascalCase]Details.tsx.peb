@@ -13,6 +13,8 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
       {{nameCamelCase}}(id: $id) {
         id{%for field in fields%}
         {{field.fieldNameCamelCase}}{%endfor%}
+        createdAt
+        updatedAt
       }
     }`,
     variables: { id: props.id },
@@ -39,6 +41,14 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
           <td>{{ field.fieldNamePascalCase }}</td>
           <td>{{ "{" }}data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%}{{ "}" }}</td>
         </tr>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
+        <tr>
+          <td>CreatedAt</td>
+          <td>{{ "{" }}data?.{{ nameCamelCase }}?.createdAt{{ "}" }}</td>
+        </tr>
+        <tr>
+          <td>UpdatedAt</td>
+          <td>{{ "{" }}data?.{{ nameCamelCase }}?.updatedAt{{ "}" }}</td>
+        </tr>
       </tbody>
     </table>
   )

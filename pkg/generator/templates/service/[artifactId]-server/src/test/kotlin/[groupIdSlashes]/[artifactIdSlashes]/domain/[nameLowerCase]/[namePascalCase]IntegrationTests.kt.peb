@@ -3,7 +3,7 @@ package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
 import {{ groupId }}.{{ artifactId }}.IntegrationTestContext
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%for field in fields%}{%if field.isFieldRelational%}
-import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_ENTITY_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Repository
 import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
 import org.assertj.core.api.Assertions.assertThat
@@ -32,7 +32,7 @@ class {{ namePascalCase }}IntegrationTests : IntegrationTestContext() {
 {%endif%}
     @Test
     fun `{{ namePluralPascalCase }} can be created, updated, fetched and deleted`() { {%for field in fields%}{%if field.isFieldRelational%}
-        val {{ field.fieldTypeCamelCase }} = {{ field.fieldTypeCamelCase }}Repository.save({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_1)
+        val {{ field.fieldTypeCamelCase }} = {{ field.fieldTypeCamelCase }}Repository.save({{ field.fieldTypeScreamingSnakeCase }}_ENTITY_FIXTURE_1)
 {%endif%}{%endfor%}
         var {{ nameCamelCase }} = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%if hasRelations%}.copy({%for field in fields%}{%if field.isFieldRelational%}
             {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!,{%endif%}{%endfor%}
@@ -42,8 +42,8 @@ class {{ namePascalCase }}IntegrationTests : IntegrationTestContext() {
         ){%endif%})!!
 
         assertThat({{ nameCamelCase }}Service.findAll()).isNotEmpty
-        assertThat({{ nameCamelCase }}Service.findById({{ nameCamelCase }}.id!!)).isNotNull
-        assertThat({{ nameCamelCase }}Service.findByIds(listOf({{ nameCamelCase }}.id!!))).isNotEmpty
+        assertThat({{ nameCamelCase }}Service.findById({{ nameCamelCase }}.id)).isNotNull
+        assertThat({{ nameCamelCase }}Service.findByIds(listOf({{ nameCamelCase }}.id))).isNotEmpty
 {%for field in fields%}{%if field.isFieldRelational%}
         assertThat({{ nameCamelCase }}Service.findAll({{ namePascalCase }}Service.{{ namePascalCase }}FilterInput({{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!))).isNotEmpty
         assertThat({{ nameCamelCase }}Service.findBy{{ field.fieldNamePluralPascalCase }}(listOf({{ field.fieldTypeCamelCase }}.id!!))).isNotEmpty
@@ -55,7 +55,7 @@ class {{ namePascalCase }}IntegrationTests : IntegrationTestContext() {
 {%for field in fields%}{%if field.isFieldRelational%}
     @Test
     fun `{{ namePascalCase }}s are deleted when related {{ field.fieldTypePluralPascalCase }} are deleted`() {
-{%for field in fields%}{%if field.isFieldRelational%}        val {{ field.fieldTypeCamelCase }} = {{ field.fieldTypeCamelCase }}Repository.save({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_1)
+{%for field in fields%}{%if field.isFieldRelational%}        val {{ field.fieldTypeCamelCase }} = {{ field.fieldTypeCamelCase }}Repository.save({{ field.fieldTypeScreamingSnakeCase }}_ENTITY_FIXTURE_1)
 {%endif%}{%endfor%}
         val {{ nameCamelCase }} = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1.copy({%for field in fields%}{%if field.isFieldRelational%}
             {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!,{%endif%}{%endfor%}

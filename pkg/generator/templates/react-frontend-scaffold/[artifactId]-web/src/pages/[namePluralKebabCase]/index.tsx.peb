@@ -4,12 +4,14 @@ import { {{namePascalCase}}List } from '@components/app/{{nameKebabCase}}/{{name
 export default function {{namePluralPascalCase}}() {
   return (
     <>
-      <h1>List of {{ namePluralPascalCase }}</h1>
+      <h1>Navigation</h1>
       <ul>
         <li>
           <Link href="/{{ namePluralKebabCase }}/new">New</Link>
         </li>
       </ul>
+
+      <h1>List of {{ namePluralPascalCase }}</h1>
       <{{namePascalCase}}List />
     </>
   )

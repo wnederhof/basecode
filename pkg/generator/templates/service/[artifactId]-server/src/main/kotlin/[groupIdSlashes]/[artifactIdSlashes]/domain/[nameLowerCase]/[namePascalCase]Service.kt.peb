@@ -6,8 +6,8 @@ import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDate
-import java.time.LocalDateTime
+import java.time.OffsetDateTime
+import java.time.ZoneId
 
 @Service
 @Transactional
@@ -19,32 +19,36 @@ class {{ namePascalCase }}Service(
 
     fun findById(id: Long): {{ namePascalCase }}? {
         return {{ nameCamelCase }}Repository.findByIdOrNull(id)
+            ?.let(::toDomainObject)
     }
 
     fun findByIds(ids: Iterable<Long>): List<{{ namePascalCase }}> {
         return {{ nameCamelCase }}Repository.findByIds(ids)
+            .map(::toDomainObject)
     }
 {%for field in fields%}{%if field.isFieldRelational%}
     fun findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: Iterable<Long>): List<{{ namePascalCase }}> {
         return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }})
+            .map(::toDomainObject)
     }
 {%endif%}{%endfor%}
     fun findAll({%if hasRelations%}filterInput: {{ namePascalCase }}FilterInput? = null{%endif%}): List<{{ namePascalCase }}> { {%for field in fields%}{%if field.isFieldRelational%}
         if (filterInput?.{{ field.fieldNameCamelCase }} != null) {
             return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}(listOf(filterInput.{{ field.fieldNameCamelCase }}))
+                .map(::toDomainObject)
         }
 {%endif%}{%endfor%}
         return {{ nameCamelCase }}Repository.findAll()
-            .toList()
+            .map(::toDomainObject)
     }
 
     fun create(input: Create{{ namePascalCase }}Input): {{ namePascalCase }} { {%for field in fields%}{%if field.isFieldRelational%}
         requireNotNull({{ field.fieldTypeCamelCase }}Service.findById(input.{{ field.fieldNameCamelCase }}))
 {%endif%}{%endfor%}
-        var {{ nameCamelCase }} = {{ namePascalCase }}({%for field in fields%}
+        val {{ nameCamelCase }}Entity = {{ namePascalCase }}Entity({%for field in fields%}
             {{field.fieldNameCamelCase}} = input.{{field.fieldNameCamelCase}},{%endfor%}
         )
-        {{ nameCamelCase }} = {{ nameCamelCase }}Repository.save({{ nameCamelCase }})
+        val {{ nameCamelCase }} = toDomainObject({{ nameCamelCase }}Repository.save({{ nameCamelCase }}Entity))
         publisher.publishEvent({{ namePluralPascalCase }}CreatedEvent(this, listOf({{ nameCamelCase }})))
         return {{ nameCamelCase }}
     }
@@ -54,32 +58,46 @@ class {{ namePascalCase }}Service(
             requireNotNull({{ field.fieldTypeCamelCase }}Service.findById(input.{{ field.fieldNameCamelCase }}))
         }
 {%endif%}{%endfor%}
-        var {{ nameCamelCase }} = {{ nameCamelCase }}Repository.findByIdOrNull(id) ?: return null
-        {{ nameCamelCase }} = {{ nameCamelCase }}.copy({%for field in fields%}
-            {{field.fieldNameCamelCase}} = input.{{field.fieldNameCamelCase}} ?: {{ nameCamelCase }}.{{field.fieldNameCamelCase}},{%endfor%}
-        )
-        {{ nameCamelCase }} = {{ nameCamelCase }}Repository.save({{ nameCamelCase }})
+        val {{ nameCamelCase }}Entity = {{ nameCamelCase }}Repository.findByIdOrNull(id) ?: return null
+        val {{ nameCamelCase }} = {{ nameCamelCase }}Repository.save(
+            {{ nameCamelCase }}Entity.copy({%for field in fields%}
+                {{field.fieldNameCamelCase}} = input.{{field.fieldNameCamelCase}} ?: {{ nameCamelCase }}Entity.{{field.fieldNameCamelCase}},{%endfor%}
+            )
+        ).let(::toDomainObject)
         publisher.publishEvent({{ namePluralPascalCase }}UpdatedEvent(this, listOf({{ nameCamelCase }})))
         return {{ nameCamelCase }}
     }
 
     fun deleteById(id: Long): Boolean {
-        val {{ nameCamelCase }} = {{ nameCamelCase }}Repository.findByIdOrNull(id) ?: return false
+        val {{ nameCamelCase }} = {{ nameCamelCase }}Repository.findByIdOrNull(id)
+            ?.let(::toDomainObject)
+            ?: return false
         {{ nameCamelCase }}Repository.deleteById(id)
         publisher.publishEvent({{ namePluralPascalCase }}DeletedEvent(this, listOf({{ nameCamelCase }})))
         return true
     }
 {%for field in fields%}{%if field.isFieldRelational%}
     fun deleteBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: List<Long>): Boolean {
-        val {{ namePluralCamelCase }} = {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }})
-        if ({{ namePluralCamelCase }}.isEmpty()) {
+        val {{ nameCamelCase }}Entities = {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }})
+        if ({{ nameCamelCase }}Entities.isEmpty()) {
             return false
         }
-        {{ nameCamelCase }}Repository.deleteAll({{ namePluralCamelCase }})
-        publisher.publishEvent({{ namePluralPascalCase }}DeletedEvent(this, {{ namePluralCamelCase }}))
+        {{ nameCamelCase }}Repository.deleteAll({{ nameCamelCase }}Entities)
+        publisher.publishEvent({{ namePluralPascalCase }}DeletedEvent(this, {{ nameCamelCase }}Entities.map(::toDomainObject)))
         return true
     }
 {%endif%}{%endfor%}
+    private fun toDomainObject(entity: {{ namePascalCase }}Entity) = {{ namePascalCase }}(
+        id = entity.id!!,{%for field in fields%}
+        {{field.fieldNameCamelCase}} = entity.{{field.fieldNameCamelCase}},{%endfor%}
+        createdAt = entity.createdAt!!
+            .atZone(ZoneId.systemDefault())
+            .toOffsetDateTime(),
+        updatedAt = entity.updatedAt
+            ?.atZone(ZoneId.systemDefault())
+            ?.toOffsetDateTime(),
+    )
+
     data class Create{{ namePascalCase }}Input({%for field in fields%}
         val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinType }},{%endfor%}
     )

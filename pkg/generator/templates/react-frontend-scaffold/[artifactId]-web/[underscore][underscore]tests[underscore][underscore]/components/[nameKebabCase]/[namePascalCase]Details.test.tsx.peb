@@ -5,8 +5,10 @@ import { fromValue } from 'wonka'
 
 describe('{{ namePascalCase }}Details', () => {
   const {{ nameCamelCase }} = {
-    id: '1'{%for field in fields%},
-    {{field.fieldNameCamelCase}}: {{field.fieldFrontendTestValue}}{%endfor%}
+    id: '1',{%for field in fields%}
+    {{field.fieldNameCamelCase}}: {{field.fieldFrontendTestValue}},{%endfor%}
+    createdAt: '1970-01-01T00:00:00Z',
+    updatedAt: '1970-02-02T00:00:00Z'
   }
 
   it('renders details when data is fetched', () => {
@@ -27,5 +29,7 @@ describe('{{ namePascalCase }}Details', () => {
       </Provider>
     ){%for field in fields%}
     expect(screen.getAllByText({{ nameCamelCase }}.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%}).length).not.toBe(0){%endfor%}
+    expect(screen.getAllByText({{ nameCamelCase }}.createdAt).length).not.toBe(0)
+    expect(screen.getAllByText({{ nameCamelCase }}.updatedAt).length).not.toBe(0)
   })
 })

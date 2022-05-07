@@ -22,7 +22,7 @@ internal class {{ namePascalCase }}ListenerUnitTests{%if hasRelations%}{
     fun `When {{ field.fieldTypePluralPascalCase }}DeletedEvent is triggered, related {{ namePluralPascalCase }} are deleted`() {
         {{ nameCamelCase }}Listener.onEvent({{ field.fieldTypePluralPascalCase }}DeletedEvent(this, listOf({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
 
-        verify({{ nameCamelCase }}Service).deleteBy{{ field.fieldNamePluralPascalCase }}(listOf({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.id!!))
+        verify({{ nameCamelCase }}Service).deleteBy{{ field.fieldNamePluralPascalCase }}(listOf({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.id))
     }
 {%endif%}{%endfor%}
 }{%endif%}{%endif%}

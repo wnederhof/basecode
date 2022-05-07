@@ -7,7 +7,7 @@ export default function Show{{namePascalCase}}() {
   const { {{nameCamelCase}}Id } = router.query
   return (
     <>
-      <h1>Show {{ namePascalCase }}</h1>
+      <h1>Navigation</h1>
       <ul>
         <li>
           <Link href="/{{ namePluralKebabCase }}">Overview</Link>
@@ -16,6 +16,8 @@ export default function Show{{namePascalCase}}() {
           <Link href={`/{{ namePluralKebabCase }}/${{ "{" }}{{ nameCamelCase }}Id{{ "}" }}/edit`}>Edit</Link>
         </li>
       </ul>
+
+      <h1>Show {{ namePascalCase }}</h1>
       <{{ namePascalCase }}Details
         id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }}
       />

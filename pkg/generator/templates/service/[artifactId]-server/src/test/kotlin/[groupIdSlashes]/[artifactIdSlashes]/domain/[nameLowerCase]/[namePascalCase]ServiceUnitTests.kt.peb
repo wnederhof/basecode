@@ -2,11 +2,13 @@ package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
 
 import com.nhaarman.mockitokotlin2.*{%for field in fields%}{%if field.isFieldRelational%}
 import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
-import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1{%for field in fields%}{%if field.isFieldRelational%}
-import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1{%endif%}{%endfor%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1{%endif%}{%endfor%}
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -36,7 +38,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     @Test
     fun `findById returns the contained value of findById in {{ namePascalCase }}Repository if it is non-empty`() {
         whenever({{ nameCamelCase }}Repository.findById(1))
-            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1))
 
         val actual = {{ nameCamelCase }}Service.findById(1)
 
@@ -59,7 +61,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     @Test
     fun `findByIds returns the contained values of findByIds in {{ namePascalCase }}Repository`() {
         whenever({{ nameCamelCase }}Repository.findByIds(listOf(1)))
-            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1))
 
         val actual = {{ nameCamelCase }}Service.findByIds(listOf(1))
 
@@ -69,7 +71,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     @Test
     fun `findBy{{field.fieldNamePluralPascalCase}} returns the contents of the corresponding repository call`() {
         whenever({{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}(listOf(1)))
-            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1))
 
         val actual = {{ nameCamelCase }}Service.findBy{{ field.fieldNamePluralPascalCase }}(listOf(1))
 
@@ -79,7 +81,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     @Test
     fun `findAll returns the values of findAll in {{ namePascalCase }}Repository`() {
         whenever({{ nameCamelCase }}Repository.findAll())
-            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1))
 
         val actual = {{ nameCamelCase }}Service.findAll()
 
@@ -89,7 +91,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     @Test
     fun `findAll returns the values of findAll in CommentRepository when filter is empty`() {
         whenever({{ nameCamelCase }}Repository.findAll())
-            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1))
 
         val actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}Service.{{ namePascalCase }}FilterInput())
 
@@ -99,7 +101,7 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     @Test
     fun `findAll delegates to findBy{{field.fieldNamePascalCase}} when filter only contains {{field.fieldNameCamelCase}}`() {
         whenever({{ nameCamelCase }}Repository.findBy{{field.fieldNamePluralPascalCase}}(listOf(1)))
-            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1))
 
         val actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}Service.{{ namePascalCase }}FilterInput({{field.fieldNameCamelCase}} = 1))
 
@@ -108,8 +110,8 @@ internal class {{ namePascalCase }}ServiceUnitTests {
 {%endif%}{%endfor%}
     @Test
     fun `create calls save on repository if all requirements are met and publishes an event`() {
-        whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_FIXTURE_1))
-            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+        whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1))
+            .thenReturn({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1)
 {%for field in fields%}{%if field.isFieldRelational%}
         whenever({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
             .thenReturn({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
@@ -128,19 +130,19 @@ internal class {{ namePascalCase }}ServiceUnitTests {
             {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
         }
 
-        verify({{ nameCamelCase }}Repository, times(0)).save({{ nameScreamingSnakeCase }}_FIXTURE_1)
+        verify({{ nameCamelCase }}Repository, times(0)).save({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1)
         verify(publisher, times(0)).publishEvent(any())
     }
 {%endif%}
     @Test
     fun `update calls save on repository if all requirements are met and publishes an event`() {
         whenever({{ nameCamelCase }}Repository.findById(1))
-            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1))
 
-        whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
-            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+        whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1))
+            .thenReturn({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1)
 {%for field in fields%}{%if field.isFieldRelational%}
-        whenever({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
+        whenever({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
             .thenReturn({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 {%endif%}{%endfor%}
         val actual = {{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
@@ -157,14 +159,14 @@ internal class {{ namePascalCase }}ServiceUnitTests {
             {{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
         }
 
-        verify({{ nameCamelCase }}Repository, times(0)).save({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+        verify({{ nameCamelCase }}Repository, times(0)).save({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1)
         verify(publisher, times(0)).publishEvent(any())
     }
 {%endif%}
     @Test
     fun `deleteById deletes the {{ namePascalCase }} identified by id in the repository if it exists and publishes an event`() {
         whenever({{ nameCamelCase }}Repository.findById(1))
-            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1))
 
         {{ nameCamelCase }}Service.deleteById(1)
 
@@ -188,12 +190,12 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     @Test
     fun `deleteBy{{ field.fieldNamePascalCase }} deletes {{ field.fieldTypePluralCamelCase }} by {{ field.fieldNameCamelCase }} and publishes event`() {
         whenever({{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}(listOf(10)))
-            .thenReturn(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+            .thenReturn(listOf({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1))
 
         val actual = {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePluralPascalCase }}(listOf(10))
         assertThat(actual).isEqualTo(true)
 
-        verify({{ nameCamelCase }}Repository).deleteAll(listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1))
+        verify({{ nameCamelCase }}Repository).deleteAll(listOf({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1))
         verify(publisher).publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}DeletedEvent({{ nameCamelCase }}Service, listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
     }
 
