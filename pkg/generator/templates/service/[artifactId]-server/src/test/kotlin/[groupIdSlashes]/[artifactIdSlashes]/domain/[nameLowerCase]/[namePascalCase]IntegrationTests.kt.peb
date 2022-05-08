@@ -37,7 +37,7 @@ class {{ namePascalCase }}IntegrationTests : IntegrationTestContext() {
         var {{ nameCamelCase }} = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%if hasRelations%}.copy({%for field in fields%}{%if field.isFieldRelational%}
             {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!,{%endif%}{%endfor%}
         ){%endif%})
-        {{ nameCamelCase }} = {{ nameCamelCase }}Service.update({{ nameCamelCase }}.id!!, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%if hasRelations%}.copy({%for field in fields%}{%if field.isFieldRelational%}
+        {{ nameCamelCase }} = {{ nameCamelCase }}Service.update({{ nameCamelCase }}.id, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%if hasRelations%}.copy({%for field in fields%}{%if field.isFieldRelational%}
             {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!,{%endif%}{%endfor%}
         ){%endif%})!!
 
@@ -48,7 +48,7 @@ class {{ namePascalCase }}IntegrationTests : IntegrationTestContext() {
         assertThat({{ nameCamelCase }}Service.findAll({{ namePascalCase }}Service.{{ namePascalCase }}FilterInput({{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!))).isNotEmpty
         assertThat({{ nameCamelCase }}Service.findBy{{ field.fieldNamePluralPascalCase }}(listOf({{ field.fieldTypeCamelCase }}.id!!))).isNotEmpty
 {%endif%}{%endfor%}
-        {{ nameCamelCase }}Service.deleteById({{ nameCamelCase }}.id!!)
+        {{ nameCamelCase }}Service.deleteById({{ nameCamelCase }}.id)
 
         assertThat({{ nameCamelCase }}Service.findAll()).isEmpty()
     }
