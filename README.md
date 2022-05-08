@@ -11,7 +11,10 @@ Basecode introduces the concept of "non-intrusive relational scaffolding", which
 - **Non-intrusive:** code generated for one entity will not affect code of any another entity, nor will it *change* any other file in the project.
 
 ## Installation
-Pull the latest basecode from the associated Github releases.
+make sure you have the Go 1.16 or later installed. Then run:
+```shell
+go install github.com/basecode/basecode@latest
+```
 
 ## Usage
 ### New project

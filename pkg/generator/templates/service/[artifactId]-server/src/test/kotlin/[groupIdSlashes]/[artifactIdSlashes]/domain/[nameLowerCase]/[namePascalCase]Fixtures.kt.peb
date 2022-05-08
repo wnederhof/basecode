@@ -1,13 +1,12 @@
 package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
 
 import java.time.LocalDateTime
-import java.time.OffsetDateTime
 import java.time.ZoneId
 
 object {{ namePascalCase }}Fixtures {
 
-    val LOCAL_DATE_TIME_FIXTURE = LocalDateTime.now()
-    val OFFSET_DATE_TIME_FIXTURE = LOCAL_DATE_TIME_FIXTURE
+    private val LOCAL_DATE_TIME_FIXTURE = LocalDateTime.now()
+    private val OFFSET_DATE_TIME_FIXTURE = LOCAL_DATE_TIME_FIXTURE
         .atZone(ZoneId.systemDefault())
         .toOffsetDateTime()
 
