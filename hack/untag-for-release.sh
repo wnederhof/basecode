@@ -9,6 +9,5 @@ if [ $# -eq 0 ]
     exit 1
 fi
 
-git tag -d "v$1-windows"
-git tag -d "v$1-macos"
-git tag -d "v$1-linux"
+git tag -d "v$1"
+echo Untagged "v$1"

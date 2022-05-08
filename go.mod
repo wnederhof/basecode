@@ -1,4 +1,4 @@
-module basecode
+module github.com/wnederhof/basecode
 
 go 1.16
 

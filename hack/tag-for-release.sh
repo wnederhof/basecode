@@ -9,11 +9,11 @@ if [ $# -eq 0 ]
     exit 1
 fi
 
-git tag "v$1-windows"
-echo Tagged "v$1-windows"
+git tag -d "latest"
+echo Untagged "latest"
 
-git tag "v$1-macos"
-echo Tagged "v$1-macos"
+git tag "v$1"
+echo Tagged "v$1"
 
-git tag "v$1-linux"
-echo Tagged "v$1-linux"
+git tag "latest"
+echo Tagged "latest"
