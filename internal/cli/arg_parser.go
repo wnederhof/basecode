@@ -1,9 +1,9 @@
 package cli
 
 import (
-	"basecode/pkg/generator"
 	"errors"
 	"github.com/urfave/cli/v2"
+	"github.com/wnederhof/basecode/pkg/generator"
 	"strings"
 )
 

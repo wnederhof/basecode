@@ -1,9 +1,9 @@
 package cli
 
 import (
-	"basecode/pkg/generator"
 	"errors"
 	"github.com/stretchr/testify/assert"
+	"github.com/wnederhof/basecode/pkg/generator"
 	"testing"
 )
 

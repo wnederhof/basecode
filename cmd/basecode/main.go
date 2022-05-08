@@ -1,7 +1,7 @@
 package main
 
 import (
-	"basecode/internal/cli"
+	"github.com/wnederhof/basecode/internal/cli"
 	"os"
 )
 

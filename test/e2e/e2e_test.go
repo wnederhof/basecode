@@ -1,9 +1,9 @@
 package e2e
 
 import (
-	"basecode/internal/cli"
 	"fmt"
 	"github.com/stretchr/testify/assert"
+	"github.com/wnederhof/basecode/internal/cli"
 	"io/ioutil"
 	"os"
 	"os/exec"
