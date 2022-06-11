@@ -149,12 +149,14 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
             as="select"
             hidden={props.{{ field.fieldNameCamelCase }}}
           >
+            <option />
             {{ "{" }}{{ field.fieldTypePluralCamelCase }}QueryResult?.data?.{{ field.fieldTypePluralCamelCase }}?.map(({{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}) =>
               <option key={{ "{" }}{{ field.fieldTypeCamelCase }}.id} value={{ "{" }}{{ field.fieldTypeCamelCase }}.id}>{{ "{" }}{{ field.fieldTypeCamelCase }}.id}</option>
             )}
           </Field>
 {%endif%}        </div>{%endfor%}
         <button type="submit">Save</button>
+        <button type="button" onClick={props.onCancel}>Cancel</button>
       </Form>
     </Formik>
   )
