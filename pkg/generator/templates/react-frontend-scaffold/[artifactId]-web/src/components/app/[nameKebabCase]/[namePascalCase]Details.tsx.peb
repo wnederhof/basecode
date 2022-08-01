@@ -3,8 +3,7 @@ import { useMemo } from 'react'
 import { Query } from '@generated/graphql'
 
 export interface {{ namePascalCase }}DetailsProps {
-  id: string | number{%for field in fields%}{%if field.isFieldRelational%}
-  {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
+  id: string | number
 }
 
 export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsProps) {
