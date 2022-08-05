@@ -54,7 +54,7 @@ func TestGeneratedCodeBuilds(t *testing.T) {
 
 	_ = os.Chdir(testDir + "/testapp/testapp-web")
 	_ = exec.Command("npm", "install").Run()
-	cmd = exec.Command("npm", "test")
+	cmd = exec.Command("npm", "run", "test")
 
 	stdout, err = cmd.Output()
 

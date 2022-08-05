@@ -28,8 +28,8 @@ describe('{{ namePascalCase }}Details', () => {
         <{{ namePascalCase }}Details id="1" />
       </Provider>
     ){%for field in fields%}
-    expect(screen.getAllByText({{ nameCamelCase }}.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%}).length).not.toBe(0){%endfor%}
-    expect(screen.getAllByText({{ nameCamelCase }}.createdAt).length).not.toBe(0)
-    expect(screen.getAllByText({{ nameCamelCase }}.updatedAt).length).not.toBe(0)
+    expect(screen.getAllByText({{ nameCamelCase }}.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%})).not.toHaveLength(0){%endfor%}
+    expect(screen.getAllByText({{ nameCamelCase }}.createdAt)).not.toHaveLength(0)
+    expect(screen.getAllByText({{ nameCamelCase }}.updatedAt)).not.toHaveLength(0)
   })
 })
