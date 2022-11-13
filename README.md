@@ -13,8 +13,9 @@ Basecode introduces the concept of "non-intrusive relational scaffolding", which
 ## Installation
 make sure you have the Go 1.16 or later installed. Then run:
 ```shell
-go install github.com/basecode/cmd/basecode@latest
+go install github.com/wnederhof/basecode/cmd/basecode@latest
 ```
+Or replace `latest` with one of the tags found under Releases in GitHub.
 
 ## Usage
 ### New project
