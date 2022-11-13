@@ -76,13 +76,7 @@ describe('{{ namePascalCase }}Form', () => {
         <{{ namePascalCase }}Form id="1" onSave={saveFn} onCancel={jest.fn()} />
       </Provider>
     )
-    fireEvent(
-      screen.getByText('Save'),
-      new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-      })
-    )
+    fireEvent.click(screen.getByText('Save'))
     await waitFor(() => expect(mockClient.executeMutation).toBeCalled())
     await waitFor(() => expect(saveFn).toBeCalled())
   })
@@ -105,13 +99,7 @@ describe('{{ namePascalCase }}Form', () => {
         <{{ namePascalCase }}Form onSave={saveFn} onCancel={jest.fn()} />
       </Provider>
     )
-    fireEvent(
-      screen.getByText('Save'),
-      new MouseEvent('click', {
-        bubbles: true,
-        cancelable: true,
-      })
-    )
+    fireEvent.click(screen.getByText('Save'))
     await waitFor(() => expect(mockClient.executeMutation).toBeCalled())
     await waitFor(() => expect(saveFn).toBeCalled())
   })

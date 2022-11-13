@@ -31,8 +31,12 @@
 
     <properties>
         <java.version>11</java.version>
-        <kotlin.version>1.6.20</kotlin.version>
-        <testcontainers.version>1.16.3</testcontainers.version>
+        <kotlin.version>1.7.20</kotlin.version>
+        <testcontainers.version>1.17.4</testcontainers.version>
+        <dgs-bom.version>4.1.0</dgs-bom.version>
+        <mockito-kotlin.version>2.2.0</mockito-kotlin.version>
+        <graphiql-starter.version>11.1.0</graphiql-starter.version>
+        <java-jwt.version>4.2.1</java-jwt.version>
     </properties>
 
     <dependencyManagement>
@@ -41,7 +45,7 @@
                 <groupId>com.netflix.graphql.dgs</groupId>
                 <artifactId>graphql-dgs-platform-dependencies</artifactId>
                 <!-- The DGS BOM/platform dependency. This is the only place you set version of DGS -->
-                <version>4.1.0</version>
+                <version>${dgs-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -56,7 +60,7 @@
         <dependency>
             <groupId>com.nhaarman.mockitokotlin2</groupId>
             <artifactId>mockito-kotlin</artifactId>
-            <version>2.2.0</version>
+            <version>${mockito-kotlin.version}</version>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
@@ -144,19 +148,13 @@
         <dependency>
             <groupId>com.graphql-java-kickstart</groupId>
             <artifactId>graphiql-spring-boot-starter</artifactId>
-            <version>7.0.1</version>
+            <version>${graphiql-starter.version}</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
-            <version>3.11.0</version>
-        </dependency>
-        <dependency>
-            <groupId>net.java.dev.jna</groupId>
-            <artifactId>jna</artifactId>
-            <version>5.7.0</version>
-            <scope>test</scope>
+            <version>${java-jwt.version}</version>
         </dependency>
     </dependencies>
 
@@ -195,5 +193,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
