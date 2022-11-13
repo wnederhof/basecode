@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react'
-import { {{ namePascalCase }}Details } from '../../../src/components/app/{{ nameKebabCase }}/{{ namePascalCase }}Details'
+import { {{ namePascalCase }}Details } from '@components/app/{{ nameKebabCase }}/{{ namePascalCase }}Details'
 import { Client, Provider } from 'urql'
+import { act } from 'react-dom/test-utils'
 import { fromValue } from 'wonka'
 
 describe('{{ namePascalCase }}Details', () => {
@@ -23,11 +24,13 @@ describe('{{ namePascalCase }}Details', () => {
       executeMutation: jest.fn(),
       executeSubscription: jest.fn(),
     }
-    render(
-      <Provider value={mockClient as Client}>
-        <{{ namePascalCase }}Details id="1" />
-      </Provider>
-    ){%for field in fields%}
+    act(() => {
+      render(
+        <Provider value={mockClient as Client}>
+          <{{ namePascalCase }}Details id="1" />
+        </Provider>
+      )
+    }){%for field in fields%}
     expect(screen.getAllByText({{ nameCamelCase }}.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%})).not.toHaveLength(0){%endfor%}
     expect(screen.getAllByText({{ nameCamelCase }}.createdAt)).not.toHaveLength(0)
     expect(screen.getAllByText({{ nameCamelCase }}.updatedAt)).not.toHaveLength(0)

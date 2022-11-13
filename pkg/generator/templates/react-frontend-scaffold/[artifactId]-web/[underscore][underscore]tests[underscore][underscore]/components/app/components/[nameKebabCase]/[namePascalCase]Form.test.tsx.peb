@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { {{ namePascalCase }}Form } from '../../../src/components/app/{{ nameKebabCase }}/{{ namePascalCase }}Form'
+import { {{ namePascalCase }}Form } from '@components/app/{{ nameKebabCase }}/{{ namePascalCase }}Form'
 import { Client, Provider } from 'urql'
 import { fromValue } from 'wonka'
 
@@ -76,17 +76,15 @@ describe('{{ namePascalCase }}Form', () => {
         <{{ namePascalCase }}Form id="1" onSave={saveFn} onCancel={jest.fn()} />
       </Provider>
     )
-    await waitFor(() => {
-      fireEvent(
-        screen.getByText('Save'),
-        new MouseEvent('click', {
-          bubbles: true,
-          cancelable: true,
-        })
-      )
-    })
-    expect(mockClient.executeMutation).toBeCalled()
-    expect(saveFn).toBeCalled()
+    fireEvent(
+      screen.getByText('Save'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
+    )
+    await waitFor(() => expect(mockClient.executeMutation).toBeCalled())
+    await waitFor(() => expect(saveFn).toBeCalled())
   })
 
   it('calls a mutation if Save is clicked if there is no id', async () => {
@@ -107,16 +105,14 @@ describe('{{ namePascalCase }}Form', () => {
         <{{ namePascalCase }}Form onSave={saveFn} onCancel={jest.fn()} />
       </Provider>
     )
-    await waitFor(() => {
-      fireEvent(
-        screen.getByText('Save'),
-        new MouseEvent('click', {
-          bubbles: true,
-          cancelable: true,
-        })
-      )
-    })
-    expect(mockClient.executeMutation).toBeCalled()
-    expect(saveFn).toBeCalled()
+    fireEvent(
+      screen.getByText('Save'),
+      new MouseEvent('click', {
+        bubbles: true,
+        cancelable: true,
+      })
+    )
+    await waitFor(() => expect(mockClient.executeMutation).toBeCalled())
+    await waitFor(() => expect(saveFn).toBeCalled())
   })
 })

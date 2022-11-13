@@ -42,7 +42,7 @@ func TestGeneratedCodeBuilds(t *testing.T) {
 	_ = os.Chdir(testDir + "/testapp/testapp-server")
 	cmd := exec.Command("mvn", "clean", "verify")
 
-	stdout, err := cmd.Output()
+	stdout, err := cmd.CombinedOutput()
 
 	fmt.Println(string(stdout))
 	if err != nil {
@@ -56,11 +56,11 @@ func TestGeneratedCodeBuilds(t *testing.T) {
 	_ = exec.Command("npm", "install").Run()
 	cmd = exec.Command("npm", "run", "test")
 
-	stdout, err = cmd.Output()
+	stdout, err = cmd.CombinedOutput()
 
 	fmt.Println(string(stdout))
 	if err != nil {
-		assert.Fail(t, "Could not execute npm."+err.Error())
+		assert.Fail(t, "Could not execute npm test."+err.Error())
 		_ = os.RemoveAll(testDir)
 		_ = os.Chdir(oldDir)
 		return

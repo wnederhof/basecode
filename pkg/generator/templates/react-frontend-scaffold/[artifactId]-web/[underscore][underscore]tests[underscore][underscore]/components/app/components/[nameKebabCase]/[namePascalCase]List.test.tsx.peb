@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { {{ namePascalCase }}List } from '../../../src/components/app/{{ nameKebabCase }}/{{ namePascalCase }}List'
+import { {{ namePascalCase }}List } from '@components/app/{{ nameKebabCase }}/{{ namePascalCase }}List'
 import { Client, Provider } from 'urql'
+import { act } from 'react-dom/test-utils'
 import { fromValue } from 'wonka'
 
 describe('{{ namePascalCase }}List', () => {
@@ -23,11 +24,13 @@ describe('{{ namePascalCase }}List', () => {
       executeMutation: jest.fn(),
       executeSubscription: jest.fn(),
     }
-    render(
-      <Provider value={mockClient as Client}>
-        <{{ namePascalCase }}List />
-      </Provider>
-    )
+    act(() => {
+      render(
+        <Provider value={mockClient as Client}>
+          <{{ namePascalCase }}List />
+        </Provider>
+      )
+    })
     expect(screen.getByText('Show')).toHaveAttribute('href', '/{{ namePluralKebabCase }}/1')
   })
 
@@ -45,11 +48,13 @@ describe('{{ namePascalCase }}List', () => {
       executeMutation: jest.fn(),
       executeSubscription: jest.fn(),
     }
-    render(
-      <Provider value={mockClient as Client}>
-        <{{ namePascalCase }}List />
-      </Provider>
-    ){%for field in fields%}
+    act(() => {
+      render(
+        <Provider value={mockClient as Client}>
+          <{{ namePascalCase }}List />
+        </Provider>
+      )
+    }){%for field in fields%}
     expect(screen.getAllByText({{ nameCamelCase }}.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%})).not.toHaveLength(0){%endfor%}
   })
 
@@ -74,19 +79,23 @@ describe('{{ namePascalCase }}List', () => {
       executeMutation,
       executeSubscription: jest.fn(),
     }
-    render(
-      <Provider value={mockClient as Client}>
-        <{{ namePascalCase }}List />
-      </Provider>
-    )
-    await waitFor(() => {
-      fireEvent(
-        screen.getByText('Delete'),
-        new MouseEvent('click', {
-          bubbles: true,
-          cancelable: true,
-        })
+    act(() => {
+      render(
+        <Provider value={mockClient as Client}>
+          <{{ namePascalCase }}List />
+        </Provider>
       )
+    })
+    await waitFor(() => {
+      act(() => {
+        fireEvent(
+          screen.getByText('Delete'),
+          new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+          })
+        )
+      })
     })
     expect(mockClient.executeMutation).toBeCalled()
   })
@@ -112,19 +121,23 @@ describe('{{ namePascalCase }}List', () => {
       executeMutation,
       executeSubscription: jest.fn(),
     }
-    render(
-      <Provider value={mockClient as Client}>
-        <{{ namePascalCase }}List />
-      </Provider>
-    )
-    await waitFor(() => {
-      fireEvent(
-        screen.getByText('Delete'),
-        new MouseEvent('click', {
-          bubbles: true,
-          cancelable: true,
-        })
+    act(() => {
+      render(
+        <Provider value={mockClient as Client}>
+          <{{ namePascalCase }}List />
+        </Provider>
       )
+    })
+    await waitFor(() => {
+      act(() => {
+        fireEvent(
+          screen.getByText('Delete'),
+          new MouseEvent('click', {
+            bubbles: true,
+            cancelable: true,
+          })
+        )
+      })
     })
     expect(mockClient.executeMutation).not.toBeCalled()
   })
