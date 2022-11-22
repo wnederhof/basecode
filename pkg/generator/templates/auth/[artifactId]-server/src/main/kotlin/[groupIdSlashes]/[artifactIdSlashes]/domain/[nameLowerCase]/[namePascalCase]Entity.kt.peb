@@ -1,0 +1,18 @@
+package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
+
+import org.springframework.data.annotation.*
+import org.springframework.data.relational.core.mapping.Table
+import java.time.LocalDateTime
+
+@Table("{{ namePluralSnakeCase }}")
+data class {{ namePascalCase }}Entity(
+    @Id
+    val id: Long? = null{%for field in fields%},
+    val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinType }}{%endfor%},
+
+    @CreatedDate
+    val createdAt: LocalDateTime? = null,
+
+    @LastModifiedDate
+    val updatedAt: LocalDateTime? = null,
+)

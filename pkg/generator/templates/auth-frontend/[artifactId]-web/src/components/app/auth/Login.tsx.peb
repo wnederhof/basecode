@@ -1,29 +1,28 @@
-import { AppButton } from '@components/presentational/AppButton'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
-import { ResetUrqlClientContext } from 'src/lib/urqlclient'
+import { ResetUrqlClientContext } from '@lib/reset-urql-client-context'
 import { gql, useMutation } from 'urql'
 
 export const Login = () => {
   const router = useRouter()
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [, executeLoginMutation] = useMutation(gql`
-    mutation login($email: String!, $password: String!) {
-      login(email: $email, password: $password) {
+    mutation login($username: String!, $password: String!) {
+      login(username: $username, password: $password) {
         id
       }
     }
   `)
   const doLogin = (resetUrqlClient: any) => {
-    executeLoginMutation({ email, password }).then((loginResult) => {
+    executeLoginMutation({ username, password }).then((loginResult) => {
       if (loginResult?.data?.login) {
         router.push('/')
         resetUrqlClient()
       } else {
         alert(
-          'Could not login. Please check your email and password and try again.'
+          'Could not login. Please check your username and password and try again.'
         )
       }
     })
@@ -43,9 +42,9 @@ export const Login = () => {
               <input
                 autoFocus
                 type="text"
-                defaultValue={email}
-                placeholder="Email"
-                onChange={(e) => setEmail(e.target.value)}
+                defaultValue={username}
+                placeholder="Username"
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div>
@@ -57,11 +56,11 @@ export const Login = () => {
               />
             </div>
             <div>
-              <button type="submit">Login</AppButton>
+              <button type="submit">Login</button>
               <Link href="/auth/register">Register</Link>
             </div>
-          </div>
-        </>
+          </>
+        </form>
       )}
     </ResetUrqlClientContext.Consumer>
   )

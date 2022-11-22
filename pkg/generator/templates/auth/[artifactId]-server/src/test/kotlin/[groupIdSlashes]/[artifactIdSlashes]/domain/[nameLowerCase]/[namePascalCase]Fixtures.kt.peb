@@ -21,7 +21,7 @@ object {{ namePascalCase }}Fixtures {
         {{ field.fieldNameCamelCase }} = {{ field.fieldKotlinTestDummyValue }}{%endfor%}
     )
 
-    val CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1 = {{ namePascalCase }}Service.Create{{ namePascalCase }}Input({%for field in fields%}
+    val REGISTER_{{ nameScreamingSnakeCase }}_FIXTURE_1 = {{ namePascalCase }}Service.Register{{ namePascalCase }}Input({%for field in fields%}
         {{ field.fieldNameCamelCase }} = {{ field.fieldKotlinTestDummyValue }},{%endfor%}
     )
 

@@ -1,0 +1,28 @@
+extend type Query {
+    current{{ namePascalCase }}: {{ namePascalCase }}
+    {{ nameCamelCase }}(id: ID!): {{ namePascalCase }}
+}
+
+extend type Mutation {
+    login(username: String!, password: String!): {{ namePascalCase }}!
+    logout: Boolean
+    register{{ namePascalCase }}(input: Register{{ namePascalCase }}Input!): {{ namePascalCase }}!
+    update{{ namePascalCase }}(id: ID!, input: Update{{ namePascalCase }}Input!): {{ namePascalCase }}
+    delete{{ namePascalCase }}(id: ID!): Boolean!
+}
+
+type {{ namePascalCase }} {
+    id: ID!{%for field in fields%}{%if field.fieldNameCamelCase != "password" %}
+    {{ field.fieldNameCamelCase }}: {{ field.graphQLFieldType }}{%endif%}{%endfor%}{%for field in fields%}{%if field.isFieldRelational%}
+    {{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}{%endif%}{%endfor%}
+    createdAt: Date!
+    updatedAt: Date
+}
+
+input Register{{ namePascalCase }}Input { {%for field in fields%}
+    {{ field.fieldNameCamelCase }}: {{ field.graphQLFieldType }}{%endfor%}
+}
+
+input Update{{ namePascalCase }}Input { {%for field in fields%}{%if field.fieldNameCamelCase != "username"%}
+    {{ field.fieldNameCamelCase }}: {{ field.graphQLFieldType }}{%endif%}{%endfor%}
+}

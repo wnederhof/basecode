@@ -19,12 +19,35 @@ func parseArgsFromStrings(args []string) (generator.Model, error) {
 	if len(args) < 2 {
 		return generator.Model{}, errors.New("usage: <name> (<fieldName>:<fieldType>)+")
 	}
-	attributeCount := len(args) - 1
+	attributes, err := parseAttributeArgsFromStrings(args[1:])
+	if err != nil {
+		return generator.Model{}, err
+	}
+	return generator.Model{
+		Name:       args[0],
+		Attributes: attributes,
+	}, nil
+}
+
+func parseAttributeArgs(cliArgs cli.Args) ([]generator.ModelAttribute, error) {
+	// TODO test separately
+	args := make([]string, cliArgs.Len())
+	for i := 0; i < cliArgs.Len(); i++ {
+		args[i] = cliArgs.Get(i)
+	}
+	return parseAttributeArgsFromStrings(args)
+}
+
+func parseAttributeArgsFromStrings(attributeArgs []string) ([]generator.ModelAttribute, error) {
+	if len(attributeArgs) < 1 {
+		return []generator.ModelAttribute{}, errors.New("usage: (<fieldName>:<fieldType>)+")
+	}
+	attributeCount := len(attributeArgs)
 	attributes := make([]generator.ModelAttribute, attributeCount)
-	for i := 1; i <= attributeCount; i++ {
-		parts := strings.Split(args[i], ":")
+	for i := 0; i < attributeCount; i++ {
+		parts := strings.Split(attributeArgs[i], ":")
 		if len(parts) > 2 {
-			return generator.Model{}, errors.New("usage: <name> (<fieldName>:<fieldType>)+")
+			return []generator.ModelAttribute{}, errors.New("usage: <name> (<fieldName>:<fieldType>)+")
 		}
 		var parseTypeResult uint8
 		var err error
@@ -34,23 +57,19 @@ func parseArgsFromStrings(args []string) (generator.Model, error) {
 			parseTypeResult, err = parseType("string")
 		}
 		if err != nil {
-			return generator.Model{}, err
+			return []generator.ModelAttribute{}, err
 		}
 		relation := ""
 		if parseTypeResult == generator.RELATIONAL {
 			relation = parts[1]
 		}
-		attributes[i-1] = generator.ModelAttribute{
+		attributes[i] = generator.ModelAttribute{
 			Name:     parts[0],
 			Type:     parseTypeResult,
 			Relation: relation,
 		}
 	}
-
-	return generator.Model{
-		Name:       args[0],
-		Attributes: attributes,
-	}, nil
+	return attributes, nil
 }
 
 func parseType(s string) (uint8, error) {

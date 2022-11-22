@@ -1,34 +1,29 @@
 package {{ groupId }}.{{ artifactId }}.application.security
 
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service
 import org.springframework.security.core.context.SecurityContextHolder
-import org.springframework.security.authentication.AuthenticationProvider
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
 class UserAuthenticationService(
-    private val applicationUserDetailsService: ApplicationUserDetailsService,
-    private val authenticationProvider: AuthenticationProvider
-) {
+    private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service,
+) : UserDetailsService {
 
-    val currentUser: UserDetails? get() {
+    fun currentUser(): {{ namePascalCase }}? {
         val context = SecurityContextHolder.getContext()
-        val name = context.authentication?.name ?: return null
-        return applicationUserDetailsService.loadUserByUsername(name)
+        val username = context.authentication?.name ?: return null
+        return {{ nameCamelCase }}Service.findByUsername(username)
     }
 
-    fun login(name: String, password: String) {
-        return try {
-            val credentials = UsernamePasswordAuthenticationToken(email, password)
-            SecurityContextHolder.getContext().authentication = authenticationProvider.authenticate(credentials)
-            currentUser
-        } catch (e: AuthenticationException) {
-            null
-        }
+    override fun loadUserByUsername(username: String): UserDetails {
+        return {{ nameCamelCase }}Service.findUserDetailsByUsername(username)
+            ?: throw UsernameNotFoundException("Username not found: $username")
     }
 
     fun logout() {

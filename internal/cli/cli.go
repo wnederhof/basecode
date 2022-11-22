@@ -121,6 +121,42 @@ func Run(args []string) error {
 							return generator.GenerateScaffold(model, c.Bool("overwrite"), c.Bool("delete"))
 						},
 					},
+					{
+						Name:    "backend:auth",
+						Aliases: []string{"ba"},
+						Usage:   "Backend Authentication - EXPERIMENTAL",
+						Action: func(c *cli.Context) error {
+							model, err := parseAttributeArgs(c.Args())
+							if err != nil {
+								return err
+							}
+							return generator.GenerateBackendAuthentication(model, c.Bool("overwrite"), c.Bool("delete"))
+						},
+					},
+					{
+						Name:    "frontend:auth",
+						Aliases: []string{"fa"},
+						Usage:   "Frontend Authentication - EXPERIMENTAL",
+						Action: func(c *cli.Context) error {
+							model, err := parseAttributeArgs(c.Args())
+							if err != nil {
+								return err
+							}
+							return generator.GenerateFrontendAuthentication(model, c.Bool("overwrite"), c.Bool("delete"))
+						},
+					},
+					{
+						Name:    "auth",
+						Aliases: []string{"a"},
+						Usage:   "Authentication - EXPERIMENTAL",
+						Action: func(c *cli.Context) error {
+							model, err := parseAttributeArgs(c.Args())
+							if err != nil {
+								return err
+							}
+							return generator.GenerateAuthentication(model, c.Bool("overwrite"), c.Bool("delete"))
+						},
+					},
 				},
 			},
 		},

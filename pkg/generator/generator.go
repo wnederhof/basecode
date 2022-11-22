@@ -116,6 +116,60 @@ func GenerateModelTemplate(templateDirectory string, model Model, overwrite bool
 	return writeFiles(templateDirectory, ".", context, overwrite)
 }
 
+func GenerateBackendAuthentication(attributes []ModelAttribute, overwrite bool, delete bool) error {
+	model := Model{
+		Name: "User",
+		Attributes: append([]ModelAttribute{{
+			Name:     "username",
+			Type:     STRING,
+			Relation: "",
+		}, {
+			Name:     "password",
+			Type:     STRING,
+			Relation: "",
+		}}, attributes...),
+	}
+	if delete {
+		err := GenerateModelTemplate("templates/auth", model, overwrite, true)
+		if err != nil {
+			return err
+		}
+		return GenerateModelTemplate("templates/auth-removal", model, overwrite, false)
+	}
+	return GenerateModelTemplate("templates/auth", model, overwrite, false)
+}
+
+func GenerateFrontendAuthentication(attributes []ModelAttribute, overwrite bool, delete bool) error {
+	model := Model{
+		Name: "User",
+		Attributes: append([]ModelAttribute{{
+			Name:     "username",
+			Type:     STRING,
+			Relation: "",
+		}, {
+			Name:     "password",
+			Type:     STRING,
+			Relation: "",
+		}}, attributes...),
+	}
+	if delete {
+		err := GenerateModelTemplate("templates/auth-frontend", model, overwrite, true)
+		if err != nil {
+			return err
+		}
+	}
+	return GenerateModelTemplate("templates/auth-frontend", model, overwrite, false)
+}
+
+func GenerateAuthentication(attributes []ModelAttribute, overwrite bool, delete bool) error {
+	// TODO test
+	err := GenerateBackendAuthentication(attributes, overwrite, delete)
+	if err != nil {
+		return err
+	}
+	return GenerateFrontendAuthentication(attributes, overwrite, delete)
+}
+
 func deleteFiles(sourceDirectory string, targetDirectoryTemplate string, context map[string]interface{}) error {
 	dirEntry, _ := assets.ReadDir(sourceDirectory)
 	for _, e := range dirEntry {
@@ -233,7 +287,7 @@ func deleteFileFromTemplate(targetFileTemplate string, context map[string]interf
 
 	if exists(targetFile) {
 		println("[D] " + targetFile)
-		return os.Remove(targetFile)
+		return os.RemoveAll(targetFile)
 	}
 	return nil
 }

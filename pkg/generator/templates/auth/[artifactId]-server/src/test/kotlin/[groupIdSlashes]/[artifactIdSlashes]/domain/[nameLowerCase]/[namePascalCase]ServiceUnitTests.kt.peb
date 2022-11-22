@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.*{%for field in fields%}{%if field.isFieldRel
 import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1
-import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.REGISTER_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1{%for field in fields%}{%if field.isFieldRelational%}
 import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
@@ -51,6 +51,53 @@ internal class {{ namePascalCase }}ServiceUnitTests {
             .thenReturn(Optional.empty())
 
         val actual = {{ nameCamelCase }}Service.findById(1)
+
+        assertThat(actual).isNull()
+
+        verify(publisher, times(0))
+            .publishEvent(any())
+    }
+
+    @Test
+    fun `findByUsername returns the mapped value of findByUsername in {{ namePascalCase }}Repository if it is non-empty`() {
+        whenever({{ nameCamelCase }}Repository.findByUsername("username"))
+            .thenReturn({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1)
+
+        val actual = {{ nameCamelCase }}Service.findByUsername("username")
+
+        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+    }
+
+    @Test
+    fun `findByUsername returns null if findByUsername in {{ namePascalCase }}Repository yields a value`() {
+        whenever({{ nameCamelCase }}Repository.findByUsername("username"))
+            .thenReturn(null)
+
+        val actual = {{ nameCamelCase }}Service.findByUsername("username")
+
+        assertThat(actual).isNull()
+
+        verify(publisher, times(0))
+            .publishEvent(any())
+    }
+
+    @Test
+    fun `findUserDetailsByUsername returns the mapped value of findByUsername in {{ namePascalCase }}Repository if it is non-empty`() {
+        whenever({{ nameCamelCase }}Repository.findByUsername("username"))
+            .thenReturn({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1)
+
+        val actual = {{ nameCamelCase }}Service.findUserDetailsByUsername("username")
+
+        assertThat(actual?.username).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.username)
+        assertThat(actual?.password).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.password)
+    }
+
+    @Test
+    fun `findUserDetailsByUsername returns null if findByUsername in {{ namePascalCase }}Repository yields a value`() {
+        whenever({{ nameCamelCase }}Repository.findByUsername("username"))
+            .thenReturn(null)
+
+        val actual = {{ nameCamelCase }}Service.findUserDetailsByUsername("username")
 
         assertThat(actual).isNull()
 
@@ -109,25 +156,25 @@ internal class {{ namePascalCase }}ServiceUnitTests {
     }
 {%endif%}{%endfor%}
     @Test
-    fun `create calls save on repository if all requirements are met and publishes an event`() {
+    fun `register calls save on repository if all requirements are met and publishes an event`() {
         whenever({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1))
             .thenReturn({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1)
 {%for field in fields%}{%if field.isFieldRelational%}
         whenever({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
             .thenReturn({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 {%endif%}{%endfor%}
-        val actual = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
+        val actual = {{ nameCamelCase }}Service.register(REGISTER_{{ nameScreamingSnakeCase }}_FIXTURE_1)
 
         assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
 
         verify(publisher)
-            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}CreatedEvent({{ nameCamelCase }}Service, listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
+            .publishEvent({{ namePascalCase }}Event.{{ namePluralPascalCase }}RegisteredEvent({{ nameCamelCase }}Service, listOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
     }
 {%if hasRelations%}
     @Test
-    fun `create fails when related objects cannot be found and publishes no events`() {
+    fun `register fails when related objects cannot be found and publishes no events`() {
         assertThrows<RuntimeException> {
-            {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1)
+            {{ nameCamelCase }}Service.register(REGISTER_{{ nameScreamingSnakeCase }}_FIXTURE_1)
         }
 
         verify({{ nameCamelCase }}Repository, times(0)).save({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1)

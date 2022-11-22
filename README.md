@@ -1,5 +1,7 @@
-# Basecode
-Basecode is a full-stack scaffolding generator for Kotlin, Spring Boot, GraphQL, React (NextJS) and PostgreSQL.
+# Basecode - The fastest way to build a web app
+Build your next web app in days instead of months.
+
+Basecode is a full-stack code generator for Kotlin, Spring Boot, GraphQL, React (NextJS) and PostgreSQL.
 
 - **Productive**: Generate relational CRUD functionality for the frontend and backend including migrations, GraphQL schema extensions, unit tests and integration tests with a single command.
 - **Maintainable**: A package-by-feature backend structure, GraphQL communication and an event-driven backend model make for a highly decoupled and extensible architecture which is built to last.
@@ -11,7 +13,7 @@ Basecode introduces the concept of "non-intrusive relational scaffolding", which
 - **Non-intrusive:** code generated for one entity will not affect code of any another entity, nor will it *change* any other file in the project.
 
 ## Installation
-make sure you have the Go 1.16 or later installed. Then run:
+Make sure you have the Go 1.16 or later installed. Then run:
 ```shell
 go install github.com/wnederhof/basecode/cmd/basecode@latest
 ```
