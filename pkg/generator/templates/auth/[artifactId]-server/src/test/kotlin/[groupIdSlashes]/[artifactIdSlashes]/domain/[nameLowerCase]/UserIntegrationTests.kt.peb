@@ -1,0 +1,69 @@
+package {{ groupId }}.{{ artifactId }}.domain.user
+
+import {{ groupId }}.{{ artifactId }}.IntegrationTestContext
+import {{ groupId }}.{{ artifactId }}.domain.user.UserFixtures.REGISTER_USER_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.user.UserFixtures.UPDATE_USER_FIXTURE_1{%for field in fields%}{%if field.isFieldRelational%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_ENTITY_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Repository
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test{%if hasRelations%}
+import org.junit.jupiter.api.assertThrows{%endif%}
+import org.springframework.beans.factory.annotation.Autowired
+
+class UserIntegrationTests : IntegrationTestContext() {
+
+    @Autowired
+    private lateinit var userService: UserService
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Autowired
+    private lateinit var {{ field.fieldTypeCamelCase }}Service: {{ field.fieldTypePascalCase }}Service
+
+    @Autowired
+    private lateinit var {{ field.fieldTypeCamelCase }}Repository: {{ field.fieldTypePascalCase }}Repository
+{%endif%}{%endfor%}{%if hasRelations%}
+    @Test
+    fun `Users cannot be registered if related entities do not exist`() {
+        assertThrows<RuntimeException> {
+            userService.register(REGISTER_USER_FIXTURE_1)
+        }
+        assertThat(userService.findAll()).isEmpty()
+    }
+{%endif%}
+    @Test
+    fun `Users can be registered, updated, fetched and deleted`() { {%for field in fields%}{%if field.isFieldRelational%}
+        val {{ field.fieldTypeCamelCase }} = {{ field.fieldTypeCamelCase }}Repository.save({{ field.fieldTypeScreamingSnakeCase }}_ENTITY_FIXTURE_1)
+{%endif%}{%endfor%}
+        var user = userService.register(REGISTER_USER_FIXTURE_1{%if hasRelations%}.copy({%for field in fields%}{%if field.isFieldRelational%}
+            {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!,{%endif%}{%endfor%}
+        ){%endif%})
+        user = userService.update(user.id, UPDATE_USER_FIXTURE_1{%if hasRelations%}.copy({%for field in fields%}{%if field.isFieldRelational%}
+            {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!,{%endif%}{%endfor%}
+        ){%endif%})!!
+
+        assertThat(userService.findAll()).isNotEmpty
+        assertThat(userService.findById(user.id)).isNotNull
+        assertThat(userService.findByIds(listOf(user.id))).isNotEmpty
+{%for field in fields%}{%if field.isFieldRelational%}
+        assertThat(userService.findAll(UserService.UserFilterInput({{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!))).isNotEmpty
+        assertThat(userService.findBy{{ field.fieldNamePluralPascalCase }}(listOf({{ field.fieldTypeCamelCase }}.id!!))).isNotEmpty
+{%endif%}{%endfor%}
+        userService.deleteById(user.id)
+
+        assertThat(userService.findAll()).isEmpty()
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Test
+    fun `Users are deleted when related {{ field.fieldTypePluralPascalCase }} are deleted`() {
+{%for field in fields%}{%if field.isFieldRelational%}        val {{ field.fieldTypeCamelCase }} = {{ field.fieldTypeCamelCase }}Repository.save({{ field.fieldTypeScreamingSnakeCase }}_ENTITY_FIXTURE_1)
+{%endif%}{%endfor%}
+        val user = userService.register(REGISTER_USER_FIXTURE_1.copy({%for field in fields%}{%if field.isFieldRelational%}
+            {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id!!,{%endif%}{%endfor%}
+        ))
+
+        {{ field.fieldTypeCamelCase }}Service.deleteById(user.{{ field.fieldNameCamelCase }})
+
+        assertThat(userService.findAll()).isEmpty()
+    }
+{%endif%}{%endfor%}
+}

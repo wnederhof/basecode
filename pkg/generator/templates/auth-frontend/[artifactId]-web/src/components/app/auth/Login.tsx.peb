@@ -1,67 +1,119 @@
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { useState } from 'react'
-import { ResetUrqlClientContext } from '@lib/reset-urql-client-context'
-import { gql, useMutation } from 'urql'
+import { gql, OperationResult, useMutation, useQuery } from 'urql'
+import { useMemo } from 'react'
+import { Mutation, Query{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%} } from '@generated/graphql'
+import { Formik, Field, Form, FormikHelpers } from 'formik'
 
-export const Login = () => {
-  const router = useRouter()
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [, executeLoginMutation] = useMutation(gql`
-    mutation login($username: String!, $password: String!) {
-      login(username: $username, password: $password) {
+export interface LoginProps { {%for field in fields%}{%if field.isFieldRelational%}
+  {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
+  onSave: () => void
+  onCancel: () => void
+}
+
+interface LoginFormData {{ "{" }}{%for field in fields%}
+  {{ field.fieldNameCamelCase }}: {%if field.fieldType == "INT" or field.fieldType == "NULL_INT"%}number{%elif field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%}boolean{%elif field.fieldType == "RELATIONAL"%}number | string{%else%}string{%endif%} | undefined{%endfor%}
+}
+
+export function Login(props: LoginProps) {
+  const [, executeLoginMutation] = useMutation<Mutation>(gql`
+    mutation login($input: LoginInput!) {
+      login(input: $input) {
         id
       }
     }
   `)
-  const doLogin = (resetUrqlClient: any) => {
-    executeLoginMutation({ username, password }).then((loginResult) => {
-      if (loginResult?.data?.login) {
-        router.push('/')
-        resetUrqlClient()
-      } else {
-        alert(
-          'Could not login. Please check your username and password and try again.'
-        )
-      }
-    })
+
+  function handleMutationResult(result: OperationResult<Mutation>) {
+    if (result.error) {
+      alert(`An error occurred: ${result.error.message}`)
+    }
+    return !result.error
   }
+
+  const doSubmit = (
+    formData: LoginFormData,
+    { setSubmitting }: FormikHelpers<LoginFormData>
+  ) => { {%if hasRelations%}
+    const formDataWithRelations = { ...formData }{%endif%}{%for field in fields%}{%if field.isFieldRelational%}
+    if (props.{{ field.fieldNameCamelCase }}) {
+      formData{%if hasRelations%}WithRelations{%endif%}.{{  field.fieldNameCamelCase }} = props.{{ field.fieldNameCamelCase }}
+    }{%endif%}{%endfor%}
+    executeLoginMutation({ input: formData{%if hasRelations%}WithRelations{%endif%} })
+      .then(result => handleMutationResult(result) && props.onSave())
+      .catch((reason) => alert(`Creating user failed. Reason: ${reason}`))
+      .finally(() => setSubmitting(false))
+  }
+{%for field in fields%}{%if field.isFieldRelational%}
+  const [{{ field.fieldTypePluralCamelCase }}QueryResult] = useQuery<Query>({
+    query: gql`
+      query {{field.fieldTypePluralCamelCase}}ForUserOptions {
+        {{field.fieldTypePluralCamelCase}} {
+          id
+        }
+      }
+    `,
+    context: useMemo(
+      () => ({
+        additionalTypenames: ['{{field.fieldTypePascalCase}}'],
+      }),
+      []
+    ),
+  })
+{%endif%}{%endfor%}
   return (
-    <ResetUrqlClientContext.Consumer>
-      {(resetUrqlClient) => (
-        <form
-          onSubmit={(e) => {
-            doLogin(resetUrqlClient)
-            e.preventDefault()
-          }}
-        >
-          <>
-            <div>
-              Username
-              <input
-                autoFocus
-                type="text"
-                defaultValue={username}
-                placeholder="Username"
-                onChange={(e) => setUsername(e.target.value)}
-              />
-            </div>
-            <div>
-              <input
-                type="password"
-                defaultValue={password}
-                placeholder="Password"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div>
-              <button type="submit">Login</button>
-              <Link href="/auth/register">Register</Link>
-            </div>
-          </>
-        </form>
-      )}
-    </ResetUrqlClientContext.Consumer>
+    <Formik
+      onSubmit={doSubmit}
+      initialValues={{ "{" }}{{ "{" }}{%for field in fields%}
+{{ field.fieldNameCamelCase }}: {%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%}false{%endif%}{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" or field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT"%}''{%endif%},{%endfor%}
+{{ "}" }} as LoginFormData{{ "}" }}
+    >
+      <Form role="form">
+{%for field in fields%}
+        <div>
+          <label htmlFor="{{ field.fieldNameCamelCase }}">{{ field.fieldNamePascalCase }}</label>{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" %}
+          <Field
+            name="{{ field.fieldNameCamelCase }}"
+            type="text"
+          />
+{%elif field.fieldType == "INT" or field.fieldType == "NULL_INT" %}
+          <Field
+            name="{{ field.fieldNameCamelCase }}"
+            type="number"
+          />
+{%elif field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT" %}
+          <Field
+            name="{{ field.fieldNameCamelCase }}"
+            as="textarea"
+          />
+{%elif field.fieldType == "INT" or field.fieldType == "NULL_INT" %}
+          <Field
+            name="{{ field.fieldNameCamelCase }}"
+            type="number"
+          />
+{%elif field.fieldType == "DATE" or field.fieldType == "NULL_DATE" %}
+          <Field
+            name="{{ field.fieldNameCamelCase }}"
+            type="date"
+          />
+{%elif field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN" %}
+          <Field
+            name="{{ field.fieldNameCamelCase }}"
+            type="checkbox"
+          />
+{%elif field.fieldType == "RELATIONAL" %}
+          <Field
+            name="{{ field.fieldNameCamelCase }}"
+            as="select"
+            hidden={props.{{ field.fieldNameCamelCase }}}
+          >
+            <option />
+            {{ "{" }}{{ field.fieldTypePluralCamelCase }}QueryResult?.data?.{{ field.fieldTypePluralCamelCase }}?.map(({{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}) =>
+              <option key={{ "{" }}{{ field.fieldTypeCamelCase }}.id} value={{ "{" }}{{ field.fieldTypeCamelCase }}.id}>{{ "{" }}{{ field.fieldTypeCamelCase }}.id}</option>
+            )}
+          </Field>
+{%endif%}        </div>{%endfor%}
+        <button type="submit">Save</button>
+        <button type="button" onClick={props.onCancel}>Cancel</button>
+      </Form>
+    </Formik>
   )
 }

@@ -1,0 +1,92 @@
+package {{ groupId }}.{{ artifactId }}.application.graphql.user
+
+import {{ groupId }}.{{ artifactId }}.domain.user.User
+import {{ groupId }}.{{ artifactId }}.domain.user.UserService
+import {{ groupId }}.{{ artifactId }}.domain.user.UserService.UpdateUserInput
+import {{ groupId }}.{{ artifactId }}.domain.user.UserService.RegisterInput
+import {{ groupId }}.{{ artifactId }}.domain.user.UserService.LoginInput{%if hasRelations%}
+import {{ groupId }}.{{ artifactId }}.domain.user.UserService.UserFilterInput{%endif%}
+{%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}
+{%endif%}{%endfor%}import com.netflix.graphql.dgs.DgsComponent{%if hasRelations%}
+import com.netflix.graphql.dgs.DgsData{%endif%}
+import com.netflix.graphql.dgs.DgsQuery
+import com.netflix.graphql.dgs.DgsMutation{%if hasRelations%}
+import java.util.concurrent.CompletableFuture
+import com.netflix.graphql.dgs.DgsDataFetchingEnvironment{%endif%}
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.authentication.AuthenticationProvider
+import org.springframework.security.core.AuthenticationException
+import org.springframework.security.core.context.SecurityContextHolder
+
+@DgsComponent
+class UserResolver(
+    private val userService: UserService,
+    private val authenticationProvider: AuthenticationProvider
+) {
+
+    @DgsQuery
+    fun currentUser(): User? {
+        val context = SecurityContextHolder.getContext()
+        val username = context.authentication?.name ?: return null
+        return userService.findByUsername(username)
+    }
+
+    @DgsQuery
+    fun user(id: Long): User? {
+        return userService.findById(id)
+    }
+
+    @DgsQuery
+    fun users({%if hasRelations%}filter: UserFilterInput?{%endif%}): Iterable<User> {
+        return userService.findAll({%if hasRelations%}filter{%endif%})
+    }
+
+    @DgsMutation
+    fun login(input: LoginInput): User? {
+        return try {
+            val credentials = UsernamePasswordAuthenticationToken(input.username, input.password)
+            SecurityContextHolder.getContext().authentication = authenticationProvider.authenticate(credentials)
+            currentUser()
+        } catch (e: AuthenticationException) {
+            null
+        }
+    }
+
+    @DgsMutation
+    fun logout(): Boolean {
+        SecurityContextHolder.getContext().authentication = null
+        return true
+    }
+
+    @DgsMutation
+    fun register(input: RegisterInput): User {
+        return userService.register(input)
+    }
+
+    @DgsMutation
+    fun updateUser(id: Long, input: UpdateUserInput): User? {
+        return userService.update(id, input)
+    }
+
+    @DgsMutation
+    fun deleteUser(id: Long): Boolean {
+        return userService.deleteById(id)
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    @DgsData(parentType = "User")
+    fun {{ field.fieldTypeCamelCase }}(dfe: DgsDataFetchingEnvironment): CompletableFuture<{{ field.fieldTypePascalCase }}?> {
+        val user = dfe.getSource<User>()
+        return dfe.getDataLoader<Long, {{ field.fieldTypePascalCase }}?>("{{ field.fieldTypeCamelCase }}ById")
+            .load(user.{{ field.fieldNameCamelCase }})
+    }
+
+    @DgsData(parentType = "{{ field.fieldTypePascalCase }}", field = "users")
+    fun usersBy{{ field.fieldTypePascalCase }}(dfe: DgsDataFetchingEnvironment): CompletableFuture<Iterable<User>> {
+        val {{ field.fieldTypeCamelCase }} = dfe.getSource<{{ field.fieldTypePascalCase }}>()
+        val {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id ?: error("Expected id to be provided.")
+        return dfe.getDataLoader<Long, Iterable<User>>("usersBy{{ field.fieldNamePascalCase }}")
+            .load({{ field.fieldNameCamelCase }})
+            .thenApply { it ?: listOf() }
+    }
+{%endif%}{%endfor%}
+}

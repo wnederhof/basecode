@@ -1,17 +1,18 @@
 extend type Query {
-    current{{ namePascalCase }}: {{ namePascalCase }}
-    {{ nameCamelCase }}(id: ID!): {{ namePascalCase }}
+    currentUser: User
+    user(id: ID!): User
+    users{%if hasRelations%}(filter: UserFilter){%endif%}: [User!]!
 }
 
 extend type Mutation {
-    login(username: String!, password: String!): {{ namePascalCase }}!
-    logout: Boolean
-    register{{ namePascalCase }}(input: Register{{ namePascalCase }}Input!): {{ namePascalCase }}!
-    update{{ namePascalCase }}(id: ID!, input: Update{{ namePascalCase }}Input!): {{ namePascalCase }}
-    delete{{ namePascalCase }}(id: ID!): Boolean!
+    login(input: LoginInput!): User!
+    logout: Boolean!
+    register(input: RegisterInput!): User!
+    updateUser(id: ID!, input: UpdateUserInput!): User
+    deleteUser(id: ID!): Boolean!
 }
 
-type {{ namePascalCase }} {
+type User {
     id: ID!{%for field in fields%}{%if field.fieldNameCamelCase != "password" %}
     {{ field.fieldNameCamelCase }}: {{ field.graphQLFieldType }}{%endif%}{%endfor%}{%for field in fields%}{%if field.isFieldRelational%}
     {{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}{%endif%}{%endfor%}
@@ -19,10 +20,15 @@ type {{ namePascalCase }} {
     updatedAt: Date
 }
 
-input Register{{ namePascalCase }}Input { {%for field in fields%}
+input LoginInput {
+    username: String!
+    password: String!
+}
+
+input RegisterInput { {%for field in fields%}
     {{ field.fieldNameCamelCase }}: {{ field.graphQLFieldType }}{%endfor%}
 }
 
-input Update{{ namePascalCase }}Input { {%for field in fields%}{%if field.fieldNameCamelCase != "username"%}
+input UpdateUserInput { {%for field in fields%}{%if field.fieldNameCamelCase != "username"%}
     {{ field.fieldNameCamelCase }}: {{ field.graphQLFieldType }}{%endif%}{%endfor%}
 }

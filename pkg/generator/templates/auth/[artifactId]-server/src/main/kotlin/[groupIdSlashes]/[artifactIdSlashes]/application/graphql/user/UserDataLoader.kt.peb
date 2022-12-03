@@ -1,0 +1,29 @@
+package {{ groupId }}.{{ artifactId }}.application.graphql.user
+
+import com.netflix.graphql.dgs.DgsComponent
+import com.netflix.graphql.dgs.DgsDataLoader
+import {{ groupId }}.{{ artifactId }}.domain.user.User
+import {{ groupId }}.{{ artifactId }}.domain.user.UserService
+import org.dataloader.MappedBatchLoader
+import java.util.concurrent.CompletableFuture.supplyAsync
+
+@DgsComponent
+class UserDataLoader(
+    private val userService: UserService
+) {
+
+    @DgsDataLoader(name = "userById")
+    val userById = MappedBatchLoader<Long, User?> {
+        supplyAsync {
+            userService.findByIds(it).associateBy { it.id }
+        }
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    @DgsDataLoader(name = "usersBy{{ field.fieldNamePascalCase }}")
+    val usersBy{{ field.fieldNamePascalCase }} = MappedBatchLoader<Long, List<User>> {
+        supplyAsync {
+            userService.findBy{{ field.fieldNamePluralPascalCase }}(it).groupBy { it.{{ field.fieldNameCamelCase }} }
+        }
+    }
+{%endif%}{%endfor%}
+}
