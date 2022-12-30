@@ -22,7 +22,7 @@ class SecurityConfig {
         passwordEncoder: PasswordEncoder
     ): AuthenticationProvider {
         val provider = DaoAuthenticationProvider()
-        provider.setUserDetailsService(userAuthenticationService)
+        provider.setUserDetailsService(userDetailsService)
         provider.setPasswordEncoder(passwordEncoder)
         return provider
     }

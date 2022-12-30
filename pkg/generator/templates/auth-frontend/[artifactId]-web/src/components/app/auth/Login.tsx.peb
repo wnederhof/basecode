@@ -1,6 +1,6 @@
-import { gql, OperationResult, useMutation, useQuery } from 'urql'
-import { useMemo } from 'react'
-import { Mutation, Query{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%} } from '@generated/graphql'
+import { gql, OperationResult, useMutation{%if hasRelations%}, useQuery{%endif%} } from 'urql'{%if hasRelations%}
+import { useMemo } from 'react'{%endif%}
+import { Mutation{%if hasRelations%}, Query{%endif%}{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%} } from '@generated/graphql'
 import { Formik, Field, Form, FormikHelpers } from 'formik'
 
 export interface LoginProps { {%for field in fields%}{%if field.isFieldRelational%}
