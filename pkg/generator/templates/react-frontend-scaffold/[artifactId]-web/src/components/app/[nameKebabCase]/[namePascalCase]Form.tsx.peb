@@ -31,7 +31,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
     }
   `)
 
-  function handleMutationResult(result: OperationResult<Mutation, object>) {
+  function handleMutationResult(result: OperationResult<Mutation>) {
     if (result.error) {
       alert(`An error occurred: ${result.error.message}`)
     }

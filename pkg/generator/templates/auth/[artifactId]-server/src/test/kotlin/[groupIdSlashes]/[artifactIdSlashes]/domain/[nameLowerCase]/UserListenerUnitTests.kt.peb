@@ -1,4 +1,4 @@
-{%if hasRelations%}package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
+{%if hasRelations%}package {{ groupId }}.{{ artifactId }}.domain.user
 
 {%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Event.{{ field.fieldTypePluralPascalCase }}DeletedEvent
 {%endif%}{%endfor%}import com.nhaarman.mockitokotlin2.verify
@@ -10,19 +10,19 @@ import org.mockito.Mock{%endif%}
 import org.mockito.junit.jupiter.MockitoExtension
 
 @ExtendWith(MockitoExtension::class)
-internal class {{ namePascalCase }}ListenerUnitTests{%if hasRelations%}{
+internal class UserListenerUnitTests{%if hasRelations%}{
 
     @Mock
-    private lateinit var {{ nameCamelCase }}Service: {{ namePascalCase }}Service
+    private lateinit var userService: UserService
 
     @InjectMocks
-    private lateinit var {{ nameCamelCase }}Listener: {{ namePascalCase }}Listener
+    private lateinit var userListener: UserListener
 {%for field in fields%}{%if field.isFieldRelational%}
     @Test
-    fun `When {{ field.fieldTypePluralPascalCase }}DeletedEvent is triggered, related {{ namePluralPascalCase }} are deleted`() {
-        {{ nameCamelCase }}Listener.onEvent({{ field.fieldTypePluralPascalCase }}DeletedEvent(this, listOf({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
+    fun `When {{ field.fieldTypePluralPascalCase }}DeletedEvent is triggered, related Users are deleted`() {
+        userListener.onEvent({{ field.fieldTypePluralPascalCase }}DeletedEvent(this, listOf({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)))
 
-        verify({{ nameCamelCase }}Service).deleteBy{{ field.fieldNamePluralPascalCase }}(listOf({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.id))
+        verify(userService).deleteBy{{ field.fieldNamePluralPascalCase }}(listOf({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.id))
     }
 {%endif%}{%endfor%}
 }{%endif%}{%endif%}

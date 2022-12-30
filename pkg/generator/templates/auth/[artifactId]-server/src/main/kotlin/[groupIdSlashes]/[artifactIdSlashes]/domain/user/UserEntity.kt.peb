@@ -1,11 +1,11 @@
-package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
+package {{ groupId }}.{{ artifactId }}.domain.user
 
 import org.springframework.data.annotation.*
 import org.springframework.data.relational.core.mapping.Table
 import java.time.LocalDateTime
 
-@Table("{{ namePluralSnakeCase }}")
-data class {{ namePascalCase }}Entity(
+@Table("users")
+data class UserEntity(
     @Id
     val id: Long? = null{%for field in fields%},
     val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinType }}{%endfor%},

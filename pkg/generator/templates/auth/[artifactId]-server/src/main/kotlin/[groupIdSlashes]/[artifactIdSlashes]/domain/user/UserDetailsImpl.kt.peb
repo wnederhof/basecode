@@ -1,4 +1,4 @@
-package com.buildsupport.toggle1.domain.user
+package {{ groupId }}.{{ artifactId }}.domain.user
 
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority

@@ -1,0 +1,268 @@
+package {{ groupId }}.{{ artifactId }}.domain.user
+
+import com.nhaarman.mockitokotlin2.*{%for field in fields%}{%if field.isFieldRelational%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
+import {{ groupId }}.{{ artifactId }}.domain.user.UserFixtures.USER_ENTITY_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.user.UserFixtures.USER_ENTITY_FIXTURE_WITH_ID_1
+import {{ groupId }}.{{ artifactId }}.domain.user.UserFixtures.REGISTER_USER_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.user.UserFixtures.UPDATE_USER_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.user.UserFixtures.USER_FIXTURE_WITH_ID_1{%for field in fields%}{%if field.isFieldRelational%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1{%endif%}{%endfor%}
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.InjectMocks
+import org.mockito.Mock
+import org.mockito.junit.jupiter.MockitoExtension
+import org.springframework.context.ApplicationEventPublisher{%if hasRelations%}
+import org.junit.jupiter.api.assertThrows
+import com.nhaarman.mockitokotlin2.times{%endif%}
+import org.springframework.security.crypto.password.PasswordEncoder
+import java.util.*
+
+@ExtendWith(MockitoExtension::class)
+internal class UserServiceUnitTests {
+
+    @Mock
+    private lateinit var publisher: ApplicationEventPublisher
+
+    @Mock
+    private lateinit var userRepository: UserRepository
+
+    @Mock
+    private lateinit var passwordEncoder: PasswordEncoder
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Mock
+    private lateinit var {{ field.fieldTypeCamelCase }}Service: {{ field.fieldTypePascalCase }}Service
+{%endif%}{%endfor%}
+    @InjectMocks
+    private lateinit var userService: UserService
+
+    @Test
+    fun `findById returns the mapped value of findById in UserRepository if it is non-empty`() {
+        whenever(userRepository.findById(1))
+            .thenReturn(Optional.of(USER_ENTITY_FIXTURE_WITH_ID_1))
+
+        val actual = userService.findById(1)
+
+        assertThat(actual).isEqualTo(USER_FIXTURE_WITH_ID_1)
+    }
+
+    @Test
+    fun `findById returns null if findById in UserRepository yields an empty Optional`() {
+        whenever(userRepository.findById(1))
+            .thenReturn(Optional.empty())
+
+        val actual = userService.findById(1)
+
+        assertThat(actual).isNull()
+
+        verify(publisher, times(0))
+            .publishEvent(any())
+    }
+
+    @Test
+    fun `findByUsername returns the mapped value of findByUsername in UserRepository if it is non-empty`() {
+        whenever(userRepository.findByUsername("username"))
+            .thenReturn(USER_ENTITY_FIXTURE_WITH_ID_1)
+
+        val actual = userService.findByUsername("username")
+
+        assertThat(actual).isEqualTo(USER_FIXTURE_WITH_ID_1)
+    }
+
+    @Test
+    fun `findByUsername returns null if findByUsername in UserRepository yields a value`() {
+        whenever(userRepository.findByUsername("username"))
+            .thenReturn(null)
+
+        val actual = userService.findByUsername("username")
+
+        assertThat(actual).isNull()
+
+        verify(publisher, times(0))
+            .publishEvent(any())
+    }
+
+    @Test
+    fun `findUserDetailsByUsername returns the mapped value of findByUsername in UserRepository if it is non-empty`() {
+        whenever(userRepository.findByUsername("username"))
+            .thenReturn(USER_ENTITY_FIXTURE_WITH_ID_1)
+
+        val actual = userService.findUserDetailsByUsername("username")
+
+        assertThat(actual?.username).isEqualTo(USER_FIXTURE_WITH_ID_1.username)
+        assertThat(actual?.password).isEqualTo(USER_FIXTURE_WITH_ID_1.password)
+    }
+
+    @Test
+    fun `findUserDetailsByUsername returns null if findByUsername in UserRepository yields a value`() {
+        whenever(userRepository.findByUsername("username"))
+            .thenReturn(null)
+
+        val actual = userService.findUserDetailsByUsername("username")
+
+        assertThat(actual).isNull()
+
+        verify(publisher, times(0))
+            .publishEvent(any())
+    }
+
+    @Test
+    fun `findByIds returns the mapped values of findByIds in UserRepository`() {
+        whenever(userRepository.findByIds(listOf(1)))
+            .thenReturn(listOf(USER_ENTITY_FIXTURE_WITH_ID_1))
+
+        val actual = userService.findByIds(listOf(1))
+
+        assertThat(actual).isEqualTo(listOf(USER_FIXTURE_WITH_ID_1))
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Test
+    fun `findBy{{field.fieldNamePluralPascalCase}} returns the contents of the corresponding repository call`() {
+        whenever(userRepository.findBy{{ field.fieldNamePluralPascalCase }}(listOf(1)))
+            .thenReturn(listOf(USER_ENTITY_FIXTURE_WITH_ID_1))
+
+        val actual = userService.findBy{{ field.fieldNamePluralPascalCase }}(listOf(1))
+
+        assertThat(actual).isEqualTo(actual)
+    }
+{%endif%}{%endfor%}
+    @Test
+    fun `findAll returns the values of findAll in UserRepository`() {
+        whenever(userRepository.findAll())
+            .thenReturn(listOf(USER_ENTITY_FIXTURE_WITH_ID_1))
+
+        val actual = userService.findAll()
+
+        assertThat(actual).containsExactly(USER_FIXTURE_WITH_ID_1)
+    }
+{%if hasRelations%}
+    @Test
+    fun `findAll returns the values of findAll in CommentRepository when filter is empty`() {
+        whenever(userRepository.findAll())
+            .thenReturn(listOf(USER_ENTITY_FIXTURE_WITH_ID_1))
+
+        val actual = userService.findAll(UserService.UserFilterInput())
+
+        assertThat(actual).containsExactly(USER_FIXTURE_WITH_ID_1)
+    }
+{%endif%}{%for field in fields%}{%if field.isFieldRelational%}
+    @Test
+    fun `findAll delegates to findBy{{field.fieldNamePascalCase}} when filter only contains {{field.fieldNameCamelCase}}`() {
+        whenever(userRepository.findBy{{field.fieldNamePluralPascalCase}}(listOf(1)))
+            .thenReturn(listOf(USER_ENTITY_FIXTURE_WITH_ID_1))
+
+        val actual = userService.findAll(UserService.UserFilterInput({{field.fieldNameCamelCase}} = 1))
+
+        assertThat(actual).containsExactly(USER_FIXTURE_WITH_ID_1)
+    }
+{%endif%}{%endfor%}
+    @Test
+    fun `register calls save on repository if all requirements are met and publishes an event`() {
+        whenever(userRepository.save(USER_ENTITY_FIXTURE_1))
+            .thenReturn(USER_ENTITY_FIXTURE_WITH_ID_1)
+
+        whenever(passwordEncoder.encode(USER_ENTITY_FIXTURE_1.password))
+            .thenReturn(USER_ENTITY_FIXTURE_WITH_ID_1.password)
+{%for field in fields%}{%if field.isFieldRelational%}
+        whenever({{ field.fieldTypeCamelCase }}Service.findById(USER_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
+            .thenReturn({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+{%endif%}{%endfor%}
+        val actual = userService.register(REGISTER_USER_FIXTURE_1)
+
+        assertThat(actual).isEqualTo(USER_FIXTURE_WITH_ID_1)
+
+        verify(publisher)
+            .publishEvent(UserEvent.UsersRegisteredEvent(userService, listOf(USER_FIXTURE_WITH_ID_1)))
+    }
+{%if hasRelations%}
+    @Test
+    fun `register fails when related objects cannot be found and publishes no events`() {
+        assertThrows<RuntimeException> {
+            userService.register(REGISTER_USER_FIXTURE_1)
+        }
+
+        verify(userRepository, times(0)).save(USER_ENTITY_FIXTURE_1)
+        verify(publisher, times(0)).publishEvent(any())
+    }
+{%endif%}
+    @Test
+    fun `update calls save on repository if all requirements are met and publishes an event`() {
+        whenever(userRepository.findById(1))
+            .thenReturn(Optional.of(USER_ENTITY_FIXTURE_WITH_ID_1))
+
+        whenever(userRepository.save(USER_ENTITY_FIXTURE_WITH_ID_1))
+            .thenReturn(USER_ENTITY_FIXTURE_WITH_ID_1)
+{%for field in fields%}{%if field.isFieldRelational%}
+        whenever({{ field.fieldTypeCamelCase }}Service.findById(USER_ENTITY_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
+            .thenReturn({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)
+{%endif%}{%endfor%}
+        val actual = userService.update(1, UPDATE_USER_FIXTURE_1)
+
+        assertThat(actual).isEqualTo(USER_FIXTURE_WITH_ID_1)
+
+        verify(publisher)
+            .publishEvent(UserEvent.UsersUpdatedEvent(userService, listOf(USER_FIXTURE_WITH_ID_1)))
+    }
+{%if hasRelations%}
+    @Test
+    fun `update fails when related objects cannot be found and publishes no events`() {
+        assertThrows<RuntimeException> {
+            userService.update(1, UPDATE_USER_FIXTURE_1)
+        }
+
+        verify(userRepository, times(0)).save(USER_ENTITY_FIXTURE_WITH_ID_1)
+        verify(publisher, times(0)).publishEvent(any())
+    }
+{%endif%}
+    @Test
+    fun `deleteById deletes the User identified by id in the repository if it exists and publishes an event`() {
+        whenever(userRepository.findById(1))
+            .thenReturn(Optional.of(USER_ENTITY_FIXTURE_WITH_ID_1))
+
+        userService.deleteById(1)
+
+        verify(userRepository).deleteById(1)
+
+        verify(publisher)
+            .publishEvent(UserEvent.UsersDeletedEvent(userService, listOf(USER_FIXTURE_WITH_ID_1)))
+    }
+
+    @Test
+    fun `deleteById does not delete the User identified by id in the repository if it doesn't exist and publishes no events`() {
+        whenever(userRepository.findById(1))
+            .thenReturn(Optional.empty())
+
+        userService.deleteById(1)
+
+        verify(userRepository, times(0)).deleteById(1)
+        verify(publisher, times(0)).publishEvent(any())
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Test
+    fun `deleteBy{{ field.fieldNamePascalCase }} deletes {{ field.fieldTypePluralCamelCase }} by {{ field.fieldNameCamelCase }} and publishes event`() {
+        whenever(userRepository.findBy{{ field.fieldNamePluralPascalCase }}(listOf(10)))
+            .thenReturn(listOf(USER_ENTITY_FIXTURE_WITH_ID_1))
+
+        val actual = userService.deleteBy{{ field.fieldNamePluralPascalCase }}(listOf(10))
+        assertThat(actual).isEqualTo(true)
+
+        verify(userRepository).deleteAll(listOf(USER_ENTITY_FIXTURE_WITH_ID_1))
+        verify(publisher).publishEvent(UserEvent.UsersDeletedEvent(userService, listOf(USER_FIXTURE_WITH_ID_1)))
+    }
+
+    @Test
+    fun `deleteBy{{ field.fieldNamePascalCase }} returns false if no {{ field.fieldTypePluralCamelCase }} are deleted and publishes no events`() {
+        whenever(userRepository.findBy{{ field.fieldNamePluralPascalCase }}(listOf(10)))
+            .thenReturn(listOf())
+
+        val actual = userService.deleteBy{{ field.fieldNamePluralPascalCase }}(listOf(10))
+        assertThat(actual).isEqualTo(false)
+
+        verify(userRepository, times(0)).deleteAll(any())
+        verify(publisher, times(0)).publishEvent(any())
+    }
+{%endif%}{%endfor%}
+}

@@ -1,0 +1,132 @@
+package {{ groupId }}.{{ artifactId }}.domain.user
+
+import {{ groupId }}.{{ artifactId }}.domain.user.UserEvent.*{%for field in fields%}{%if field.isFieldRelational%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
+import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
+import java.time.OffsetDateTime
+import java.time.ZoneId
+
+@Service
+@Transactional
+class UserService(
+    private val userRepository: UserRepository,{%for field in fields%}{%if field.isFieldRelational%}
+    private val {{ field.fieldTypeCamelCase }}Service: {{ field.fieldTypePascalCase }}Service,{%endif%}{%endfor%}
+    private val passwordEncoder: PasswordEncoder,
+    private val publisher: ApplicationEventPublisher,
+) {
+
+    fun findById(id: Long): User? {
+        return userRepository.findByIdOrNull(id)
+            ?.let(::toDomainObject)
+    }
+
+    fun findByUsername(username: String): User? {
+        return userRepository.findByUsername(username)
+            ?.let(::toDomainObject)
+    }
+
+    fun findUserDetailsByUsername(username: String): UserDetails? {
+        return userRepository.findByUsername(username)
+            ?.let { UserDetailsImpl(it) }
+    }
+
+    fun findByIds(ids: Iterable<Long>): List<User> {
+        return userRepository.findByIds(ids)
+            .map(::toDomainObject)
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    fun findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: Iterable<Long>): List<User> {
+        return userRepository.findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }})
+            .map(::toDomainObject)
+    }
+{%endif%}{%endfor%}
+    fun findAll({%if hasRelations%}filterInput: UserFilterInput? = null{%endif%}): List<User> { {%for field in fields%}{%if field.isFieldRelational%}
+        if (filterInput?.{{ field.fieldNameCamelCase }} != null) {
+            return userRepository.findBy{{ field.fieldNamePluralPascalCase }}(listOf(filterInput.{{ field.fieldNameCamelCase }}))
+                .map(::toDomainObject)
+        }
+{%endif%}{%endfor%}
+        return userRepository.findAll()
+            .map(::toDomainObject)
+    }
+
+    fun register(input: RegisterInput): User { {%for field in fields%}{%if field.isFieldRelational%}
+        requireNotNull({{ field.fieldTypeCamelCase }}Service.findById(input.{{ field.fieldNameCamelCase }}))
+{%endif%}{%endfor%}
+        val userEntity = UserEntity({%for field in fields%}{%if field.fieldNameCamelCase == "password"%}
+            {{field.fieldNameCamelCase}} = passwordEncoder.encode(input.{{field.fieldNameCamelCase}}),{%else%}
+            {{field.fieldNameCamelCase}} = input.{{field.fieldNameCamelCase}},{%endif%}{%endfor%}
+        )
+        val user = toDomainObject(userRepository.save(userEntity))
+        publisher.publishEvent(UsersRegisteredEvent(this, listOf(user)))
+        return user
+    }
+
+    fun update(id: Long, input: UpdateUserInput): User? { {%for field in fields%}{%if field.isFieldRelational%}
+        if (input.{{ field.fieldNameCamelCase }} != null) {
+            requireNotNull({{ field.fieldTypeCamelCase }}Service.findById(input.{{ field.fieldNameCamelCase }}))
+        }
+{%endif%}{%endfor%}
+        val userEntity = userRepository.findByIdOrNull(id) ?: return null
+        val user = userRepository.save(
+            userEntity.copy({%for field in fields%}{%if field.fieldNameCamelCase != "username"%}
+                {{field.fieldNameCamelCase}} = input.{{field.fieldNameCamelCase}} ?: userEntity.{{field.fieldNameCamelCase}},{%endif%}{%endfor%}
+            )
+        ).let(::toDomainObject)
+        publisher.publishEvent(UsersUpdatedEvent(this, listOf(user)))
+        return user
+    }
+
+    fun deleteById(id: Long): Boolean {
+        val user = userRepository.findByIdOrNull(id)
+            ?.let(::toDomainObject)
+            ?: return false
+        userRepository.deleteById(id)
+        publisher.publishEvent(UsersDeletedEvent(this, listOf(user)))
+        return true
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    fun deleteBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: List<Long>): Boolean {
+        val userEntities = userRepository.findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }})
+        if (userEntities.isEmpty()) {
+            return false
+        }
+        userRepository.deleteAll(userEntities)
+        publisher.publishEvent(UsersDeletedEvent(this, userEntities.map(::toDomainObject)))
+        return true
+    }
+{%endif%}{%endfor%}
+    private fun toDomainObject(entity: UserEntity) = User(
+        id = entity.id!!,{%for field in fields%}
+        {{field.fieldNameCamelCase}} = entity.{{field.fieldNameCamelCase}},{%endfor%}
+        createdAt = entity.createdAt!!
+            .atZone(ZoneId.systemDefault())
+            .toOffsetDateTime(),
+        updatedAt = entity.updatedAt
+            ?.atZone(ZoneId.systemDefault())
+            ?.toOffsetDateTime(),
+    )
+
+    data class LoginInput(
+        val username: String,
+        val password: String,
+    )
+
+    data class RegisterInput({%for field in fields%}
+        val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinType }},{%endfor%}
+    )
+
+    data class UpdateUserInput({%for field in fields%}{%if field.fieldNameCamelCase != "username"%}
+        val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinTypeNotNullable }}?,{%endif%}{%endfor%}
+    )
+{%if hasRelations%}
+    data class UserFilterInput({%for field in fields%}{%if field.isFieldRelational%}
+        val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinTypeNotNullable }}? = null,{%endif%}{%endfor%}
+    )
+{%endif%}
+}

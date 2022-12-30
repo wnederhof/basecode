@@ -1,0 +1,146 @@
+package {{ groupId }}.{{ artifactId }}.application.graphql.user
+
+import com.netflix.graphql.dgs.DgsQueryExecutor
+import com.netflix.graphql.dgs.autoconfig.DgsAutoConfiguration
+import com.netflix.graphql.dgs.autoconfig.DgsExtendedScalarsAutoConfiguration
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever{%for field in fields%}{%if field.isFieldRelational%}
+import {{ groupId }}.{{ artifactId }}.application.graphql.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}DataLoader
+import {{ groupId }}.{{ artifactId }}.application.graphql.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Resolver
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
+import {{ groupId }}.{{ artifactId }}.domain.user.UserFixtures.REGISTER_USER_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.user.UserFixtures.USER_FIXTURE_WITH_ID_1
+import {{ groupId }}.{{ artifactId }}.domain.user.UserFixtures.UPDATE_USER_FIXTURE_1
+import {{ groupId }}.{{ artifactId }}.domain.user.UserService
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyLong
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
+
+@SpringBootTest(
+    classes = [
+        DgsAutoConfiguration::class,
+        DgsExtendedScalarsAutoConfiguration::class,{%for field in fields%}{%if field.isFieldRelational%}
+        {{ field.fieldTypePascalCase }}Resolver::class,
+        {{ field.fieldTypePascalCase }}DataLoader::class,{%endif%}{%endfor%}
+        UserResolver::class,
+        UserDataLoader::class,
+    ]
+)
+class UserResolverTests {
+
+    @Autowired
+    private lateinit var dgsQueryExecutor: DgsQueryExecutor
+{%for field in fields%}{%if field.isFieldRelational%}
+    @MockBean
+    private lateinit var {{ field.fieldTypeCamelCase }}Service: {{ field.fieldTypePascalCase }}Service
+{%endif%}{%endfor%}
+    @MockBean
+    private lateinit var userService: UserService
+
+    @Test
+    fun users() {
+        whenever(userService.findAll())
+            .thenReturn(listOf(USER_FIXTURE_WITH_ID_1))
+
+        val ids = dgsQueryExecutor.executeAndExtractJsonPath<List<String>>(
+            "{ users { id } }",
+            "data.users[*].id"
+        )
+
+        assertThat(ids).contains(USER_FIXTURE_WITH_ID_1.id.toString())
+    }
+
+    @Test
+    fun `register delegates the call to the service's register`() {
+        whenever(userService.register(any()))
+            .thenReturn(USER_FIXTURE_WITH_ID_1)
+
+        val registerInput = mapOf({%for field in fields%}
+            "{{ field.fieldNameCamelCase }}" to {{ field.fieldKotlinTestDummyValue }},{%endfor%}
+        )
+
+        val result = dgsQueryExecutor.executeAndExtractJsonPath<String>(
+            "mutation register(\$input: RegisterInput!) { register(input: \$input) { id } }",
+            "data.register.id",
+            mapOf("input" to registerInput)
+        )
+
+        assertThat(result).isEqualTo(USER_FIXTURE_WITH_ID_1.id.toString())
+
+        verify(userService).register(REGISTER_USER_FIXTURE_1)
+    }
+
+    @Test
+    fun `updateUser delegates the call to the service's update`() {
+        whenever(userService.update(anyLong(), any()))
+            .thenReturn(USER_FIXTURE_WITH_ID_1)
+
+        val updateUserInput = mapOf({%for field in fields%}
+            "{{ field.fieldNameCamelCase }}" to {{ field.fieldKotlinTestDummyValue }},{%endfor%}
+        )
+
+        val result = dgsQueryExecutor.executeAndExtractJsonPath<String>(
+            "mutation updateUser(\$id: ID!, \$input: UpdateUserInput!) { updateUser(id: \$id, input: \$input) { id } }",
+            "data.updateUser.id",
+            mapOf("id" to USER_FIXTURE_WITH_ID_1.id, "input" to updateUserInput)
+        )
+
+        assertThat(result).isEqualTo(USER_FIXTURE_WITH_ID_1.id.toString())
+
+        verify(userService).update(USER_FIXTURE_WITH_ID_1.id!!, UPDATE_USER_FIXTURE_1)
+    }
+
+    @Test
+    fun deleteUser() {
+        whenever(userService.deleteById(any()))
+            .thenReturn(true)
+
+        val result = dgsQueryExecutor.executeAndExtractJsonPath<Boolean>(
+            "mutation deleteUser(\$id: ID!) { deleteUser(id: \$id) }",
+            "data.deleteUser",
+            mapOf("id" to 1)
+        )
+
+        assertThat(result).isEqualTo(true)
+
+        verify(userService).deleteById(1)
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Test
+    fun users_{{ field.fieldTypeCamelCase }}() {
+        whenever(userService.findAll())
+            .thenReturn(listOf(USER_FIXTURE_WITH_ID_1))
+
+        whenever({{ field.fieldTypeCamelCase }}Service.findByIds(setOf(USER_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})))
+            .thenReturn(listOf({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.copy(id = USER_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})))
+
+        val ids = dgsQueryExecutor.executeAndExtractJsonPath<List<String>>(
+            "{ users { {{ field.fieldTypeCamelCase }} { id } } }",
+            "data.users[*].{{ field.fieldTypeCamelCase }}.id"
+        )
+
+        assertThat(ids).contains(USER_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}.toString())
+    }
+
+    @Test
+    fun {{ field.fieldTypePluralCamelCase }}_users() {
+        whenever({{ field.fieldTypeCamelCase }}Service.findAll())
+            .thenReturn(listOf({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.copy(id = USER_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})))
+
+        whenever(userService.findBy{{ field.fieldNamePluralPascalCase }}(setOf(USER_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})))
+            .thenReturn(listOf(USER_FIXTURE_WITH_ID_1))
+
+        val ids = dgsQueryExecutor.executeAndExtractJsonPath<List<String>>(
+            "{ {{ field.fieldTypePluralCamelCase }} { users { id } } }",
+            "data.{{ field.fieldTypePluralCamelCase }}[*].users[*].id"
+        )
+
+        assertThat(ids).contains(USER_FIXTURE_WITH_ID_1.id.toString())
+    }
+{%endif%}{%endfor%}
+}

@@ -1,6 +1,6 @@
-import { gql, OperationResult, useMutation, useQuery } from 'urql'
-import { useMemo } from 'react'
-import { Mutation, Query{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%} } from '@generated/graphql'
+import { gql, OperationResult, useMutation{%if hasRelations%}, useQuery{%endif%} } from 'urql'{%if hasRelations%}
+import { useMemo } from 'react'{%endif%}
+import { Mutation{%if hasRelations%}, Query{%endif%}{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%} } from '@generated/graphql'
 import { Formik, Field, Form, FormikHelpers } from 'formik'
 
 export interface RegisterProps { {%for field in fields%}{%if field.isFieldRelational%}
@@ -15,14 +15,14 @@ interface RegisterFormData {{ "{" }}{%for field in fields%}
 
 export function Register(props: RegisterProps) {
   const [, executeRegisterMutation] = useMutation<Mutation>(gql`
-    mutation register{{namePascalCase}}($input: Register{{namePascalCase}}Input!) {
-      register{{namePascalCase}}(input: $input) {
+    mutation register($input: RegisterInput!) {
+      register(input: $input) {
         id
       }
     }
   `)
 
-  function handleMutationResult(result: OperationResult<Mutation, object>) {
+  function handleMutationResult(result: OperationResult<Mutation>) {
     if (result.error) {
       alert(`An error occurred: ${result.error.message}`)
     }
@@ -39,32 +39,13 @@ export function Register(props: RegisterProps) {
     }{%endif%}{%endfor%}
     executeRegisterMutation({ input: formData{%if hasRelations%}WithRelations{%endif%} })
       .then(result => handleMutationResult(result) && props.onSave())
-      .catch((reason) => alert(`Creating {{ nameCamelCase }} failed. Reason: ${reason}`))
+      .catch((reason) => alert(`Creating user failed. Reason: ${reason}`))
       .finally(() => setSubmitting(false))
   }
-
-  const [{ data, error, fetching }] = useQuery<Query>({
-    query: gql`
-      query {{nameCamelCase}}Form($id: ID!) {
-        {{nameCamelCase}}(id: $id) {
-          id{%for field in fields%}
-          {{field.fieldNameCamelCase}}{%endfor%}
-        }
-      }
-    `,
-    pause: !props.id,
-    variables: { id: props.id },
-    context: useMemo(
-      () => ({
-        additionalTypenames: ['{{namePascalCase}}'],
-      }),
-      []
-    ),
-  })
 {%for field in fields%}{%if field.isFieldRelational%}
   const [{{ field.fieldTypePluralCamelCase }}QueryResult] = useQuery<Query>({
     query: gql`
-      query {{field.fieldTypePluralCamelCase}}For{{ namePascalCase }}Options {
+      query {{field.fieldTypePluralCamelCase}}ForUserOptions {
         {{field.fieldTypePluralCamelCase}} {
           id
         }
@@ -78,22 +59,12 @@ export function Register(props: RegisterProps) {
     ),
   })
 {%endif%}{%endfor%}
-  if (fetching{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.fetching{%endif%}{%endfor%}) {
-    return <div>Loading...</div>
-  }
-
-  const errorMessage = error?.message{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.error?.message{%endif%}{%endfor%}
-
-  if (errorMessage) {
-    return <div>{errorMessage}</div>
-  }
-
   return (
     <Formik
       onSubmit={doSubmit}
       initialValues={{ "{" }}{{ "{" }}{%for field in fields%}
-        {{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} || false{%endif%}{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" or field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT"%} || ''{%endif%},{%endfor%}
-      {{ "}" }} as {{ namePascalCase }}FormData{{ "}" }}
+        {{ field.fieldNameCamelCase }}: {%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%}false{%endif%}{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" or field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT"%}''{%endif%},{%endfor%}
+      {{ "}" }} as RegisterFormData{{ "}" }}
     >
       <Form role="form">
 {%for field in fields%}
