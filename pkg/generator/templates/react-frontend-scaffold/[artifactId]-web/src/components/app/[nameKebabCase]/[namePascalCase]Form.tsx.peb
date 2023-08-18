@@ -46,6 +46,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
       executeUpdateMutation({ id: props.id, input: formData })
         .then(result => handleMutationResult(result) && props.onSave())
         .catch((reason) => alert(`Updating {{ nameCamelCase }} failed. Reason: ${reason}`))
+        .finally(() => setSubmitting(false))
     } else {{ "{" }}{%if hasRelations%}
       const formDataWithRelations = { ...formData }{%endif%}{%for field in fields%}{%if field.isFieldRelational%}
       if (props.{{ field.fieldNameCamelCase }}) {
