@@ -11,7 +11,7 @@ class UserListener{%if hasRelations%}(
 {%for field in fields%}{%if field.isFieldRelational%}
     @EventListener
     fun onEvent(event: {{ field.fieldTypePluralPascalCase }}DeletedEvent) {
-        val entityIds = event.entities.mapNotNull { it.id }
+        val entityIds = event.entities.map { it.id }
         userService.deleteBy{{ field.fieldNamePluralPascalCase }}(entityIds)
     }
 {%endif%}{%endfor%}
