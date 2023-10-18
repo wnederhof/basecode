@@ -24,7 +24,7 @@ export function {{ namePascalCase }}List({%if hasRelations%}props: {{ namePascal
 
   const [{ data, error, fetching }] = useQuery<Query>({
     query: gql`
-      {%if hasRelations%}query {{nameCamelCase}}List($filter: {{namePascalCase}}Filter) {%endif%}{
+      query {{nameCamelCase}}List{%if hasRelations%}($filter: {{namePascalCase}}Filter){%endif%} {
         {{namePluralCamelCase}}{%if hasRelations%}(filter: $filter){%endif%} {
           id{%for field in fields%}
           {{field.fieldNameCamelCase}}{%endfor%}
