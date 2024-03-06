@@ -1,7 +1,7 @@
 {%if hasRelations%}package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
 
 {%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Event.{{ field.fieldTypePluralPascalCase }}DeletedEvent
-{%endif%}{%endfor%}import com.nhaarman.mockitokotlin2.verify
+{%endif%}{%endfor%}import org.mockito.kotlin.verify
 import org.junit.jupiter.api.Test
 {%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
 {%endif%}{%endfor%}import org.junit.jupiter.api.extension.ExtendWith

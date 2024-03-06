@@ -1,6 +1,6 @@
 package {{ groupId }}.{{ artifactId }}.domain.user
 
-import com.nhaarman.mockitokotlin2.*{%for field in fields%}{%if field.isFieldRelational%}
+import org.mockito.kotlin.*{%for field in fields%}{%if field.isFieldRelational%}
 import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service{%endif%}{%endfor%}
 import {{ groupId }}.{{ artifactId }}.domain.user.UserFixtures.USER_ENTITY_FIXTURE_1
 import {{ groupId }}.{{ artifactId }}.domain.user.UserFixtures.USER_ENTITY_FIXTURE_WITH_ID_1
@@ -17,7 +17,7 @@ import org.mockito.Mock
 import org.mockito.junit.jupiter.MockitoExtension
 import org.springframework.context.ApplicationEventPublisher{%if hasRelations%}
 import org.junit.jupiter.api.assertThrows
-import com.nhaarman.mockitokotlin2.times{%endif%}
+import org.mockito.kotlin.times{%endif%}
 import org.springframework.security.crypto.password.PasswordEncoder
 import java.util.*
 

@@ -3,7 +3,7 @@ package {{ groupId }}.{{ artifactId }}.domain.user
 import java.time.OffsetDateTime
 
 data class User(
-    val id: Long{%for field in fields%},
+    val id: Int{%for field in fields%},
     val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinType }}{%endfor%},
     val createdAt: OffsetDateTime,
     val updatedAt: OffsetDateTime? = null,

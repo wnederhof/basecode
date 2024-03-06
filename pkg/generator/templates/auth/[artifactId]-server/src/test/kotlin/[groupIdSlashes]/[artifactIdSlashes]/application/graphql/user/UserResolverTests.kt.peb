@@ -3,9 +3,9 @@ package {{ groupId }}.{{ artifactId }}.application.graphql.user
 import com.netflix.graphql.dgs.DgsQueryExecutor
 import com.netflix.graphql.dgs.autoconfig.DgsAutoConfiguration
 import com.netflix.graphql.dgs.autoconfig.DgsExtendedScalarsAutoConfiguration
-import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.whenever{%for field in fields%}{%if field.isFieldRelational%}
+import org.mockito.kotlin.any
+import org.mockito.kotlin.verify
+import org.mockito.kotlin.whenever{%for field in fields%}{%if field.isFieldRelational%}
 import {{ groupId }}.{{ artifactId }}.application.graphql.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}DataLoader
 import {{ groupId }}.{{ artifactId }}.application.graphql.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Resolver
 import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
@@ -16,7 +16,7 @@ import {{ groupId }}.{{ artifactId }}.domain.user.UserFixtures.UPDATE_USER_FIXTU
 import {{ groupId }}.{{ artifactId }}.domain.user.UserService
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.ArgumentMatchers.anyInt
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
@@ -77,7 +77,7 @@ class UserResolverTests {
 
     @Test
     fun `updateUser delegates the call to the service's update`() {
-        whenever(userService.update(anyLong(), any()))
+        whenever(userService.update(anyInt(), any()))
             .thenReturn(USER_FIXTURE_WITH_ID_1)
 
         val updateUserInput = mapOf({%for field in fields%}

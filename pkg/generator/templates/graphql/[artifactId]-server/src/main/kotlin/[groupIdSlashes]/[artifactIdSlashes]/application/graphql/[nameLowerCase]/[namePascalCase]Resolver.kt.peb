@@ -19,7 +19,7 @@ class {{ namePascalCase }}Resolver(
 ) {
 
     @DgsQuery
-    fun {{ nameCamelCase }}(id: Long): {{ namePascalCase }}? {
+    fun {{ nameCamelCase }}(id: Int): {{ namePascalCase }}? {
         return {{ nameCamelCase }}Service.findById(id)
     }
 
@@ -34,19 +34,19 @@ class {{ namePascalCase }}Resolver(
     }
 
     @DgsMutation
-    fun update{{ namePascalCase }}(id: Long, input: Update{{ namePascalCase }}Input): {{ namePascalCase }}? {
+    fun update{{ namePascalCase }}(id: Int, input: Update{{ namePascalCase }}Input): {{ namePascalCase }}? {
         return {{ nameCamelCase }}Service.update(id, input)
     }
 
     @DgsMutation
-    fun delete{{ namePascalCase }}(id: Long): Boolean {
+    fun delete{{ namePascalCase }}(id: Int): Boolean {
         return {{ nameCamelCase }}Service.deleteById(id)
     }
 {%for field in fields%}{%if field.isFieldRelational%}
     @DgsData(parentType = "{{ namePascalCase }}")
     fun {{ field.fieldTypeCamelCase }}(dfe: DgsDataFetchingEnvironment): CompletableFuture<{{ field.fieldTypePascalCase }}?> {
         val {{ nameCamelCase }} = dfe.getSource<{{ namePascalCase }}>()
-        return dfe.getDataLoader<Long, {{ field.fieldTypePascalCase }}?>("{{ field.fieldTypeCamelCase }}ById")
+        return dfe.getDataLoader<Int, {{ field.fieldTypePascalCase }}?>("{{ field.fieldTypeCamelCase }}ById")
             .load({{ nameCamelCase }}.{{ field.fieldNameCamelCase }})
     }
 
@@ -54,7 +54,7 @@ class {{ namePascalCase }}Resolver(
     fun {{ namePluralCamelCase }}By{{ field.fieldTypePascalCase }}(dfe: DgsDataFetchingEnvironment): CompletableFuture<Iterable<{{ namePascalCase }}>> {
         val {{ field.fieldTypeCamelCase }} = dfe.getSource<{{ field.fieldTypePascalCase }}>()
         val {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id ?: error("Expected id to be provided.")
-        return dfe.getDataLoader<Long, Iterable<{{ namePascalCase }}>>("{{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }}")
+        return dfe.getDataLoader<Int, Iterable<{{ namePascalCase }}>>("{{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }}")
             .load({{ field.fieldNameCamelCase }})
             .thenApply { it ?: listOf() }
     }

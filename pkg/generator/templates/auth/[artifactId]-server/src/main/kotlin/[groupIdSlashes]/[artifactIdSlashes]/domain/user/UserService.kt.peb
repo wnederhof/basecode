@@ -20,7 +20,7 @@ class UserService(
     private val publisher: ApplicationEventPublisher,
 ) {
 
-    fun findById(id: Long): User? {
+    fun findById(id: Int): User? {
         return userRepository.findByIdOrNull(id)
             ?.let(::toDomainObject)
     }
@@ -35,12 +35,12 @@ class UserService(
             ?.let { UserDetailsImpl(it) }
     }
 
-    fun findByIds(ids: Iterable<Long>): List<User> {
+    fun findByIds(ids: Iterable<Int>): List<User> {
         return userRepository.findByIds(ids)
             .map(::toDomainObject)
     }
 {%for field in fields%}{%if field.isFieldRelational%}
-    fun findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: Iterable<Long>): List<User> {
+    fun findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: Iterable<Int>): List<User> {
         return userRepository.findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }})
             .map(::toDomainObject)
     }
@@ -67,7 +67,7 @@ class UserService(
         return user
     }
 
-    fun update(id: Long, input: UpdateUserInput): User? { {%for field in fields%}{%if field.isFieldRelational%}
+    fun update(id: Int, input: UpdateUserInput): User? { {%for field in fields%}{%if field.isFieldRelational%}
         if (input.{{ field.fieldNameCamelCase }} != null) {
             requireNotNull({{ field.fieldTypeCamelCase }}Service.findById(input.{{ field.fieldNameCamelCase }}))
         }
@@ -82,7 +82,7 @@ class UserService(
         return user
     }
 
-    fun deleteById(id: Long): Boolean {
+    fun deleteById(id: Int): Boolean {
         val user = userRepository.findByIdOrNull(id)
             ?.let(::toDomainObject)
             ?: return false
@@ -91,7 +91,7 @@ class UserService(
         return true
     }
 {%for field in fields%}{%if field.isFieldRelational%}
-    fun deleteBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: List<Long>): Boolean {
+    fun deleteBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: List<Int>): Boolean {
         val userEntities = userRepository.findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }})
         if (userEntities.isEmpty()) {
             return false

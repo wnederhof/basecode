@@ -13,14 +13,14 @@ class UserDataLoader(
 ) {
 
     @DgsDataLoader(name = "userById")
-    val userById = MappedBatchLoader<Long, User?> {
+    val userById = MappedBatchLoader<Int, User?> {
         supplyAsync {
             userService.findByIds(it).associateBy { it.id }
         }
     }
 {%for field in fields%}{%if field.isFieldRelational%}
     @DgsDataLoader(name = "usersBy{{ field.fieldNamePascalCase }}")
-    val usersBy{{ field.fieldNamePascalCase }} = MappedBatchLoader<Long, List<User>> {
+    val usersBy{{ field.fieldNamePascalCase }} = MappedBatchLoader<Int, List<User>> {
         supplyAsync {
             userService.findBy{{ field.fieldNamePluralPascalCase }}(it).groupBy { it.{{ field.fieldNameCamelCase }} }
         }

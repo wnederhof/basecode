@@ -32,7 +32,7 @@ class UserResolver(
     }
 
     @DgsQuery
-    fun user(id: Long): User? {
+    fun user(id: Int): User? {
         return userService.findById(id)
     }
 
@@ -64,19 +64,19 @@ class UserResolver(
     }
 
     @DgsMutation
-    fun updateUser(id: Long, input: UpdateUserInput): User? {
+    fun updateUser(id: Int, input: UpdateUserInput): User? {
         return userService.update(id, input)
     }
 
     @DgsMutation
-    fun deleteUser(id: Long): Boolean {
+    fun deleteUser(id: Int): Boolean {
         return userService.deleteById(id)
     }
 {%for field in fields%}{%if field.isFieldRelational%}
     @DgsData(parentType = "User")
     fun {{ field.fieldTypeCamelCase }}(dfe: DgsDataFetchingEnvironment): CompletableFuture<{{ field.fieldTypePascalCase }}?> {
         val user = dfe.getSource<User>()
-        return dfe.getDataLoader<Long, {{ field.fieldTypePascalCase }}?>("{{ field.fieldTypeCamelCase }}ById")
+        return dfe.getDataLoader<Int, {{ field.fieldTypePascalCase }}?>("{{ field.fieldTypeCamelCase }}ById")
             .load(user.{{ field.fieldNameCamelCase }})
     }
 
@@ -84,7 +84,7 @@ class UserResolver(
     fun usersBy{{ field.fieldTypePascalCase }}(dfe: DgsDataFetchingEnvironment): CompletableFuture<Iterable<User>> {
         val {{ field.fieldTypeCamelCase }} = dfe.getSource<{{ field.fieldTypePascalCase }}>()
         val {{ field.fieldNameCamelCase }} = {{ field.fieldTypeCamelCase }}.id ?: error("Expected id to be provided.")
-        return dfe.getDataLoader<Long, Iterable<User>>("usersBy{{ field.fieldNamePascalCase }}")
+        return dfe.getDataLoader<Int, Iterable<User>>("usersBy{{ field.fieldNamePascalCase }}")
             .load({{ field.fieldNameCamelCase }})
             .thenApply { it ?: listOf() }
     }

@@ -17,17 +17,17 @@ class {{ namePascalCase }}Service(
     private val publisher: ApplicationEventPublisher,
 ) {
 
-    fun findById(id: Long): {{ namePascalCase }}? {
+    fun findById(id: Int): {{ namePascalCase }}? {
         return {{ nameCamelCase }}Repository.findByIdOrNull(id)
             ?.let(::toDomainObject)
     }
 
-    fun findByIds(ids: Iterable<Long>): List<{{ namePascalCase }}> {
+    fun findByIds(ids: Iterable<Int>): List<{{ namePascalCase }}> {
         return {{ nameCamelCase }}Repository.findByIds(ids)
             .map(::toDomainObject)
     }
 {%for field in fields%}{%if field.isFieldRelational%}
-    fun findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: Iterable<Long>): List<{{ namePascalCase }}> {
+    fun findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: Iterable<Int>): List<{{ namePascalCase }}> {
         return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }})
             .map(::toDomainObject)
     }
@@ -53,7 +53,7 @@ class {{ namePascalCase }}Service(
         return {{ nameCamelCase }}
     }
 
-    fun update(id: Long, input: Update{{ namePascalCase }}Input): {{ namePascalCase }}? { {%for field in fields%}{%if field.isFieldRelational%}
+    fun update(id: Int, input: Update{{ namePascalCase }}Input): {{ namePascalCase }}? { {%for field in fields%}{%if field.isFieldRelational%}
         if (input.{{ field.fieldNameCamelCase }} != null) {
             requireNotNull({{ field.fieldTypeCamelCase }}Service.findById(input.{{ field.fieldNameCamelCase }}))
         }
@@ -68,7 +68,7 @@ class {{ namePascalCase }}Service(
         return {{ nameCamelCase }}
     }
 
-    fun deleteById(id: Long): Boolean {
+    fun deleteById(id: Int): Boolean {
         val {{ nameCamelCase }} = {{ nameCamelCase }}Repository.findByIdOrNull(id)
             ?.let(::toDomainObject)
             ?: return false
@@ -77,7 +77,7 @@ class {{ namePascalCase }}Service(
         return true
     }
 {%for field in fields%}{%if field.isFieldRelational%}
-    fun deleteBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: List<Long>): Boolean {
+    fun deleteBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: List<Int>): Boolean {
         val {{ nameCamelCase }}Entities = {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }})
         if ({{ nameCamelCase }}Entities.isEmpty()) {
             return false

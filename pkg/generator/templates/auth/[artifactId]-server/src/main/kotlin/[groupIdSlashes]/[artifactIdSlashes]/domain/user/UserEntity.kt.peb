@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 @Table("users")
 data class UserEntity(
     @Id
-    val id: Long? = null{%for field in fields%},
+    val id: Int? = null{%for field in fields%},
     val {{ field.fieldNameCamelCase }}: {{ field.fieldKotlinType }}{%endfor%},
 
     @CreatedDate

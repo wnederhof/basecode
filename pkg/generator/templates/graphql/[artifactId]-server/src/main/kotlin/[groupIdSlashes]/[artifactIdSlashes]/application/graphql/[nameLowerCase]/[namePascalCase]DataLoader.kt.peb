@@ -13,14 +13,14 @@ class {{ namePascalCase }}DataLoader(
 ) {
 
     @DgsDataLoader(name = "{{ nameCamelCase }}ById")
-    val {{ nameCamelCase }}ById = MappedBatchLoader<Long, {{ namePascalCase }}?> {
+    val {{ nameCamelCase }}ById = MappedBatchLoader<Int, {{ namePascalCase }}?> {
         supplyAsync {
             {{ nameCamelCase }}Service.findByIds(it).associateBy { it.id }
         }
     }
 {%for field in fields%}{%if field.isFieldRelational%}
     @DgsDataLoader(name = "{{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }}")
-    val {{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }} = MappedBatchLoader<Long, List<{{ namePascalCase }}>> {
+    val {{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }} = MappedBatchLoader<Int, List<{{ namePascalCase }}>> {
         supplyAsync {
             {{ nameCamelCase }}Service.findBy{{ field.fieldNamePluralPascalCase }}(it).groupBy { it.{{ field.fieldNameCamelCase }} }
         }

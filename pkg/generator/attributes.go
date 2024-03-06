@@ -274,8 +274,8 @@ func provideKotlinFieldContextAttributes(context map[string]interface{}, attribu
 		context["fieldKotlinTypeNotNullable"] = "Boolean"
 		context["fieldKotlinTestDummyValue"] = "true"
 	case RELATIONAL:
-		context["fieldKotlinType"] = "Long"
-		context["fieldKotlinTypeNotNullable"] = "Long"
+		context["fieldKotlinType"] = "Int"
+		context["fieldKotlinTypeNotNullable"] = "Int"
 		context["fieldKotlinTestDummyValue"] = "10"
 	default:
 		panic("Undetermined attribute type.")
