@@ -3,6 +3,7 @@ import { {{ namePascalCase }}Details } from '@components/app/{{ nameKebabCase }}
 import { Client, Provider } from 'urql'
 import { act } from 'react-dom/test-utils'
 import { fromValue } from 'wonka'
+import { {{ namePascalCase }}DetailsQuery } from '@generated/graphql'
 
 describe('{{ namePascalCase }}Details', () => {
   const {{ nameCamelCase }} = {
@@ -15,7 +16,7 @@ describe('{{ namePascalCase }}Details', () => {
   it('renders details when data is fetched', () => {
     const executeQuery = jest.fn()
     executeQuery.mockReturnValue(
-      fromValue({
+      fromValue<{ data: {{ namePascalCase }}DetailsQuery }>({
         data: { {{ nameCamelCase }} },
       })
     )

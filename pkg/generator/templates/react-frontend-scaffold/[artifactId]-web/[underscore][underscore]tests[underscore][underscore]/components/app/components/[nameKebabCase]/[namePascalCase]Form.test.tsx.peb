@@ -2,6 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { {{ namePascalCase }}Form } from '@components/app/{{ nameKebabCase }}/{{ namePascalCase }}Form'
 import { Client, Provider } from 'urql'
 import { fromValue } from 'wonka'
+import { {{ namePascalCase }}FormQuery, Update{{ namePascalCase }}Mutation, Create{{ namePascalCase }}Mutation } from '@generated/graphql'
 
 describe('{{ namePascalCase }}Form', () => {
   const {{ nameCamelCase }} = {
@@ -26,7 +27,7 @@ describe('{{ namePascalCase }}Form', () => {
   it('renders form containing existing data if id is passed', () => {
     const executeQuery = jest.fn()
     executeQuery.mockReturnValue(
-      fromValue({
+      fromValue<{ data: {{ namePascalCase }}FormQuery }>({
         data: {
           {{ nameCamelCase }}{%for field in fields%}{%if field.isFieldRelational%},
           {{field.fieldTypePluralCamelCase}}: [{ id: 1 }]{%endif%}{%endfor%}
@@ -56,12 +57,12 @@ describe('{{ namePascalCase }}Form', () => {
     const executeQuery = jest.fn()
     const executeMutation = jest.fn()
     executeQuery.mockReturnValue(
-      fromValue({
+      fromValue<{ data: {{ namePascalCase }}FormQuery }>({
         data: { {{ nameCamelCase }} },
       }),
     )
     executeMutation.mockReturnValue(
-      fromValue({
+      fromValue<{ data: Update{{ namePascalCase }}Mutation }>({
         data: {},
       })
     )
@@ -84,7 +85,7 @@ describe('{{ namePascalCase }}Form', () => {
   it('calls a mutation if Save is clicked if there is no id', async () => {
     const executeMutation = jest.fn()
     executeMutation.mockReturnValue(
-      fromValue({
+      fromValue<{ data: Create{{ namePascalCase }}Mutation }>({
         data: {},
       })
     )

@@ -3,6 +3,7 @@ import { {{ namePascalCase }}List } from '@components/app/{{ nameKebabCase }}/{{
 import { Client, Provider } from 'urql'
 import { act } from 'react-dom/test-utils'
 import { fromValue } from 'wonka'
+import { {{ namePascalCase }}ListQuery } from '@generated/graphql'
 
 describe('{{ namePascalCase }}List', () => {
   const {{ nameCamelCase }} = {
@@ -13,7 +14,7 @@ describe('{{ namePascalCase }}List', () => {
   it('forwards to {{ nameCamelCase }} page on Show', () => {
     const executeQuery = jest.fn()
     executeQuery.mockReturnValue(
-      fromValue({
+      fromValue<{ data: {{ namePascalCase }}ListQuery }>({
         data: {
           {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
         },
@@ -37,7 +38,7 @@ describe('{{ namePascalCase }}List', () => {
   it('renders entries when data is fetched', () => {
     const executeQuery = jest.fn()
     executeQuery.mockReturnValue(
-      fromValue({
+      fromValue<{ data: {{ namePascalCase }}ListQuery }>({
         data: {
           {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
         },
@@ -63,14 +64,14 @@ describe('{{ namePascalCase }}List', () => {
     const executeQuery = jest.fn()
     const executeMutation = jest.fn()
     executeQuery.mockReturnValue(
-      fromValue({
+      fromValue<{ data: {{ namePascalCase }}ListQuery }>({
         data: {
           {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
         },
       }),
     )
     executeMutation.mockReturnValue(
-      fromValue({
+      fromValue<{ data: {{ namePascalCase }}ListQuery }>({
         data: {},
       })
     )
@@ -105,14 +106,14 @@ describe('{{ namePascalCase }}List', () => {
     const executeQuery = jest.fn()
     const executeMutation = jest.fn()
     executeQuery.mockReturnValue(
-      fromValue({
+      fromValue<{ data: {{ namePascalCase }}ListQuery }>({
         data: {
           {{ namePluralCamelCase }}: [{{ nameCamelCase }}],
         },
       })
     )
     executeMutation.mockReturnValue(
-      fromValue({
+      fromValue<{ data: {{ namePascalCase }}ListQuery }>({
         data: {},
       })
     )
