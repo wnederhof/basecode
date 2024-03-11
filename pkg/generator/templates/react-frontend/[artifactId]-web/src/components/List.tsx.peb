@@ -12,9 +12,9 @@ export interface AppListProps<T> {
 }
 
 export interface AppListItemActionProps {
-  show?: string
-  edit?: string
-  delete?: () => void
+  showHref?: string
+  editHref?: string
+  onDeleteClick?: () => void
 }
 
 export const List = <T,>({
