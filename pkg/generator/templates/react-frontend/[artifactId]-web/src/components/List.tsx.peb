@@ -12,9 +12,9 @@ export interface AppListProps<T> {
 }
 
 export interface AppListItemActionProps {
-  show: string
-  edit: string
-  delete: () => void
+  show?: string
+  edit?: string
+  delete?: () => void
 }
 
 export const List = <T,>({
@@ -32,21 +32,17 @@ export const List = <T,>({
       </tr>
     </thead>
     <tbody>
-      {data?.map((values: any, i) => {
+      {data?.map((values: T, i) => {
         const actions = actionsFn(values)
         return (
           <tr key={i}>
             {fields.map((field) => (
-              <td key={field.name}>{values[field.name]}</td>
+              <td key={field.name}>{'' + values[field.name as keyof T]}</td>
             ))}
             <td>
-              {actions.show ? <a href={actions.show}>Show</a> : <></>}
-              {actions.edit ? <a href={actions.edit}>Edit</a> : <></>}
-              {actions.delete ? (
-                <button onClick={actions.delete}>Delete</button>
-              ) : (
-                <></>
-              )}
+              {actions.showHref && <a href={actions.showHref}>Show</a>}
+              {actions.editHref && <a href={actions.editHref}>Edit</a>}
+              {actions.onDeleteClick && <button onClick={actions.onDeleteClick}>Delete</button>}
             </td>
           </tr>
         )
