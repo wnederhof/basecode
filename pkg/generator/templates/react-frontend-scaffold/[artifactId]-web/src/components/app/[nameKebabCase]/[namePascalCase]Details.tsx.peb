@@ -1,7 +1,9 @@
 import { gql, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Query } from '@generated/graphql'
-import { LoadingIndicator } from '@components/LoadingIndicator'
+import { Error } from '@components/Error'
+import { Loader } from '@components/Loader'
+import { Details } from '@components/Details'
 
 export interface {{ namePascalCase }}DetailsProps {
   id: string | number
@@ -27,29 +29,24 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
   })
 
   if (error?.message) {
-    return <div>{error?.message}</div>
+    return <Error>{error?.message}</Error>
   }
 
   if (fetching || !data) {
-    return <LoadingIndicator />
+    return <Loader />
   }
 
   return (
-    <table>
-      <tbody>{%for field in fields%}{%if field.isFieldRelational%}{!props.{{ field.fieldNameCamelCase }} &&{%endif%}
-        <tr>
-          <td>{{ field.fieldNamePascalCase }}</td>
-          <td>{{ "{" }}data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%}{{ "}" }}</td>
-        </tr>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
-        <tr>
-          <td>CreatedAt</td>
-          <td>{{ "{" }}data?.{{ nameCamelCase }}?.createdAt{{ "}" }}</td>
-        </tr>
-        <tr>
-          <td>UpdatedAt</td>
-          <td>{{ "{" }}data?.{{ nameCamelCase }}?.updatedAt{{ "}" }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <Details>{%for field in fields%}
+      <Details.Field label="{{ field.fieldNamePascalCase }}">
+        {{ "{" }}data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%}{{ "}" }}
+      </Details.Field>{%endfor%}
+      <Details.Field label="Created At">
+        {{ "{" }}data?.{{ nameCamelCase }}?.createdAt{{ "}" }}
+      </Details.Field>
+      <Details.Field label="Updated At">
+        {{ "{" }}data?.{{ nameCamelCase }}?.updatedAt{{ "}" }}
+      </Details.Field>
+    </Details>
   )
 }

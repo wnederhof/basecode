@@ -1,0 +1,8 @@
+import { Loader } from '@components/Loader'
+import { render } from '@testing-library/react'
+
+describe('Loader', () => {
+  it('renders without errors', () => {
+    render(<Loader />)
+  })
+})

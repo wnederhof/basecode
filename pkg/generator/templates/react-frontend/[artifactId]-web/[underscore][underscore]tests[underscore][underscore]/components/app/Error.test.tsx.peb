@@ -1,0 +1,8 @@
+import { Error } from '@components/Error'
+import { render } from '@testing-library/react'
+
+describe('Error', () => {
+  it('renders without errors', () => {
+    render(<Error />)
+  })
+})

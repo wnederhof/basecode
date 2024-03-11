@@ -1,0 +1,7 @@
+export interface ErrorProps {
+  children: React.ReactNode
+}
+
+export const Error = (props: ErrorProps) => (
+  <div>{props.children}</div>
+)

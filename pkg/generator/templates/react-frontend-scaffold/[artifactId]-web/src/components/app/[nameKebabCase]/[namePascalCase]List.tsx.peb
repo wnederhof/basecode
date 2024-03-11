@@ -2,7 +2,9 @@ import Link from 'next/link'
 import { gql, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Mutation, Query } from '@generated/graphql'
-import { LoadingIndicator } from '@components/LoadingIndicator'
+import { Error } from '@components/Error'
+import { Loader } from '@components/Loader'
+import { List } from '@components/List'
 {%if hasRelations%}
 export interface {{ namePascalCase }}ListProps {{ "{" }}{%for field in fields%}{%if field.isFieldRelational%}
   {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
@@ -46,31 +48,24 @@ export function {{ namePascalCase }}List({%if hasRelations%}props: {{ namePascal
   })
 
   if (fetching) {
-    return <LoadingIndicator />
+    return <Loader />
   }
 
   if (error?.message) {
-    return <div>{error?.message}</div>
+    return <Error>{error?.message}</Error>
   }
 
   return (
-    <table>
-      <thead>
-      <tr>{%for field in fields%}{%if field.isFieldRelational%}{ !props.{{ field.fieldNameCamelCase }} &&{%endif%}
-        <th>{{ field.fieldNamePascalCase }}</th>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
-        <th>Action</th>
-      </tr>
-      </thead>
-      <tbody>{data?.{{ namePluralCamelCase }}?.map(row =>
-        <tr key={row.id}>{%for field in fields%}{%if field.isFieldRelational%}{!props.{{ field.fieldNameCamelCase }} &&{%endif%}
-          <td>{{ "{" }}row.{{ field.fieldNameCamelCase }}{{ "}" }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%}</td>{%if field.isFieldRelational%}{{ "}" }}{%endif%}{%endfor%}
-          <td>
-            <Link href={`/{{ namePluralKebabCase }}/${row.id}`}>Show</Link>
-            <Link href={`/{{ namePluralKebabCase }}/${row.id}/edit`}>Edit</Link>
-            <button onClick={() => handleDelete(row.id)}>Delete</button>
-          </td>
-        </tr>)
-      }</tbody>
-    </table>
+    <List
+      fields={[{%for field in fields%}
+        { name: '{{ field.fieldNameCamelCase }}', label: '{{ field.fieldNamePascalCase }}' },{%endfor%}
+      ]}
+      data={data?.{{namePluralCamelCase}}{{ "}" }}
+      actions={values => ({
+        show: `/{{ namePluralKebabCase }}/${values.id}`,
+        edit: `/{{ namePluralKebabCase }}/${values.id}/edit`,
+        delete: () => handleDelete(values.id),
+      })}
+    />
   )
 }

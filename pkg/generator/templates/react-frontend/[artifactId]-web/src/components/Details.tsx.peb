@@ -1,0 +1,24 @@
+export interface FieldProps {
+  label: string
+  children?: React.ReactNode
+}
+
+export const Details = ({
+  children,
+  ...props
+}: React.TableHTMLAttributes<HTMLTableElement>) => {
+  return (
+    <table {...props}>
+      <tbody>{children}</tbody>
+    </table>
+  )
+}
+
+Details.Field = (props: FieldProps) => {
+  return (
+    <tr>
+      <td>{props.label}</td>
+      <td>{props.children}</td>
+    </tr>
+  )
+}

@@ -1,0 +1,56 @@
+import React from 'react'
+
+export interface AppListFieldProps {
+  name: string
+  label: string
+}
+
+export interface AppListProps<T> {
+  data?: T[]
+  fields: AppListFieldProps[]
+  actions: (values: T) => AppListItemActionProps
+}
+
+export interface AppListItemActionProps {
+  show: string
+  edit: string
+  delete: () => void
+}
+
+export const List = <T,>({
+  data,
+  actions: actionsFn,
+  fields,
+  ...props
+}: AppListProps<T>) => (
+  <table {...props}>
+    <thead>
+      <tr>
+        {fields.map(field => (
+          <th key={field.name}>{field.label}</th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {data?.map((values: any, i) => {
+        const actions = actionsFn(values)
+        return (
+          <tr key={i}>
+            {fields.map((field) => (
+              <td key={field.name}>{values[field.name]}</td>
+            ))}
+            <td>
+              {actions.show ? <a href={actions.show}>Show</a> : <></>}
+              {actions.edit ? <a href={actions.edit}>Edit</a> : <></>}
+              {actions.delete ? (
+                <button onClick={actions.delete}>Delete</button>
+              ) : (
+                <></>
+              )}
+            </td>
+          </tr>
+        )
+      })}
+    </tbody>
+  </table>
+)

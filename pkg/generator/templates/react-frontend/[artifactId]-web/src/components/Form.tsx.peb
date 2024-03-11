@@ -1,0 +1,104 @@
+export interface FieldProps {
+  htmlFor: string
+  label: string
+  children?: React.ReactNode
+}
+
+export const Form = ({
+  children,
+  ...props
+}: React.FormHTMLAttributes<HTMLFormElement>) => {
+  return <form {...props}>{children}</form>
+}
+
+Form.Field = (props: FieldProps) => {
+  return (
+    <div>
+      <label htmlFor={props.htmlFor}>{props.label}</label>
+      {props.children}
+    </div>
+  )
+}
+
+Form.Text = ({
+  children,
+  ...props
+}: React.InputHTMLAttributes<HTMLInputElement>) => {
+  return (
+    <input type="text" {...props}>
+      {children}
+    </input>
+  )
+}
+
+Form.Integer = ({
+  children,
+  ...props
+}: React.InputHTMLAttributes<HTMLInputElement>) => {
+  return (
+    <input type="number" {...props}>
+      {children}
+    </input>
+  )
+}
+
+Form.Date = ({
+  children,
+  ...props
+}: React.InputHTMLAttributes<HTMLInputElement>) => {
+  return (
+    <input type="date" {...props}>
+      {children}
+    </input>
+  )
+}
+
+Form.Checkbox = ({
+  children,
+  ...props
+}: React.InputHTMLAttributes<HTMLInputElement>) => {
+  return (
+    <input type="checkbox" {...props}>
+      {children}
+    </input>
+  )
+}
+
+Form.Select = ({
+  children,
+  ...props
+}: React.SelectHTMLAttributes<HTMLSelectElement>) => {
+  return <select {...props}>{children}</select>
+}
+
+Form.Option = ({
+  children,
+  ...props
+}: React.OptionHTMLAttributes<HTMLOptionElement>) => {
+  return <option {...props}>{children}</option>
+}
+
+Form.TextArea = ({
+  children,
+  ...props
+}: React.TextareaHTMLAttributes<HTMLTextAreaElement>) => {
+  return <textarea {...props}>{children}</textarea>
+}
+
+Form.SubmitButton = ({
+  children,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
+  return (
+    <button type="submit" {...props}>
+      {children}
+    </button>
+  )
+}
+
+Form.CancelButton = ({
+  children,
+  ...props
+}: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
+  return <button {...props}>{children}</button>
+}

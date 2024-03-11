@@ -1,8 +1,0 @@
-import { LoadingScreen } from '@components/shared/LoadingIndicator'
-import { render } from '@testing-library/react'
-
-describe('LoadingIndicator', () => {
-  it('renders without errors', () => {
-    render(<LoadingScreen />)
-  })
-})
