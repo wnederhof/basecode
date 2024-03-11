@@ -1,7 +1,12 @@
-export interface ErrorProps {
-  children: React.ReactNode
+import { CombinedError } from "urql"
+
+export interface ErrorProps extends React.HTMLAttributes<HTMLDivElement> {
+  value: CombinedError | string
 }
 
-export const Error = (props: ErrorProps) => (
-  <div>{props.children}</div>
-)
+export const Error = ({ value, ...props }: ErrorProps) => {
+  if (value instanceof CombinedError) {
+    return <div {...props}>{value.message}</div>
+  }
+  return <div {...props}>{value}</div>
+}

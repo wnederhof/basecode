@@ -3,6 +3,6 @@ import { render } from '@testing-library/react'
 
 describe('Error', () => {
   it('renders without errors', () => {
-    render(<Error />)
+    render(<Error value="some error" />)
   })
 })

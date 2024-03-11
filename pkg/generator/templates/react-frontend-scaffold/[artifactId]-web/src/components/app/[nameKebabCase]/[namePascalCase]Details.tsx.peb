@@ -28,8 +28,8 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
     ),
   })
 
-  if (error?.message) {
-    return <Error>{error?.message}</Error>
+  if (error) {
+    return <Error value={error} />
   }
 
   if (fetching || !data) {
@@ -39,13 +39,13 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
   return (
     <Details>{%for field in fields%}
       <Details.Field label="{{ field.fieldNamePascalCase }}">
-        {{ "{" }}data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%}{{ "}" }}
+        {{ "{" }}data.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%}{{ "}" }}
       </Details.Field>{%endfor%}
       <Details.Field label="Created At">
-        {{ "{" }}data?.{{ nameCamelCase }}?.createdAt{{ "}" }}
+        {{ "{" }}data.{{ nameCamelCase }}?.createdAt{{ "}" }}
       </Details.Field>
       <Details.Field label="Updated At">
-        {{ "{" }}data?.{{ nameCamelCase }}?.updatedAt{{ "}" }}
+        {{ "{" }}data.{{ nameCamelCase }}?.updatedAt{{ "}" }}
       </Details.Field>
     </Details>
   )

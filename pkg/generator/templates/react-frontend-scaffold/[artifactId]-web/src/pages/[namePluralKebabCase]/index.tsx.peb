@@ -1,18 +1,19 @@
-import Link from 'next/link'
 import { {{namePascalCase}}List } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}List'
+import { DefaultLayout } from '@components/layout/DefaultLayout'
+import { Actions } from '@components/Actions'
 
 export default function {{namePluralPascalCase}}() {
   return (
-    <>
-      <h1>Navigation</h1>
-      <ul>
-        <li>
-          <Link href="/{{ namePluralKebabCase }}/new">New</Link>
-        </li>
-      </ul>
-
-      <h1>List of {{ namePluralPascalCase }}</h1>
+    <DefaultLayout
+      title="{{ namePluralPascalCase }}"
+      breadcrumbs={[
+        { label: '{{namePluralPascalCase}}', href: '/{{namePluralCamelCase}}' },
+      ]}
+    >
+      <Actions>
+        <Actions.Action href="/{{namePluralCamelCase}}/new">New</Actions.Action>
+      </Actions>
       <{{namePascalCase}}List />
-    </>
+    </DefaultLayout>
   )
 }

@@ -50,8 +50,8 @@ export function {{ namePascalCase }}List({%if hasRelations%}props: {{ namePascal
     return <Loader />
   }
 
-  if (error?.message) {
-    return <Error>{error?.message}</Error>
+  if (error) {
+    return <Error value={error} />
   }
 
   return (

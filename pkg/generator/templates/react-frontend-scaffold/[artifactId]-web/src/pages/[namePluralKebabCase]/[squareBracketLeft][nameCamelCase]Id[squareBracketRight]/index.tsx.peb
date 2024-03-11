@@ -1,26 +1,21 @@
-import Link from 'next/link'
 import { {{namePascalCase}}Details } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}Details'
 import { useRouter } from 'next/router'
+import { DefaultLayout } from '@components/layout/DefaultLayout'
 
 export default function Show{{namePascalCase}}() {
   const router = useRouter()
   const { {{nameCamelCase}}Id } = router.query
   return (
-    <>
-      <h1>Navigation</h1>
-      <ul>
-        <li>
-          <Link href="/{{ namePluralKebabCase }}">Overview</Link>
-        </li>
-        <li>
-          <Link href={`/{{ namePluralKebabCase }}/${{ "{" }}{{ nameCamelCase }}Id{{ "}" }}/edit`}>Edit</Link>
-        </li>
-      </ul>
-
-      <h1>Show {{ namePascalCase }}</h1>
+    <DefaultLayout
+      title="Selected {{ namePascalCase }}"
+      breadcrumbs={[
+        { label: '{{namePluralPascalCase}}', href: '/{{namePluralCamelCase}}' },
+        { label: 'Selected {{ namePascalCase }}', href: `/{{ namePluralKebabCase }}/${{ "{" }}{{ nameCamelCase }}Id{{ "}" }}` },
+      ]}
+    >
       <{{ namePascalCase }}Details
         id={{ "{" }}{{ nameCamelCase }}Id as string{{ "}" }}
       />
-    </>
+    </DefaultLayout>
   )
 }

@@ -9,6 +9,7 @@ export interface Breadcrumb {
 export interface DefaultLayoutProps {
   breadcrumbs?: Breadcrumb[]
   children?: ReactNode
+  title: string
 }
 
 export function DefaultLayout(props: DefaultLayoutProps) {
@@ -17,12 +18,13 @@ export function DefaultLayout(props: DefaultLayoutProps) {
       {props.breadcrumbs && (
         <ul>
           {props.breadcrumbs.map((breadcrumb, i) => (
-            <div key={i}>
+            <li key={i}>
               <Link href={breadcrumb.href}>{breadcrumb.label}</Link>
-            </div>
+            </li>
           ))}
         </ul>
       )}
+      <h1>{props.title}</h1>
       {props.children}
     </>
   )

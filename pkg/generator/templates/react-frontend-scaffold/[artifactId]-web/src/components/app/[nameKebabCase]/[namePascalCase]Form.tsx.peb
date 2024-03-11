@@ -98,10 +98,10 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
     return <Loader />
   }
 
-  const errorMessage = error?.message{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.error?.message{%endif%}{%endfor%}
+  const queryError = error{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.error{%endif%}{%endfor%}
 
-  if (errorMessage) {
-    return <Error>{errorMessage}</Error>
+  if (queryError) {
+    return <Error value={queryError} />
   }
 
   const formik = useFormik({
