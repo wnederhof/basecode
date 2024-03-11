@@ -11,4 +11,4 @@ import React from 'react'
 //   )}
 // </ResetUrqlClientContext.Consumer>
 
-export const ResetUrqlClientContext = React.createContext(undefined)
+export const ResetUrqlClientContext = React.createContext<() => void>(() => {})

@@ -1,34 +1,36 @@
-# Basecode - The fastest way to build a web app
-Build your next web app in days instead of months.
+# Basecode - The fastest way to create a web app
 
-Basecode is a full-stack code generator for Kotlin, Spring Boot, GraphQL, React (NextJS) and PostgreSQL.
+Basecode is a full-stack code generator for creating web apps using Kotlin, Spring Boot, GraphQL, React (NextJS) and
+PostgreSQL. The focus of Basecode is on creating lean, decoupled code with a solid foundation.
 
-- **Productive**: Generate relational CRUD functionality for the frontend and backend including migrations, GraphQL schema extensions, unit tests and integration tests with a single command.
-- **Maintainable**: A package-by-feature backend structure, GraphQL communication and an event-driven backend model make for a highly decoupled and extensible architecture which is built to last.
-- **Incremental**: Start with almost no code. Then, once you're ready for the next step, add a GraphQL API, a frontend and more at your own pace.
-
-Basecode introduces the concept of "non-intrusive relational scaffolding", which is designed to keep your code maintainable, even for entities with 1-N relationships.
-
-- **Relational:** the user may generate generate entities with 1-N relationships.
-- **Non-intrusive:** code generated for one entity will not affect code of any another entity, nor will it *change* any other file in the project.
+Basecode is fully open source and community-driven ([MIT](LICENSE.md)).
 
 ## Installation
-Make sure you have the Go 1.16 or later installed. Then run:
+The following software needs to be installed on your machine before you can use Basecode effectively:
+
+- Go 1.16 or later
+- JDK 21 or later
+- Node 18 or later
+- Docker
+
+Install Basecode using the following command:
 ```shell
 go install github.com/wnederhof/basecode/cmd/basecode@latest
 ```
-Or replace `latest` with one of the tags found under Releases in GitHub.
 
 ## Usage
-### New project
-Provided that basecode is available under the alias `basecode`, you can create a new project using `basecode new`.
+### Create a New Project
+```
+basecode new <groupId> <artifactId>
+```
+Here, `groupId` and `artifactId` are the name of the group and artifact respectively, as defined by Maven.
 
 For example:
 ```
-basecode new com.mycorp blog
+basecode new com.example blog
 ```
 
-### Generate
+### Scaffold Generation
 Using `basecode generate`, you can generate code based using one of the following generators.
 ```
    backend:scaffold, bes   Backend Scaffold
@@ -38,8 +40,14 @@ Using `basecode generate`, you can generate code based using one of the followin
    frontend, fe            Frontend Support
    frontend:scaffold, fes  Frontend Scaffold (Generate frontend support first)
    scaffold, s             Backend and Frontend Scaffold (Generate frontend support first)
+   backend:auth, ba        Backend Authentication - EXPERIMENTAL
+   frontend:auth, fa       Frontend Authentication - EXPERIMENTAL
 ```
-For more information about the generators, use `-h`:
+For more information about the generators, run:
+```
+basecode generate <generator name> -h
+```
+For example:
 ```
 basecode generate scaffold -h
 ```
@@ -55,15 +63,13 @@ Available types:
 - datetime
 - boolean
 
-For each of these types, you can add `?` to make this type optional. For example: `title:string?`.
-
 # Example
 When you want, for example, to generate a blog, you can do that as following:
 ```
 basecode new com.mycorp blog
 cd blog
-basecode generate scaffold Post title
-basecode generate scaffold Comment postId:Post comment
+basecode generate scaffold Post title contents:text
+basecode generate scaffold Comment postId:Post contents:text
 ```
 Most generators specify the following parameters:
 ```
@@ -75,15 +81,12 @@ Here:
 - `delete` will undo the file generation. This command may also additional generate files, such as migration scripts for dropping a previously created table.
 - `overwrite` will overwrite any existing files. When this option is not specified, Basecode will abort when a file is about to be overwritten.
 
-## Development
-For developing your application, you can use `docker-compose up` to spin up a development database. You can then either start the backend using your IDE by running the `main` method in the `Application.kt` file, or start the Spring Boot server using `./mvnw spring-boot:run`. You should be able to access your GraphQL dashboard at: `http://localhost:8080/graphiql`.
+## After Initialization
+After initializing your application, you can use `docker-compose up` to spin up a development database.
+
+You can then either start the backend using your IDE by running the `main` method in the `Application.kt` file, or start the Spring Boot server using `./mvnw spring-boot:run`. You should be able to access your GraphQL dashboard at: `http://localhost:8080/graphiql`.
 
 To start the frontend, make sure your artifacts are installed using `npm install` and run `npm run dev`.
-
-When both the backend and frontend are running, you can build your next best thing at: `http://localhost:3000`. (Note: as of yet, there is no index page). If you created an entity called `Post`, you will find your scaffolds at: `http://localhost:3000/posts`.
-
-## License
-Licensed under [MIT](LICENSE.md).
 
 ## Credits
 - The `new` template is based on the code generated using Spring Boot Initializr.

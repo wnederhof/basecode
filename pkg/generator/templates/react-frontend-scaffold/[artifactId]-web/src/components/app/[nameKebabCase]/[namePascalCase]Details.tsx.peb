@@ -1,6 +1,7 @@
 import { gql, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Query } from '@generated/graphql'
+import { LoadingIndicator } from '@components/LoadingIndicator'
 
 export interface {{ namePascalCase }}DetailsProps {
   id: string | number
@@ -30,7 +31,7 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
   }
 
   if (fetching || !data) {
-    return <div>Loading...</div>
+    return <LoadingIndicator />
   }
 
   return (

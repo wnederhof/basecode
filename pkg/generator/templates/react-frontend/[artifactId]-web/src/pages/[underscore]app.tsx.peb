@@ -1,0 +1,45 @@
+import { ResetUrqlClientContext } from '@lib/reset-urql-client-context'
+import { withUrqlClient } from 'next-urql'
+import type { AppProps } from 'next/app'
+import Head from 'next/head'
+import {
+  cacheExchange,
+  fetchExchange,
+  mapExchange
+} from 'urql'
+
+function App({
+  Component,
+  pageProps,
+  resetUrqlClient,
+}: AppProps & { resetUrqlClient: () => void }) {
+  return (
+    <>
+      <Head>
+        <title>{{ artifactId }}</title>
+        <meta name="description" content="{{ artifactId }}" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
+      <ResetUrqlClientContext.Provider value={resetUrqlClient}>
+        <Component {...pageProps} />
+      </ResetUrqlClientContext.Provider>
+    </>
+  )
+}
+
+export default withUrqlClient((ssrExchange) => {
+  const exchanges = [
+    cacheExchange,
+    mapExchange({}),
+    ssrExchange,
+    fetchExchange,
+  ]
+  return {
+    url: '/graphql',
+    exchanges,
+    fetchOptions: {
+      credentials: 'include',
+    },
+    requestPolicy: 'cache-and-network',
+  }
+})(App)

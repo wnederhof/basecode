@@ -1,0 +1,26 @@
+import Link from 'next/link'
+
+export interface Breadcrumb {
+  label: string,
+  href: string,
+}
+
+export interface DefaultLayoutProps {
+  breadcrumbs?: Breadcrumb[],
+  children?: ReactNode,
+}
+
+export const DefaultLayout(props: DefaultLayoutProps) {
+  return (
+    <>
+      {props.breadcrumbs && <ul>
+        {props.breadcrumbs.map((breadcrumb, i) => (
+          <div key={i}>
+            <Link href={breadcrumb.href}>{breadcrumb.label}</Link}
+          </div>
+        )}
+      </ul>}
+      {children}
+    </>
+  )
+}

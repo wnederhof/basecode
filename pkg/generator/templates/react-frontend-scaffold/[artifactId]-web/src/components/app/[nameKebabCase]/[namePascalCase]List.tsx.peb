@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { gql, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Mutation, Query } from '@generated/graphql'
+import { LoadingIndicator } from '@components/LoadingIndicator'
 {%if hasRelations%}
 export interface {{ namePascalCase }}ListProps {{ "{" }}{%for field in fields%}{%if field.isFieldRelational%}
   {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
@@ -45,7 +46,7 @@ export function {{ namePascalCase }}List({%if hasRelations%}props: {{ namePascal
   })
 
   if (fetching) {
-    return <div>Loading...</div>
+    return <LoadingIndicator />
   }
 
   if (error?.message) {

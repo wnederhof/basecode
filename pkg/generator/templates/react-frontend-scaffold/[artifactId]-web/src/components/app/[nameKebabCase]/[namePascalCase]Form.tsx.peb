@@ -1,7 +1,8 @@
 import { gql, OperationResult, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Mutation, Query{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%} } from '@generated/graphql'
-import { Formik, Field, Form, FormikHelpers } from 'formik'
+import { useFormik } from 'formik'
+import { LoadingIndicator } from '@components/LoadingIndicator'
 
 export interface {{ namePascalCase }}FormProps {
   id?: string | number{%for field in fields%}{%if field.isFieldRelational%}
@@ -39,14 +40,12 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
   }
 
   const doSubmit = (
-    formData: {{ namePascalCase }}FormData,
-    { setSubmitting }: FormikHelpers<{{ namePascalCase }}FormData>
+    formData: {{ namePascalCase }}FormData
   ) => {
     if (props.id) {
       executeUpdateMutation({ id: props.id, input: formData })
         .then(result => handleMutationResult(result) && props.onSave())
         .catch((reason) => alert(`Updating {{ nameCamelCase }} failed. Reason: ${reason}`))
-        .finally(() => setSubmitting(false))
     } else {{ "{" }}{%if hasRelations%}
       const formDataWithRelations = { ...formData }{%endif%}{%for field in fields%}{%if field.isFieldRelational%}
       if (props.{{ field.fieldNameCamelCase }}) {
@@ -55,7 +54,6 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
       executeCreateMutation({ input: formData{%if hasRelations%}WithRelations{%endif%} })
         .then(result => handleMutationResult(result) && props.onSave())
         .catch((reason) => alert(`Creating {{ nameCamelCase }} failed. Reason: ${reason}`))
-        .finally(() => setSubmitting(false))
     }
   }
 
@@ -95,7 +93,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
   })
 {%endif%}{%endfor%}
   if (fetching{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.fetching{%endif%}{%endfor%}) {
-    return <div>Loading...</div>
+    return <LoadingIndicator />
   }
 
   const errorMessage = error?.message{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.error?.message{%endif%}{%endfor%}
@@ -104,61 +102,38 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
     return <div>{errorMessage}</div>
   }
 
+  const formik = useFormik({
+    initialValues: {{ "{" }}{%for field in fields%}
+      {{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} || false{%endif%}{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" or field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT"%} || ''{%endif%},{%endfor%}
+    },
+    onSubmit: doSubmit
+  })
+
   return (
-    <Formik
-      onSubmit={doSubmit}
-      initialValues={{ "{" }}{{ "{" }}{%for field in fields%}
-        {{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} || false{%endif%}{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" or field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT"%} || ''{%endif%},{%endfor%}
-      {{ "}" }} as {{ namePascalCase }}FormData{{ "}" }}
-    >
-      <Form role="form">
-{%for field in fields%}
-        <div>
-          <label htmlFor="{{ field.fieldNameCamelCase }}">{{ field.fieldNamePascalCase }}</label>{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" %}
-          <Field
-            name="{{ field.fieldNameCamelCase }}"
-            type="text"
-          />
+    <form role="form" onSubmit={formik.handleSubmit}>{%for field in fields%}
+      <div>
+        <label htmlFor="{{ field.fieldNameCamelCase }}">{{ field.fieldNamePascalCase }}</label>{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" %}
+        <input name="{{ field.fieldNameCamelCase }}" type="text" onChange={formik.handleChange} value={formik.values.{{ field.fieldNameCamelCase }}{{ "}" }} />
 {%elif field.fieldType == "INT" or field.fieldType == "NULL_INT" %}
-          <Field
-            name="{{ field.fieldNameCamelCase }}"
-            type="number"
-          />
+        <input name="{{ field.fieldNameCamelCase }}" type="number" onChange={formik.handleChange} value={formik.values.{{ field.fieldNameCamelCase }}{{ "}" }} />
 {%elif field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT" %}
-          <Field
-            name="{{ field.fieldNameCamelCase }}"
-            as="textarea"
-          />
+        <textarea name="{{ field.fieldNameCamelCase }}" onChange={formik.handleChange} value={formik.values.{{ field.fieldNameCamelCase }}{{ "}" }}  />
 {%elif field.fieldType == "INT" or field.fieldType == "NULL_INT" %}
-          <Field
-            name="{{ field.fieldNameCamelCase }}"
-            type="number"
-          />
+        <input name="{{ field.fieldNameCamelCase }}" type="number" />
 {%elif field.fieldType == "DATE" or field.fieldType == "NULL_DATE" %}
-          <Field
-            name="{{ field.fieldNameCamelCase }}"
-            type="date"
-          />
+        <input name="{{ field.fieldNameCamelCase }}" type="date"  onChange={formik.handleChange} value={formik.values.{{ field.fieldNameCamelCase }}{{ "}" }} />
 {%elif field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN" %}
-          <Field
-            name="{{ field.fieldNameCamelCase }}"
-            type="checkbox"
-          />
+        <input name="{{ field.fieldNameCamelCase }}" type="checkbox" onChange={formik.handleChange} value={formik.values.{{ field.fieldNameCamelCase }}{{ "}" }} />
 {%elif field.fieldType == "RELATIONAL" %}
-          <Field
-            name="{{ field.fieldNameCamelCase }}"
-            as="select"
-            hidden={props.{{ field.fieldNameCamelCase }}}
-          >
-            <option />
-            {{ "{" }}{{ field.fieldTypePluralCamelCase }}QueryResult?.data?.{{ field.fieldTypePluralCamelCase }}?.map(({{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}) =>
-              <option key={{ "{" }}{{ field.fieldTypeCamelCase }}.id} value={{ "{" }}{{ field.fieldTypeCamelCase }}.id}>{{ "{" }}{{ field.fieldTypeCamelCase }}.id}</option>
-            )}
-          </Field>
-{%endif%}        </div>{%endfor%}
-        <button type="submit">Save</button>
-        <button type="button" onClick={props.onCancel}>Cancel</button>
-      </Form>
-    </Formik>
+        {props.{{ field.fieldNameCamelCase }} ? <></> : <select name="{{ field.fieldNameCamelCase }}" onChange={formik.handleChange} value={formik.values.{{ field.fieldNameCamelCase }}{{ "}" }}>
+          <option />
+          {{ "{" }}{{ field.fieldTypePluralCamelCase }}QueryResult?.data?.{{ field.fieldTypePluralCamelCase }}?.map(({{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}) =>
+            <option key={{ "{" }}{{ field.fieldTypeCamelCase }}.id} value={{ "{" }}{{ field.fieldTypeCamelCase }}.id}>{{ "{" }}{{ field.fieldTypeCamelCase }}.id}</option>
+          )}
+        </select>}
+{%endif%}      </div>{%endfor%}
+      <button type="submit">Save</button>
+      <button type="button" onClick={props.onCancel}>Cancel</button>
+    </form>
   )
 }

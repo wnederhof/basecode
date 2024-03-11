@@ -45,8 +45,7 @@ describe('{{ namePascalCase }}Form', () => {
       </Provider>
     )
     const expectedFormValues = {
-      ...{{ nameCamelCase }},
-      id: undefined{%for field in fields%}{%if field.isFieldRelational%},
+      ...{{ nameCamelCase }}{%for field in fields%}{%if field.isFieldRelational%},
       {{field.fieldNameCamelCase}}: '1'{%endif%}{%endfor%}
     }
     delete expectedFormValues.id
