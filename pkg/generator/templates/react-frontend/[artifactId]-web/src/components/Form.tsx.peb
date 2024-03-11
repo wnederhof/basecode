@@ -100,5 +100,9 @@ Form.CancelButton = ({
   children,
   ...props
 }: React.ButtonHTMLAttributes<HTMLButtonElement>) => {
-  return <button {...props}>{children}</button>
+  return (
+    <button type="button {...props}>
+      {children}
+    </button>
+  )
 }
