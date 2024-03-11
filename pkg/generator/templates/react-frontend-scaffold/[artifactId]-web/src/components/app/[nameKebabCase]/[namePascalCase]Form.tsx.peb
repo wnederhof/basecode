@@ -113,7 +113,7 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
 
   return (
     <Form role="form" onSubmit={formik.handleSubmit}>{%for field in fields%}
-      <Form.Field htmlFor="{{ field.fieldNameCamelCase }}" label="{{ field.fieldNamePascalCase }}">{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" %}
+      {%if field.fieldType == "RELATIONAL" %}{props.{{ field.fieldNameCamelCase }} ? <></> : {%endif%}<Form.Field htmlFor="{{ field.fieldNameCamelCase }}" label="{{ field.fieldNamePascalCase }}">{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" %}
         <Form.Text name="{{ field.fieldNameCamelCase }}" onChange={formik.handleChange} value={formik.values.{{ field.fieldNameCamelCase }}{{ "}" }} />
 {%elif field.fieldType == "INT" or field.fieldType == "NULL_INT" %}
         <Form.Text name="{{ field.fieldNameCamelCase }}" onChange={formik.handleChange} value={formik.values.{{ field.fieldNameCamelCase }}{{ "}" }} />
@@ -126,13 +126,13 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
 {%elif field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN" %}
         <Form.Checkbox name="{{ field.fieldNameCamelCase }}" onChange={formik.handleChange} value={formik.values.{{ field.fieldNameCamelCase }}{{ "}" }} />
 {%elif field.fieldType == "RELATIONAL" %}
-        {props.{{ field.fieldNameCamelCase }} ? <></> : <Form.Select name="{{ field.fieldNameCamelCase }}" onChange={formik.handleChange} value={formik.values.{{ field.fieldNameCamelCase }}{{ "}" }}>
+        <Form.Select name="{{ field.fieldNameCamelCase }}" onChange={formik.handleChange} value={formik.values.{{ field.fieldNameCamelCase }}{{ "}" }}>
           <Form.Option />
           {{ "{" }}{{ field.fieldTypePluralCamelCase }}QueryResult?.data?.{{ field.fieldTypePluralCamelCase }}?.map(({{ field.fieldTypeCamelCase }}: {{ field.fieldTypePascalCase }}) =>
             <Form.Option key={{ "{" }}{{ field.fieldTypeCamelCase }}.id} value={{ "{" }}{{ field.fieldTypeCamelCase }}.id}>{{ "{" }}{{ field.fieldTypeCamelCase }}.id}</Form.Option>
           )}
-        </Form.Select>}
-{%endif%}      </Form.Field>{%endfor%}
+        </Form.Select>
+{%endif%}      </Form.Field>{%if field.fieldType == "RELATIONAL" %}{{ "}" }}{%endif%}{%endfor%}
       <Form.SubmitButton>Save</Form.SubmitButton>
       <Form.CancelButton onClick={props.onCancel}>Cancel</Form.CancelButton>
     </Form>
