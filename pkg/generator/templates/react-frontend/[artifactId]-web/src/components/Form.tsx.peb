@@ -36,20 +36,15 @@ Form.Integer = ({
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement>) => {
   return (
-    <input type="number" {...props}>
-      {children}
-    </input>
+    <input type="number" {...props} />
   )
 }
 
 Form.Date = ({
-  children,
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement>) => {
   return (
-    <input type="date" {...props}>
-      {children}
-    </input>
+    <input type="date" {...props} />
   )
 }
 
