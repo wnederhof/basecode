@@ -1,0 +1,16 @@
+import { Form } from '@components/Form'
+import { render, screen, within } from '@testing-library/react'
+
+describe('Form', () => {
+  it('renders form with fields', () => {
+    render(
+      <Form>
+        <Form.Field label="Field">
+          <Form.Text />
+        </Form.Field>
+      </Form>
+    )
+    expect(screen.queryAllByText('Field')).toHaveLength(1)
+    expect(screen.queryAllByRole('textbox')).toHaveLength(1)
+  })
+})

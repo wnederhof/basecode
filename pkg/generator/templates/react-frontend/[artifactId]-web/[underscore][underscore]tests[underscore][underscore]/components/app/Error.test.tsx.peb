@@ -1,8 +1,18 @@
 import { Error } from '@components/Error'
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
+import { CombinedError } from 'urql'
 
 describe('Error', () => {
-  it('renders without errors', () => {
-    render(<Error value="some error" />)
+  it('renders the provided error message if the value is a string', () => {
+    render(<Error value="Error message" />)
+    expect(screen.queryAllByText('Error message')).toHaveLength(1)
+  })
+
+  it('renders the provided error message if the value is a combined error', () => {
+    const combinedError = new CombinedError({
+      graphQLErrors: ['Error message'],
+    })
+    render(<Error value={combinedError} />)
+    expect(screen.queryAllByText('[GraphQL] Error message')).toHaveLength(1)
   })
 })

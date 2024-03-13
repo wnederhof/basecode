@@ -1,0 +1,17 @@
+import { Actions } from '@components/Actions'
+import { render, screen } from '@testing-library/react'
+
+describe('Actions', () => {
+  it('renders the provided action', () => {
+    render(
+      <Actions>
+        <Actions.Action href="https://www.example.com">Do it</Actions.Action>
+      </Actions>
+    )
+    expect(screen.queryAllByText('Do it')).toHaveLength(1)
+    expect(screen.getByRole('link')).toHaveAttribute(
+      'href',
+      'https://www.example.com'
+    )
+  })
+})

@@ -1,0 +1,14 @@
+import { Details } from '@components/Details'
+import { render, screen } from '@testing-library/react'
+
+describe('Details', () => {
+  it('renders the provided details', () => {
+    render(
+      <Details>
+        <Details.Field label="Field">Value</Details.Field>
+      </Details>
+    )
+    expect(screen.queryAllByText('Field')).toHaveLength(1)
+    expect(screen.queryAllByText('Value')).toHaveLength(1)
+  })
+})

@@ -1,0 +1,63 @@
+import { List } from '@components/List'
+import { render, screen, within } from '@testing-library/react'
+
+describe('List', () => {
+  it('renders the provided list', () => {
+    render(
+      <List
+        fields={[{ name: 'field', label: 'Field' }]}
+        data={[{ field: 'Value' }]}
+        actions={() => ({})}
+      />
+    )
+    expect(screen.queryAllByText('Field')).toHaveLength(1)
+    expect(screen.queryAllByText('Value')).toHaveLength(1)
+  })
+
+  it('does not render actions if not provided', () => {
+    render(
+      <List
+        fields={[{ name: 'field', label: 'Field' }]}
+        data={[{ field: 'Value' }]}
+        actions={() => ({})}
+      />
+    )
+    expect(screen.queryAllByText('Show')).toHaveLength(0)
+    expect(screen.queryAllByText('Edit')).toHaveLength(0)
+    expect(screen.queryAllByText('Delete')).toHaveLength(0)
+  })
+
+  it('renders the provided actions', () => {
+    let clicked = false
+    render(
+      <List
+        fields={[{ name: 'field', label: 'Field' }]}
+        data={[{ field: 'Value' }]}
+        actions={() => ({
+          showHref: 'https://www.example1.com',
+          editHref: 'https://www.example2.com',
+          onDeleteClick: () => {
+            clicked = true
+          },
+        })}
+      />
+    )
+    expect(screen.queryAllByText('Show')).toHaveLength(1)
+    expect(screen.queryAllByText('Edit')).toHaveLength(1)
+    expect(screen.queryAllByText('Delete')).toHaveLength(1)
+
+    expect(screen.getByText('Show')).toHaveAttribute(
+      'href',
+      'https://www.example1.com'
+    )
+
+    expect(screen.getByText('Edit')).toHaveAttribute(
+      'href',
+      'https://www.example2.com'
+    )
+
+    screen.getByText('Delete').click()
+
+    expect(clicked).toBeTruthy()
+  })
+})
