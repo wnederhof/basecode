@@ -1,3 +1,4 @@
+import { Header } from '@components/Header'
 import Link from 'next/link'
 import { ReactNode } from 'react'
 
@@ -15,7 +16,7 @@ export interface DefaultLayoutProps {
 export function DefaultLayout(props: DefaultLayoutProps) {
   return (
     <>
-      <h1>{{ artifactId }}</h1>
+      <div>{{ artifactId }}</div>
       {props.breadcrumbs && (
         <ul>
           {props.breadcrumbs.map((breadcrumb, i) => (
@@ -25,7 +26,7 @@ export function DefaultLayout(props: DefaultLayoutProps) {
           ))}
         </ul>
       )}
-      <h2>{props.title}</h2>
+      <Header level={1}>{props.title}</Header>
       {props.children}
     </>
   )

@@ -94,6 +94,14 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
     ),
   })
 {%endif%}{%endfor%}
+  const formik = useFormik({
+    initialValues: {{ "{" }}{%for field in fields%}
+{{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} || false{%endif%}{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" or field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT"%} || ''{%endif%},{%endfor%}
+    },
+    enableReinitialize: true,
+    onSubmit: doSubmit
+  })
+
   if (fetching{%for field in fields%}{%if field.isFieldRelational%} || {{ field.fieldTypePluralCamelCase }}QueryResult.fetching{%endif%}{%endfor%}) {
     return <Loader />
   }
@@ -103,13 +111,6 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
   if (queryError) {
     return <Error value={queryError} />
   }
-
-  const formik = useFormik({
-    initialValues: {{ "{" }}{%for field in fields%}
-      {{ field.fieldNameCamelCase }}: data?.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} || false{%endif%}{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" or field.fieldType == "TEXT" or field.fieldType == "NULL_TEXT"%} || ''{%endif%},{%endfor%}
-    },
-    onSubmit: doSubmit
-  })
 
   return (
     <Form role="form" onSubmit={formik.handleSubmit}>{%for field in fields%}

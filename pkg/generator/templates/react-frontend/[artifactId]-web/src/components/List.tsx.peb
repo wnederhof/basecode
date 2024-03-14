@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import React from 'react'
 
 export interface AppListFieldProps {
@@ -40,8 +41,8 @@ export const List = <T,>({
               <td key={field.name}>{'' + values[field.name as keyof T]}</td>
             ))}
             <td>
-              {actions.showHref && <a href={actions.showHref}>Show</a>}
-              {actions.editHref && <a href={actions.editHref}>Edit</a>}
+              {actions.showHref && <Link href={actions.showHref}>Show</Link>}
+              {actions.editHref && <Link href={actions.editHref}>Edit</Link>}
               {actions.onDeleteClick && <button onClick={actions.onDeleteClick}>Delete</button>}
             </td>
           </tr>

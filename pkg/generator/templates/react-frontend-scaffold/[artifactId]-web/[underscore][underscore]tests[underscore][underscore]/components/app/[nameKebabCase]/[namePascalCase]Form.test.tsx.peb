@@ -44,11 +44,9 @@ describe('{{ namePascalCase }}Form', () => {
         <{{ namePascalCase }}Form id="1" onSave={jest.fn()} onCancel={jest.fn()} />
       </Provider>
     )
-    const expectedFormValues = {
-      ...{{ nameCamelCase }}{%for field in fields%}{%if field.isFieldRelational%},
-      {{field.fieldNameCamelCase}}: '1'{%endif%}{%endfor%}
+    const expectedFormValues = {{ "{" }}{%for field in fields%}
+      {{field.fieldNameCamelCase}}: {{field.fieldFrontendExpectedValue}},{%endfor%}
     }
-    delete expectedFormValues.id
     expect(screen.getByRole('form')).toHaveFormValues(expectedFormValues)
   })
 

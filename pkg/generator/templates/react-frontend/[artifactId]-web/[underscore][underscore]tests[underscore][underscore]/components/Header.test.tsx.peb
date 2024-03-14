@@ -1,0 +1,11 @@
+import { Header } from '@components/Header'
+import { render, screen } from '@testing-library/react'
+
+describe('Header', () => {
+  [1, 2, 3, 4, 5, 6].forEach(level => {
+    it(`renders the header for header ${level}`, () => {
+      render(<Header level={level}>Hello, World!</Header>)
+      expect(screen.queryAllByText('Hello, World!')).toHaveLength(1)
+    })
+  })
+})

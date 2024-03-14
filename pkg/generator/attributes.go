@@ -94,7 +94,8 @@ func provideFieldContextAttributes(context map[string]interface{}, attributes []
 		provideGraphQLFieldTypeContextAttributes(fieldContext, attribute)
 		provideKotlinFieldContextAttributes(fieldContext, attribute)
 		provideInputFieldContextAttributes(fieldContext, attribute)
-		provideVueTemplateContextAttributes(fieldContext, attribute)
+		provideReactTemplateTestContextAttributes(fieldContext, attribute)
+		provideReactTemplateExpectedContextAttributes(fieldContext, attribute)
 	}
 }
 
@@ -311,7 +312,7 @@ func provideInputFieldContextAttributes(context map[string]interface{}, attribut
 	}
 }
 
-func provideVueTemplateContextAttributes(context map[string]interface{}, attribute ModelAttribute) {
+func provideReactTemplateTestContextAttributes(context map[string]interface{}, attribute ModelAttribute) {
 	switch attribute.Type {
 	case STRING:
 		context["fieldFrontendTestValue"] = "'Some " + attribute.Name + "'"
@@ -335,6 +336,35 @@ func provideVueTemplateContextAttributes(context map[string]interface{}, attribu
 		context["fieldFrontendTestValue"] = "true"
 	case RELATIONAL:
 		context["fieldFrontendTestValue"] = "1"
+	default:
+		panic("Undetermined attribute type.")
+	}
+}
+
+func provideReactTemplateExpectedContextAttributes(context map[string]interface{}, attribute ModelAttribute) {
+	switch attribute.Type {
+	case STRING:
+		context["fieldFrontendExpectedValue"] = "'Some " + attribute.Name + "'"
+	case INT:
+		context["fieldFrontendExpectedValue"] = "'10'"
+	case TEXT:
+		context["fieldFrontendExpectedValue"] = "'Some " + attribute.Name + "'"
+	case DATE:
+		context["fieldFrontendExpectedValue"] = "'2000-01-01'"
+	case BOOLEAN:
+		context["fieldFrontendExpectedValue"] = "true"
+	case NULL_STRING:
+		context["fieldFrontendExpectedValue"] = "'Some " + attribute.Name + "'"
+	case NULL_INT:
+		context["fieldFrontendExpectedValue"] = "'10'"
+	case NULL_TEXT:
+		context["fieldFrontendExpectedValue"] = "'Some " + attribute.Name + "'"
+	case NULL_DATE:
+		context["fieldFrontendExpectedValue"] = "'2000-01-01'"
+	case NULL_BOOLEAN:
+		context["fieldFrontendExpectedValue"] = "true"
+	case RELATIONAL:
+		context["fieldFrontendExpectedValue"] = "1"
 	default:
 		panic("Undetermined attribute type.")
 	}

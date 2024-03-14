@@ -20,42 +20,27 @@ Form.Field = (props: FieldProps) => {
   )
 }
 
-Form.Text = ({
-  children,
-  ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) => {
+Form.Text = (props: React.InputHTMLAttributes<HTMLInputElement>) => {
   return (
-    <input type="text" {...props}>
-      {children}
-    </input>
+    <input type="text" {...props} />
   )
 }
 
-Form.Integer = ({
-  children,
-  ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) => {
+Form.Integer = (props: React.InputHTMLAttributes<HTMLInputElement>) => {
   return (
     <input type="number" {...props} />
   )
 }
 
-Form.Date = ({
-  ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) => {
+Form.Date = (props: React.InputHTMLAttributes<HTMLInputElement>) => {
   return (
     <input type="date" {...props} />
   )
 }
 
-Form.Checkbox = ({
-  children,
-  ...props
-}: React.InputHTMLAttributes<HTMLInputElement>) => {
+Form.Checkbox = (props: React.InputHTMLAttributes<HTMLInputElement>) => {
   return (
-    <input type="checkbox" {...props}>
-      {children}
-    </input>
+    <input type="checkbox" {...props} />
   )
 }
 

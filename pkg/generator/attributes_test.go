@@ -257,6 +257,19 @@ func TestProvideFieldNameContextAttributes(t *testing.T) {
 	assert.Equal(t, "RELATIONAL", fields[10]["fieldInputType"])
 
 	// fieldFrontendTestValue
+	assert.Equal(t, "'Some streetName'", fields[0]["fieldFrontendExpectedValue"])
+	assert.Equal(t, "'10'", fields[1]["fieldFrontendExpectedValue"])
+	assert.Equal(t, "'Some streetName'", fields[2]["fieldFrontendExpectedValue"])
+	assert.Equal(t, "'2000-01-01'", fields[3]["fieldFrontendExpectedValue"])
+	assert.Equal(t, "true", fields[4]["fieldFrontendExpectedValue"])
+	assert.Equal(t, "'Some streetName'", fields[5]["fieldFrontendExpectedValue"])
+	assert.Equal(t, "'10'", fields[6]["fieldFrontendExpectedValue"])
+	assert.Equal(t, "'Some streetName'", fields[7]["fieldFrontendExpectedValue"])
+	assert.Equal(t, "'2000-01-01'", fields[8]["fieldFrontendExpectedValue"])
+	assert.Equal(t, "true", fields[9]["fieldFrontendExpectedValue"])
+	assert.Equal(t, "1", fields[10]["fieldFrontendExpectedValue"])
+
+	// fieldFrontendTestValue
 	assert.Equal(t, "'Some streetName'", fields[0]["fieldFrontendTestValue"])
 	assert.Equal(t, "10", fields[1]["fieldFrontendTestValue"])
 	assert.Equal(t, "'Some streetName'", fields[2]["fieldFrontendTestValue"])

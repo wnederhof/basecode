@@ -5,8 +5,8 @@ describe('Form', () => {
   it('renders form with fields', () => {
     render(
       <Form>
-        <Form.Field label="Field">
-          <Form.Text />
+        <Form.Field htmlFor="text" label="Field">
+          <Form.Text name="text" />
         </Form.Field>
       </Form>
     )

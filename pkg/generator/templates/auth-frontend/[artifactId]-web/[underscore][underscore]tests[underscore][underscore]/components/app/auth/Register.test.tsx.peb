@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { UserForm } from '@components/app/auth/Register'
+import { Register } from '@components/app/auth/Register'
 import { Client, Provider } from 'urql'
 import { fromValue } from 'wonka'
 
