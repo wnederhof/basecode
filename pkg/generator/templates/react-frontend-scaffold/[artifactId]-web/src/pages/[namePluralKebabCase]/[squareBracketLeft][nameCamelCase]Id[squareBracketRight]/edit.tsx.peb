@@ -7,7 +7,6 @@ export default function Show{{namePascalCase}}() {
   const { {{nameCamelCase}}Id } = router.query
   return (
     <DefaultLayout
-      title="Edit {{ namePascalCase }}"
       breadcrumbs={[
         { label: '{{namePluralPascalCase}}', href: '/{{namePluralCamelCase}}' },
         { label: 'Selected {{ namePascalCase }}', href: `/{{ namePluralKebabCase }}/${{ "{" }}{{ nameCamelCase }}Id{{ "}" }}` },

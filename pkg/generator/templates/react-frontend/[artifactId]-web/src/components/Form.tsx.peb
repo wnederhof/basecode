@@ -26,6 +26,12 @@ Form.Text = (props: React.InputHTMLAttributes<HTMLInputElement>) => {
   )
 }
 
+Form.Password = (props: React.InputHTMLAttributes<HTMLInputElement>) => {
+  return (
+    <input type="password" {...props} />
+  )
+}
+
 Form.Integer = (props: React.InputHTMLAttributes<HTMLInputElement>) => {
   return (
     <input type="number" {...props} />

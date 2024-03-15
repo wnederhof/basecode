@@ -1,8 +1,12 @@
 import { Login } from '@components/app/auth/Login'
+import { useRouter } from 'next/router'
 
 export default function LoginPage() {
-  return <>
-    <h1>Login</h1>
-    <Login />
-  </>
+  const router = useRouter()
+  return (
+    <Login
+      onCancel={() => router.push('/')}
+      onLogin={() => router.push('/')}
+    />
+  )
 }

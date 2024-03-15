@@ -1,5 +1,0 @@
-export const RegisterSuccess = () => (
-  <div>
-    Registration completed.
-  </div>
-)

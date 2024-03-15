@@ -1,8 +1,0 @@
-import { RegisterSuccess } from '@components/app/auth/RegisterSuccess'
-import { render } from '@testing-library/react'
-
-describe('RegisterSuccess', () => {
-  it('renders without errors', () => {
-    render(<Loader />)
-  })
-})

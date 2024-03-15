@@ -1,3 +1,4 @@
+import { Header } from '@components/Header'
 import { gql, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Mutation, Query } from '@generated/graphql'
@@ -55,16 +56,19 @@ export function {{ namePascalCase }}List({%if hasRelations%}props: {{ namePascal
   }
 
   return (
-    <List
-      fields={[{%for field in fields%}
-        { name: '{{ field.fieldNameCamelCase }}', label: '{{ field.fieldNamePascalCase }}' },{%endfor%}
-      ]}
-      data={data?.{{namePluralCamelCase}}{{ "}" }}
-      actions={values => ({
-        showHref: `/{{ namePluralKebabCase }}/${values.id}`,
-        editHref: `/{{ namePluralKebabCase }}/${values.id}/edit`,
-        onDeleteClick: () => handleDelete(values.id),
-      })}
-    />
+    <>
+      <Header level={1}>List of {{ namePluralPascalCase }}</Header>
+      <List
+        fields={[{%for field in fields%}
+          { name: '{{ field.fieldNameCamelCase }}', label: '{{ field.fieldNamePascalCase }}' },{%endfor%}
+        ]}
+        data={data?.{{namePluralCamelCase}}{{ "}" }}
+        actions={values => ({
+          showHref: `/{{ namePluralKebabCase }}/${values.id}`,
+          editHref: `/{{ namePluralKebabCase }}/${values.id}/edit`,
+          onDeleteClick: () => handleDelete(values.id),
+        })}
+      />
+    </>
   )
 }

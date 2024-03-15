@@ -10,7 +10,6 @@ export interface Breadcrumb {
 export interface DefaultLayoutProps {
   breadcrumbs?: Breadcrumb[]
   children?: ReactNode
-  title: string
 }
 
 export function DefaultLayout(props: DefaultLayoutProps) {
@@ -26,7 +25,6 @@ export function DefaultLayout(props: DefaultLayoutProps) {
           ))}
         </ul>
       )}
-      <Header level={1}>{props.title}</Header>
       {props.children}
     </>
   )

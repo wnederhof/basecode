@@ -43,7 +43,7 @@ func Run(args []string) error {
 						Aliases: []string{"bes"},
 						Usage:   "Backend Scaffold",
 						Action: func(c *cli.Context) error {
-							model, err := parseArgs(c.Args())
+							model, err := parseArgs(c.Args(), 1)
 							if err != nil {
 								return err
 							}
@@ -55,7 +55,7 @@ func Run(args []string) error {
 						Aliases: []string{"bem"},
 						Usage:   "Model files, including migration script, entity and repository",
 						Action: func(c *cli.Context) error {
-							model, err := parseArgs(c.Args())
+							model, err := parseArgs(c.Args(), 1)
 							if err != nil {
 								return err
 							}
@@ -67,7 +67,7 @@ func Run(args []string) error {
 						Aliases: []string{"bea"},
 						Usage:   "GraphQL API (schema and resolvers)",
 						Action: func(c *cli.Context) error {
-							model, err := parseArgs(c.Args())
+							model, err := parseArgs(c.Args(), 1)
 							if err != nil {
 								return err
 							}
@@ -79,7 +79,7 @@ func Run(args []string) error {
 						Aliases: []string{"bsv"},
 						Usage:   "Service between API and repository",
 						Action: func(c *cli.Context) error {
-							model, err := parseArgs(c.Args())
+							model, err := parseArgs(c.Args(), 1)
 							if err != nil {
 								return err
 							}
@@ -102,7 +102,7 @@ func Run(args []string) error {
 						Aliases: []string{"fes"},
 						Usage:   "Frontend Scaffold (Generate frontend support first)",
 						Action: func(c *cli.Context) error {
-							model, err := parseArgs(c.Args())
+							model, err := parseArgs(c.Args(), 1)
 							if err != nil {
 								return err
 							}
@@ -114,7 +114,7 @@ func Run(args []string) error {
 						Aliases: []string{"s"},
 						Usage:   "Backend and Frontend Scaffold (Generate frontend support first)",
 						Action: func(c *cli.Context) error {
-							model, err := parseArgs(c.Args())
+							model, err := parseArgs(c.Args(), 1)
 							if err != nil {
 								return err
 							}
@@ -126,7 +126,7 @@ func Run(args []string) error {
 						Aliases: []string{"ba"},
 						Usage:   "Backend Authentication - EXPERIMENTAL",
 						Action: func(c *cli.Context) error {
-							model, err := parseAttributeArgs(c.Args())
+							model, err := parseAttributeArgs(c.Args(), 0)
 							if err != nil {
 								return err
 							}
@@ -138,7 +138,7 @@ func Run(args []string) error {
 						Aliases: []string{"fa"},
 						Usage:   "Frontend Authentication - EXPERIMENTAL",
 						Action: func(c *cli.Context) error {
-							model, err := parseAttributeArgs(c.Args())
+							model, err := parseAttributeArgs(c.Args(), 0)
 							if err != nil {
 								return err
 							}
@@ -150,7 +150,7 @@ func Run(args []string) error {
 						Aliases: []string{"a"},
 						Usage:   "Authentication - EXPERIMENTAL",
 						Action: func(c *cli.Context) error {
-							model, err := parseAttributeArgs(c.Args())
+							model, err := parseAttributeArgs(c.Args(), 0)
 							if err != nil {
 								return err
 							}

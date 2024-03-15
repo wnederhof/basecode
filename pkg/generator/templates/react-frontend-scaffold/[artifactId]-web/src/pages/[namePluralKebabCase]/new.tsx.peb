@@ -4,7 +4,6 @@ import { DefaultLayout } from '@components/layout/DefaultLayout'
 export default function New{{namePascalCase}}() {
   return (
     <DefaultLayout
-      title="New {{ namePascalCase }}"
       breadcrumbs={[
         { label: '{{namePluralPascalCase}}', href: '/{{namePluralCamelCase}}' },
         { label: 'New', href: '/{{namePluralCamelCase}}/new' },

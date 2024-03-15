@@ -1,3 +1,4 @@
+import { Header } from '@components/Header'
 import { gql, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Query } from '@generated/graphql'
@@ -37,16 +38,19 @@ export function {{ namePascalCase }}Details(props: {{ namePascalCase }}DetailsPr
   }
 
   return (
-    <Details>{%for field in fields%}
-      <Details.Field label="{{ field.fieldNamePascalCase }}">
-        {{ "{" }}data.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%}{{ "}" }}
-      </Details.Field>{%endfor%}
-      <Details.Field label="Created At">
-        {{ "{" }}data.{{ nameCamelCase }}?.createdAt{{ "}" }}
-      </Details.Field>
-      <Details.Field label="Updated At">
-        {{ "{" }}data.{{ nameCamelCase }}?.updatedAt{{ "}" }}
-      </Details.Field>
-    </Details>
+    <>
+      <Header level={1}>{{ namePascalCase }} Details</Header>
+      <Details>{%for field in fields%}
+        <Details.Field label="{{ field.fieldNamePascalCase }}">
+          {{ "{" }}data.{{ nameCamelCase }}?.{{ field.fieldNameCamelCase }}{%if field.fieldType == "BOOLEAN" or field.fieldType == "NULL_BOOLEAN"%} ? 'Yes' : 'No'{%endif%}{{ "}" }}
+        </Details.Field>{%endfor%}
+        <Details.Field label="Created At">
+          {{ "{" }}data.{{ nameCamelCase }}?.createdAt{{ "}" }}
+        </Details.Field>
+        <Details.Field label="Updated At">
+          {{ "{" }}data.{{ nameCamelCase }}?.updatedAt{{ "}" }}
+        </Details.Field>
+      </Details>
+    </>
   )
 }

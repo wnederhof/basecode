@@ -7,19 +7,19 @@ import (
 	"strings"
 )
 
-func parseArgs(cliArgs cli.Args) (generator.Model, error) {
+func parseArgs(cliArgs cli.Args, minArgs int) (generator.Model, error) {
 	args := make([]string, cliArgs.Len())
 	for i := 0; i < cliArgs.Len(); i++ {
 		args[i] = cliArgs.Get(i)
 	}
-	return parseArgsFromStrings(args)
+	return parseArgsFromStrings(args, minArgs)
 }
 
-func parseArgsFromStrings(args []string) (generator.Model, error) {
+func parseArgsFromStrings(args []string, minArgs int) (generator.Model, error) {
 	if len(args) < 2 {
 		return generator.Model{}, errors.New("usage: <name> (<fieldName>:<fieldType>)+")
 	}
-	attributes, err := parseAttributeArgsFromStrings(args[1:])
+	attributes, err := parseAttributeArgsFromStrings(args[1:], minArgs)
 	if err != nil {
 		return generator.Model{}, err
 	}
@@ -29,17 +29,17 @@ func parseArgsFromStrings(args []string) (generator.Model, error) {
 	}, nil
 }
 
-func parseAttributeArgs(cliArgs cli.Args) ([]generator.ModelAttribute, error) {
+func parseAttributeArgs(cliArgs cli.Args, minArgs int) ([]generator.ModelAttribute, error) {
 	// TODO test separately
 	args := make([]string, cliArgs.Len())
 	for i := 0; i < cliArgs.Len(); i++ {
 		args[i] = cliArgs.Get(i)
 	}
-	return parseAttributeArgsFromStrings(args)
+	return parseAttributeArgsFromStrings(args, minArgs)
 }
 
-func parseAttributeArgsFromStrings(attributeArgs []string) ([]generator.ModelAttribute, error) {
-	if len(attributeArgs) < 1 {
+func parseAttributeArgsFromStrings(attributeArgs []string, minArgs int) ([]generator.ModelAttribute, error) {
+	if len(attributeArgs) < minArgs {
 		return []generator.ModelAttribute{}, errors.New("usage: (<fieldName>:<fieldType>)+")
 	}
 	attributeCount := len(attributeArgs)

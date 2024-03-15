@@ -9,6 +9,20 @@ describe('Login', () => {
     {{field.fieldNameCamelCase}}: {{field.fieldFrontendTestValue}}{%endfor%}
   }
 
+  it('has a header', () => {
+    const mockClient: Partial<Client> = {
+      executeQuery: jest.fn(),
+      executeMutation: jest.fn(),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient as Client}>
+        <Login />
+      </Provider>
+    )
+    expect(screen.queryAllByText('Login Form')).toHaveLength(1)
+  })
+
   it('renders form containing the necessary fields', () => {
     const mockClient: Partial<Client> = {
       executeQuery: jest.fn(),
@@ -17,75 +31,21 @@ describe('Login', () => {
     }
     render(
       <Provider value={mockClient as Client}>
-        <Login onSave={jest.fn()} onCancel={jest.fn()} />
+        <Login onLogin={jest.fn()} onCancel={jest.fn()} />
       </Provider>
     ){%for field in fields%}
     expect(screen.queryByText('{{ field.fieldNamePascalCase }}')).not.toBeNull(){%endfor%}
   })
 
-  it('renders form containing existing data if id is passed', () => {
-    const executeQuery = jest.fn()
-    executeQuery.mockReturnValue(
+  it('calls a mutation if Login is clicked', async () => {
+    const executeMutation = jest.fn()
+    executeMutation.mockReturnValue(
       fromValue({
         data: {
-          user{%for field in fields%}{%if field.isFieldRelational%},
-          {{field.fieldTypePluralCamelCase}}: [{ id: 1 }]{%endif%}{%endfor%}
+          login: {
+            id: 1
+          }
         }
-      })
-    )
-    const mockClient: Partial<Client> = {
-      executeQuery,
-      executeMutation: jest.fn(),
-      executeSubscription: jest.fn(),
-    }
-    render(
-      <Provider value={mockClient as Client}>
-        <Login id="1" onSave={jest.fn()} onCancel={jest.fn()} />
-      </Provider>
-    )
-    const expectedFormValues = {
-      ...user,
-      id: undefined{%for field in fields%}{%if field.isFieldRelational%},
-      {{field.fieldNameCamelCase}}: '1'{%endif%}{%endfor%}
-    }
-    delete expectedFormValues.id
-    expect(screen.getByRole('form')).toHaveFormValues(expectedFormValues)
-  })
-
-  it('calls a mutation if Save is clicked if there is an id', async () => {
-    const executeQuery = jest.fn()
-    const executeMutation = jest.fn()
-    executeQuery.mockReturnValue(
-      fromValue({
-        data: { user },
-      }),
-    )
-    executeMutation.mockReturnValue(
-      fromValue({
-        data: {},
-      })
-    )
-    const mockClient: Partial<Client> = {
-      executeQuery,
-      executeMutation,
-      executeSubscription: jest.fn(),
-    }
-    const saveFn = jest.fn()
-    render(
-      <Provider value={mockClient as Client}>
-        <Login id="1" onSave={saveFn} onCancel={jest.fn()} />
-      </Provider>
-    )
-    fireEvent.click(screen.getByText('Save'))
-    await waitFor(() => expect(mockClient.executeMutation).toBeCalled())
-    await waitFor(() => expect(saveFn).toBeCalled())
-  })
-
-  it('calls a mutation if Save is clicked if there is no id', async () => {
-    const executeMutation = jest.fn()
-    executeMutation.mockReturnValue(
-      fromValue({
-        data: {},
       })
     )
     const mockClient: Partial<Client> = {
@@ -93,14 +53,14 @@ describe('Login', () => {
       executeMutation,
       executeSubscription: jest.fn(),
     }
-    const saveFn = jest.fn()
+    const loginFn = jest.fn()
     render(
       <Provider value={mockClient as Client}>
-        <Form onSave={saveFn} onCancel={jest.fn()} />
+        <Login onLogin={loginFn} onCancel={jest.fn()} />
       </Provider>
     )
-    fireEvent.click(screen.getByText('Save'))
+    fireEvent.click(screen.getByText('Login'))
     await waitFor(() => expect(mockClient.executeMutation).toBeCalled())
-    await waitFor(() => expect(saveFn).toBeCalled())
+    await waitFor(() => expect(loginFn).toBeCalled())
   })
 })

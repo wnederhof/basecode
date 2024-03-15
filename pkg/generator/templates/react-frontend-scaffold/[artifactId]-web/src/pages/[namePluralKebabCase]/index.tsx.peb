@@ -5,7 +5,6 @@ import { Actions } from '@components/Actions'
 export default function {{namePluralPascalCase}}() {
   return (
     <DefaultLayout
-      title="{{ namePluralPascalCase }}"
       breadcrumbs={[
         { label: '{{namePluralPascalCase}}', href: '/{{namePluralCamelCase}}' },
       ]}

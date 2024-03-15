@@ -364,7 +364,7 @@ func provideReactTemplateExpectedContextAttributes(context map[string]interface{
 	case NULL_BOOLEAN:
 		context["fieldFrontendExpectedValue"] = "true"
 	case RELATIONAL:
-		context["fieldFrontendExpectedValue"] = "1"
+		context["fieldFrontendExpectedValue"] = "'1'"
 	default:
 		panic("Undetermined attribute type.")
 	}

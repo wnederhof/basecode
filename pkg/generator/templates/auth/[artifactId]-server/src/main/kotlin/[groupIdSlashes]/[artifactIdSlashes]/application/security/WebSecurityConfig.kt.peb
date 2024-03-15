@@ -5,35 +5,35 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationProvider
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter
-import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource
-import org.springframework.web.filter.CorsFilter
+import org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED
+import org.springframework.security.web.SecurityFilterChain
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true)
 @EnableConfigurationProperties(SecurityProperties::class)
 class WebSecurityConfig(
     private val authenticationProvider: AuthenticationProvider,
-) : WebSecurityConfigurerAdapter() {
-
-    override fun configure(auth: AuthenticationManagerBuilder) {
-        auth.authenticationProvider(authenticationProvider)
+) {
+    @Bean
+    fun filterChain(http: HttpSecurity): SecurityFilterChain {
+        return http
+            .authenticationProvider(authenticationProvider)
+            .cors { it.disable() }
+            .csrf { it.disable() }
+            .authorizeHttpRequests {
+                it
+                    .requestMatchers("/graphql").permitAll()
+                    .requestMatchers("/actuator/health").permitAll()
+                    .requestMatchers("/subscriptions").permitAll()
+                    .requestMatchers("/graphiql/**").permitAll()
+                    .requestMatchers("/api/**").permitAll()
+            }
+            .sessionManagement { it.sessionCreationPolicy(IF_REQUIRED) }
+            .securityContext { it.requireExplicitSave(false) }
+            .build()
     }
-
-    override fun configure(http: HttpSecurity) {
-        http
-            .authorizeRequests()
-            .antMatchers("/graphql").permitAll()
-            .and()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED).and()
-            .csrf().disable()
-    }
-
 }

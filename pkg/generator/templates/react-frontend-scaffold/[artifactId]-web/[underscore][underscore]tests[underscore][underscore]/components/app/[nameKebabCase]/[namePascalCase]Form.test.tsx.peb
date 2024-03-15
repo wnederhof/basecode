@@ -10,6 +10,43 @@ describe('{{ namePascalCase }}Form', () => {
     {{field.fieldNameCamelCase}}: {{field.fieldFrontendTestValue}}{%endfor%}
   }
 
+  it('has an appropriate header if no id is provided', () => {
+    const mockClient: Partial<Client> = {
+      executeQuery: jest.fn(),
+      executeMutation: jest.fn(),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient as Client}>
+        <{{ namePascalCase }}Form />
+      </Provider>
+    )
+    expect(screen.queryAllByText('New {{ namePascalCase }}')).toHaveLength(1)
+  })
+
+  it('has an appropriate header if an id is provided', () => {
+    const executeQuery = jest.fn()
+    executeQuery.mockReturnValue(
+      fromValue<{ data: {{ namePascalCase }}FormQuery }>({
+        data: {
+          {{ nameCamelCase }}{%for field in fields%}{%if field.isFieldRelational%},
+          {{field.fieldTypePluralCamelCase}}: [{ id: 1 }]{%endif%}{%endfor%}
+        }
+      })
+    )
+    const mockClient: Partial<Client> = {
+      executeQuery,
+      executeMutation: jest.fn(),
+      executeSubscription: jest.fn(),
+    }
+    render(
+      <Provider value={mockClient as Client}>
+        <{{ namePascalCase }}Form id="1" onSave={jest.fn()} onCancel={jest.fn()} />
+      </Provider>
+    )
+    expect(screen.queryAllByText('Edit {{ namePascalCase }}')).toHaveLength(1)
+  })
+
   it('renders form containing the necessary fields', () => {
     const mockClient: Partial<Client> = {
       executeQuery: jest.fn(),
