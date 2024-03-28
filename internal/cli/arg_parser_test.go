@@ -36,20 +36,20 @@ func TestParseArgs(t *testing.T) {
 		"someField:date_opt",
 		"someField:boolean_opt",
 		"someField:Employer",
-	})
+	}, 1)
 	assert.Equal(t, expected, actual)
 }
 
 func TestParseArgsInvalidInput(t *testing.T) {
-	_, err := parseArgsFromStrings([]string{})
+	_, err := parseArgsFromStrings([]string{}, 1)
 	assert.Equal(t, err, errors.New("usage: <name> (<fieldName>:<fieldType>)+"))
 
-	_, err = parseArgsFromStrings([]string{"test"})
+	_, err = parseArgsFromStrings([]string{"test"}, 1)
 	assert.Equal(t, err, errors.New("usage: <name> (<fieldName>:<fieldType>)+"))
 
-	_, err = parseArgsFromStrings([]string{"test", "fieldName:something:else"})
+	_, err = parseArgsFromStrings([]string{"test", "fieldName:something:else"}, 1)
 	assert.Equal(t, err, errors.New("usage: <name> (<fieldName>:<fieldType>)+"))
 
-	_, err = parseArgsFromStrings([]string{"test", "fieldName:float"})
+	_, err = parseArgsFromStrings([]string{"test", "fieldName:float"}, 1)
 	assert.Equal(t, err, errors.New("unknown type float"))
 }
