@@ -2,7 +2,7 @@ import { Form } from '@components/Form'
 import { render, screen } from '@testing-library/react'
 
 describe('Form', () => {
-  it('renders form with fields', () => {
+  it('renders a form with fields', () => {
     render(
       <Form>
         <Form.Field htmlFor="text" label="Field">

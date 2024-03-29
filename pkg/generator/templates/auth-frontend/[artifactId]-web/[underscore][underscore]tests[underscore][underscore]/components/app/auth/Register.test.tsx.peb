@@ -2,12 +2,22 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import { Register } from '@components/app/auth/Register'
 import { Client, Provider } from 'urql'
 import { fromValue } from 'wonka'
+import * as notifications from '@lib/notifications'
+
+jest.mock('@lib/notifications', () => ({
+  showError: jest.fn(),
+  showInfo: jest.fn(),
+}))
 
 describe('Register', () => {
   const user = {
     id: '1'{%for field in fields%},
     {{field.fieldNameCamelCase}}: {{field.fieldFrontendTestValue}}{%endfor%}
   }
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  })
 
   it('has a header', () => {
     const mockClient: Partial<Client> = {
@@ -23,7 +33,7 @@ describe('Register', () => {
     expect(screen.queryAllByText('Registration Form')).toHaveLength(1)
   })
 
-  it('renders form containing the necessary fields', () => {
+  it('renders a form containing the necessary fields', () => {
     const mockClient: Partial<Client> = {
       executeQuery: jest.fn(),
       executeMutation: jest.fn(),
@@ -58,5 +68,6 @@ describe('Register', () => {
     fireEvent.click(screen.getByText('Register'))
     await waitFor(() => expect(mockClient.executeMutation).toHaveBeenCalled())
     await waitFor(() => expect(registerFn).toHaveBeenCalled())
+    expect(notifications.showInfo).toHaveBeenCalledWith('Registration successful.')
   })
 })

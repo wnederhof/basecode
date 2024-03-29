@@ -10,6 +10,10 @@ describe('Login', () => {
     password: 'password'
   }
 
+  beforeEach(() => {
+    jest.clearAllMocks();
+  })
+
   it('has a header', () => {
     const mockClient: Partial<Client> = {
       executeQuery: jest.fn(),
@@ -24,7 +28,7 @@ describe('Login', () => {
     expect(screen.queryAllByText('Login Form')).toHaveLength(1)
   })
 
-  it('renders form containing the necessary fields', () => {
+  it('renders a form containing the necessary fields', () => {
     const mockClient: Partial<Client> = {
       executeQuery: jest.fn(),
       executeMutation: jest.fn(),

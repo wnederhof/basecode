@@ -6,16 +6,16 @@ import { fromValue } from 'wonka'
 import { {{ namePascalCase }}DetailsQuery } from '@generated/graphql'
 
 describe('{{ namePascalCase }}Details', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
-  })
-
   const {{ nameCamelCase }} = {
     id: '1',{%for field in fields%}
     {{field.fieldNameCamelCase}}: {{field.fieldFrontendTestValue}},{%endfor%}
     createdAt: '1970-01-01T00:00:00Z',
     updatedAt: '1970-02-02T00:00:00Z'
   }
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  })
 
   it('renders details when data is fetched', () => {
     const executeQuery = jest.fn()
