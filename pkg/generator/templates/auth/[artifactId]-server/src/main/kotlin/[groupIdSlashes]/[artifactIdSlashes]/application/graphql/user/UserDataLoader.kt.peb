@@ -6,17 +6,19 @@ import {{ groupId }}.{{ artifactId }}.domain.user.User
 import {{ groupId }}.{{ artifactId }}.domain.user.UserService
 import org.dataloader.MappedBatchLoader
 import java.util.concurrent.CompletableFuture.supplyAsync
+import java.util.concurrent.Executor
 
 @DgsComponent
 class UserDataLoader(
-    private val userService: UserService
+    private val userService: UserService,
+    private val executor: Executor
 ) {
 
     @DgsDataLoader(name = "userById")
     val userById = MappedBatchLoader<Int, User?> {
-        supplyAsync {
+        supplyAsync({
             userService.findByIds(it).associateBy { it.id }
-        }
+        }, executor)
     }
 {%for field in fields%}{%if field.isFieldRelational%}
     @DgsDataLoader(name = "usersBy{{ field.fieldNamePascalCase }}")

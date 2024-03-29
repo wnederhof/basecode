@@ -6,17 +6,19 @@ import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCa
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service
 import org.dataloader.MappedBatchLoader
 import java.util.concurrent.CompletableFuture.supplyAsync
+import java.util.concurrent.Executor
 
 @DgsComponent
 class {{ namePascalCase }}DataLoader(
-    private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service
+    private val {{ nameCamelCase }}Service: {{ namePascalCase }}Service,
+    private val executor: Executor
 ) {
 
     @DgsDataLoader(name = "{{ nameCamelCase }}ById")
     val {{ nameCamelCase }}ById = MappedBatchLoader<Int, {{ namePascalCase }}?> {
-        supplyAsync {
+        supplyAsync({
             {{ nameCamelCase }}Service.findByIds(it).associateBy { it.id }
-        }
+        }, executor)
     }
 {%for field in fields%}{%if field.isFieldRelational%}
     @DgsDataLoader(name = "{{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }}")
