@@ -1,4 +1,5 @@
 overwrite: true
+ignoreNoDocuments: true
 schema: "../{{ artifactId }}-server/src/main/resources/schema/*"
 documents: "src/**/*.tsx"
 generates:
