@@ -6,11 +6,11 @@ export default function {{namePluralPascalCase}}() {
   return (
     <DefaultLayout
       breadcrumbs={[
-        { label: '{{namePluralPascalCase}}', href: '/{{namePluralCamelCase}}' },
+        { label: '{{namePluralPascalCase}}', href: '/{{namePluralKebabCase}}' },
       ]}
     >
       <Actions>
-        <Actions.Action href="/{{namePluralCamelCase}}/new">New</Actions.Action>
+        <Actions.Action href="/{{namePluralKebabCase}}/new">New</Actions.Action>
       </Actions>
       <{{namePascalCase}}List />
     </DefaultLayout>

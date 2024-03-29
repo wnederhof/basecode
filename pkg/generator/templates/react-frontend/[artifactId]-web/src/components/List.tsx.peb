@@ -1,14 +1,14 @@
 import Link from 'next/link'
 import React from 'react'
 
-export interface AppListFieldProps {
-  name: string
+export interface AppListFieldProps<T> {
+  render: (value: T) => React.ReactNode
   label: string
 }
 
 export interface AppListProps<T> {
   data?: T[]
-  fields: AppListFieldProps[]
+  fields: (AppListFieldProps<T> | undefined)[]
   actions: (values: T) => AppListItemActionProps
 }
 
@@ -27,8 +27,8 @@ export const List = <T,>({
   <table {...props}>
     <thead>
       <tr>
-        {fields.map(field => (
-          <th key={field.name}>{field.label}</th>
+        {fields.filter(field => field).map((field, i) => (
+          <th key={i}>{field!.label}</th>
         ))}
       </tr>
     </thead>
@@ -37,13 +37,15 @@ export const List = <T,>({
         const actions = actionsFn(values)
         return (
           <tr key={i}>
-            {fields.map((field) => (
-              <td key={field.name}>{'' + values[field.name as keyof T]}</td>
+            {fields.filter(field => field).map((field, i) => (
+              <td key={i}>{field!.render(values)}</td>
             ))}
             <td>
               {actions.showHref && <Link href={actions.showHref}>Show</Link>}
               {actions.editHref && <Link href={actions.editHref}>Edit</Link>}
-              {actions.onDeleteClick && <button onClick={actions.onDeleteClick}>Delete</button>}
+              {actions.onDeleteClick && (
+                <button onClick={actions.onDeleteClick}>Delete</button>
+              )}
             </td>
           </tr>
         )

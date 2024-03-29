@@ -5,8 +5,8 @@ export default function New{{namePascalCase}}() {
   return (
     <DefaultLayout
       breadcrumbs={[
-        { label: '{{namePluralPascalCase}}', href: '/{{namePluralCamelCase}}' },
-        { label: 'New', href: '/{{namePluralCamelCase}}/new' },
+        { label: '{{namePluralPascalCase}}', href: '/{{namePluralKebabCase}}' },
+        { label: 'New', href: '/{{namePluralKebabCase}}/new' },
       ]}
     >
       <{{ namePascalCase }}Form

@@ -67,7 +67,7 @@ export function {{ namePascalCase }}List({%if hasRelations%}props: {{ namePascal
       <Header level={1}>List of {{ namePluralPascalCase }}</Header>
       <List
         fields={[{%for field in fields%}
-          { name: '{{ field.fieldNameCamelCase }}', label: '{{ field.fieldNamePascalCase }}' },{%endfor%}
+          {%if field.isFieldRelational%}!props.{{ field.fieldNameCamelCase }} ? {%endif%}{ render: values => values.{{ field.fieldNameCamelCase }}, label: '{{ field.fieldNamePascalCase }}' }{%if field.isFieldRelational%} : undefined {%endif%},{%endfor%}
         ]}
         data={data?.{{namePluralCamelCase}}{{ "}" }}
         actions={values => ({

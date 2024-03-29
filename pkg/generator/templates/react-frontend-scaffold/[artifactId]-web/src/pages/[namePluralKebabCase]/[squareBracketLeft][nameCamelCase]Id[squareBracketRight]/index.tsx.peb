@@ -8,7 +8,7 @@ export default function Show{{namePascalCase}}() {
   return (
     <DefaultLayout
       breadcrumbs={[
-        { label: '{{namePluralPascalCase}}', href: '/{{namePluralCamelCase}}' },
+        { label: '{{namePluralPascalCase}}', href: '/{{namePluralKebabCase}}' },
         { label: 'Selected {{ namePascalCase }}', href: `/{{ namePluralKebabCase }}/${{ "{" }}{{ nameCamelCase }}Id{{ "}" }}` },
       ]}
     >

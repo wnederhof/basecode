@@ -5,7 +5,7 @@ describe('List', () => {
   it('renders the provided list', () => {
     render(
       <List
-        fields={[{ name: 'field', label: 'Field' }]}
+        fields={[{ render: values => values.field, label: 'Field' }]}
         data={[{ field: 'Value' }]}
         actions={() => ({})}
       />
@@ -17,7 +17,7 @@ describe('List', () => {
   it('does not render actions if not provided', () => {
     render(
       <List
-        fields={[{ name: 'field', label: 'Field' }]}
+        fields={[{ render: values => values.field, label: 'Field' }]}
         data={[{ field: 'Value' }]}
         actions={() => ({})}
       />
@@ -31,7 +31,7 @@ describe('List', () => {
     let clicked = false
     render(
       <List
-        fields={[{ name: 'field', label: 'Field' }]}
+        fields={[{ render: values => values.field, label: 'Field' }]}
         data={[{ field: 'Value' }]}
         actions={() => ({
           showHref: 'https://www.example1.com',
