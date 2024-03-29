@@ -3,6 +3,7 @@ package {{ groupId }}.{{ artifactId }}.application.graphql.user
 import com.netflix.graphql.dgs.DgsQueryExecutor
 import com.netflix.graphql.dgs.autoconfig.DgsAutoConfiguration
 import com.netflix.graphql.dgs.autoconfig.DgsExtendedScalarsAutoConfiguration
+import {{ groupId }}.{{ artifactId }}.application.FakeSecurityConfig
 import org.mockito.kotlin.any
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever{%for field in fields%}{%if field.isFieldRelational%}
@@ -20,6 +21,7 @@ import org.mockito.ArgumentMatchers.anyInt
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
+import org.springframework.context.annotation.Import
 
 @SpringBootTest(
     classes = [
@@ -31,6 +33,7 @@ import org.springframework.boot.test.mock.mockito.MockBean
         UserDataLoader::class,
     ]
 )
+@Import(FakeSecurityConfig::class)
 class UserResolverTests {
 
     @Autowired
@@ -80,8 +83,8 @@ class UserResolverTests {
         whenever(userService.update(anyInt(), any()))
             .thenReturn(USER_FIXTURE_WITH_ID_1)
 
-        val updateUserInput = mapOf({%for field in fields%}
-            "{{ field.fieldNameCamelCase }}" to {{ field.fieldKotlinTestDummyValue }},{%endfor%}
+        val updateUserInput = mapOf({%for field in fields%}{%if field.fieldNameCamelCase != "username"%}
+            "{{ field.fieldNameCamelCase }}" to {{ field.fieldKotlinTestDummyValue }},{%endif%}{%endfor%}
         )
 
         val result = dgsQueryExecutor.executeAndExtractJsonPath<String>(

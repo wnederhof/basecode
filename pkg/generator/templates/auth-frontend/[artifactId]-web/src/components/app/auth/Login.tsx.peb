@@ -42,7 +42,7 @@ export function Login(props: LoginProps) {
       .catch((reason) => alert(`Logging in failed. Reason: ${reason}`))
   }
   const formik = useFormik({
-    initialValues:
+    initialValues: {
       username: '',
       password: ''
     },
@@ -55,10 +55,10 @@ export function Login(props: LoginProps) {
       <Header level={1}>Login Form</Header>
       <Form role="form" onSubmit={formik.handleSubmit}>
         <Form.Field htmlFor="username" label="Username">
-          <Form.Text name="username" onChange={formik.handleChange} value={formik.values.username} }} />
+          <Form.Text name="username" onChange={formik.handleChange} value={formik.values.username} />
         </Form.Field>
         <Form.Field htmlFor="password" label="Password">
-          <Form.Password name="password" onChange={formik.handleChange} value={formik.values.password} }} />
+          <Form.Password name="password" onChange={formik.handleChange} value={formik.values.password} />
         </Form.Field>
         <Form.SubmitButton>Login</Form.SubmitButton>
         {props.onCancel && <Form.CancelButton onClick={() => props.onCancel?.()}>Cancel</Form.CancelButton>}

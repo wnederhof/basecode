@@ -69,7 +69,7 @@ export function Register(props: RegisterProps) {
 
   return (
     <>
-      <Header level={1}>Register</Header>
+      <Header level={1}>Registration Form</Header>
       <Form role="form" onSubmit={formik.handleSubmit}>{%for field in fields%}
 {%if field.fieldType == "RELATIONAL" %}{props.{{ field.fieldNameCamelCase }} ? <></> : {%endif%}<Form.Field htmlFor="{{ field.fieldNameCamelCase }}" label="{{ field.fieldNamePascalCase }}">{%if field.fieldType == "STRING" or field.fieldType == "NULL_STRING" %}
         <Form.Text name="{{ field.fieldNameCamelCase }}" onChange={formik.handleChange} value={formik.values.{{ field.fieldNameCamelCase }}{{ "}" }} />
