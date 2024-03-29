@@ -2,6 +2,7 @@ package generator
 
 import (
 	"embed"
+	"fmt"
 	"gopkg.in/yaml.v3"
 	"os"
 	"strings"
@@ -134,7 +135,12 @@ func GenerateBackendAuthentication(attributes []ModelAttribute, overwrite bool, 
 		if err != nil {
 			return err
 		}
+		println("Please remove the spring-boot-starter-security dependency manually.")
 		return GenerateModelTemplate("templates/auth-removal", model, overwrite, false)
+	}
+	err := addDependency("org.springframework.boot", "spring-boot-starter-security")
+	if err != nil {
+		return err
 	}
 	return GenerateModelTemplate("templates/auth", model, overwrite, false)
 }
@@ -289,5 +295,38 @@ func deleteFileFromTemplate(targetFileTemplate string, context map[string]interf
 		println("[D] " + targetFile)
 		return os.RemoveAll(targetFile)
 	}
+	return nil
+}
+
+func addDependency(groupId string, artifactId string) error {
+	properties, err := readProperties()
+	if err != nil {
+		return err
+	}
+	context := make(map[string]interface{})
+	provideProjectContextAttributes(context, properties)
+	provideHelperContextAttributes(context)
+
+	targetFile := substitutePathParamsAndRemovePeb("./[artifactId]-server/pom.xml", context)
+	contents, err := os.ReadFile(targetFile)
+	if err != nil {
+		return err
+	}
+
+	dependency := `
+		<dependency>
+			<groupId>%s</groupId>
+			<artifactId>%s</artifactId>
+        </dependency>`
+
+	dependency = fmt.Sprintf(dependency, groupId, artifactId)
+
+	contentsStr := string(contents)
+	if !strings.Contains(contentsStr, dependency) {
+		contentsStr = strings.ReplaceAll(contentsStr, "\n    </dependencies>", dependency+"\n    </dependencies>")
+		println(fmt.Sprintf("Adding %s:%s to pom...", groupId, artifactId))
+		return os.WriteFile(targetFile, []byte(contentsStr), os.FileMode.Perm(0644))
+	}
+	println(fmt.Sprintf("Pom already contains %s:%s, skipping...", groupId, artifactId))
 	return nil
 }

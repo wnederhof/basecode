@@ -5,8 +5,9 @@ import { fromValue } from 'wonka'
 
 describe('Login', () => {
   const user = {
-    id: '1'{%for field in fields%},
-    {{field.fieldNameCamelCase}}: {{field.fieldFrontendTestValue}}{%endfor%}
+    id: '1',
+    username: 'user',
+    password: 'password'
   }
 
   it('has a header', () => {
@@ -33,8 +34,9 @@ describe('Login', () => {
       <Provider value={mockClient as Client}>
         <Login onLogin={jest.fn()} onCancel={jest.fn()} />
       </Provider>
-    ){%for field in fields%}
-    expect(screen.queryByText('{{ field.fieldNamePascalCase }}')).not.toBeNull(){%endfor%}
+    )
+    expect(screen.queryByText('Username')).not.toBeNull()
+    expect(screen.queryByText('Password')).not.toBeNull()
   })
 
   it('calls a mutation if Login is clicked', async () => {

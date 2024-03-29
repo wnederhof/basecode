@@ -38,6 +38,7 @@ func TestGeneratedCodeBuilds(t *testing.T) {
 	_ = cli.Run([]string{"basecode", "generate", "frontend"})
 	_ = cli.Run([]string{"basecode", "generate", "scaffold", "Post", "title", "description:text"})
 	_ = cli.Run([]string{"basecode", "generate", "scaffold", "Comment", "postId:Post", "author", "content:text"})
+	_ = cli.Run([]string{"basecode", "generate", "auth"})
 
 	_ = os.Chdir(testDir + "/testapp/testapp-server")
 	cmd := exec.Command("mvn", "clean", "verify")
