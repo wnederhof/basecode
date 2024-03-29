@@ -56,7 +56,7 @@ describe('Register', () => {
       </Provider>
     )
     fireEvent.click(screen.getByText('Register'))
-    await waitFor(() => expect(mockClient.executeMutation).toBeCalled())
-    await waitFor(() => expect(registerFn).toBeCalled())
+    await waitFor(() => expect(mockClient.executeMutation).toHaveBeenCalled())
+    await waitFor(() => expect(registerFn).toHaveBeenCalled())
   })
 })

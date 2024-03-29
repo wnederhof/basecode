@@ -19,17 +19,16 @@ export function {{ namePascalCase }}List({%if hasRelations%}props: {{ namePascal
   `)
 
   const handleDelete = async (id: string) => {
-    if (!await askConfirmation('Are you sure you want to delete {{ namePascalCase }}?')) {
-      return
-    }
-    try {
-      await executeDeleteMutation(
-        { id },
-        { additionalTypenames: ['{{ namePascalCase }}'] }
-      )
-      showInfo('{{ namePascalCase }} deleted.')
-    } catch(error) {
-      showError(error)
+    if (await askConfirmation('Are you sure you want to delete {{ namePascalCase }}?')) {
+      try {
+        await executeDeleteMutation(
+          { id },
+          { additionalTypenames: ['{{ namePascalCase }}'] }
+        )
+        showInfo('{{ namePascalCase }} deleted.')
+      } catch(error) {
+        showError(error)
+      }
     }
   }
 

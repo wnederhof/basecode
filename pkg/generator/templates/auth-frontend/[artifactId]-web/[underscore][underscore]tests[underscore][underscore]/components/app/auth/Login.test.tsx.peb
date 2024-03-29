@@ -62,7 +62,7 @@ describe('Login', () => {
       </Provider>
     )
     fireEvent.click(screen.getByText('Login'))
-    await waitFor(() => expect(mockClient.executeMutation).toBeCalled())
-    await waitFor(() => expect(loginFn).toBeCalled())
+    await waitFor(() => expect(mockClient.executeMutation).toHaveBeenCalled())
+    await waitFor(() => expect(loginFn).toHaveBeenCalled())
   })
 })

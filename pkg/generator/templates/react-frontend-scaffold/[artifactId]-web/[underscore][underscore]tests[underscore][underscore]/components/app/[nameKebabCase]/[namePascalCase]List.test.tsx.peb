@@ -4,9 +4,7 @@ import { Client, Provider } from 'urql'
 import { act } from 'react-dom/test-utils'
 import { fromValue } from 'wonka'
 import { {{ namePascalCase }}ListQuery } from '@generated/graphql'
-import * as notifications from "@lib/notifications";
-
-const askConfirmation = jest.fn()
+import * as notifications from '@lib/notifications'
 
 jest.mock('@lib/notifications', () => ({
   showError: jest.fn(),
@@ -15,6 +13,10 @@ jest.mock('@lib/notifications', () => ({
 }))
 
 describe('{{ namePascalCase }}List', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  })
+
   const {{ nameCamelCase }} = {
     id: '1'{%for field in fields%},
     {{field.fieldNameCamelCase}}: {{field.fieldFrontendTestValue}}{%endfor%}
@@ -123,7 +125,8 @@ describe('{{ namePascalCase }}List', () => {
         )
       })
     })
-    expect(mockClient.executeMutation).toBeCalled()
+    expect(mockClient.executeMutation).toHaveBeenCalled()
+    expect(notifications.showInfo).toHaveBeenCalledWith('{{ namePascalCase }} deleted.')
   })
 
   it('does not call mutation when Delete is clicked and not confirmed', async () => {
@@ -165,6 +168,7 @@ describe('{{ namePascalCase }}List', () => {
         )
       })
     })
-    expect(mockClient.executeMutation).not.toBeCalled()
+    expect(mockClient.executeMutation).not.toHaveBeenCalled()
+    expect(notifications.showInfo).not.toHaveBeenCalled()
   })
 })
