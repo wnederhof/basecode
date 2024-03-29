@@ -1,3 +1,4 @@
+import { showError } from '@lib/notifications'
 import { Header } from '@components/Header'
 import { gql, OperationResult, useMutation } from 'urql'
 import { Mutation } from '@generated/graphql'
@@ -25,21 +26,25 @@ export function Login(props: LoginProps) {
 
   function handleMutationResult(result: OperationResult<Mutation>) {
     if (result.error) {
-      alert(`An error occurred: ${result.error.message}`)
+      showError(result.error)
     }
     if (!result.data?.login) {
-      alert('Could not login.')
+      showError('Could not login.')
       return false
     }
     return !result.error
   }
 
-  const doSubmit = (
+  const doSubmit = async (
     formData: LoginFormData,
   ) => {
-    executeLoginMutation({ input: formData })
-      .then(result => handleMutationResult(result) && props.onLogin?.())
-      .catch((reason) => alert(`Logging in failed. Reason: ${reason}`))
+    try {
+      const result = await executeLoginMutation({ input: formData })
+      handleMutationResult(result)
+      props.onLogin?.()
+    } catch(error) {
+      showError(error)
+    }
   }
   const formik = useFormik({
     initialValues: {

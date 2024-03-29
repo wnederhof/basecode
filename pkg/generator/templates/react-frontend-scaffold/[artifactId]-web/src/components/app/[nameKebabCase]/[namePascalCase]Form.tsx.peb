@@ -1,3 +1,4 @@
+import { showError, showInfo } from '@lib/notifications'
 import { Header } from '@components/Header'
 import { gql, OperationResult, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
@@ -37,26 +38,29 @@ export function {{ namePascalCase }}Form(props: {{ namePascalCase }}FormProps) {
 
   function handleMutationResult(result: OperationResult<Mutation>) {
     if (result.error) {
-      alert(`An error occurred: ${result.error.message}`)
+      throw result.error.message
     }
-    return !result.error
   }
 
-  const doSubmit = (
+  const doSubmit = async (
     formData: {{ namePascalCase }}FormData
   ) => {
-    if (props.id) {
-      executeUpdateMutation({ id: props.id, input: formData })
-        .then(result => handleMutationResult(result) && props.onSave?.())
-        .catch((reason) => alert(`Updating {{ nameCamelCase }} failed. Reason: ${reason}`))
-    } else {{ "{" }}{%if hasRelations%}
-      const formDataWithRelations = { ...formData }{%endif%}{%for field in fields%}{%if field.isFieldRelational%}
-      if (props.{{ field.fieldNameCamelCase }}) {
-        formData{%if hasRelations%}WithRelations{%endif%}.{{  field.fieldNameCamelCase }} = props.{{ field.fieldNameCamelCase }}
-      }{%endif%}{%endfor%}
-      executeCreateMutation({ input: formData{%if hasRelations%}WithRelations{%endif%} })
-        .then(result => handleMutationResult(result) && props.onSave?.())
-        .catch((reason) => alert(`Creating {{ nameCamelCase }} failed. Reason: ${reason}`))
+    try {
+      let result
+      if (props.id) {
+        result = await executeUpdateMutation({ id: props.id, input: formData })
+      } else {{ "{" }}{%if hasRelations%}
+        const formDataWithRelations = { ...formData }{%endif%}{%for field in fields%}{%if field.isFieldRelational%}
+        if (props.{{ field.fieldNameCamelCase }}) {
+          formData{%if hasRelations%}WithRelations{%endif%}.{{  field.fieldNameCamelCase }} = props.{{ field.fieldNameCamelCase }}
+        }{%endif%}{%endfor%}
+        result = await executeCreateMutation({ input: formData{%if hasRelations%}WithRelations{%endif%} })
+      }
+      handleMutationResult(result)
+      showInfo('Successfully saved.')
+      props.onSave?.()
+    } catch(error) {
+      showError(error)
     }
   }
 

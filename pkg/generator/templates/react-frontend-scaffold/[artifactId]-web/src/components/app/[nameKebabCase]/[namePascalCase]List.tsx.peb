@@ -1,3 +1,4 @@
+import { askConfirmation, showError, showInfo } from '@lib/notifications'
 import { Header } from '@components/Header'
 import { gql, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
@@ -17,12 +18,19 @@ export function {{ namePascalCase }}List({%if hasRelations%}props: {{ namePascal
     }
   `)
 
-  const handleDelete = (id: string) => {
-    confirm('Are you sure you want to delete {{ namePascalCase }}?') &&
-      executeDeleteMutation(
+  const handleDelete = async (id: string) => {
+    if (!await askConfirmation('Are you sure you want to delete {{ namePascalCase }}?')) {
+      return
+    }
+    try {
+      await executeDeleteMutation(
         { id },
         { additionalTypenames: ['{{ namePascalCase }}'] }
-      ).catch((reason) => alert(`Deleting {{ namePascalCase }} failed. Reason: ${reason}`))
+      )
+      showInfo('{{ namePascalCase }} deleted.')
+    } catch(error) {
+      showError(error)
+    }
   }
 
   const [{ data, error, fetching }] = useQuery<Query>({

@@ -1,0 +1,11 @@
+export const showError = (message: any) => {
+  alert(message)
+}
+
+export const showInfo = (message: any) => {
+  alert(message)
+}
+
+export const askConfirmation = async (message: string): Promise<boolean> => {
+  return confirm(message)
+}

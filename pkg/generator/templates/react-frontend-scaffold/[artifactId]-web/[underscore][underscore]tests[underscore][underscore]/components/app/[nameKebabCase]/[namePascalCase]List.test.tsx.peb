@@ -4,6 +4,15 @@ import { Client, Provider } from 'urql'
 import { act } from 'react-dom/test-utils'
 import { fromValue } from 'wonka'
 import { {{ namePascalCase }}ListQuery } from '@generated/graphql'
+import * as notifications from "@lib/notifications";
+
+const askConfirmation = jest.fn()
+
+jest.mock('@lib/notifications', () => ({
+  showError: jest.fn(),
+  showInfo: jest.fn(),
+  askConfirmation: jest.fn(),
+}))
 
 describe('{{ namePascalCase }}List', () => {
   const {{ nameCamelCase }} = {
@@ -76,7 +85,7 @@ describe('{{ namePascalCase }}List', () => {
   })
 
   it('calls mutation when Delete is clicked and confirmed', async () => {
-    jest.spyOn(window, 'confirm').mockReturnValueOnce(true)
+    jest.spyOn(notifications, 'askConfirmation').mockReturnValueOnce(Promise.resolve(true))
     const executeQuery = jest.fn()
     const executeMutation = jest.fn()
     executeQuery.mockReturnValue(
@@ -118,7 +127,7 @@ describe('{{ namePascalCase }}List', () => {
   })
 
   it('does not call mutation when Delete is clicked and not confirmed', async () => {
-    jest.spyOn(window, 'confirm').mockReturnValueOnce(false)
+    jest.spyOn(notifications, 'askConfirmation').mockReturnValueOnce(Promise.resolve(false))
     const executeQuery = jest.fn()
     const executeMutation = jest.fn()
     executeQuery.mockReturnValue(

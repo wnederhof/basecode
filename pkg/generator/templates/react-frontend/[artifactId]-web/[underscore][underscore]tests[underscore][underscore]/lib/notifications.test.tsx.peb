@@ -1,0 +1,31 @@
+import { showInfo, showError, askConfirmation } from '@lib/notifications'
+import { CombinedError } from 'urql'
+
+describe('notifications', () => {
+  beforeEach(() => {
+    jest.spyOn(window, 'alert').mockImplementation(() => {})
+    jest.spyOn(window, 'confirm').mockImplementation(() => true)
+  })
+
+  describe('showInfo', () => {
+    it('shows the provided info message', () => {
+      const actual = showInfo('test')
+      expect(window.alert).toHaveBeenCalledWith('test')
+    })
+  })
+
+  describe('showError', () => {
+    it('shows the provided error message', () => {
+      const actual = showError('test')
+      expect(window.alert).toHaveBeenCalledWith('test')
+    })
+  })
+
+  describe('askConfirmation', () => {
+    it('confirms the provided request', () => {
+      const actual = askConfirmation('test')
+      expect(actual).toBeTruthy()
+      expect(window.confirm).toHaveBeenCalledWith('test')
+    })
+  })
+})

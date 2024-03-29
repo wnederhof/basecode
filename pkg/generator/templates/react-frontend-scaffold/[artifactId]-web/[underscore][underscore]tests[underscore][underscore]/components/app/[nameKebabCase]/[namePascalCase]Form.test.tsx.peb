@@ -4,6 +4,12 @@ import { Client, Provider } from 'urql'
 import { fromValue } from 'wonka'
 import { {{ namePascalCase }}FormQuery, Update{{ namePascalCase }}Mutation, Create{{ namePascalCase }}Mutation } from '@generated/graphql'
 
+jest.mock("@lib/notifications", () => ({
+  showError: jest.fn(),
+  showInfo: jest.fn(),
+  askConfirmation: jest.fn(() => true),
+}))
+
 describe('{{ namePascalCase }}Form', () => {
   const {{ nameCamelCase }} = {
     id: '1'{%for field in fields%},
