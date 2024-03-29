@@ -1,5 +1,4 @@
 import { showInfo, showError, askConfirmation } from '@lib/notifications'
-import { CombinedError } from 'urql'
 
 describe('notifications', () => {
   beforeEach(() => {
@@ -9,14 +8,14 @@ describe('notifications', () => {
 
   describe('showInfo', () => {
     it('shows the provided info message', () => {
-      const actual = showInfo('test')
+      showInfo('test')
       expect(window.alert).toHaveBeenCalledWith('test')
     })
   })
 
   describe('showError', () => {
     it('shows the provided error message', () => {
-      const actual = showError('test')
+      showError('test')
       expect(window.alert).toHaveBeenCalledWith('test')
     })
   })

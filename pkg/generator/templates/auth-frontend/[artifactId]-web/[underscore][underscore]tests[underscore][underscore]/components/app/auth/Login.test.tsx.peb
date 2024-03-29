@@ -4,12 +4,6 @@ import { Client, Provider } from 'urql'
 import { fromValue } from 'wonka'
 
 describe('Login', () => {
-  const user = {
-    id: '1',
-    username: 'user',
-    password: 'password'
-  }
-
   beforeEach(() => {
     jest.clearAllMocks();
   })
