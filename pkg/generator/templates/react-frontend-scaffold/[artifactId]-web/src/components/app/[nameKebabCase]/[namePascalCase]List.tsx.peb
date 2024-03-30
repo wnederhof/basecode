@@ -8,7 +8,7 @@ import { Loader } from '@components/Loader'
 import { List } from '@components/List'
 {%if hasRelations%}
 export interface {{ namePascalCase }}ListProps {{ "{" }}{%for field in fields%}{%if field.isFieldRelational%}
-  {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
+  {{ field.fieldNameCamelCase }}?: string | number{%endif%}{%endfor%}
 }
 {%endif%}
 export function {{ namePascalCase }}List({%if hasRelations%}props: {{ namePascalCase }}ListProps{%endif%}) {

@@ -10,7 +10,7 @@ import { Form } from '@components/Form'
 
 export interface {{ namePascalCase }}FormProps {
   id?: string | number{%for field in fields%}{%if field.isFieldRelational%}
-  {{ field.fieldNameCamelCase }}?: string{%endif%}{%endfor%}
+  {{ field.fieldNameCamelCase }}?: string | number{%endif%}{%endfor%}
   onSave?: () => void
   onCancel?: () => void
 }
