@@ -2,7 +2,7 @@
 
 Basecode is a full-stack platform for creating web apps using Kotlin, Spring Boot, GraphQL, React (NextJS) and
 Postgres. The platform consists of several generators to generate the basic structure of web applications, based on
-industry standard technologies. The goal of Basecode is to provide its users with a productive tool to
+often used technologies within IT. The goal of Basecode is to provide its users with a productive tool to
 create lean, decoupled code with a solid foundation.
 
 Basecode is fully open source ([MIT](LICENSE.md)).
@@ -26,10 +26,6 @@ Top reasons to use Basecode:
   few lines of code. As soon as you need a feature, you can easily add it. If you don't need
   Basecode, however, it completely gets out of your way.
 
-An example of a product that was built using Basecode is WireQuery, for which Basecode was
-originally designed. While WireQuery took about a year until its first release, it would
-have likely taken at least two years to build if it wasn't for Basecode.
-
 ## Installation
 
 The following software needs to be installed on your machine before you can use Basecode effectively:
@@ -37,7 +33,7 @@ The following software needs to be installed on your machine before you can use 
 - Go 1.16 or later
 - JDK 21 or later
 - Node 18 or later
-- Docker
+- Docker (for setting up a development database)
 
 Install Basecode using the following command:
 
@@ -73,8 +69,9 @@ Using `basecode generate`, you can generate code based using one of the followin
    frontend, fe            Frontend Support
    frontend:scaffold, fes  Frontend Scaffold (Generate frontend support first)
    scaffold, s             Backend and Frontend Scaffold (Generate frontend support first)
-   backend:auth, ba        Backend Authentication - EXPERIMENTAL
-   frontend:auth, fa       Frontend Authentication - EXPERIMENTAL
+   backend:auth, ba        Backend Authentication
+   frontend:auth, fa       Frontend Authentication
+   auth, fa                Authentication
 ```
 
 For more information about the generators, run:
