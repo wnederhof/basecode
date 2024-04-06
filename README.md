@@ -141,6 +141,10 @@ at: `http://localhost:8080/graphiql`.
 
 To start the frontend, make sure your artifacts are installed using `npm install` and run `npm run dev`.
 
+## Community
+
+- [Discord Channel](https://discord.gg/KgcYdpEZ)
+
 ## Credits
 
 - The `new` template is based on the code generated using Spring Boot Initializr.
