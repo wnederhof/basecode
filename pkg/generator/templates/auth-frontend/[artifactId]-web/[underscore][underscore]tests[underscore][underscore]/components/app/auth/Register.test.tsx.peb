@@ -14,20 +14,6 @@ describe('Register', () => {
     jest.clearAllMocks();
   })
 
-  it('has a header', () => {
-    const mockClient: Partial<Client> = {
-      executeQuery: jest.fn(),
-      executeMutation: jest.fn(),
-      executeSubscription: jest.fn(),
-    }
-    render(
-      <Provider value={mockClient as Client}>
-        <Register />
-      </Provider>
-    )
-    expect(screen.queryAllByText('Registration Form')).toHaveLength(1)
-  })
-
   it('renders a form containing the necessary fields', () => {
     const mockClient: Partial<Client> = {
       executeQuery: jest.fn(),

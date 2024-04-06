@@ -5,7 +5,12 @@ PostgreSQL. The platform consists of several generators to generate the basic st
 industry standard technologies. The goal of Basecode is to provide its users with a productive tool to
 create lean, decoupled code with a solid foundation.
 
-Basecode is fully open source and community-driven ([MIT](LICENSE.md)).
+Basecode is fully open source ([MIT](LICENSE.md)).
+
+⭐ If you like Basecode, please consider giving it a star. Your support can help the project grow and deliver exciting
+features.
+
+<a href="https://www.youtube.com/watch?v=rx9xL0nhot8"><img src="video-button.png"></a>
 
 Top reasons to use Basecode:
 

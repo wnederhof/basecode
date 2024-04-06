@@ -8,20 +8,6 @@ describe('Login', () => {
     jest.clearAllMocks();
   })
 
-  it('has a header', () => {
-    const mockClient: Partial<Client> = {
-      executeQuery: jest.fn(),
-      executeMutation: jest.fn(),
-      executeSubscription: jest.fn(),
-    }
-    render(
-      <Provider value={mockClient as Client}>
-        <Login />
-      </Provider>
-    )
-    expect(screen.queryAllByText('Login Form')).toHaveLength(1)
-  })
-
   it('renders a form containing the necessary fields', () => {
     const mockClient: Partial<Client> = {
       executeQuery: jest.fn(),

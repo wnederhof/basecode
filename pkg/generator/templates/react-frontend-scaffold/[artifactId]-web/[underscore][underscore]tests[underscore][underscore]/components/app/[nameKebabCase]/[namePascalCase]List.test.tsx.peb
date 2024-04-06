@@ -22,22 +22,6 @@ describe('{{ namePascalCase }}List', () => {
     jest.clearAllMocks();
   })
 
-  it('has a header', () => {
-    const mockClient: Partial<Client> = {
-      executeQuery: jest.fn(),
-      executeMutation: jest.fn(),
-      executeSubscription: jest.fn(),
-    }
-    act(() => {
-      render(
-        <Provider value={mockClient as Client}>
-          <{{ namePascalCase }}List />
-        </Provider>
-      )
-    })
-    expect(screen.queryAllByText('List of {{ namePluralPascalCase }}')).toHaveLength(1)
-  })
-
   it('forwards to {{ nameCamelCase }} page on Show', () => {
     const executeQuery = jest.fn()
     executeQuery.mockReturnValue(

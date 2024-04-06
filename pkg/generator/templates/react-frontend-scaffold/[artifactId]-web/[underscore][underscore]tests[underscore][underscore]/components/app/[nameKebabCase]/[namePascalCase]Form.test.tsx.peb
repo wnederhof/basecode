@@ -20,7 +20,7 @@ describe('{{ namePascalCase }}Form', () => {
     jest.clearAllMocks();
   })
 
-  it('has an appropriate header if no id is provided', () => {
+  it('has a New header if no id is provided', () => {
     const mockClient: Partial<Client> = {
       executeQuery: jest.fn(),
       executeMutation: jest.fn(),
@@ -34,7 +34,7 @@ describe('{{ namePascalCase }}Form', () => {
     expect(screen.queryAllByText('New {{ namePascalCase }}')).toHaveLength(1)
   })
 
-  it('has an appropriate header if an id is provided', () => {
+  it('has an Edit header if an id is provided', () => {
     const executeQuery = jest.fn()
     executeQuery.mockReturnValue(
       fromValue<{ data: {{ namePascalCase }}FormQuery }>({
