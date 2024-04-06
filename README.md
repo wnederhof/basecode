@@ -1,7 +1,7 @@
 # Basecode - The fastest way to create a web app
 
 Basecode is a full-stack platform for creating web apps using Kotlin, Spring Boot, GraphQL, React (NextJS) and
-PostgreSQL. The platform consists of several generators to generate the basic structure of web applications, based on
+Postgres. The platform consists of several generators to generate the basic structure of web applications, based on
 industry standard technologies. The goal of Basecode is to provide its users with a productive tool to
 create lean, decoupled code with a solid foundation.
 
@@ -141,9 +141,16 @@ at: `http://localhost:8080/graphiql`.
 
 To start the frontend, make sure your artifacts are installed using `npm install` and run `npm run dev`.
 
-## Community
+## Tips
+
+- If you want to *update* an existing scaffolding, make start with an empty commit. This way, you can easily see
+  overwrite existing code using the `-o` (overwrite) flag and use the Git diff to determine what code you want to keep
+  and what code you want to overwrite.
+
+## Resources
 
 - [Discord Channel](https://discord.gg/KgcYdpEZ)
+- [WireQuery](https://github.com/wirequery/wirequery) - A real world app created using Basecode
 
 ## Credits
 
