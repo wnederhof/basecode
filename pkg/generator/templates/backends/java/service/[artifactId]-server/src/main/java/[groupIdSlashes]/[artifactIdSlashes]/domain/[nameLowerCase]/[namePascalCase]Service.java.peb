@@ -2,7 +2,7 @@ package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }};
 
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Event.*;{%for field in fields%}{%if field.isFieldRelational%}
 import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service;{%endif%}{%endfor%}
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NonNull;
@@ -22,15 +22,15 @@ import static java.util.Collections.singletonList;
 
 @Service
 @Transactional
-@AllArgsContructor
-class {{ namePascalCase }}Service {
-    private {{ namePascalCase }}Repository {{ nameCamelCase }}Repository;{%for field in fields%}{%if field.isFieldRelational%}
-    private {{ field.fieldTypePascalCase }}Service {{ field.fieldTypeCamelCase }}Service;{%endif%}{%endfor%}
-    private ApplicationEventPublisher publisher;
+@RequiredArgsConstructor
+public class {{ namePascalCase }}Service {
+    private final {{ namePascalCase }}Repository {{ nameCamelCase }}Repository;{%for field in fields%}{%if field.isFieldRelational%}
+    private final {{ field.fieldTypePascalCase }}Service {{ field.fieldTypeCamelCase }}Service;{%endif%}{%endfor%}
+    private final ApplicationEventPublisher publisher;
 
     public Optional<{{ namePascalCase }}> findById(int id) {
         return {{ nameCamelCase }}Repository.findById(id)
-            .map(this::toDomainObject)
+            .map(this::toDomainObject);
     }
 
     public List<{{ namePascalCase }}> findByIds(Iterable<Integer> ids) {
@@ -46,13 +46,13 @@ class {{ namePascalCase }}Service {
             .map(this::toDomainObject)
             .collect(Collectors.toList());
     }
-{%endif%}{%endfor%}
+{%endif%}{%endfor%}{%if hasRelations%}
     public List<{{ namePascalCase }}> findAll() {
         return findAll(null);
     }
-
+{%endif%}
     public List<{{ namePascalCase }}> findAll({%if hasRelations%}{{ namePascalCase }}FilterInput filterInput{%endif%}) { {%for field in fields%}{%if field.isFieldRelational%}
-        if (filterInput.get{{ field.fieldPascalCamelCase }}() != null) {
+        if (filterInput.get{{ field.fieldNamePascalCase }}() != null) {
             return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}(listOf(filterInput.{{ field.fieldNameCamelCase }}))
                     .map(this::toDomainObject)
                     .collect(Collectors.toList());
@@ -64,19 +64,19 @@ class {{ namePascalCase }}Service {
     }
 
     public {{ namePascalCase }} create(Create{{ namePascalCase }}Input input) { {%for field in fields%}{%if field.isFieldRelational%}
-        Objects.requireNonNull({{ field.fieldTypeCamelCase }}Service.findById(input.get{{ field.fieldPascalCamelCase }}()).getOrElse(null));
+        Objects.requireNonNull({{ field.fieldTypeCamelCase }}Service.findById(input.get{{ field.fieldNamePascalCase }}()).getOrElse(null));
 {%endif%}{%endfor%}
         var {{ nameCamelCase }}Entity = {{ namePascalCase }}Entity.builder(){%for field in fields%}
-                .{{field.fieldNameCamelCase}}(input.get{{field.fieldPascalCamelCase}}()){%endfor%}
+                .{{field.fieldNameCamelCase}}(input.get{{field.fieldNamePascalCase}}()){%endfor%}
                 .build();
-        var {{ nameCamelCase }} = toDomainObject({{ nameCamelCase }}Repository.save({{ nameCamelCase }}Entity))
-        publisher.publishEvent({{ namePluralPascalCase }}CreatedEvent(this, singletonList({{ nameCamelCase }})))
-        return {{ nameCamelCase }}
+        var {{ nameCamelCase }} = toDomainObject({{ nameCamelCase }}Repository.save({{ nameCamelCase }}Entity));
+        publisher.publishEvent(new {{ namePluralPascalCase }}CreatedEvent(this, singletonList({{ nameCamelCase }})));
+        return {{ nameCamelCase }};
     }
 
     public Optional<{{ namePascalCase }}> update(int id, Update{{ namePascalCase }}Input input) { {%for field in fields%}{%if field.isFieldRelational%}
         if (input.{{ field.fieldNameCamelCase }} != null) {
-            Objects.requireNonNull({{ field.fieldTypeCamelCase }}Service.findById(input.get{{ field.fieldPascalCamelCase }}()).getOrElse(null));
+            Objects.requireNonNull({{ field.fieldTypeCamelCase }}Service.findById(input.get{{ field.fieldNamePascalCase }}()).getOrElse(null));
         }
 {%endif%}{%endfor%}
         var {{ nameCamelCase }}Entity = {{ nameCamelCase }}Repository.findById(id);
@@ -84,23 +84,22 @@ class {{ namePascalCase }}Service {
             return Optional.empty();
         }
         var saved{{ namePascalCase }}Entity = {{ nameCamelCase }}Repository.save(
-                {{ nameCamelCase }}.get(){%for field in fields%}
-                        .with{{field.fieldNamePascalCase}}(input.get{{field.fieldPascalCamelCase}}() != null ? input.get{{field.fieldPascalCamelCase}}() : {{ nameCamelCase }}Entity.get().get{{field.fieldPascalCamelCase}}()){%endfor%}
-        );
+                {{ nameCamelCase }}Entity.get(){%for field in fields%}
+                        .with{{field.fieldNamePascalCase}}(input.get{{field.fieldNamePascalCase}}() != null ? input.get{{field.fieldNamePascalCase}}() : {{ nameCamelCase }}Entity.get().get{{field.fieldNamePascalCase}}()){%endfor%});
         var {{ nameCamelCase }} = toDomainObject(saved{{ namePascalCase }}Entity);
         publisher.publishEvent(new {{ namePluralPascalCase }}UpdatedEvent(this, singletonList({{ nameCamelCase }})));
         return Optional.of({{ nameCamelCase }});
     }
 
     public boolean deleteById(int id) {
-        var {{ nameCamelCase }} = {{ nameCamelCase }}Repository.findByIdOrNull(id)
-                .map(this::toDomainObject);
+        var {{ nameCamelCase }} = {{ nameCamelCase }}Repository.findById(id)
+                .map(this::toDomainObject)
                 .orElse(null);
         if ({{ nameCamelCase }} == null) {
             return false;
         }
         {{ nameCamelCase }}Repository.deleteById(id);
-        publisher.publishEvent(new {{ namePluralPascalCase }}DeletedEvent(this, listOf({{ nameCamelCase }})));
+        publisher.publishEvent(new {{ namePluralPascalCase }}DeletedEvent(this, singletonList({{ nameCamelCase }})));
         return true;
     }
 {%for field in fields%}{%if field.isFieldRelational%}
@@ -119,7 +118,7 @@ class {{ namePascalCase }}Service {
     private {{ namePascalCase }} toDomainObject({{ namePascalCase }}Entity entity) {
         return {{ namePascalCase }}.builder()
                 .id(entity.getId()){%for field in fields%}
-                .{{field.fieldNameCamelCase}}(entity.get{{field.fieldPascalCamelCase}}()){%endfor%}
+                .{{field.fieldNameCamelCase}}(entity.get{{field.fieldNamePascalCase}}()){%endfor%}
                 .createdAt(entity.getCreatedAt().atZone(ZoneId.systemDefault()).toOffsetDateTime())
                 .updatedAt(entity.getUpdatedAt() != null
                         ? entity.getUpdatedAt().atZone(ZoneId.systemDefault()).toOffsetDateTime()
@@ -139,7 +138,6 @@ class {{ namePascalCase }}Service {
     @With
     @Builder
     public static class Update{{ namePascalCase }}Input {{ "{" }}{%for field in fields%}
-        @NonNull
         private {{ field.fieldJavaType }} {{ field.fieldNameCamelCase }};{%endfor%}
     {{ "}" }}{%if hasRelations%}
 

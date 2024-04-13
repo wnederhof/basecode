@@ -12,12 +12,12 @@ import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.DgsMutation;{%if hasRelations%}
 import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;{%endif%}
 import lombok.AllArgsConstructor;
-
-import java.util.Objects;
-import java.util.Optional;
+{%if hasRelations%}
+import java.util.Objects;{%endif%}
+import java.util.Optional;{%if hasRelations%}
 import java.util.concurrent.CompletableFuture;
 
-import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyList;{%endif%}
 
 @DgsComponent
 @AllArgsConstructor
@@ -25,7 +25,7 @@ class {{ namePascalCase }}Resolver {
     private {{ namePascalCase }}Service {{ nameCamelCase }}Service;
 
     @DgsQuery
-    Optional<{{ nameCamelCase }}>(int id) {
+    Optional<{{ namePascalCase }}> {{ nameCamelCase }}(int id) {
         return {{ nameCamelCase }}Service.findById(id);
     }
 
@@ -35,12 +35,12 @@ class {{ namePascalCase }}Resolver {
     }
 
     @DgsMutation
-    Optional<{{ namePascalCase }}> create{{ namePascalCase }}(Create{{ namePascalCase }}Input input) {
+    {{ namePascalCase }} create{{ namePascalCase }}(Create{{ namePascalCase }}Input input) {
         return {{ nameCamelCase }}Service.create(input);
     }
 
     @DgsMutation
-    Optional<{{ namePascalCase }}> update{{ namePascalCase }}(id: Int, input: Update{{ namePascalCase }}Input) {
+    Optional<{{ namePascalCase }}> update{{ namePascalCase }}(int id, Update{{ namePascalCase }}Input input) {
         return {{ nameCamelCase }}Service.update(id, input);
     }
 

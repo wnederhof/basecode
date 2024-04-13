@@ -40,6 +40,8 @@ var (
 func provideProjectContextAttributes(context map[string]interface{}, properties Properties) {
 	context["groupId"] = properties.GroupId
 	context["artifactId"] = properties.ArtifactId
+	context["backend"] = properties.Backend
+	context["frontend"] = properties.Frontend
 
 	context["groupIdSlashes"] = regexDot.ReplaceAllString(properties.GroupId, "/")
 	context["artifactIdSlashes"] = regexDot.ReplaceAllString(properties.ArtifactId, "/")

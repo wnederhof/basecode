@@ -17,15 +17,17 @@ type Properties struct {
 	ArtifactId string `yaml:",omitempty"`
 	GroupId    string `yaml:",omitempty"`
 	Backend    string `yaml:",omitempty"`
+	Frontend   string `yaml:",omitempty"`
 }
 
-func GenerateNewProject(groupId string, artifactId string, backend string) error {
+func GenerateNewProject(groupId string, artifactId string, backend string, frontend string) error {
 	projectName := artifactId
 	context := make(map[string]interface{})
 	properties := Properties{
 		GroupId:    groupId,
 		ArtifactId: artifactId,
 		Backend:    backend,
+		Frontend:   frontend,
 	}
 	err := os.MkdirAll(projectName, os.ModePerm)
 	if err != nil {
@@ -222,7 +224,10 @@ func writeProperties(properties Properties, projectName string) error {
 func writeFiles(sourceDirectory string, targetDirectoryTemplate string, context map[string]interface{}, overwrite bool) error {
 	// Replace /templates/[language] with /templates/java
 	sourceDirectory = substitutePathParamsAndRemovePeb(sourceDirectory, context)
+	return writeFilesNoRetemplate(sourceDirectory, targetDirectoryTemplate, context, overwrite)
+}
 
+func writeFilesNoRetemplate(sourceDirectory string, targetDirectoryTemplate string, context map[string]interface{}, overwrite bool) error {
 	err := createDirectoryUsingTemplate(targetDirectoryTemplate, context)
 	if err != nil {
 		return err
@@ -232,7 +237,7 @@ func writeFiles(sourceDirectory string, targetDirectoryTemplate string, context 
 		sourceFile := sourceDirectory + "/" + e.Name()
 		targetFileTemplate := targetDirectoryTemplate + "/" + e.Name()
 		if e.IsDir() {
-			err := writeFiles(sourceFile, targetFileTemplate, context, overwrite)
+			err := writeFilesNoRetemplate(sourceFile, targetFileTemplate, context, overwrite)
 			if err != nil {
 				return err
 			}
@@ -279,6 +284,7 @@ func writeFileFromTemplate(sourceFile string, targetFileTemplate string, context
 			if err != nil {
 				return err
 			}
+			println("[G] " + targetFile)
 			contents, err := substituteFile(string(templateContents), context)
 			if err != nil {
 				return err
@@ -286,7 +292,6 @@ func writeFileFromTemplate(sourceFile string, targetFileTemplate string, context
 			if strings.TrimSpace(contents) == "" {
 				return nil
 			}
-			println("[G] " + targetFile)
 			return os.WriteFile(targetFile, []byte(contents), os.FileMode.Perm(0644))
 		}
 	}

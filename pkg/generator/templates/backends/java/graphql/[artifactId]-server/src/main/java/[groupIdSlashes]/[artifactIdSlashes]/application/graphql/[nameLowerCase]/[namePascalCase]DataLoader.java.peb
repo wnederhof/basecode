@@ -6,8 +6,8 @@ import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCa
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service;
 import lombok.RequiredArgsConstructor;
 import org.dataloader.MappedBatchLoader;
-
-import java.util.List;
+{%if hasRelations%}
+import java.util.List;{%endif%}
 import java.util.function.Function;
 import java.util.stream.Collectors;
 

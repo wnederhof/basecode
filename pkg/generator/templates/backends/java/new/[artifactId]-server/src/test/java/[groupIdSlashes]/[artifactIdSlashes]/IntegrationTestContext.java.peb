@@ -10,11 +10,11 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @SpringBootTest
 @Testcontainers
 @Transactional // Rolls back transaction after each test.
-abstract class IntegrationTestContext {
+public abstract class IntegrationTestContext {
     private static final PostgreSQLContainer<?> POSTGRES_CONTAINER = new PostgreSQLContainer("postgres:14-alpine")
-                .withDatabaseName("foo")
-                .withUsername("foo")
-                .withPassword("secret");
+            .withDatabaseName("foo")
+            .withUsername("foo")
+            .withPassword("secret");
 
     static {
         POSTGRES_CONTAINER.start();

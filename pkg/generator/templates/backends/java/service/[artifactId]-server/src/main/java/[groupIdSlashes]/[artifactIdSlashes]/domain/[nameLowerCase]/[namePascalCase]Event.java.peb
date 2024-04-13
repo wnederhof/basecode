@@ -1,9 +1,14 @@
 package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }};
 
 import lombok.Getter;
-import org.springframework.context.ApplicationEvent
+import org.springframework.context.ApplicationEvent;
 
-public abstract class {{ namePascalCase }}Event(source: Any) : ApplicationEvent(source) {
+import java.util.List;
+
+public abstract class {{ namePascalCase }}Event extends ApplicationEvent {
+    {{ namePascalCase }}Event(Object source) {
+        super(source);
+    }
 
     @Getter
     public static class {{ namePluralPascalCase }}CreatedEvent extends {{ namePascalCase }}Event {

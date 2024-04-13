@@ -30,6 +30,10 @@ func Run(args []string) error {
 						Name:    "backend",
 						Aliases: []string{"b"},
 					},
+					&cli.StringFlag{
+						Name:    "frontend",
+						Aliases: []string{"f"},
+					},
 				},
 				Action: func(c *cli.Context) error {
 					if c.Args().Len() != 2 {
@@ -43,7 +47,7 @@ func Run(args []string) error {
 					if frontend == "" {
 						frontend = "react"
 					}
-					return generator.GenerateNewProject(c.Args().Get(0), c.Args().Get(1), backend)
+					return generator.GenerateNewProject(c.Args().Get(0), c.Args().Get(1), backend, frontend)
 				},
 			},
 			{
@@ -138,7 +142,7 @@ func Run(args []string) error {
 					{
 						Name:    "backend:auth",
 						Aliases: []string{"ba"},
-						Usage:   "Backend Authentication - EXPERIMENTAL",
+						Usage:   "Backend Authentication",
 						Action: func(c *cli.Context) error {
 							model, err := parseAttributeArgs(c.Args(), 0)
 							if err != nil {
@@ -150,7 +154,7 @@ func Run(args []string) error {
 					{
 						Name:    "frontend:auth",
 						Aliases: []string{"fa"},
-						Usage:   "Frontend Authentication - EXPERIMENTAL",
+						Usage:   "Frontend Authentication",
 						Action: func(c *cli.Context) error {
 							model, err := parseAttributeArgs(c.Args(), 0)
 							if err != nil {
@@ -162,7 +166,7 @@ func Run(args []string) error {
 					{
 						Name:    "auth",
 						Aliases: []string{"a"},
-						Usage:   "Authentication - EXPERIMENTAL",
+						Usage:   "Authentication",
 						Action: func(c *cli.Context) error {
 							model, err := parseAttributeArgs(c.Args(), 0)
 							if err != nil {

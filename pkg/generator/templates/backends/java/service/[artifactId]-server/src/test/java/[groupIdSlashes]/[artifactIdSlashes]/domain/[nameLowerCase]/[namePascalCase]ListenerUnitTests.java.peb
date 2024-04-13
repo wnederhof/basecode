@@ -1,4 +1,4 @@
-{%if hasRelations%}package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
+{%if hasRelations%}package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }};
 
 {%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Event.{{ field.fieldTypePluralPascalCase }}DeletedEvent;
 {%endif%}{%endfor%}import static org.mockito.Mockito.verify;

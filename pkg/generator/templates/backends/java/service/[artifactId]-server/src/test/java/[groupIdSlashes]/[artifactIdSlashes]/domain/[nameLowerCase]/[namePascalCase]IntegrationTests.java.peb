@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;{%if hasRelations%}
 import static org.junit.jupiter.api.Assertions.assertThrows;{%endif%}
 import static java.util.Collections.singletonList;
 
-class {{ namePascalCase }}IntegrationTests extends IntegrationTestContext() {
+class {{ namePascalCase }}IntegrationTests extends IntegrationTestContext {
 
     @Autowired
     private {{ namePascalCase }}Service {{ nameCamelCase }}Service;
@@ -37,7 +37,7 @@ class {{ namePascalCase }}IntegrationTests extends IntegrationTestContext() {
         var {{ nameCamelCase }} = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%if hasRelations%}{%for field in fields%}{%if field.isFieldRelational%}
             .with{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.getId()){%endif%}{%endfor%}{%endif%});
         {{ nameCamelCase }} = {{ nameCamelCase }}Service.update({{ nameCamelCase }}.getId(), UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%if hasRelations%}{%for field in fields%}{%if field.isFieldRelational%}
-            .with{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.getId()){%endif%}{%endfor%}{%endif%});
+            .with{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.getId()){%endif%}{%endfor%}{%endif%}).get();
 
         assertThat({{ nameCamelCase }}Service.findAll()).isNotEmpty();
         assertThat({{ nameCamelCase }}Service.findById({{ nameCamelCase }}.getId())).isNotNull();
