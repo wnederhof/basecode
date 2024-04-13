@@ -242,8 +242,8 @@ func provideJavaFieldContextAttributes(context map[string]interface{}, attribute
 		context["fieldJavaTypeNotNullable"] = "String"
 		context["fieldJavaTestDummyValue"] = "\"Some " + attribute.Name + "\""
 	case INT:
-		context["fieldJavaType"] = "Int"
-		context["fieldJavaTypeNotNullable"] = "Int"
+		context["fieldJavaType"] = "Integer"
+		context["fieldJavaTypeNotNullable"] = "Integer"
 		context["fieldJavaTestDummyValue"] = "1"
 	case TEXT:
 		context["fieldJavaAnnotations"] = "@Lob"
@@ -255,33 +255,33 @@ func provideJavaFieldContextAttributes(context map[string]interface{}, attribute
 		context["fieldJavaTypeNotNullable"] = "LocalDate"
 		context["fieldJavaTestDummyValue"] = "LocalDate.of(2000, 1, 1)"
 	case BOOLEAN:
-		context["fieldJavaType"] = "Boolean"
-		context["fieldJavaTypeNotNullable"] = "Boolean"
+		context["fieldJavaType"] = "boolean"
+		context["fieldJavaTypeNotNullable"] = "boolean"
 		context["fieldJavaTestDummyValue"] = "true"
 	case NULL_STRING:
-		context["fieldJavaType"] = "String?"
+		context["fieldJavaType"] = "String"
 		context["fieldJavaTypeNotNullable"] = "String"
 		context["fieldJavaTestDummyValue"] = "\"Some " + attribute.Name + "\""
 	case NULL_INT:
-		context["fieldJavaType"] = "Int?"
-		context["fieldJavaTypeNotNullable"] = "Int"
+		context["fieldJavaType"] = "Integer"
+		context["fieldJavaTypeNotNullable"] = "Integer"
 		context["fieldJavaTestDummyValue"] = "1"
 	case NULL_TEXT:
 		context["fieldJavaAnnotations"] = "@Lob"
-		context["fieldJavaType"] = "String?"
+		context["fieldJavaType"] = "String"
 		context["fieldJavaTypeNotNullable"] = "String"
 		context["fieldJavaTestDummyValue"] = "\"Some " + attribute.Name + "\""
 	case NULL_DATE:
-		context["fieldJavaType"] = "LocalDate?"
+		context["fieldJavaType"] = "LocalDate"
 		context["fieldJavaTypeNotNullable"] = "LocalDate"
 		context["fieldJavaTestDummyValue"] = "LocalDate.of(2000, 1, 1)"
 	case NULL_BOOLEAN:
-		context["fieldJavaType"] = "Boolean?"
+		context["fieldJavaType"] = "Boolean"
 		context["fieldJavaTypeNotNullable"] = "Boolean"
 		context["fieldJavaTestDummyValue"] = "true"
 	case RELATIONAL:
-		context["fieldJavaType"] = "Int"
-		context["fieldJavaTypeNotNullable"] = "Int"
+		context["fieldJavaType"] = "Integer"
+		context["fieldJavaTypeNotNullable"] = "Integer"
 		context["fieldJavaTestDummyValue"] = "10"
 	default:
 		panic("Undetermined attribute type.")

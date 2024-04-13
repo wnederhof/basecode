@@ -15,7 +15,7 @@ import static java.util.concurrent.CompletableFuture.supplyAsync;
 
 @DgsComponent
 @RequiredArgsConstructor
-class {{ namePascalCase }}DataLoader {
+public class {{ namePascalCase }}DataLoader {
     private {{ namePascalCase }}Service {{ nameCamelCase }}Service;
 
     @DgsDataLoader(name = "{{ nameCamelCase }}ById")

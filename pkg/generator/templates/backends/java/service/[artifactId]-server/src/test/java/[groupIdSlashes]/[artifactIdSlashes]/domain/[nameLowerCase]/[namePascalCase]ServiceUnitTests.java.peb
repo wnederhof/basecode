@@ -1,7 +1,7 @@
 package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }};
 
 {%for field in fields%}{%if field.isFieldRelational%}
-import static {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service;{%endif%}{%endfor%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service;{%endif%}{%endfor%}
 import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1;
 import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1;
 import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1;
@@ -98,7 +98,7 @@ class {{ namePascalCase }}ServiceUnitTests {
         when({{ nameCamelCase }}Repository.findAll())
             .thenReturn(singletonList({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1));
 
-        var actual = {{ nameCamelCase }}Service.findAll(new {{ namePascalCase }}Service.{{ namePascalCase }}FilterInput());
+        var actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}Service.{{ namePascalCase }}FilterInput.builder().build());
 
         assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1);
     }
@@ -108,7 +108,7 @@ class {{ namePascalCase }}ServiceUnitTests {
         when({{ nameCamelCase }}Repository.findBy{{field.fieldNamePluralPascalCase}}(singletonList(1)))
             .thenReturn(singletonList({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1));
 
-        var actual = {{ nameCamelCase }}Service.findAll(new {{ namePascalCase }}Service.{{ namePascalCase }}FilterInput({{field.fieldNameCamelCase}} = 1));
+        var actual = {{ nameCamelCase }}Service.findAll({{ namePascalCase }}Service.{{ namePascalCase }}FilterInput.builder().{{field.fieldNameCamelCase}}(1).build());
 
         assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1);
     }
@@ -118,7 +118,7 @@ class {{ namePascalCase }}ServiceUnitTests {
         when({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1))
             .thenReturn({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1);
 {%for field in fields%}{%if field.isFieldRelational%}
-        when({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
+        when({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.get{{ field.fieldNamePascalCase }}()))
             .thenReturn(Optional.of({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1));
 {%endif%}{%endfor%}
         var actual = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1);
@@ -146,8 +146,8 @@ class {{ namePascalCase }}ServiceUnitTests {
         when({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1))
             .thenReturn({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1);
 {%for field in fields%}{%if field.isFieldRelational%}
-        when({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
-            .thenReturn({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1);
+        when({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1.get{{ field.fieldNamePascalCase }}()))
+            .thenReturn(Optional.of({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1));
 {%endif%}{%endfor%}
         var actual = {{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1);
 

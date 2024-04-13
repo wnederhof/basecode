@@ -53,7 +53,7 @@ public class {{ namePascalCase }}Service {
 {%endif%}
     public List<{{ namePascalCase }}> findAll({%if hasRelations%}{{ namePascalCase }}FilterInput filterInput{%endif%}) { {%for field in fields%}{%if field.isFieldRelational%}
         if (filterInput.get{{ field.fieldNamePascalCase }}() != null) {
-            return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}(listOf(filterInput.{{ field.fieldNameCamelCase }}))
+            return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}(singletonList(filterInput.{{ field.fieldNameCamelCase }})).stream()
                     .map(this::toDomainObject)
                     .collect(Collectors.toList());
         }
@@ -64,7 +64,7 @@ public class {{ namePascalCase }}Service {
     }
 
     public {{ namePascalCase }} create(Create{{ namePascalCase }}Input input) { {%for field in fields%}{%if field.isFieldRelational%}
-        Objects.requireNonNull({{ field.fieldTypeCamelCase }}Service.findById(input.get{{ field.fieldNamePascalCase }}()).getOrElse(null));
+        Objects.requireNonNull({{ field.fieldTypeCamelCase }}Service.findById(input.get{{ field.fieldNamePascalCase }}()).orElse(null));
 {%endif%}{%endfor%}
         var {{ nameCamelCase }}Entity = {{ namePascalCase }}Entity.builder(){%for field in fields%}
                 .{{field.fieldNameCamelCase}}(input.get{{field.fieldNamePascalCase}}()){%endfor%}
@@ -76,7 +76,7 @@ public class {{ namePascalCase }}Service {
 
     public Optional<{{ namePascalCase }}> update(int id, Update{{ namePascalCase }}Input input) { {%for field in fields%}{%if field.isFieldRelational%}
         if (input.{{ field.fieldNameCamelCase }} != null) {
-            Objects.requireNonNull({{ field.fieldTypeCamelCase }}Service.findById(input.get{{ field.fieldNamePascalCase }}()).getOrElse(null));
+            Objects.requireNonNull({{ field.fieldTypeCamelCase }}Service.findById(input.get{{ field.fieldNamePascalCase }}()).orElse(null));
         }
 {%endif%}{%endfor%}
         var {{ nameCamelCase }}Entity = {{ nameCamelCase }}Repository.findById(id);
@@ -103,7 +103,7 @@ public class {{ namePascalCase }}Service {
         return true;
     }
 {%for field in fields%}{%if field.isFieldRelational%}
-    public boolean deleteBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }}: List<Int>) {
+    public boolean deleteBy{{ field.fieldNamePluralPascalCase }}(List<Integer> {{ field.fieldNamePluralCamelCase }}) {
         var {{ nameCamelCase }}Entities = {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }});
         if ({{ nameCamelCase }}Entities.isEmpty()) {
             return false;
@@ -145,7 +145,6 @@ public class {{ namePascalCase }}Service {
     @With
     @Builder
     public static class {{ namePascalCase }}FilterInput {{ "{" }}{%for field in fields%}{%if field.isFieldRelational%}
-        @NonNull
         private {{ field.fieldJavaType }} {{ field.fieldNameCamelCase }};{%endif%}{%endfor%}
     {{ "}" }}{%endif%}
 }

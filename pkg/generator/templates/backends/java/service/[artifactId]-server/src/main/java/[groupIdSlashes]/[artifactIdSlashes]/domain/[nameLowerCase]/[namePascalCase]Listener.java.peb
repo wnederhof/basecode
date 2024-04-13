@@ -6,16 +6,17 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
 @Component
 @AllArgsConstructor
 class {{ namePascalCase }}Listener {
     private {{ namePascalCase }}Service {{ nameCamelCase }}Service;
-
 {%for field in fields%}{%if field.isFieldRelational%}
     @EventListener
     void onEvent({{ field.fieldTypePluralPascalCase }}DeletedEvent event) {
         var entityIds = event.getEntities().stream()
-                .map({{ fieldTypePascalCase }}::getId)
+                .map({{ field.fieldTypePascalCase }}::getId)
                 .collect(Collectors.toList());
         {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePluralPascalCase }}(entityIds);
     }

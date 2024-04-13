@@ -43,7 +43,7 @@ class {{ namePascalCase }}IntegrationTests extends IntegrationTestContext {
         assertThat({{ nameCamelCase }}Service.findById({{ nameCamelCase }}.getId())).isNotNull();
         assertThat({{ nameCamelCase }}Service.findByIds(singletonList({{ nameCamelCase }}.getId()))).isNotEmpty();
 {%for field in fields%}{%if field.isFieldRelational%}
-        assertThat({{ nameCamelCase }}Service.findAll({{ namePascalCase }}Service.{{ namePascalCase }}FilterInput({{ field.fieldTypeCamelCase }}.getId()))).isNotEmpty();
+        assertThat({{ nameCamelCase }}Service.findAll(new {{ namePascalCase }}Service.{{ namePascalCase }}FilterInput({{ field.fieldTypeCamelCase }}.getId()))).isNotEmpty();
         assertThat({{ nameCamelCase }}Service.findBy{{ field.fieldNamePluralPascalCase }}(singletonList({{ field.fieldTypeCamelCase }}.getId()))).isNotEmpty();
 {%endif%}{%endfor%}
         {{ nameCamelCase }}Service.deleteById({{ nameCamelCase }}.getId());
@@ -58,7 +58,7 @@ class {{ namePascalCase }}IntegrationTests extends IntegrationTestContext {
         var {{ nameCamelCase }} = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%for field in fields%}{%if field.isFieldRelational%}
                 .with{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.getId()){%endif%}{%endfor%});
 
-        {{ field.fieldTypeCamelCase }}Service.deleteById({{ nameCamelCase }}.{{ field.fieldNameCamelCase }});
+        {{ field.fieldTypeCamelCase }}Service.deleteById({{ nameCamelCase }}.get{{ field.fieldNamePascalCase }}());
 
         assertThat({{ nameCamelCase }}Service.findAll()).isEmpty();
     }

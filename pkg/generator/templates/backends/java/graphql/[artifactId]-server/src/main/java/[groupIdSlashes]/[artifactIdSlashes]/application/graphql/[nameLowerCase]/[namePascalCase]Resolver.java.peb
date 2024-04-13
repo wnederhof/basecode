@@ -21,7 +21,7 @@ import static java.util.Collections.emptyList;{%endif%}
 
 @DgsComponent
 @AllArgsConstructor
-class {{ namePascalCase }}Resolver {
+public class {{ namePascalCase }}Resolver {
     private {{ namePascalCase }}Service {{ nameCamelCase }}Service;
 
     @DgsQuery
@@ -52,15 +52,15 @@ class {{ namePascalCase }}Resolver {
     @DgsData(parentType = "{{ namePascalCase }}")
     CompletableFuture<{{ field.fieldTypePascalCase }}> {{ field.fieldTypeCamelCase }}(DgsDataFetchingEnvironment dfe) {
         var {{ nameCamelCase }} = dfe.<{{ namePascalCase }}>getSource();
-        return dfe.<Integer, {{ namePascalCase }}>getDataLoader("{{ field.fieldTypeCamelCase }}ById")
-            .load({{ nameCamelCase }}.{{ field.fieldNameCamelCase }})
+        return dfe.<Integer, {{ field.fieldTypePascalCase }}>getDataLoader("{{ field.fieldTypeCamelCase }}ById")
+            .load({{ nameCamelCase }}.get{{ field.fieldNamePascalCase }}());
     }
 
     @DgsData(parentType = "{{ field.fieldTypePascalCase }}", field = "{{ namePluralCamelCase }}")
-    CompletableFuture<{{ field.fieldTypePascalCase }}> {{ namePluralCamelCase }}By{{ field.fieldTypePascalCase }}(DgsDataFetchingEnvironment dfe) {
-        var {{ field.fieldTypeCamelCase }} = dfe.<{{ namePascalCase }}>getSource<{{ field.fieldTypePascalCase }}>();
+    CompletableFuture<Iterable<{{ field.fieldTypePascalCase }}>> {{ namePluralCamelCase }}By{{ field.fieldTypePascalCase }}(DgsDataFetchingEnvironment dfe) {
+        var {{ field.fieldTypeCamelCase }} = dfe.<{{ namePascalCase }}>getSource();
         var {{ field.fieldNameCamelCase }} = Objects.requireNonNull({{ field.fieldTypeCamelCase }}).getId();
-        return dfe.<Integer, Iterable<{{ namePascalCase }}>>getDataLoader("{{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }}")
+        return dfe.<Integer, Iterable<{{ field.fieldTypePascalCase }}>>getDataLoader("{{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }}")
             .load({{ field.fieldNameCamelCase }})
             .thenApply(it -> it == null ? emptyList() : it);
     }

@@ -28,13 +28,13 @@ public class {{ namePascalCase }}Fixtures {
                     .{{ field.fieldNameCamelCase }}({{ field.fieldKotlinTestDummyValue }}){%endif%}{%endfor%}
                     .build();
 
-    static final {{ namePascalCase }}Entity {{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1 =
+    public static final {{ namePascalCase }}Entity {{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1 =
             {{ namePascalCase }}Entity.builder()
                 .id(null){%for field in fields%}
                 .{{ field.fieldNameCamelCase }}({{ field.fieldKotlinTestDummyValue }}){%endfor%}
                 .build();
 
-    static final {{ namePascalCase }}Entity {{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1 =
+    public static final {{ namePascalCase }}Entity {{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1 =
             {{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1
                 .withId(1)
                 .withCreatedAt(LOCAL_DATE_TIME_FIXTURE);

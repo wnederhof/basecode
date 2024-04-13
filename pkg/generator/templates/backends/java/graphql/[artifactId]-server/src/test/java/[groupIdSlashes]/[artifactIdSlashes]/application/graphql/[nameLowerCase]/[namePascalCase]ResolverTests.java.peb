@@ -123,23 +123,25 @@ class {{ namePascalCase }}ResolverTests {
         when({{ nameCamelCase }}Service.findAll())
             .thenReturn(singletonList({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1));
 
-        when({{ field.fieldTypeCamelCase }}Service.findByIds(Set.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})))
-            .thenReturn(singletonList({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.copy(id = {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})));
+        when({{ field.fieldTypeCamelCase }}Service.findByIds(Set.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.get{{ field.fieldNamePascalCase }}())))
+            .thenReturn(singletonList({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
+                .withId({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.get{{ field.fieldNamePascalCase }}())));
 
         var ids = dgsQueryExecutor.<List<String>>executeAndExtractJsonPath(
             "{ {{ namePluralCamelCase }} { {{ field.fieldTypeCamelCase }} { id } } }",
             "data.{{ namePluralCamelCase }}[*].{{ field.fieldTypeCamelCase }}.id"
         );
 
-        assertThat(ids).contains({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}.toString());
+        assertThat(ids).contains({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.get{{ field.fieldNamePascalCase }}().toString());
     }
 
     @Test
     void {{ field.fieldTypePluralCamelCase }}_{{ namePluralCamelCase }}() {
         when({{ field.fieldTypeCamelCase }}Service.findAll())
-            .thenReturn(singletonList({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.copy(id = {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})));
+            .thenReturn(singletonList({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1
+                .withId({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.get{{ field.fieldNamePascalCase }}())));
 
-        when({{ nameCamelCase }}Service.findBy{{ field.fieldNamePluralPascalCase }}(Set.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})))
+        when({{ nameCamelCase }}Service.findBy{{ field.fieldNamePluralPascalCase }}(Set.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.get{{ field.fieldNamePascalCase }}())))
             .thenReturn(singletonList({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1));
 
         var ids = dgsQueryExecutor.<List<String>>executeAndExtractJsonPath(
@@ -147,7 +149,7 @@ class {{ namePascalCase }}ResolverTests {
             "data.{{ field.fieldTypePluralCamelCase }}[*].{{ namePluralCamelCase }}[*].id"
         );
 
-        assertThat(ids).contains({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.id.toString());
+        assertThat(ids).contains("" + {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.getId());
     }
 {%endif%}{%endfor%}
 }

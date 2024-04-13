@@ -21,7 +21,7 @@ class {{ namePascalCase }}ListenerUnitTests{%if hasRelations%}{
 {%for field in fields%}{%if field.isFieldRelational%}
     @Test
     void when_{{ field.fieldTypePluralPascalCase }}DeletedEvent_is_triggered_related_{{ namePluralPascalCase }}_are_deleted() {
-        {{ nameCamelCase }}Listener.onEvent({{ field.fieldTypePluralPascalCase }}DeletedEvent(this, singletonList({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)));
+        {{ nameCamelCase }}Listener.onEvent(new {{ field.fieldTypePluralPascalCase }}DeletedEvent(this, singletonList({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)));
 
         verify({{ nameCamelCase }}Service).deleteBy{{ field.fieldNamePluralPascalCase }}(singletonList({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.getId()));
     }

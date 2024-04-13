@@ -6,7 +6,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-interface {{ namePascalCase }}Repository extends CrudRepository<{{ namePascalCase }}Entity, Integer> {
+public interface {{ namePascalCase }}Repository extends CrudRepository<{{ namePascalCase }}Entity, Integer> {
 
     @Query("SELECT * FROM {{ namePluralSnakeCase }} WHERE id IN (:ids)")
     List<{{ namePascalCase }}Entity> findByIds(@Param("ids") Iterable<Integer> ids);
