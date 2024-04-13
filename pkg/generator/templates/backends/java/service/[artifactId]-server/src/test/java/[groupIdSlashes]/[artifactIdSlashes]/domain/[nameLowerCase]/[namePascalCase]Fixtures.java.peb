@@ -1,0 +1,42 @@
+package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }};
+
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+
+public class {{ namePascalCase }}Fixtures {
+
+    private static LocalDateTime LOCAL_DATE_TIME_FIXTURE = LocalDateTime.now();
+    private static OffsetDateTime OFFSET_DATE_TIME_FIXTURE = LOCAL_DATE_TIME_FIXTURE
+            .atZone(ZoneId.systemDefault())
+            .toOffsetDateTime();
+
+    public static {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1 =
+            {{ namePascalCase }}.builder()
+                    .id(1){%for field in fields%}
+                    .{{ field.fieldNameCamelCase }}({{ field.fieldKotlinTestDummyValue }}){%endfor%}
+                    .createdAt(OFFSET_DATE_TIME_FIXTURE)
+                    .build();
+
+    public static CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1 =
+            {{ namePascalCase }}Service.Create{{ namePascalCase }}Input.builder()({%for field in fields%}
+                    .{{ field.fieldNameCamelCase }}({{ field.fieldKotlinTestDummyValue }}){%endif%}{%endfor%}
+                    .build();
+
+    public static UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1 =
+            {{ namePascalCase }}Service.Update{{ namePascalCase }}Input.builder()({%for field in fields%}{%if field.fieldNameCamelCase != "username"%}
+                    .{{ field.fieldNameCamelCase }}({{ field.fieldKotlinTestDummyValue }}){%endif%}{%endfor%}
+                    .build();
+
+    static {{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1 =
+            {{ namePascalCase }}Entity.builder()
+                .id(null){%for field in fields%}
+                .{{ field.fieldNameCamelCase }}({{ field.fieldKotlinTestDummyValue }}){%endfor%}
+                .build();
+
+    static {{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1 =
+            {{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1
+                .withId(1)
+                .withCreatedAt(LOCAL_DATE_TIME_FIXTURE);
+
+}

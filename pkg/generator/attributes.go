@@ -93,9 +93,11 @@ func provideFieldContextAttributes(context map[string]interface{}, attributes []
 		provideIsFieldRelationalContextAttributes(fieldContext, attribute)
 		provideGraphQLFieldTypeContextAttributes(fieldContext, attribute)
 		provideKotlinFieldContextAttributes(fieldContext, attribute)
+		provideJavaFieldContextAttributes(fieldContext, attribute)
 		provideInputFieldContextAttributes(fieldContext, attribute)
 		provideReactTemplateTestContextAttributes(fieldContext, attribute)
 		provideReactTemplateExpectedContextAttributes(fieldContext, attribute)
+		fieldContext["isNotLast"] = i != len(attributes)-1
 	}
 }
 
@@ -225,6 +227,60 @@ func provideGraphQLFieldTypeContextAttributes(context map[string]interface{}, at
 	case RELATIONAL:
 		context["nullableGraphQLFieldType"] = "Int"
 		context["graphQLFieldType"] = "Int!"
+	default:
+		panic("Undetermined attribute type.")
+	}
+}
+
+// TODO add tests
+func provideJavaFieldContextAttributes(context map[string]interface{}, attribute ModelAttribute) {
+	switch attribute.Type {
+	case STRING:
+		context["fieldJavaType"] = "String"
+		context["fieldJavaTypeNotNullable"] = "String"
+		context["fieldJavaTestDummyValue"] = "\"Some " + attribute.Name + "\""
+	case INT:
+		context["fieldJavaType"] = "Int"
+		context["fieldJavaTypeNotNullable"] = "Int"
+		context["fieldJavaTestDummyValue"] = "1"
+	case TEXT:
+		context["fieldJavaAnnotations"] = "@Lob"
+		context["fieldJavaType"] = "String"
+		context["fieldJavaTypeNotNullable"] = "String"
+		context["fieldJavaTestDummyValue"] = "\"Some " + attribute.Name + "\""
+	case DATE:
+		context["fieldJavaType"] = "LocalDate"
+		context["fieldJavaTypeNotNullable"] = "LocalDate"
+		context["fieldJavaTestDummyValue"] = "LocalDate.of(2000, 1, 1)"
+	case BOOLEAN:
+		context["fieldJavaType"] = "Boolean"
+		context["fieldJavaTypeNotNullable"] = "Boolean"
+		context["fieldJavaTestDummyValue"] = "true"
+	case NULL_STRING:
+		context["fieldJavaType"] = "String?"
+		context["fieldJavaTypeNotNullable"] = "String"
+		context["fieldJavaTestDummyValue"] = "\"Some " + attribute.Name + "\""
+	case NULL_INT:
+		context["fieldJavaType"] = "Int?"
+		context["fieldJavaTypeNotNullable"] = "Int"
+		context["fieldJavaTestDummyValue"] = "1"
+	case NULL_TEXT:
+		context["fieldJavaAnnotations"] = "@Lob"
+		context["fieldJavaType"] = "String?"
+		context["fieldJavaTypeNotNullable"] = "String"
+		context["fieldJavaTestDummyValue"] = "\"Some " + attribute.Name + "\""
+	case NULL_DATE:
+		context["fieldJavaType"] = "LocalDate?"
+		context["fieldJavaTypeNotNullable"] = "LocalDate"
+		context["fieldJavaTestDummyValue"] = "LocalDate.of(2000, 1, 1)"
+	case NULL_BOOLEAN:
+		context["fieldJavaType"] = "Boolean?"
+		context["fieldJavaTypeNotNullable"] = "Boolean"
+		context["fieldJavaTestDummyValue"] = "true"
+	case RELATIONAL:
+		context["fieldJavaType"] = "Int"
+		context["fieldJavaTypeNotNullable"] = "Int"
+		context["fieldJavaTestDummyValue"] = "10"
 	default:
 		panic("Undetermined attribute type.")
 	}

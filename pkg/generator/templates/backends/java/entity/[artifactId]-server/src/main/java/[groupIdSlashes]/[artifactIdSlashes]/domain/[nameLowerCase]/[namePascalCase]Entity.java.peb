@@ -1,0 +1,25 @@
+package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }};
+
+import lombok.Builder;
+import lombok.Data;
+import lombok.NonNull;
+import lombok.With;
+import org.springframework.data.relational.core.mapping.Table;
+
+import java.time.LocalDateTime;
+
+@Data
+@With
+@Builder
+@Table("{{ namePluralSnakeCase }}")
+public class {{ namePascalCase }}Entity {
+    @Id
+    private Integer id;{%for field in fields%}
+    private {{ field.fieldJavaType }} {{ field.fieldNameCamelCase }};{%endfor%}
+
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    private LocalDateTime LocalDateTime;
+}

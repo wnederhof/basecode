@@ -1,0 +1,20 @@
+package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }};
+
+import lombok.Builder;
+import lombok.Data;
+import lombok.NonNull;
+import lombok.With;
+
+import java.time.OffsetDateTime;
+
+@Data
+@With
+@Builder
+public class {{ namePascalCase }} {
+    private int id;{%for field in fields%}
+    @NonNull
+    private {{ field.fieldJavaType }} {{ field.fieldNameCamelCase }};{%endfor%}
+    @NonNull
+    private OffsetDateTime createdAt;
+    private OffsetDateTime updatedAt;
+}

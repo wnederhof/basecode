@@ -1,0 +1,153 @@
+package {{ groupId }}.{{ artifactId }}.application.graphql.{{ nameLowerCase }}
+
+import com.netflix.graphql.dgs.DgsQueryExecutor;
+import com.netflix.graphql.dgs.autoconfig.DgsAutoConfiguration;
+import com.netflix.graphql.dgs.autoconfig.DgsExtendedScalarsAutoConfiguration;{%for field in fields%}{%if field.isFieldRelational%}
+import {{ groupId }}.{{ artifactId }}.application.graphql.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}DataLoader;
+import {{ groupId }}.{{ artifactId }}.application.graphql.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Resolver;
+import static {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1;
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service;{%endif%}{%endfor%}
+import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1;
+import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1;
+import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1;
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.mock.mockito.MockBean
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@SpringBootTest(
+    classes = {
+        DgsAutoConfiguration.class,
+        DgsExtendedScalarsAutoConfiguration.class,{%for field in fields%}{%if field.isFieldRelational%}
+        {{ field.fieldTypePascalCase }}Resolver.class,
+        {{ field.fieldTypePascalCase }}DataLoader.class,{%endif%}{%endfor%}
+        {{ namePascalCase }}Resolver.class,
+        {{ namePascalCase }}DataLoader.class,
+    }
+)
+class {{ namePascalCase }}ResolverTests {
+
+    @Autowired
+    private DgsQueryExecutor dgsQueryExecutor;
+{%for field in fields%}{%if field.isFieldRelational%}
+    @MockBean
+    private {{ field.fieldTypePascalCase }}Service {{ field.fieldTypeCamelCase }}Service;
+{%endif%}{%endfor%}
+    @MockBean
+    private {{ namePascalCase }}Service {{ nameCamelCase }}Service;
+
+    @Test
+    fun {{ namePluralCamelCase }}() {
+        when({{ nameCamelCase }}Service.findAll())
+            .thenReturn(singletonList({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1));
+
+        var ids = dgsQueryExecutor.<String>executeAndExtractJsonPath<List<String>>(
+            "{ {{ namePluralCamelCase }} { id } }",
+            "data.{{ namePluralCamelCase }}[*].id"
+        );
+
+        assertThat(ids).contains("" + {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.getId());
+    }
+
+    @Test
+    fun create{{ namePascalCase }}_delegates_the_call_to_the_services_create() {
+        when({{ nameCamelCase }}Service.create(any()))
+            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1);
+
+        var create{{ namePascalCase }}Input = Map.of({%for field in fields%}
+            "{{ field.fieldNameCamelCase }}", {{ field.fieldKotlinTestDummyValue }}{%if field.isNotLast%},{%endif%}{%endfor%}
+        );
+
+        var result = dgsQueryExecutor.<String>executeAndExtractJsonPath<String>(
+            "mutation create{{ namePascalCase }}(\$input: Create{{ namePascalCase }}Input!) { create{{ namePascalCase }}(input: \$input) { id } }",
+            "data.create{{ namePascalCase }}.id",
+            Map.of("input", create{{ namePascalCase }}Input)
+        );
+
+        assertThat(result).isEqualTo("" + {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.getId());
+
+        verify({{ nameCamelCase }}Service).create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1);
+    }
+
+    @Test
+    void update{{ namePascalCase }}_delegates_the_call_to_the_services_update() {
+        when({{ nameCamelCase }}Service.update(anyInt(), any()))
+            .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1);
+
+        var update{{ namePascalCase }}Input = Map.of({%for field in fields%}
+            "{{ field.fieldNameCamelCase }}", {{ field.fieldKotlinTestDummyValue }}{%if field.isNotLast%},{%endif%}{%endfor%}
+        );
+
+        var result = dgsQueryExecutor.<String>executeAndExtractJsonPath<String>(
+            "mutation update{{ namePascalCase }}(\$id: ID!, \$input: Update{{ namePascalCase }}Input!) { update{{ namePascalCase }}(id: \$id, input: \$input) { id } }",
+            "data.update{{ namePascalCase }}.id",
+            Map.of("id", {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.getId(), "input", update{{ namePascalCase }}Input)
+        );
+
+        assertThat(result).isEqualTo("" + {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.getId());
+
+        verify({{ nameCamelCase }}Service).update({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.getId(), UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1);
+    }
+
+    @Test
+    void delete{{ namePascalCase }}() {
+        when({{ nameCamelCase }}Service.deleteById(any()))
+            .thenReturn(true);
+
+        val result = dgsQueryExecutor.<String>executeAndExtractJsonPath<Boolean>(
+            "mutation delete{{ namePascalCase }}(\$id: ID!) { delete{{ namePascalCase }}(id: \$id) }",
+            "data.delete{{ namePascalCase }}",
+            Map.of("id", 1)
+        );
+
+        assertThat(result).isEqualTo(true);
+
+        verify({{ nameCamelCase }}Service).deleteById(1);
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Test
+    void {{ namePluralCamelCase }}_{{ field.fieldTypeCamelCase }}() {
+        when({{ nameCamelCase }}Service.findAll())
+            .thenReturn(singletonList({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1));
+
+        when({{ field.fieldTypeCamelCase }}Service.findByIds(setOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})))
+            .thenReturn(singletonList({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.copy(id = {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})));
+
+        val ids = dgsQueryExecutor.<String>executeAndExtractJsonPath<List<String>>(
+            "{ {{ namePluralCamelCase }} { {{ field.fieldTypeCamelCase }} { id } } }",
+            "data.{{ namePluralCamelCase }}[*].{{ field.fieldTypeCamelCase }}.id"
+        );
+
+        assertThat(ids).contains({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}.toString());
+    }
+
+    @Test
+    void {{ field.fieldTypePluralCamelCase }}_{{ namePluralCamelCase }}() {
+        when({{ field.fieldTypeCamelCase }}Service.findAll())
+            .thenReturn(singletonList({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.copy(id = {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})));
+
+        when({{ nameCamelCase }}Service.findBy{{ field.fieldNamePluralPascalCase }}(setOf({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }})))
+            .thenReturn(singletonList({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1));
+
+        val ids = dgsQueryExecutor.<String>executeAndExtractJsonPath<List<String>>(
+            "{ {{ field.fieldTypePluralCamelCase }} { {{ namePluralCamelCase }} { id } } }",
+            "data.{{ field.fieldTypePluralCamelCase }}[*].{{ namePluralCamelCase }}[*].id"
+        );
+
+        assertThat(ids).contains({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.id.toString());
+    }
+{%endif%}{%endfor%}
+}

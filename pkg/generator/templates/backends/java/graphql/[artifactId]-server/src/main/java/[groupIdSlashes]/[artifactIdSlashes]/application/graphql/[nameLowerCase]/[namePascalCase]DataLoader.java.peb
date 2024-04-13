@@ -1,0 +1,33 @@
+package {{ groupId }}.{{ artifactId }}.application.graphql.{{ nameLowerCase }};
+
+import com.netflix.graphql.dgs.DgsComponent;
+import com.netflix.graphql.dgs.DgsDataLoader;
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }};
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service;
+import lombok.RequiredArgsConstructor;
+import org.dataloader.MappedBatchLoader;
+
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import static java.util.concurrent.CompletableFuture.supplyAsync;
+
+@DgsComponent
+@RequiredArgsConstructor
+class {{ namePascalCase }}DataLoader {
+    private {{ namePascalCase }}Service {{ nameCamelCase }}Service;
+
+    @DgsDataLoader(name = "{{ nameCamelCase }}ById")
+    MappedBatchLoader<Integer, {{ namePascalCase }}> {{ nameCamelCase }}ById = ids -> supplyAsync(() ->
+            {{ nameCamelCase }}Service.findByIds(ids)
+                    .stream()
+                    .collect(Collectors.toMap({{ namePascalCase }}::getId, Function.identity())));
+{%for field in fields%}{%if field.isFieldRelational%}
+    @DgsDataLoader(name = "{{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }}")
+    MappedBatchLoader<Integer, List<{{ namePascalCase }}>> {{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }} = ids -> supplyAsync(() ->
+            {{ nameCamelCase }}Service.findBy{{ field.fieldNamePluralPascalCase }}(ids)
+                    .stream()
+                    .collect(Collectors.groupingBy({{ namePascalCase }}::get{{ field.fieldNamePascalCase }})));
+{%endif%}{%endfor%}
+}

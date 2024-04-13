@@ -1,0 +1,37 @@
+package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }};
+
+import lombok.Getter;
+import org.springframework.context.ApplicationEvent
+
+public abstract class {{ namePascalCase }}Event(source: Any) : ApplicationEvent(source) {
+
+    @Getter
+    public static class {{ namePluralPascalCase }}CreatedEvent extends {{ namePascalCase }}Event {
+        private final List<{{ namePascalCase }}> entities;
+
+        {{ namePluralPascalCase }}CreatedEvent(Object source, List<{{ namePascalCase }}> entities) {
+            super(source);
+            this.entities = entities;
+        }
+    }
+
+    @Getter
+    public static class {{ namePluralPascalCase }}UpdatedEvent extends {{ namePascalCase }}Event {
+        private final List<{{ namePascalCase }}> entities;
+
+        {{ namePluralPascalCase }}UpdatedEvent(Object source, List<{{ namePascalCase }}> entities) {
+            super(source);
+            this.entities = entities;
+        }
+    }
+
+    @Getter
+    public static class {{ namePluralPascalCase }}DeletedEvent extends {{ namePascalCase }}Event {
+        private final List<{{ namePascalCase }}> entities;
+
+        {{ namePluralPascalCase }}DeletedEvent(Object source, List<{{ namePascalCase }}> entities) {
+            super(source);
+            this.entities = entities;
+        }
+    }
+}

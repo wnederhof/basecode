@@ -1,0 +1,23 @@
+{%if hasRelations%}package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }};
+{%for field in fields%}{%if field.isFieldRelational%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }};{%endif%}{%endfor%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Event.{{ field.fieldTypePluralPascalCase }}DeletedEvent;{%endif%}{%endfor%}
+import lombok.AllArgsConstructor;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
+
+@Component
+@AllArgsConstructor
+class {{ namePascalCase }}Listener {
+    private {{ namePascalCase }}Service {{ nameCamelCase }}Service;
+
+{%for field in fields%}{%if field.isFieldRelational%}
+    @EventListener
+    void onEvent({{ field.fieldTypePluralPascalCase }}DeletedEvent event) {
+        var entityIds = event.getEntities().stream()
+                .map({{ fieldTypePascalCase }}::getId)
+                .collect(Collectors.toList());
+        {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePluralPascalCase }}(entityIds);
+    }
+{%endif%}{%endfor%}
+}{%endif%}

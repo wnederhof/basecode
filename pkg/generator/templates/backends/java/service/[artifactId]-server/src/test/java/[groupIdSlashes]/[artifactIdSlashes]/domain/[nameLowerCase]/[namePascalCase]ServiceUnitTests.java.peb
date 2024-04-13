@@ -1,0 +1,218 @@
+package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}
+
+// TODODODODOD
+{%for field in fields%}{%if field.isFieldRelational%}
+import static {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service;{%endif%}{%endfor%}
+import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1;
+import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1;
+import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1;
+import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1;
+import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1;{%for field in fields%}{%if field.isFieldRelational%}
+import static {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1;
+import static {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1;{%endif%}{%endfor%}
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEventPublisher;
+
+import java.util.Optional;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class {{ namePascalCase }}ServiceUnitTests {
+
+    @Mock
+    private ApplicationEventPublisher publisher;
+
+    @Mock
+    private {{ namePascalCase }}Repository {{ nameCamelCase }}Repository;
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Mock
+    private {{ field.fieldTypePascalCase }}Service {{ field.fieldTypeCamelCase }}Service;
+{%endif%}{%endfor%}
+    @InjectMocks
+    private {{ namePascalCase }}Service {{ nameCamelCase }}Service;
+
+    @Test
+    void findById_returns_the_mapped_value_of_findById_in_{{ namePascalCase }}Repository_if_it_is_non_empty() {
+        when({{ nameCamelCase }}Repository.findById(1))
+            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1));
+
+        var actual = {{ nameCamelCase }}Service.findById(1);
+
+        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1);
+    }
+
+    @Test
+    void findById_returns_null_if_findById_in_{{ namePascalCase }}Repository_yields_an_empty_Optional() {
+        when({{ nameCamelCase }}Repository.findById(1))
+            .thenReturn(Optional.empty());
+
+        var actual = {{ nameCamelCase }}Service.findById(1);
+
+        assertThat(actual).isNull();
+
+        verify(publisher, times(0))
+            .publishEvent(any());
+    }
+
+    @Test
+    void findByIds_returns_the_mapped_values_of_findByIds_in_{{ namePascalCase }}Repository() {
+        when({{ nameCamelCase }}Repository.findByIds(singletonList(1)))
+            .thenReturn(singletonList({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1));
+
+        var actual = {{ nameCamelCase }}Service.findByIds(singletonList(1));
+
+        assertThat(actual).isEqualTo(singletonList({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1));
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Test
+    void findBy{{field.fieldNamePluralPascalCase}}_returns_the_contents_of_the_corresponding_repository_call() {
+        when({{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}(singletonList(1)))
+            .thenReturn(singletonList({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1));
+
+        var actual = {{ nameCamelCase }}Service.findBy{{ field.fieldNamePluralPascalCase }}(singletonList(1));
+
+        assertThat(actual).isEqualTo(actual);
+    }
+{%endif%}{%endfor%}
+    @Test
+    void findAll_returns_the_values_of_findAll_in_{{ namePascalCase }}Repository() {
+        when({{ nameCamelCase }}Repository.findAll())
+            .thenReturn(singletonList({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1));
+
+        var actual = {{ nameCamelCase }}Service.findAll();
+
+        assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1);
+    }
+{%if hasRelations%}
+    @Test
+    void findAll_returns_the_values_of_findAll_in_CommentRepository_when_filter_is_empty() {
+        when({{ nameCamelCase }}Repository.findAll())
+            .thenReturn(singletonList({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1));
+
+        var actual = {{ nameCamelCase }}Service.findAll(new {{ namePascalCase }}Service.{{ namePascalCase }}FilterInput());
+
+        assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1);
+    }
+{%endif%}{%for field in fields%}{%if field.isFieldRelational%}
+    @Test
+    void findAll_delegates_to_findBy{{field.fieldNamePascalCase}}_when_filter_only_contains_{{field.fieldNameCamelCase}}() {
+        when({{ nameCamelCase }}Repository.findBy{{field.fieldNamePluralPascalCase}}(singletonList(1)))
+            .thenReturn(singletonList({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1));
+
+        var actual = {{ nameCamelCase }}Service.findAll(new {{ namePascalCase }}Service.{{ namePascalCase }}FilterInput({{field.fieldNameCamelCase}} = 1));
+
+        assertThat(actual).containsExactly({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1);
+    }
+{%endif%}{%endfor%}
+    @Test
+    void create_calls_save_on_repository_if_all_requirements_are_met_and_publishes_an_event() {
+        when({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1))
+            .thenReturn({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1);
+{%for field in fields%}{%if field.isFieldRelational%}
+        when({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
+            .thenReturn(Optional.of({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1));
+{%endif%}{%endfor%}
+        val actual = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1);
+
+        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1);
+
+        verify(publisher)
+            .publishEvent(new {{ namePascalCase }}Event.{{ namePluralPascalCase }}CreatedEvent({{ nameCamelCase }}Service, singletonList({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)));
+    }
+{%if hasRelations%}
+    @Test
+    void create_fails_when_related_objects_cannot_be_found_and_publishes_no_events() {
+        assertThrows(RuntimeException.class, () ->
+            {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1));
+
+        verify({{ nameCamelCase }}Repository, times(0)).save({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1);
+        verify(publisher, times(0)).publishEvent(any());
+    }
+{%endif%}
+    @Test
+    fun update_calls_save_on_repository_if_all_requirements_are_met_and_publishes_an_event() {
+        when({{ nameCamelCase }}Repository.findById(1))
+            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1));
+
+        when({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1))
+            .thenReturn({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1);
+{%for field in fields%}{%if field.isFieldRelational%}
+        when({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1.{{ field.fieldNameCamelCase }}))
+            .thenReturn({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1);
+{%endif%}{%endfor%}
+        var actual = {{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1);
+
+        assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1);
+
+        verify(publisher)
+            .publishEvent(new {{ namePascalCase }}Event.{{ namePluralPascalCase }}UpdatedEvent({{ nameCamelCase }}Service, singletonList({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)));
+    }
+{%if hasRelations%}
+    @Test
+    fun update_fails_when_related_objects_cannot_be_found_and_publishes_no_events() {
+        assertThrows(RuntimeException.class, () ->
+            {{ nameCamelCase }}Service.update(1, UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1));
+
+        verify({{ nameCamelCase }}Repository, times(0)).save({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1);
+        verify(publisher, times(0)).publishEvent(any());
+    }
+{%endif%}
+    @Test
+    fun deleteById_deletes_the_{{ namePascalCase }}_identified_by_id_in_the_repository_if_it_exists_and_publishes_an_event() {
+        when({{ nameCamelCase }}Repository.findById(1))
+            .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1));
+
+        {{ nameCamelCase }}Service.deleteById(1);
+
+        verify({{ nameCamelCase }}Repository).deleteById(1);
+
+        verify(publisher)
+            .publishEvent(new {{ namePascalCase }}Event.{{ namePluralPascalCase }}DeletedEvent({{ nameCamelCase }}Service, singletonList({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)));
+    }
+
+    @Test
+    fun deleteById_does_not_delete_the_{{ namePascalCase }}_identified_by_id_in_the_repository_if_it_doesnt_exist_and_publishes_no_events() {
+        when({{ nameCamelCase }}Repository.findById(1))
+            .thenReturn(Optional.empty());
+
+        {{ nameCamelCase }}Service.deleteById(1);
+
+        verify({{ nameCamelCase }}Repository, times(0)).deleteById(1);
+        verify(publisher, times(0)).publishEvent(any());
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Test
+    fun deleteBy{{ field.fieldNamePascalCase }}_deletes_{{ field.fieldTypePluralCamelCase }}_by_{{ field.fieldNameCamelCase }}_and_publishes_event() {
+        when({{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}(singletonList(10)))
+            .thenReturn(singletonList({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1));
+
+        val actual = {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePluralPascalCase }}(singletonList(10));
+        assertThat(actual).isEqualTo(true);
+
+        verify({{ nameCamelCase }}Repository).deleteAll(singletonList({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1));
+        verify(publisher).publishEvent(new {{ namePascalCase }}Event.{{ namePluralPascalCase }}DeletedEvent({{ nameCamelCase }}Service, singletonList({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)));
+    }
+
+    @Test
+    fun deleteBy{{ field.fieldNamePascalCase }}_returns_false_if_no_{{ field.fieldTypePluralCamelCase }}_are_deleted_and_publishes_no_events() {
+        when({{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}(singletonList(10)))
+            .thenReturn(emptyList());
+
+        val actual = {{ nameCamelCase }}Service.deleteBy{{ field.fieldNamePluralPascalCase }}(singletonList(10));
+        assertThat(actual).isEqualTo(false);
+
+        verify({{ nameCamelCase }}Repository, times(0)).deleteAll(any());
+        verify(publisher, times(0)).publishEvent(any());
+    }
+{%endif%}{%endfor%}
+}
