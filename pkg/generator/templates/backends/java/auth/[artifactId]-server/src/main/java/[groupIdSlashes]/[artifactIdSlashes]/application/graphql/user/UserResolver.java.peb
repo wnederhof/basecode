@@ -3,7 +3,8 @@ package {{ groupId }}.{{ artifactId }}.application.graphql.{{ nameLowerCase }};
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }};
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service;
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service.Update{{ namePascalCase }}Input;
-import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service.Create{{ namePascalCase }}Input;{%if hasRelations%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service.LoginInput;
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service.RegisterInput;{%if hasRelations%}
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service.{{ namePascalCase }}FilterInput;{%endif%}
 {%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }};
 {%endif%}{%endfor%}import com.netflix.graphql.dgs.DgsComponent;{%if hasRelations%}
@@ -11,11 +12,14 @@ import com.netflix.graphql.dgs.DgsData;{%endif%}
 import com.netflix.graphql.dgs.DgsQuery;
 import com.netflix.graphql.dgs.DgsMutation;{%if hasRelations%}
 import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;{%endif%}
-import lombok.AllArgsConstructor;
-{%if hasRelations%}
+import lombok.AllArgsConstructor;{%if hasRelations%}
 import java.util.Objects;{%endif%}
-import java.util.Optional;{%if hasRelations%}
-import java.util.concurrent.CompletableFuture;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import java.util.Optional;
+{%if hasRelations%}import java.util.concurrent.CompletableFuture;
 
 import static java.util.Collections.emptyList;{%endif%}
 
@@ -23,6 +27,17 @@ import static java.util.Collections.emptyList;{%endif%}
 @AllArgsConstructor
 public class {{ namePascalCase }}Resolver {
     private {{ namePascalCase }}Service {{ nameCamelCase }}Service;
+    private AuthenticationProvider authenticationProvider;
+
+    @DgsQuery
+    Optional<User> currentUser() {
+        var context = SecurityContextHolder.getContext();
+        if (context.getAuthentication() == null) {
+            return Optional.empty();
+        }
+        var username = context.getAuthentication().getName();
+        return userService.findByUsername(username);
+    }
 
     @DgsQuery
     Optional<{{ namePascalCase }}> {{ nameCamelCase }}(int id) {
@@ -31,15 +46,32 @@ public class {{ namePascalCase }}Resolver {
 
     @DgsQuery
     Iterable<{{ namePascalCase }}> {{ namePluralCamelCase }}({%if hasRelations%}{{ namePascalCase }}FilterInput filter{%endif%}) {
-        {%if hasRelations%}if (filter == null) {
+        if (filter == null) {
             return {{ nameCamelCase }}Service.findAll();
         }
-        {%endif%}return {{ nameCamelCase }}Service.findAll({%if hasRelations%}filter{%endif%});
+        return {{ nameCamelCase }}Service.findAll({%if hasRelations%}filter{%endif%});
     }
 
     @DgsMutation
-    {{ namePascalCase }} create{{ namePascalCase }}(Create{{ namePascalCase }}Input input) {
-        return {{ nameCamelCase }}Service.create(input);
+    Optional<User> login(LoginInput input) {
+        try {
+            var credentials = new UsernamePasswordAuthenticationToken(input.getUsername(), input.getPassword());
+            SecurityContextHolder.getContext().setAuthentication(authenticationProvider.authenticate(credentials));
+            return currentUser();
+        } catch (AuthenticationException e) {
+            return Optional.empty();
+        }
+    }
+
+    @DgsMutation
+    boolean logout() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+        return true;
+    }
+
+    @DgsMutation
+    User register(RegisterInput input) {
+        return userService.register(input);
     }
 
     @DgsMutation

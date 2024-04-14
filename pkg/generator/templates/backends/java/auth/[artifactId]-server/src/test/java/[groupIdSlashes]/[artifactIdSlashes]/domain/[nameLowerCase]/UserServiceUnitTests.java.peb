@@ -1,10 +1,9 @@
 package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }};
-
 {%for field in fields%}{%if field.isFieldRelational%}
 import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service;{%endif%}{%endfor%}
 import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1;
 import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1;
-import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1;
+import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.REGISTER_{{ nameScreamingSnakeCase }}_FIXTURE_1;
 import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1;
 import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1;{%for field in fields%}{%if field.isFieldRelational%}
 import static {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1;
@@ -16,6 +15,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 {%if hasRelations%}
@@ -37,6 +37,9 @@ class {{ namePascalCase }}ServiceUnitTests {
     @Mock
     private {{ field.fieldTypePascalCase }}Service {{ field.fieldTypeCamelCase }}Service;
 {%endif%}{%endfor%}
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
     @InjectMocks
     private {{ namePascalCase }}Service {{ nameCamelCase }}Service;
 
@@ -56,6 +59,53 @@ class {{ namePascalCase }}ServiceUnitTests {
             .thenReturn(Optional.empty());
 
         var actual = {{ nameCamelCase }}Service.findById(1);
+
+        assertThat(actual).isEmpty();
+
+        verify(publisher, times(0))
+            .publishEvent(any());
+    }
+
+    @Test
+    void findByUsername_returns_the_mapped_value_of_findByUsername_in_UserRepository_if_it_is_nonempty() {
+        when(userRepository.findByUsername("username"))
+            .thenReturn(Optional.of(USER_ENTITY_FIXTURE_WITH_ID_1));
+
+        var actual = userService.findByUsername("username");
+
+        assertThat(actual).isEqualTo(Optional.of(USER_FIXTURE_WITH_ID_1));
+    }
+
+    @Test
+    void findByUsername_returns_null_if_findByUsername_in_UserRepository_yields_a_value() {
+        when(userRepository.findByUsername("username"))
+            .thenReturn(Optional.empty());
+
+        var actual = userService.findByUsername("username");
+
+        assertThat(actual).isEmpty();
+
+        verify(publisher, times(0))
+            .publishEvent(any());
+    }
+
+    @Test
+    void findUserDetailsByUsername_returns_the_mapped_value_of_findByUsername_in_UserRepository_if_it_is_nonempty() {
+        when(userRepository.findByUsername("username"))
+            .thenReturn(Optional.of(USER_ENTITY_FIXTURE_WITH_ID_1));
+
+        var actual = userService.findUserDetailsByUsername("username");
+
+        assertThat(actual.get().getUsername()).isEqualTo(USER_FIXTURE_WITH_ID_1.getUsername());
+        assertThat(actual.get().getPassword()).isEqualTo(USER_FIXTURE_WITH_ID_1.getPassword());
+    }
+
+    @Test
+    void findUserDetailsByUsername_returns_null_if_findByUsername_in_UserRepository_yields_a_value() {
+        when(userRepository.findByUsername("username"))
+            .thenReturn(Optional.empty());
+
+        var actual = userService.findUserDetailsByUsername("username");
 
         assertThat(actual).isEmpty();
 
@@ -114,25 +164,28 @@ class {{ namePascalCase }}ServiceUnitTests {
     }
 {%endif%}{%endfor%}
     @Test
-    void create_calls_save_on_repository_if_all_requirements_are_met_and_publishes_an_event() {
+    void register_calls_save_on_repository_if_all_requirements_are_met_and_publishes_an_event() {
         when({{ nameCamelCase }}Repository.save({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1))
             .thenReturn({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_WITH_ID_1);
+
+        when(passwordEncoder.encode(USER_ENTITY_FIXTURE_1.getPassword()))
+            .thenReturn(USER_ENTITY_FIXTURE_WITH_ID_1.getPassword());
 {%for field in fields%}{%if field.isFieldRelational%}
         when({{ field.fieldTypeCamelCase }}Service.findById({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.get{{ field.fieldNamePascalCase }}()))
             .thenReturn(Optional.of({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1));
 {%endif%}{%endfor%}
-        var actual = {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1);
+        var actual = {{ nameCamelCase }}Service.register(REGISTER_{{ nameScreamingSnakeCase }}_FIXTURE_1);
 
         assertThat(actual).isEqualTo({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1);
 
         verify(publisher)
-            .publishEvent(new {{ namePascalCase }}Event.{{ namePluralPascalCase }}CreatedEvent({{ nameCamelCase }}Service, singletonList({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)));
+            .publishEvent(new {{ namePascalCase }}Event.{{ namePluralPascalCase }}RegisteredEvent({{ nameCamelCase }}Service, singletonList({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1)));
     }
 {%if hasRelations%}
     @Test
-    void create_fails_when_related_objects_cannot_be_found_and_publishes_no_events() {
+    void register_fails_when_related_objects_cannot_be_found_and_publishes_no_events() {
         assertThrows(RuntimeException.class, () ->
-            {{ nameCamelCase }}Service.create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1));
+            {{ nameCamelCase }}Service.register(REGISTER_{{ nameScreamingSnakeCase }}_FIXTURE_1));
 
         verify({{ nameCamelCase }}Repository, times(0)).save({{ nameScreamingSnakeCase }}_ENTITY_FIXTURE_1);
         verify(publisher, times(0)).publishEvent(any());

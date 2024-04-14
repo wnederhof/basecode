@@ -1,0 +1,66 @@
+package {{ groupId }}.{{ artifactId }}.domain.user;
+
+import {{ groupId }}.{{ artifactId }}.IntegrationTestContext;
+import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.REGISTER_{{ nameScreamingSnakeCase }}_FIXTURE_1;
+import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1;{%for field in fields%}{%if field.isFieldRelational%}
+import static {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_ENTITY_FIXTURE_1;
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Repository;
+import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service;{%endif%}{%endfor%}
+import static org.assertj.core.api.Assertions.assertThat;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.Test;{%if hasRelations%}
+import static org.junit.jupiter.api.Assertions.assertThrows;{%endif%}
+import static java.util.Collections.singletonList;
+
+class {{ namePascalCase }}IntegrationTests extends IntegrationTestContext {
+
+    @Autowired
+    private {{ namePascalCase }}Service {{ nameCamelCase }}Service;
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Autowired
+    private {{ field.fieldTypePascalCase }}Service {{ field.fieldTypeCamelCase }}Service;
+
+    @Autowired
+    private {{ field.fieldTypePascalCase }}Repository {{ field.fieldTypeCamelCase }}Repository;
+{%endif%}{%endfor%}{%if hasRelations%}
+    @Test
+    void {{ namePascalCase }}s_cannot_be_registered_if_related_entities_do_not_exist() {
+        assertThrows(RuntimeException.class, () ->
+                {{ nameCamelCase }}Service.register(REGISTER_{{ nameScreamingSnakeCase }}_FIXTURE_1));
+        assertThat({{ nameCamelCase }}Service.findAll()).isEmpty();
+    }
+{%endif%}
+    @Test
+    void {{ namePluralPascalCase }}_can_be_registered_updated_fetched_and_deleted() { {%for field in fields%}{%if field.isFieldRelational%}
+        var {{ field.fieldTypeCamelCase }} = {{ field.fieldTypeCamelCase }}Repository.save({{ field.fieldTypeScreamingSnakeCase }}_ENTITY_FIXTURE_1);
+{%endif%}{%endfor%}
+        var {{ nameCamelCase }} = {{ nameCamelCase }}Service.register(REGISTER_{{ nameScreamingSnakeCase }}_FIXTURE_1{%if hasRelations%}{%for field in fields%}{%if field.isFieldRelational%}
+            .with{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.getId()){%endif%}{%endfor%}{%endif%});
+        {{ nameCamelCase }} = {{ nameCamelCase }}Service.update({{ nameCamelCase }}.getId(), UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1{%if hasRelations%}{%for field in fields%}{%if field.isFieldRelational%}
+            .with{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.getId()){%endif%}{%endfor%}{%endif%}).get();
+
+        assertThat({{ nameCamelCase }}Service.findAll()).isNotEmpty();
+        assertThat({{ nameCamelCase }}Service.findById({{ nameCamelCase }}.getId())).isNotNull();
+        assertThat({{ nameCamelCase }}Service.findByIds(singletonList({{ nameCamelCase }}.getId()))).isNotEmpty();
+{%for field in fields%}{%if field.isFieldRelational%}
+        assertThat({{ nameCamelCase }}Service.findAll(new {{ namePascalCase }}Service.{{ namePascalCase }}FilterInput({{ field.fieldTypeCamelCase }}.getId()))).isNotEmpty();
+        assertThat({{ nameCamelCase }}Service.findBy{{ field.fieldNamePluralPascalCase }}(singletonList({{ field.fieldTypeCamelCase }}.getId()))).isNotEmpty();
+{%endif%}{%endfor%}
+        {{ nameCamelCase }}Service.deleteById({{ nameCamelCase }}.getId());
+
+        assertThat({{ nameCamelCase }}Service.findAll()).isEmpty();
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Test
+    void {{ namePascalCase }}s_are_deleted_when_related_{{ field.fieldTypePluralPascalCase }}_are_deleted() {
+{%for field in fields%}{%if field.isFieldRelational%}        var {{ field.fieldTypeCamelCase }} = {{ field.fieldTypeCamelCase }}Repository.save({{ field.fieldTypeScreamingSnakeCase }}_ENTITY_FIXTURE_1);
+{%endif%}{%endfor%}
+        var {{ nameCamelCase }} = {{ nameCamelCase }}Service.register(REGISTER_{{ nameScreamingSnakeCase }}_FIXTURE_1{%for field in fields%}{%if field.isFieldRelational%}
+                .with{{ field.fieldNamePascalCase }}({{ field.fieldTypeCamelCase }}.getId()){%endif%}{%endfor%});
+
+        {{ field.fieldTypeCamelCase }}Service.deleteById({{ nameCamelCase }}.get{{ field.fieldNamePascalCase }}());
+
+        assertThat({{ nameCamelCase }}Service.findAll()).isEmpty();
+    }
+{%endif%}{%endfor%}
+}

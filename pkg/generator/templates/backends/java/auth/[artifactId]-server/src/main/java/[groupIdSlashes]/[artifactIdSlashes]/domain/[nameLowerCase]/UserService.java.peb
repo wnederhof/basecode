@@ -4,6 +4,8 @@ import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCa
 import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service;{%endif%}{%endfor%}
 import lombok.*;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,25 +24,36 @@ import static java.util.Collections.singletonList;
 public class {{ namePascalCase }}Service {
     private final {{ namePascalCase }}Repository {{ nameCamelCase }}Repository;{%for field in fields%}{%if field.isFieldRelational%}
     private final {{ field.fieldTypePascalCase }}Service {{ field.fieldTypeCamelCase }}Service;{%endif%}{%endfor%}
+    private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher publisher;
 
     public Optional<{{ namePascalCase }}> findById(int id) {
         return {{ nameCamelCase }}Repository.findById(id)
-            .map(this::toDomainObject);
+                .map(this::toDomainObject);
+    }
+
+    public Optional<User> findByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(this::toDomainObject);
+    }
+
+    public Optional<UserDetails> findUserDetailsByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .map(it -> new UserDetailsImpl(it));
     }
 
     public List<{{ namePascalCase }}> findByIds(Iterable<Integer> ids) {
         return {{ nameCamelCase }}Repository.findByIds(ids)
-            .stream()
-            .map(this::toDomainObject)
-            .collect(Collectors.toList());
+                .stream()
+                .map(this::toDomainObject)
+                .collect(Collectors.toList());
     }
 {%for field in fields%}{%if field.isFieldRelational%}
     public List<{{ namePascalCase }}> findBy{{ field.fieldNamePluralPascalCase }}(Iterable<Integer> {{ field.fieldNamePluralCamelCase }}) {
         return {{ nameCamelCase }}Repository.findBy{{ field.fieldNamePluralPascalCase }}({{ field.fieldNamePluralCamelCase }})
-            .stream()
-            .map(this::toDomainObject)
-            .collect(Collectors.toList());
+                .stream()
+                .map(this::toDomainObject)
+                .collect(Collectors.toList());
     }
 {%endif%}{%endfor%}{%if hasRelations%}
     public List<{{ namePascalCase }}> findAll() {
@@ -59,14 +72,14 @@ public class {{ namePascalCase }}Service {
                 .collect(Collectors.toList());
     }
 
-    public {{ namePascalCase }} create(Create{{ namePascalCase }}Input input) { {%for field in fields%}{%if field.isFieldRelational%}
+    public {{ namePascalCase }} register(RegisterInput input) { {%for field in fields%}{%if field.isFieldRelational%}
         Objects.requireNonNull({{ field.fieldTypeCamelCase }}Service.findById(input.get{{ field.fieldNamePascalCase }}()).orElse(null));
 {%endif%}{%endfor%}
-        var {{ nameCamelCase }}Entity = {{ namePascalCase }}Entity.builder(){%for field in fields%}
-                .{{field.fieldNameCamelCase}}(input.get{{field.fieldNamePascalCase}}()){%endfor%}
+        var {{ nameCamelCase }}Entity = {{ namePascalCase }}Entity.builder(){%for field in fields%}{%if field.isFieldRelational%}
+                .{{field.fieldNameCamelCase}}(input.get{{field.fieldNamePascalCase}}()){%endif%}{%endfor%}
                 .build();
         var {{ nameCamelCase }} = toDomainObject({{ nameCamelCase }}Repository.save({{ nameCamelCase }}Entity));
-        publisher.publishEvent(new {{ namePluralPascalCase }}CreatedEvent(this, singletonList({{ nameCamelCase }})));
+        publisher.publishEvent(new {{ namePluralPascalCase }}RegisteredEvent(this, singletonList({{ nameCamelCase }})));
         return {{ nameCamelCase }};
     }
 
@@ -80,8 +93,8 @@ public class {{ namePascalCase }}Service {
             return Optional.empty();
         }
         var saved{{ namePascalCase }}Entity = {{ nameCamelCase }}Repository.save(
-                {{ nameCamelCase }}Entity.get(){%for field in fields%}
-                        .with{{field.fieldNamePascalCase}}(input.get{{field.fieldNamePascalCase}}() != null ? input.get{{field.fieldNamePascalCase}}() : {{ nameCamelCase }}Entity.get().get{{field.fieldNamePascalCase}}()){%endfor%});
+                {{ nameCamelCase }}Entity.get(){%for field in fields%}{%if field.isFieldRelational%}
+                        .with{{field.fieldNamePascalCase}}(input.get{{field.fieldNamePascalCase}}() != null ? input.get{{field.fieldNamePascalCase}}() : {{ nameCamelCase }}Entity.get().get{{field.fieldNamePascalCase}}()){%endif%}{%endfor%});
         var {{ nameCamelCase }} = toDomainObject(saved{{ namePascalCase }}Entity);
         publisher.publishEvent(new {{ namePluralPascalCase }}UpdatedEvent(this, singletonList({{ nameCamelCase }})));
         return Optional.of({{ nameCamelCase }});
@@ -114,7 +127,7 @@ public class {{ namePascalCase }}Service {
     private {{ namePascalCase }} toDomainObject({{ namePascalCase }}Entity entity) {
         return {{ namePascalCase }}.builder()
                 .id(entity.getId()){%for field in fields%}
-                .{{field.fieldNameCamelCase}}(entity.get{{field.fieldNamePascalCase}}()){%endfor%}
+                .{{field.fieldNameCamelCase}}({%if field.fieldNameCamelCase == "password"%}passwordEncoder.encode(entity.get{{field.fieldNamePascalCase}}()){%else%}entity.get{{field.fieldNamePascalCase}}(){%endif%}){%endfor%}
                 .createdAt(entity.getCreatedAt().atZone(ZoneId.systemDefault()).toOffsetDateTime())
                 .updatedAt(entity.getUpdatedAt() != null
                         ? entity.getUpdatedAt().atZone(ZoneId.systemDefault()).toOffsetDateTime()
@@ -127,7 +140,7 @@ public class {{ namePascalCase }}Service {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Create{{ namePascalCase }}Input {{ "{" }}{%for field in fields%}
+    public static class LoginInput {{ "{" }}{%for field in fields%}
         @NonNull
         private {{ field.fieldJavaType }} {{ field.fieldNameCamelCase }};{%endfor%}
     }
@@ -137,8 +150,18 @@ public class {{ namePascalCase }}Service {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class Update{{ namePascalCase }}Input {{ "{" }}{%for field in fields%}
+    public static class RegisterInput {{ "{" }}{%for field in fields%}
+        @NonNull
         private {{ field.fieldJavaType }} {{ field.fieldNameCamelCase }};{%endfor%}
+    }
+
+    @Data
+    @With
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Update{{ namePascalCase }}Input {{ "{" }}{%for field in fields%}{%if field.fieldNameCamelCase != "username"%}
+        private {{ field.fieldJavaType }} {{ field.fieldNameCamelCase }};{%endif%}{%endfor%}
     {{ "}" }}{%if hasRelations%}
 
     @Data

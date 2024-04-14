@@ -13,10 +13,10 @@ public abstract class {{ namePascalCase }}Event extends ApplicationEvent {
     }
 
     @Getter
-    public static class {{ namePluralPascalCase }}CreatedEvent extends {{ namePascalCase }}Event {
+    public static class {{ namePluralPascalCase }}RegisteredEvent extends {{ namePascalCase }}Event {
         private final List<{{ namePascalCase }}> entities;
 
-        public {{ namePluralPascalCase }}CreatedEvent(Object source, List<{{ namePascalCase }}> entities) {
+        public {{ namePluralPascalCase }}RegisteredEvent(Object source, List<{{ namePascalCase }}> entities) {
             super(source);
             this.entities = entities;
         }

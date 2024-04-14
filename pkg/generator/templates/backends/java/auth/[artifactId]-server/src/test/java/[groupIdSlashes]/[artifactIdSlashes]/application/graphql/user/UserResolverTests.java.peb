@@ -7,10 +7,11 @@ import {{ groupId }}.{{ artifactId }}.application.graphql.{{ field.fieldTypeLowe
 import {{ groupId }}.{{ artifactId }}.application.graphql.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Resolver;
 import static {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1;
 import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Service;{%endif%}{%endfor%}
-import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1;
+import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.REGISTER_{{ nameScreamingSnakeCase }}_FIXTURE_1;
 import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.{{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1;
 import static {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Fixtures.UPDATE_{{ nameScreamingSnakeCase }}_FIXTURE_1;
 import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service;
+import {{ groupId }}.{{ artifactId }}.application.FakeSecurityConfig;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -38,6 +39,7 @@ import static org.mockito.Mockito.when;
         {{ namePascalCase }}DataLoader.class,
     }
 )
+@Import(FakeSecurityConfig.class)
 class {{ namePascalCase }}ResolverTests {
 
     @Autowired
@@ -63,23 +65,23 @@ class {{ namePascalCase }}ResolverTests {
     }
 
     @Test
-    void create{{ namePascalCase }}_delegates_the_call_to_the_services_create() {
-        when({{ nameCamelCase }}Service.create(any()))
+    void register_delegates_the_call_to_the_services_register() {
+        when({{ nameCamelCase }}Service.register(any()))
             .thenReturn({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1);
 
-        var create{{ namePascalCase }}Input = Map.of({%for field in fields%}
+        var registerInput = Map.of({%for field in fields%}
             "{{ field.fieldNameCamelCase }}", {{ field.fieldKotlinTestDummyValue }}{%if field.isNotLast%},{%endif%}{%endfor%}
         );
 
         var result = dgsQueryExecutor.<String>executeAndExtractJsonPath(
-            "mutation create{{ namePascalCase }}($input: Create{{ namePascalCase }}Input!) { create{{ namePascalCase }}(input: $input) { id } }",
-            "data.create{{ namePascalCase }}.id",
-            Map.of("input", create{{ namePascalCase }}Input)
+            "mutation register($input: RegisterInput!) { register(input: $input) { id } }",
+            "data.register.id",
+            Map.of("input", registerInput)
         );
 
         assertThat(result).isEqualTo("" + {{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1.getId());
 
-        verify({{ nameCamelCase }}Service).create(CREATE_{{ nameScreamingSnakeCase }}_FIXTURE_1);
+        verify({{ nameCamelCase }}Service).register(REGISTER_{{ nameScreamingSnakeCase }}_FIXTURE_1);
     }
 
     @Test

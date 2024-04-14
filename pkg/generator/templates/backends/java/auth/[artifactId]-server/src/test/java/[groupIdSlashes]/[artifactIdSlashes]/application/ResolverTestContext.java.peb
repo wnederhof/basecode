@@ -1,0 +1,59 @@
+package {{ groupId }}.{{ artifactId }}.application;
+
+import {{ groupId }}.{{ artifactId }}.application.security.SecurityConfig;
+import org.junit.jupiter.api.BeforeEach;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Import;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+@Import(ResolverTestContext.Config.class)
+@EnableMethodSecurity(prePostEnabled = true)
+abstract class ResolverTestContext {
+    @MockBean
+    protected AuthenticationManager authenticationManager;
+
+    @MockBean
+    protected SecurityContext securityContext;
+
+    protected Authentication authenticationMock;
+
+    @TestConfiguration
+    static class Config {
+        @Bean
+        ThreadPoolTaskExecutor executor() {
+            var poolExecutor = new ThreadPoolTaskExecutor();
+            poolExecutor.setTaskDecorator(new SecurityConfig.ContextCopyingDecorator());
+            poolExecutor.initialize();
+            return poolExecutor;
+        }
+    }
+
+    @BeforeEach
+    void init() {
+        authenticationMock = mock();
+        when(authenticationMock.isAuthenticated())
+                .thenReturn(true);
+
+        when(authenticationManager.authenticate(any()))
+                .thenReturn(authenticationMock);
+
+        when(authenticationMock.getName())
+                .thenReturn("Some Username");
+
+        when(securityContext.getAuthentication())
+                .thenReturn(authenticationMock);
+
+        SecurityContextHolder.setContext(securityContext);
+    }
+}
