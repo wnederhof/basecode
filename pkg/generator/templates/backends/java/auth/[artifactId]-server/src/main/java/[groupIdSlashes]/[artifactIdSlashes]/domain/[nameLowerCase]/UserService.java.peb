@@ -75,9 +75,10 @@ public class {{ namePascalCase }}Service {
     public {{ namePascalCase }} register(RegisterInput input) { {%for field in fields%}{%if field.isFieldRelational%}
         Objects.requireNonNull({{ field.fieldTypeCamelCase }}Service.findById(input.get{{ field.fieldNamePascalCase }}()).orElse(null));
 {%endif%}{%endfor%}
-        var {{ nameCamelCase }}Entity = {{ namePascalCase }}Entity.builder(){%for field in fields%}{%if field.isFieldRelational%}
-                .{{field.fieldNameCamelCase}}(input.get{{field.fieldNamePascalCase}}()){%endif%}{%endfor%}
+        var {{ nameCamelCase }}Entity = {{ namePascalCase }}Entity.builder(){%for field in fields%}
+                .{{field.fieldNameCamelCase}}({%if field.fieldNameCamelCase == "password"%}passwordEncoder.encode(input.get{{field.fieldNamePascalCase}}()){%else%}input.get{{field.fieldNamePascalCase}}(){%endif%}){%endfor%}
                 .build();
+
         var {{ nameCamelCase }} = toDomainObject({{ nameCamelCase }}Repository.save({{ nameCamelCase }}Entity));
         publisher.publishEvent(new {{ namePluralPascalCase }}RegisteredEvent(this, singletonList({{ nameCamelCase }})));
         return {{ nameCamelCase }};
@@ -93,7 +94,7 @@ public class {{ namePascalCase }}Service {
             return Optional.empty();
         }
         var saved{{ namePascalCase }}Entity = {{ nameCamelCase }}Repository.save(
-                {{ nameCamelCase }}Entity.get(){%for field in fields%}{%if field.isFieldRelational%}
+                {{ nameCamelCase }}Entity.get(){%for field in fields%}{%if field.fieldNameCamelCase != "username"%}
                         .with{{field.fieldNamePascalCase}}(input.get{{field.fieldNamePascalCase}}() != null ? input.get{{field.fieldNamePascalCase}}() : {{ nameCamelCase }}Entity.get().get{{field.fieldNamePascalCase}}()){%endif%}{%endfor%});
         var {{ nameCamelCase }} = toDomainObject(saved{{ namePascalCase }}Entity);
         publisher.publishEvent(new {{ namePluralPascalCase }}UpdatedEvent(this, singletonList({{ nameCamelCase }})));
@@ -127,7 +128,7 @@ public class {{ namePascalCase }}Service {
     private {{ namePascalCase }} toDomainObject({{ namePascalCase }}Entity entity) {
         return {{ namePascalCase }}.builder()
                 .id(entity.getId()){%for field in fields%}
-                .{{field.fieldNameCamelCase}}({%if field.fieldNameCamelCase == "password"%}passwordEncoder.encode(entity.get{{field.fieldNamePascalCase}}()){%else%}entity.get{{field.fieldNamePascalCase}}(){%endif%}){%endfor%}
+                .{{field.fieldNameCamelCase}}(entity.get{{field.fieldNamePascalCase}}()){%endfor%}
                 .createdAt(entity.getCreatedAt().atZone(ZoneId.systemDefault()).toOffsetDateTime())
                 .updatedAt(entity.getUpdatedAt() != null
                         ? entity.getUpdatedAt().atZone(ZoneId.systemDefault()).toOffsetDateTime()

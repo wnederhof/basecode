@@ -46,10 +46,10 @@ public class {{ namePascalCase }}Resolver {
 
     @DgsQuery
     Iterable<{{ namePascalCase }}> {{ namePluralCamelCase }}({%if hasRelations%}{{ namePascalCase }}FilterInput filter{%endif%}) {
-        if (filter == null) {
+        {%if hasRelations%}if (filter == null) {
             return {{ nameCamelCase }}Service.findAll();
         }
-        return {{ nameCamelCase }}Service.findAll({%if hasRelations%}filter{%endif%});
+        {%endif%}return {{ nameCamelCase }}Service.findAll({%if hasRelations%}filter{%endif%});
     }
 
     @DgsMutation

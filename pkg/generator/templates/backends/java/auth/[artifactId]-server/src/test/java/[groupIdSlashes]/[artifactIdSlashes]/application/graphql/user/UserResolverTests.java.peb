@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 
 import java.util.List;
 import java.util.Map;
@@ -89,8 +90,8 @@ class {{ namePascalCase }}ResolverTests {
         when({{ nameCamelCase }}Service.update(anyInt(), any()))
             .thenReturn(Optional.of({{ nameScreamingSnakeCase }}_FIXTURE_WITH_ID_1));
 
-        var update{{ namePascalCase }}Input = Map.of({%for field in fields%}
-            "{{ field.fieldNameCamelCase }}", {{ field.fieldKotlinTestDummyValue }}{%if field.isNotLast%},{%endif%}{%endfor%}
+        var update{{ namePascalCase }}Input = Map.of({%for field in fields%}{%if field.fieldNameCamelCase != "username"%}
+            "{{ field.fieldNameCamelCase }}", {{ field.fieldKotlinTestDummyValue }}{%if field.isNotLast%},{%endif%}{%endif%}{%endfor%}
         );
 
         var result = dgsQueryExecutor.<String>executeAndExtractJsonPath(
