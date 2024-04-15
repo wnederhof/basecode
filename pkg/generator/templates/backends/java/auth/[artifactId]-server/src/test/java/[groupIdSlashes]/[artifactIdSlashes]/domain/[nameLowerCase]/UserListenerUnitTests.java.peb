@@ -1,0 +1,29 @@
+{%if hasRelations%}package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }};
+
+{%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Event.{{ field.fieldTypePluralPascalCase }}DeletedEvent;
+{%endif%}{%endfor%}import static org.mockito.Mockito.verify;
+import org.junit.jupiter.api.Test;
+{%for field in fields%}{%if field.isFieldRelational%}import static {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }}Fixtures.{{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1;
+{%endif%}{%endfor%}import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;{%if hasRelations%}
+import org.mockito.Mock;{%endif%}
+import org.mockito.junit.jupiter.MockitoExtension;
+import static java.util.Collections.singletonList;
+
+@ExtendWith(MockitoExtension.class)
+class {{ namePascalCase }}ListenerUnitTests{%if hasRelations%}{
+
+    @Mock
+    private {{ namePascalCase }}Service {{ nameCamelCase }}Service;
+
+    @InjectMocks
+    private {{ namePascalCase }}Listener {{ nameCamelCase }}Listener;
+{%for field in fields%}{%if field.isFieldRelational%}
+    @Test
+    void when_{{ field.fieldTypePluralPascalCase }}DeletedEvent_is_triggered_related_{{ namePluralPascalCase }}_are_deleted() {
+        {{ nameCamelCase }}Listener.onEvent(new {{ field.fieldTypePluralPascalCase }}DeletedEvent(this, singletonList({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1)));
+
+        verify({{ nameCamelCase }}Service).deleteBy{{ field.fieldNamePluralPascalCase }}(singletonList({{ field.fieldTypeScreamingSnakeCase }}_FIXTURE_WITH_ID_1.getId()));
+    }
+{%endif%}{%endfor%}
+}{%endif%}{%endif%}

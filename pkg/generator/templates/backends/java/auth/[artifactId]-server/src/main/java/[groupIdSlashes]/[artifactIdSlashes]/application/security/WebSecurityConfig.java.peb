@@ -1,0 +1,43 @@
+package {{ groupId }}.{{ artifactId }}.application.security;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.SecurityFilterChain;
+
+import static org.springframework.security.config.http.SessionCreationPolicy.IF_REQUIRED;
+
+@Configuration
+@EnableWebSecurity
+@EnableMethodSecurity
+@EnableConfigurationProperties(SecurityProperties.class)
+@RequiredArgsConstructor
+class WebSecurityConfig {
+    private final AuthenticationProvider authenticationProvider;
+
+    @Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http
+                .authenticationProvider(authenticationProvider)
+                .cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(customizer ->
+                        customizer
+                                .requestMatchers("/graphql").permitAll()
+                                .requestMatchers("/actuator/health").permitAll()
+                                .requestMatchers("/subscriptions").permitAll()
+                                .requestMatchers("/graphiql/**").permitAll()
+                                .requestMatchers("/api/**").permitAll()
+                )
+                .sessionManagement(it -> it.sessionCreationPolicy(IF_REQUIRED))
+                .securityContext(it -> it.requireExplicitSave(false))
+                .build();
+    }
+}

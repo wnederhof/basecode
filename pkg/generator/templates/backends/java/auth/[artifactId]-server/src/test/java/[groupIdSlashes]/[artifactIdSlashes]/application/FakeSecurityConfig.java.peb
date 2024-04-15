@@ -1,0 +1,19 @@
+package {{ groupId }}.{{ artifactId }}.application;
+
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.authentication.AuthenticationProvider;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+@TestConfiguration
+public class FakeSecurityConfig {
+    @Bean
+    AuthenticationProvider  authenticationProvider() {
+        var authenticationProvider = mock(AuthenticationProvider.class);
+        when(authenticationProvider.authenticate(any())).thenReturn(mock());
+        return authenticationProvider;
+    }
+}

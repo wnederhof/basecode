@@ -1,0 +1,44 @@
+package {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }};
+
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import org.springframework.context.ApplicationEvent;
+
+import java.util.List;
+
+@EqualsAndHashCode(callSuper = false)
+public abstract class {{ namePascalCase }}Event extends ApplicationEvent {
+    {{ namePascalCase }}Event(Object source) {
+        super(source);
+    }
+
+    @Getter
+    public static class {{ namePluralPascalCase }}RegisteredEvent extends {{ namePascalCase }}Event {
+        private final List<{{ namePascalCase }}> entities;
+
+        public {{ namePluralPascalCase }}RegisteredEvent(Object source, List<{{ namePascalCase }}> entities) {
+            super(source);
+            this.entities = entities;
+        }
+    }
+
+    @Getter
+    public static class {{ namePluralPascalCase }}UpdatedEvent extends {{ namePascalCase }}Event {
+        private final List<{{ namePascalCase }}> entities;
+
+        public {{ namePluralPascalCase }}UpdatedEvent(Object source, List<{{ namePascalCase }}> entities) {
+            super(source);
+            this.entities = entities;
+        }
+    }
+
+    @Getter
+    public static class {{ namePluralPascalCase }}DeletedEvent extends {{ namePascalCase }}Event {
+        private final List<{{ namePascalCase }}> entities;
+
+        public {{ namePluralPascalCase }}DeletedEvent(Object source, List<{{ namePascalCase }}> entities) {
+            super(source);
+            this.entities = entities;
+        }
+    }
+}

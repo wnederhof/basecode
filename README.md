@@ -16,14 +16,13 @@ basic structure of your web application.
 
 Basecode generates code consisting of:
 
-- Kotlin / Java (coming soon)
-- GraphQL
+- Java / Kotlin
+- GraphQL schema files
 - Typescript + React (through Next.js)
 
 Finally, Basecode is open source ([MIT](LICENSE.md)).
 
-⭐ If you like Basecode, please consider giving it a star. It would mean the world to us! Your support can help the
-project grow and deliver exciting
+⭐ If you like Basecode, please consider giving it a star. Your support can help the project grow and deliver exciting
 features.
 
 <a href="https://www.youtube.com/watch?v=rx9xL0nhot8"><img src="video-button.png"></a>
@@ -120,41 +119,6 @@ In order to start your newly generated program, you need to:
   your IDE)
 - Run `npm install` in the `<artifactId>-web` directory to install the frontend dependencies
 - Run `npm dev` in the `<artifactId>-web` directory to start the frontend development server
-
-# Blog Tutorial
-
-Let's discuss how to create a simple blog application.
-
-First, create a new application called `blog` and `cd` into it:
-
-```
-basecode new com.mycorp blog
-cd blog
-```
-
-Next, let's generate scaffolds for the Post and Comment entities.
-
-```
-basecode generate scaffold Post title contents:text
-basecode generate scaffold Comment postId:Post contents:text
-```
-
-Then, fire up a development database by running `docker-compose up` in the `<artifactId>-server` folder.
-
-Now, either start the backend using your IDE by running the `main` method in the `Application.kt` file, or start
-the Spring Boot server using `./mvnw spring-boot:run`. You should be able to access your GraphQL dashboard
-at: `http://localhost:8080/graphiql`.
-
-To start the frontend, make sure your artifacts are installed using `npm install` and run `npm run dev`.
-
-If you now visit `localhost:3000/posts`, you should be able to see the posts.
-
-Next, add `<CommentList postId={postId as string} />` and `<CommentForm postId={postId as string} />` to
-the `/blog-web/src/pages/posts/[postId]/index.tsx` page, right
-before the `</DefaultLayout>`. Make sure you import both of them.
-
-You should now be able to create, list, edit and view posts and comment on them. We leave it up to you to turn the rest
-of the blog into an absolute gem!
 
 ## Tips
 

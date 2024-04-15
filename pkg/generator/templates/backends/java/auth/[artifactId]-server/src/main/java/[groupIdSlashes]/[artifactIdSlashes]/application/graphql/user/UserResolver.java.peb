@@ -1,0 +1,103 @@
+package {{ groupId }}.{{ artifactId }}.application.graphql.{{ nameLowerCase }};
+
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }};
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service;
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service.Update{{ namePascalCase }}Input;
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service.LoginInput;
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service.RegisterInput;{%if hasRelations%}
+import {{ groupId }}.{{ artifactId }}.domain.{{ nameLowerCase }}.{{ namePascalCase }}Service.{{ namePascalCase }}FilterInput;{%endif%}
+{%for field in fields%}{%if field.isFieldRelational%}import {{ groupId }}.{{ artifactId }}.domain.{{ field.fieldTypeLowerCase }}.{{ field.fieldTypePascalCase }};
+{%endif%}{%endfor%}import com.netflix.graphql.dgs.DgsComponent;{%if hasRelations%}
+import com.netflix.graphql.dgs.DgsData;{%endif%}
+import com.netflix.graphql.dgs.DgsQuery;
+import com.netflix.graphql.dgs.DgsMutation;{%if hasRelations%}
+import com.netflix.graphql.dgs.DgsDataFetchingEnvironment;{%endif%}
+import lombok.AllArgsConstructor;{%if hasRelations%}
+import java.util.Objects;{%endif%}
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import java.util.Optional;
+{%if hasRelations%}import java.util.concurrent.CompletableFuture;
+
+import static java.util.Collections.emptyList;{%endif%}
+
+@DgsComponent
+@AllArgsConstructor
+public class {{ namePascalCase }}Resolver {
+    private {{ namePascalCase }}Service {{ nameCamelCase }}Service;
+    private AuthenticationProvider authenticationProvider;
+
+    @DgsQuery
+    Optional<User> currentUser() {
+        var context = SecurityContextHolder.getContext();
+        if (context.getAuthentication() == null) {
+            return Optional.empty();
+        }
+        var username = context.getAuthentication().getName();
+        return userService.findByUsername(username);
+    }
+
+    @DgsQuery
+    Optional<{{ namePascalCase }}> {{ nameCamelCase }}(int id) {
+        return {{ nameCamelCase }}Service.findById(id);
+    }
+
+    @DgsQuery
+    Iterable<{{ namePascalCase }}> {{ namePluralCamelCase }}({%if hasRelations%}{{ namePascalCase }}FilterInput filter{%endif%}) {
+        {%if hasRelations%}if (filter == null) {
+            return {{ nameCamelCase }}Service.findAll();
+        }
+        {%endif%}return {{ nameCamelCase }}Service.findAll({%if hasRelations%}filter{%endif%});
+    }
+
+    @DgsMutation
+    Optional<User> login(LoginInput input) {
+        try {
+            var credentials = new UsernamePasswordAuthenticationToken(input.getUsername(), input.getPassword());
+            SecurityContextHolder.getContext().setAuthentication(authenticationProvider.authenticate(credentials));
+            return currentUser();
+        } catch (AuthenticationException e) {
+            return Optional.empty();
+        }
+    }
+
+    @DgsMutation
+    boolean logout() {
+        SecurityContextHolder.getContext().setAuthentication(null);
+        return true;
+    }
+
+    @DgsMutation
+    User register(RegisterInput input) {
+        return userService.register(input);
+    }
+
+    @DgsMutation
+    Optional<{{ namePascalCase }}> update{{ namePascalCase }}(int id, Update{{ namePascalCase }}Input input) {
+        return {{ nameCamelCase }}Service.update(id, input);
+    }
+
+    @DgsMutation
+    boolean delete{{ namePascalCase }}(int id) {
+        return {{ nameCamelCase }}Service.deleteById(id);
+    }
+{%for field in fields%}{%if field.isFieldRelational%}
+    @DgsData(parentType = "{{ namePascalCase }}")
+    CompletableFuture<{{ field.fieldTypePascalCase }}> {{ field.fieldTypeCamelCase }}(DgsDataFetchingEnvironment dfe) {
+        var {{ nameCamelCase }} = dfe.<{{ namePascalCase }}>getSource();
+        return dfe.<Integer, {{ field.fieldTypePascalCase }}>getDataLoader("{{ field.fieldTypeCamelCase }}ById")
+            .load({{ nameCamelCase }}.get{{ field.fieldNamePascalCase }}());
+    }
+
+    @DgsData(parentType = "{{ field.fieldTypePascalCase }}", field = "{{ namePluralCamelCase }}")
+    CompletableFuture<Iterable<{{ namePascalCase }}>> {{ namePluralCamelCase }}By{{ field.fieldTypePascalCase }}(DgsDataFetchingEnvironment dfe) {
+        var {{ field.fieldTypeCamelCase }} = dfe.<{{ field.fieldTypePascalCase }}>getSource();
+        var {{ field.fieldNameCamelCase }} = Objects.requireNonNull({{ field.fieldTypeCamelCase }}).getId();
+        return dfe.<Integer, Iterable<{{ namePascalCase }}>>getDataLoader("{{ namePluralCamelCase }}By{{ field.fieldNamePascalCase }}")
+            .load({{ field.fieldNameCamelCase }})
+            .thenApply(it -> it == null ? emptyList() : it);
+    }
+{%endif%}{%endfor%}
+}

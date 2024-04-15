@@ -16,14 +16,18 @@ var (
 type Properties struct {
 	ArtifactId string `yaml:",omitempty"`
 	GroupId    string `yaml:",omitempty"`
+	Backend    string `yaml:",omitempty"`
+	Frontend   string `yaml:",omitempty"`
 }
 
-func GenerateNewProject(groupId string, artifactId string) error {
+func GenerateNewProject(groupId string, artifactId string, backend string, frontend string) error {
 	projectName := artifactId
 	context := make(map[string]interface{})
 	properties := Properties{
 		GroupId:    groupId,
 		ArtifactId: artifactId,
+		Backend:    backend,
+		Frontend:   frontend,
 	}
 	err := os.MkdirAll(projectName, os.ModePerm)
 	if err != nil {
@@ -35,7 +39,7 @@ func GenerateNewProject(groupId string, artifactId string) error {
 	}
 	provideProjectContextAttributes(context, properties)
 	provideHelperContextAttributes(context)
-	return writeFiles("templates/new", projectName, context, false)
+	return writeFiles("templates/backends/[backend]/new", projectName, context, false)
 }
 
 func GenerateScaffold(model Model, overwrite bool, delete bool) error {
@@ -64,21 +68,21 @@ func GenerateBackendScaffold(model Model, overwrite bool, delete bool) error {
 
 func GenerateBackendModel(model Model, overwrite bool, delete bool) error {
 	if delete {
-		err := GenerateModelTemplate("templates/entity", model, overwrite, true)
+		err := GenerateModelTemplate("templates/backends/[backend]/entity", model, overwrite, true)
 		if err != nil {
 			return err
 		}
-		return GenerateModelTemplate("templates/entity-removal", model, overwrite, false)
+		return GenerateModelTemplate("templates/backends/[backend]/entity-removal", model, overwrite, false)
 	}
-	return GenerateModelTemplate("templates/entity", model, overwrite, false)
+	return GenerateModelTemplate("templates/backends/[backend]/entity", model, overwrite, false)
 }
 
 func GenerateBackendApi(model Model, overwrite bool, delete bool) error {
-	return GenerateModelTemplate("templates/graphql", model, overwrite, delete)
+	return GenerateModelTemplate("templates/backends/[backend]/graphql", model, overwrite, delete)
 }
 
 func GenerateBackendService(model Model, overwrite bool, delete bool) error {
-	return GenerateModelTemplate("templates/service", model, overwrite, delete)
+	return GenerateModelTemplate("templates/backends/[backend]/service", model, overwrite, delete)
 }
 
 func GenerateFrontend(overwrite bool, delete bool) error {
@@ -90,13 +94,13 @@ func GenerateFrontend(overwrite bool, delete bool) error {
 	provideProjectContextAttributes(context, properties)
 	provideHelperContextAttributes(context)
 	if delete {
-		return deleteFiles("templates/react-frontend", ".", context)
+		return deleteFiles("templates/frontends/[frontend]/new", ".", context)
 	}
-	return writeFiles("templates/react-frontend", ".", context, overwrite)
+	return writeFiles("templates/frontends/[frontend]/new", ".", context, overwrite)
 }
 
 func GenerateFrontendScaffold(model Model, overwrite bool, delete bool) error {
-	return GenerateModelTemplate("templates/react-frontend-scaffold", model, overwrite, delete)
+	return GenerateModelTemplate("templates/frontends/[frontend]/scaffold", model, overwrite, delete)
 }
 
 func GenerateModelTemplate(templateDirectory string, model Model, overwrite bool, delete bool) error {
@@ -131,18 +135,18 @@ func GenerateBackendAuthentication(attributes []ModelAttribute, overwrite bool, 
 		}}, attributes...),
 	}
 	if delete {
-		err := GenerateModelTemplate("templates/auth", model, overwrite, true)
+		err := GenerateModelTemplate("templates/backends/[backend]/auth", model, overwrite, true)
 		if err != nil {
 			return err
 		}
 		println("Please remove the spring-boot-starter-security dependency manually.")
-		return GenerateModelTemplate("templates/auth-removal", model, overwrite, false)
+		return GenerateModelTemplate("templates/backends/[backend]/auth-removal", model, overwrite, false)
 	}
 	err := addDependency("org.springframework.boot", "spring-boot-starter-security")
 	if err != nil {
 		return err
 	}
-	return GenerateModelTemplate("templates/auth", model, overwrite, false)
+	return GenerateModelTemplate("templates/backends/[backend]/auth", model, overwrite, false)
 }
 
 func GenerateFrontendAuthentication(attributes []ModelAttribute, overwrite bool, delete bool) error {
@@ -159,16 +163,15 @@ func GenerateFrontendAuthentication(attributes []ModelAttribute, overwrite bool,
 		}}, attributes...),
 	}
 	if delete {
-		err := GenerateModelTemplate("templates/auth-frontend", model, overwrite, true)
+		err := GenerateModelTemplate("templates/frontends/[frontend]/auth", model, overwrite, true)
 		if err != nil {
 			return err
 		}
 	}
-	return GenerateModelTemplate("templates/auth-frontend", model, overwrite, false)
+	return GenerateModelTemplate("templates/frontends/[frontend]/auth", model, overwrite, false)
 }
 
 func GenerateAuthentication(attributes []ModelAttribute, overwrite bool, delete bool) error {
-	// TODO test
 	err := GenerateBackendAuthentication(attributes, overwrite, delete)
 	if err != nil {
 		return err
@@ -219,6 +222,12 @@ func writeProperties(properties Properties, projectName string) error {
 }
 
 func writeFiles(sourceDirectory string, targetDirectoryTemplate string, context map[string]interface{}, overwrite bool) error {
+	// Replace /templates/[language] with /templates/java
+	sourceDirectory = substitutePathParamsAndRemovePeb(sourceDirectory, context)
+	return writeFilesNoRetemplate(sourceDirectory, targetDirectoryTemplate, context, overwrite)
+}
+
+func writeFilesNoRetemplate(sourceDirectory string, targetDirectoryTemplate string, context map[string]interface{}, overwrite bool) error {
 	err := createDirectoryUsingTemplate(targetDirectoryTemplate, context)
 	if err != nil {
 		return err
@@ -228,7 +237,7 @@ func writeFiles(sourceDirectory string, targetDirectoryTemplate string, context 
 		sourceFile := sourceDirectory + "/" + e.Name()
 		targetFileTemplate := targetDirectoryTemplate + "/" + e.Name()
 		if e.IsDir() {
-			err := writeFiles(sourceFile, targetFileTemplate, context, overwrite)
+			err := writeFilesNoRetemplate(sourceFile, targetFileTemplate, context, overwrite)
 			if err != nil {
 				return err
 			}
@@ -275,6 +284,7 @@ func writeFileFromTemplate(sourceFile string, targetFileTemplate string, context
 			if err != nil {
 				return err
 			}
+			println("[G] " + targetFile)
 			contents, err := substituteFile(string(templateContents), context)
 			if err != nil {
 				return err
@@ -282,7 +292,6 @@ func writeFileFromTemplate(sourceFile string, targetFileTemplate string, context
 			if strings.TrimSpace(contents) == "" {
 				return nil
 			}
-			println("[G] " + targetFile)
 			return os.WriteFile(targetFile, []byte(contents), os.FileMode.Perm(0644))
 		}
 	}

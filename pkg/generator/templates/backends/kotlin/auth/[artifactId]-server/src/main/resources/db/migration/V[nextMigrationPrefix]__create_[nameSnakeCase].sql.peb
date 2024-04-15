@@ -1,0 +1,7 @@
+CREATE TABLE users (
+    id BIGSERIAL PRIMARY KEY{%for field in fields%},
+    {%if field.fieldNameCamelCase != "passwordHash" %}{{ field.fieldNameSnakeCase }}{%else%}password_hash{%endif%} {{ field.fieldDatabaseDefinitionType }}{%endfor%},
+    created_at TIMESTAMP,
+    updated_at TIMESTAMP,
+    UNIQUE(username)
+);
