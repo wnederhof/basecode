@@ -65,6 +65,12 @@ For example:
 basecode new com.example blog
 ```
 
+By default, this will create a Kotlin + React project. However, Basecode can generate Java code by specifying `--backend java`. For example:
+
+```
+basecode new --backend java com.example blog
+```
+
 ### Scaffold Generation
 
 Using `basecode generate`, you can generate code based using one of the following generators.
@@ -79,7 +85,7 @@ Using `basecode generate`, you can generate code based using one of the followin
    scaffold, s             Backend and Frontend Scaffold (Generate frontend support first)
    backend:auth, ba        Backend Authentication
    frontend:auth, fa       Frontend Authentication
-   auth, fa                Authentication
+   auth, a                 Authentication
 ```
 
 For more information about the generators, run:
