@@ -1,5 +1,5 @@
 import { render, screen } from '@testing-library/react'
-import { {{ namePascalCase }}Details } from '@components/app/{{ nameKebabCase }}/{{ namePascalCase }}Details'
+import { {{ namePascalCase }}Details } from '@components/app/{{ nameKebabCase }}/{{ nameKebabCase }}-details'
 import { Client, Provider } from 'urql'
 import { act } from 'react-dom/test-utils'
 import { fromValue } from 'wonka'

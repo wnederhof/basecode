@@ -1,5 +1,5 @@
 import { DefaultLayout } from '@components/layout/DefaultLayout'
-import { {{namePascalCase}}Form } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}Form'
+import { {{namePascalCase}}Form } from '@components/app/{{nameKebabCase}}/{{nameKebabCase}}-form'
 import { useRouter } from 'next/router'
 
 export default function Show{{namePascalCase}}() {

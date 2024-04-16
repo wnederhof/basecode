@@ -1,4 +1,4 @@
-import { {{namePascalCase}}Form } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}Form'
+import { {{namePascalCase}}Form } from '@components/app/{{nameKebabCase}}/{{nameKebabCase}}-form'
 import { DefaultLayout } from '@components/layout/DefaultLayout'
 
 export default function New{{namePascalCase}}() {

@@ -1,4 +1,4 @@
-import { Actions } from '@components/ui/Actions'
+import { Actions } from '@components/ui/actions'
 import { render, screen } from '@testing-library/react'
 
 describe('Actions', () => {

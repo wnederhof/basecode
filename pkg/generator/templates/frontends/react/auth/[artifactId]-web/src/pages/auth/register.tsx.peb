@@ -1,4 +1,4 @@
-import { Register } from '@components/app/auth/Register'
+import { Register } from '@components/app/auth/register'
 import { useRouter } from 'next/router'
 
 export default function LoginPage() {

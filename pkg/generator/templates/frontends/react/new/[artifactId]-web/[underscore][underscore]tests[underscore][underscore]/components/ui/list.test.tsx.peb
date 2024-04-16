@@ -1,4 +1,4 @@
-import { List } from '@components/ui/List'
+import { List } from '@components/ui/list'
 import { render, screen } from '@testing-library/react'
 
 describe('List', () => {

@@ -1,10 +1,10 @@
 import { showError } from '@lib/notifications'
-import { Header } from '@components/ui/Header'
+import { Header } from '@components/ui/header'
 import { gql, OperationResult, useMutation{%if hasRelations%}, useQuery{%endif%} } from 'urql'{%if hasRelations%}
 import { useMemo } from 'react'{%endif%}
 import { Mutation{%if hasRelations%}, Query{%endif%}{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%} } from '@generated/graphql'
 import { useFormik } from 'formik'
-import { Form } from '@components/ui/Form'
+import { Form } from '@components/ui/form'
 import { showInfo } from '@lib/notifications'
 
 export interface RegisterProps { {%for field in fields%}{%if field.isFieldRelational%}

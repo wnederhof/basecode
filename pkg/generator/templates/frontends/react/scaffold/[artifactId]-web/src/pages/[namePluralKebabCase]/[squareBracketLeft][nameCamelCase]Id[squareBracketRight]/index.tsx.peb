@@ -1,4 +1,4 @@
-import { {{namePascalCase}}Details } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}Details'
+import { {{namePascalCase}}Details } from '@components/app/{{nameKebabCase}}/{{nameKebabCase}}-details'
 import { useRouter } from 'next/router'
 import { DefaultLayout } from '@components/layout/DefaultLayout'
 

@@ -1,11 +1,11 @@
 import { askConfirmation, showError, showInfo } from '@lib/notifications'
-import { Header } from '@components/ui/Header'
+import { Header } from '@components/ui/header'
 import { gql, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Mutation, Query } from '@generated/graphql'
-import { Error } from '@components/ui/Error'
-import { Loader } from '@components/ui/Loader'
-import { List } from '@components/ui/List'
+import { Error } from '@components/ui/error'
+import { Loader } from '@components/ui/loader'
+import { List } from '@components/ui/list'
 {%if hasRelations%}
 export interface {{ namePascalCase }}ListProps {{ "{" }}{%for field in fields%}{%if field.isFieldRelational%}
   {{ field.fieldNameCamelCase }}?: string | number{%endif%}{%endfor%}

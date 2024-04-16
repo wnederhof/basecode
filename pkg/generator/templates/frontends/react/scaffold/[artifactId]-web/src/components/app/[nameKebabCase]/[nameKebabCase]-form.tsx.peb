@@ -1,12 +1,12 @@
 import { showError, showInfo } from '@lib/notifications'
-import { Header } from '@components/ui/Header'
+import { Header } from '@components/ui/header'
 import { gql, OperationResult, useMutation, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Mutation, Query{%for field in fields%}{%if field.isFieldRelational%}, {{ field.fieldTypePascalCase }}{%endif%}{%endfor%} } from '@generated/graphql'
 import { useFormik } from 'formik'
-import { Error } from '@components/ui/Error'
-import { Loader } from '@components/ui/Loader'
-import { Form } from '@components/ui/Form'
+import { Error } from '@components/ui/error'
+import { Loader } from '@components/ui/loader'
+import { Form } from '@components/ui/form'
 
 export interface {{ namePascalCase }}FormProps {
   id?: string | number{%for field in fields%}{%if field.isFieldRelational%}

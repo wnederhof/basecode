@@ -1,4 +1,4 @@
-import { Error } from '@components/ui/Error'
+import { Error } from '@components/ui/error'
 import { render, screen } from '@testing-library/react'
 import { CombinedError } from 'urql'
 

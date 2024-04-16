@@ -1,4 +1,4 @@
-import { Form } from '@components/ui/Form'
+import { Form } from '@components/ui/form'
 import { render, screen } from '@testing-library/react'
 
 describe('Form', () => {

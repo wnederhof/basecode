@@ -1,9 +1,9 @@
 import { showError } from '@lib/notifications'
-import { Header } from '@components/ui/Header'
+import { Header } from '@components/ui/header'
 import { gql, OperationResult, useMutation } from 'urql'
 import { Mutation } from '@generated/graphql'
 import { useFormik } from 'formik'
-import { Form } from '@components/ui/Form'
+import { Form } from '@components/ui/form'
 
 export interface LoginProps {
   onLogin?: () => void

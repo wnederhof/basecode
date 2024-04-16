@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { Login } from '@components/app/auth/Login'
+import { Login } from '@components/app/auth/login'
 import { Client, Provider } from 'urql'
 import { fromValue } from 'wonka'
 

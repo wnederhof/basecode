@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
-import { {{ namePascalCase }}Form } from '@components/app/{{ nameKebabCase }}/{{ namePascalCase }}Form'
+import { {{ namePascalCase }}Form } from '@components/app/{{ nameKebabCase }}/{{ nameKebabCase }}-form'
 import { Client, Provider } from 'urql'
 import { fromValue } from 'wonka'
 import { {{ namePascalCase }}FormQuery, Update{{ namePascalCase }}Mutation, Create{{ namePascalCase }}Mutation } from '@generated/graphql'
