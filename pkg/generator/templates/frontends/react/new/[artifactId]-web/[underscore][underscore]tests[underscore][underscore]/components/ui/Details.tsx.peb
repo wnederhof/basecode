@@ -1,4 +1,4 @@
-import { Details } from '@components/Details'
+import { Details } from '@components/ui/Details'
 import { render, screen } from '@testing-library/react'
 
 describe('Details', () => {

@@ -1,6 +1,6 @@
 import { {{namePascalCase}}List } from '@components/app/{{nameKebabCase}}/{{namePascalCase}}List'
 import { DefaultLayout } from '@components/layout/DefaultLayout'
-import { Actions } from '@components/Actions'
+import { Actions } from '@components/ui/Actions'
 
 export default function {{namePluralPascalCase}}() {
   return (

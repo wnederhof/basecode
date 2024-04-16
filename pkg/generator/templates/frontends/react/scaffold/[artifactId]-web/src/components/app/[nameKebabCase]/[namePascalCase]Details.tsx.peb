@@ -1,10 +1,10 @@
-import { Header } from '@components/Header'
+import { Header } from '@components/ui/Header'
 import { gql, useQuery } from 'urql'
 import { useMemo } from 'react'
 import { Query } from '@generated/graphql'
-import { Error } from '@components/Error'
-import { Loader } from '@components/Loader'
-import { Details } from '@components/Details'
+import { Error } from '@components/ui/Error'
+import { Loader } from '@components/ui/Loader'
+import { Details } from '@components/ui/Details'
 
 export interface {{ namePascalCase }}DetailsProps {
   id: string | number
